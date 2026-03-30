@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>싹싹 — 입주청소 전문인 플랫폼</title>
+<title>싹싹</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="싹싹">
@@ -23,599 +23,535 @@
   --gray-500: #6B7684;
   --gray-700: #3D4A5C;
   --gray-900: #1A1F36;
+  --amber: #F59E0B;
   --red: #EF4444;
-  --radius: 14px;
-  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --blue: #3B82F6;
+  --purple: #8B5CF6;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: #fff; color: var(--gray-900); }
+html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: var(--gray-50); color: var(--gray-900); }
 
 /* ── Shell ── */
-.shell {
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100vh;
+.shell { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 80px; }
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  padding: 52px 20px 28px;
+  position: relative; overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+.header::after {
+  content: '';
+  position: absolute; bottom: -20px; right: 40px;
+  width: 80px; height: 80px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+.header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; position: relative; z-index: 1;
+}
+.header-greeting { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 3px; }
+.header-name { font-size: 20px; font-weight: 900; color: #fff; }
+.header-right { display: flex; gap: 10px; }
+.icon-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; border: none;
+  transition: background 0.2s;
+  position: relative;
+}
+.icon-btn:active { background: rgba(255,255,255,0.3); }
+.notif-dot {
+  position: absolute; top: 6px; right: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #FF5A5A; border: 2px solid var(--primary);
+}
+
+/* ── Today stats ── */
+.today-stats {
+  display: flex; gap: 10px; position: relative; z-index: 1;
+}
+.today-stat {
+  flex: 1; background: rgba(255,255,255,0.15);
+  border-radius: var(--radius-sm); padding: 12px;
+  backdrop-filter: blur(10px);
+}
+.ts-label { font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+.ts-value { font-size: 22px; font-weight: 900; color: #fff; line-height: 1; }
+.ts-unit { font-size: 12px; font-weight: 400; }
+
+/* ── Content ── */
+.content { padding: 20px; }
+
+/* ── Section ── */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.section-title { font-size: 15px; font-weight: 700; }
+.section-more { font-size: 12.5px; color: var(--primary); font-weight: 600; cursor: pointer; }
+
+/* ── Quick actions ── */
+.quick-btn {
+  background: var(--primary);
+  color: #fff; border: none;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  width: 100%;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,200,150,0.3);
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.quick-btn:active { transform: scale(0.98); }
+.quick-btn-icon { font-size: 24px; flex-shrink: 0; }
+.quick-btn-text { text-align: left; }
+.quick-btn-label { font-size: 15px; font-weight: 700; color: #fff; }
+.quick-btn-desc { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 2px; }
+.quick-btn-arrow { margin-left: auto; font-size: 18px; color: rgba(255,255,255,0.7); }
+
+/* ── Menu grid ── */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.menu-item {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 16px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
   position: relative;
   overflow: hidden;
 }
+.menu-item:active { transform: scale(0.96); }
+.menu-item:hover { border-color: var(--primary); box-shadow: 0 4px 16px rgba(0,200,150,0.15); }
+.menu-icon { font-size: 28px; margin-bottom: 7px; }
+.menu-label { font-size: 12.5px; font-weight: 700; color: var(--gray-700); }
+.menu-badge {
+  position: absolute; top: 8px; right: 8px;
+  background: var(--red); color: #fff;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 6px; border-radius: 10px;
+  min-width: 18px; text-align: center;
+}
+.menu-item.coming {
+  background: var(--gray-50);
+  border-style: dashed;
+}
+.menu-item.coming .menu-label { color: var(--gray-400); }
+.coming-tag {
+  position: absolute; top: 6px; right: 6px;
+  background: var(--gray-200); color: var(--gray-500);
+  font-size: 9px; font-weight: 700;
+  padding: 2px 6px; border-radius: 8px;
+}
 
-/* ── Screens ── */
-.screen { display: none; min-height: 100vh; flex-direction: column; }
-.screen.active { display: flex; }
-
-/* ── Splash ── */
-.splash {
-  align-items: center; justify-content: center;
-  background: linear-gradient(160deg, #E6FAF5 0%, #fff 60%);
-  text-align: center;
-  padding: 40px 24px;
-}
-.splash-logo {
-  font-size: 64px; font-weight: 900;
-  color: var(--primary);
-  letter-spacing: -2px;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-.splash-sub {
-  font-size: 15px; color: var(--gray-500);
-  margin-bottom: 60px;
-}
-.splash-features {
-  display: flex; flex-direction: column; gap: 12px;
-  width: 100%; max-width: 320px;
-  margin: 0 auto 60px;
-}
-.splash-feature {
-  display: flex; align-items: center; gap: 12px;
+/* ── Inquiry cards ── */
+.inq-card {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
   padding: 14px 16px;
-  background: #fff;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
+  margin-bottom: 10px;
+  display: flex; gap: 12px; align-items: flex-start;
   box-shadow: var(--shadow);
-  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.sf-icon { font-size: 24px; flex-shrink: 0; }
-.sf-text { font-size: 13.5px; font-weight: 500; color: var(--gray-700); }
-.sf-desc { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
-.splash-btns { width: 100%; max-width: 320px; }
+.inq-card:active { transform: scale(0.98); }
+.inq-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 15px; color: #fff;
+  flex-shrink: 0;
+}
+.inq-name { font-size: 14px; font-weight: 700; }
+.inq-meta { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+.inq-msg { font-size: 13px; color: var(--gray-600, #4B5563); margin-top: 5px; line-height: 1.5; }
+.inq-time { font-size: 11px; color: var(--gray-300); margin-left: auto; flex-shrink: 0; }
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 9px; border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+}
+.badge-wait { background: #FEF3C7; color: #D97706; }
+.badge-new { background: #FEE2E2; color: #DC2626; }
+.badge-done { background: var(--primary-light); color: var(--primary-dark); }
 
-/* ── Login ── */
-.login-screen { padding: 0; }
-.login-header {
-  padding: 56px 28px 32px;
-  background: linear-gradient(160deg, #E6FAF5 0%, #fff 80%);
-}
-.back-btn {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 14px; color: var(--gray-500);
-  background: none; border: none;
-  cursor: pointer; font-family: inherit;
-  margin-bottom: 28px; padding: 0;
-}
-.login-title { font-size: 26px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 6px; }
-.login-subtitle { font-size: 14px; color: var(--gray-500); }
-
-.login-body { padding: 28px; flex: 1; }
-
-/* ── Form ── */
-.form-group { margin-bottom: 16px; }
-.form-label {
-  display: block; font-size: 13px; font-weight: 600;
-  color: var(--gray-700); margin-bottom: 7px;
-}
-.form-input {
-  width: 100%; padding: 14px 16px;
-  border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius);
-  font-size: 15px; font-family: inherit;
-  color: var(--gray-900);
-  outline: none; transition: border-color 0.2s;
-  background: #fff;
-  -webkit-appearance: none;
-}
-.form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,200,150,0.12); }
-.form-input.error { border-color: var(--red); }
-.form-error { font-size: 12px; color: var(--red); margin-top: 5px; display: none; }
-.form-error.show { display: block; }
-
-/* ── Password toggle ── */
-.input-wrap { position: relative; }
-.input-wrap .form-input { padding-right: 48px; }
-.toggle-pw {
-  position: absolute; right: 14px; top: 50%;
-  transform: translateY(-50%);
-  background: none; border: none;
-  font-size: 18px; cursor: pointer;
-  color: var(--gray-400);
-}
-
-/* ── Divider ── */
-.divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 20px 0;
-}
-.divider::before, .divider::after {
-  content: ''; flex: 1; height: 1px; background: var(--gray-200);
-}
-.divider span { font-size: 12.5px; color: var(--gray-400); white-space: nowrap; }
-
-/* ── Buttons ── */
-.btn {
-  width: 100%; padding: 16px;
-  border-radius: var(--radius);
-  font-family: inherit; font-size: 15px; font-weight: 700;
-  cursor: pointer; border: none;
-  transition: all 0.2s; display: flex;
-  align-items: center; justify-content: center; gap: 8px;
-  margin-bottom: 12px;
-}
-.btn:active { transform: scale(0.98); }
-.btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 16px rgba(0,200,150,0.3); }
-.btn-primary:hover { background: var(--primary-dark); }
-.btn-primary:disabled { background: var(--gray-300); box-shadow: none; cursor: not-allowed; }
-.btn-kakao { background: #FEE500; color: #1A1A1A; }
-.btn-kakao:hover { background: #F0D800; }
-.btn-outline { background: #fff; color: var(--gray-700); border: 1.5px solid var(--gray-200); }
-.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-.btn-google { background: #fff; color: var(--gray-700); border: 1.5px solid var(--gray-200); }
-
-/* ── Switch ── */
-.auth-switch {
-  text-align: center; font-size: 13.5px; color: var(--gray-500);
-  margin-top: 8px;
-}
-.auth-switch a {
-  color: var(--primary); font-weight: 700;
-  cursor: pointer; text-decoration: none;
-}
-
-/* ── Success screen ── */
-.success-screen {
-  align-items: center; justify-content: center;
-  text-align: center; padding: 40px 28px;
-  background: linear-gradient(160deg, #E6FAF5 0%, #fff 60%);
-}
-.success-icon { font-size: 72px; margin-bottom: 20px; }
-.success-title { font-size: 24px; font-weight: 900; margin-bottom: 10px; }
-.success-desc { font-size: 15px; color: var(--gray-500); line-height: 1.7; margin-bottom: 40px; }
-.user-card {
+/* ── Schedule cards ── */
+.schedule-card {
   background: #fff;
   border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: var(--shadow);
+}
+.schedule-time {
+  text-align: center; flex-shrink: 0; width: 48px;
+}
+.st-time { font-size: 14px; font-weight: 900; color: var(--primary); }
+.st-ampm { font-size: 11px; color: var(--gray-400); }
+.schedule-divider {
+  width: 1px; height: 40px; background: var(--gray-200); flex-shrink: 0;
+}
+.schedule-info { flex: 1; min-width: 0; }
+.si-title { font-size: 14px; font-weight: 700; }
+.si-meta { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+.schedule-status {
+  flex-shrink: 0;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11.5px; font-weight: 600;
+}
+.ss-confirmed { background: var(--primary-light); color: var(--primary-dark); }
+.ss-pending { background: #FEF3C7; color: #D97706; }
+
+/* ── Performance card ── */
+.perf-card {
+  background: linear-gradient(135deg, var(--secondary) 0%, #2D3561 100%);
   border-radius: var(--radius);
   padding: 20px;
-  width: 100%; max-width: 320px;
-  margin: 0 auto 32px;
-  box-shadow: var(--shadow);
-  text-align: left;
+  margin-bottom: 20px;
+  color: #fff;
 }
-.user-avatar {
-  width: 52px; height: 52px; border-radius: 50%;
-  background: var(--primary);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; font-weight: 900; color: #fff;
-  margin-bottom: 12px;
+.perf-title { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 14px; }
+.perf-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; }
+.perf-item { text-align: center; }
+.perf-item + .perf-item { border-left: 1px solid rgba(255,255,255,0.1); }
+.perf-val { font-size: 22px; font-weight: 900; color: #fff; }
+.perf-label { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+.perf-change {
+  font-size: 11px; color: var(--primary);
+  font-weight: 600; margin-top: 2px;
 }
-.user-name { font-size: 17px; font-weight: 700; }
-.user-plan {
-  display: inline-flex; align-items: center;
-  padding: 3px 10px; border-radius: 20px;
-  background: var(--primary-light); color: var(--primary-dark);
-  font-size: 12px; font-weight: 600; margin-top: 4px;
-}
-.user-phone { font-size: 13px; color: var(--gray-400); margin-top: 6px; }
 
-/* ── Loading overlay ── */
-.loading-overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(255,255,255,0.85);
-  z-index: 999;
-  align-items: center; justify-content: center;
-  flex-direction: column; gap: 14px;
+/* ── Bottom nav ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%; max-width: 480px;
+  background: rgba(255,255,255,0.95);
+  border-top: 1px solid var(--gray-200);
+  backdrop-filter: blur(20px);
+  display: flex;
+  padding: 8px 0 env(safe-area-inset-bottom, 8px);
+  z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
 }
-.loading-overlay.show { display: flex; }
-.spinner {
-  width: 40px; height: 40px;
-  border: 3px solid var(--gray-200);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 3px;
+  padding: 4px 0; cursor: pointer;
+  color: var(--gray-400); font-size: 10px;
+  transition: color 0.15s;
+  font-family: inherit; background: none; border: none;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 14px; color: var(--gray-500); font-weight: 500; }
+.nav-item.active { color: var(--primary); }
+.nav-icon { font-size: 22px; line-height: 1; }
 
 /* ── Toast ── */
 #toast {
-  position: fixed; bottom: 32px; left: 50%;
+  position: fixed; bottom: 96px; left: 50%;
   transform: translateX(-50%) translateY(20px);
   background: var(--gray-900); color: #fff;
-  padding: 12px 22px; border-radius: 24px;
+  padding: 11px 20px; border-radius: 24px;
   font-size: 13.5px; font-weight: 500;
   opacity: 0; transition: all 0.3s;
-  pointer-events: none; z-index: 9999;
+  pointer-events: none; z-index: 999;
   white-space: nowrap;
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ── Terms ── */
-.terms-text {
-  font-size: 11.5px; color: var(--gray-400);
-  text-align: center; line-height: 1.6;
-  margin-top: 16px;
+/* ── Fade in animation ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.terms-text a { color: var(--primary); }
-
-/* ── Forgot PW ── */
-.forgot-pw {
-  text-align: right; margin-top: -8px; margin-bottom: 16px;
-}
-.forgot-pw a {
-  font-size: 12.5px; color: var(--gray-400);
-  cursor: pointer; text-decoration: none;
-}
-.forgot-pw a:hover { color: var(--primary); }
+.fade-in { animation: fadeUp 0.5s ease both; }
+.fade-in-1 { animation-delay: 0.05s; }
+.fade-in-2 { animation-delay: 0.1s; }
+.fade-in-3 { animation-delay: 0.15s; }
+.fade-in-4 { animation-delay: 0.2s; }
+.fade-in-5 { animation-delay: 0.25s; }
 </style>
 </head>
 <body>
 <div class="shell">
 
-  <!-- ── SPLASH ── -->
-  <div class="screen active" id="screen-splash">
-    <div class="splash">
-      <div style="margin-bottom:40px;">
-        <div class="splash-logo">싹싹</div>
-        <div class="splash-sub">입주청소 전문인 커뮤니티 & 솔루션</div>
+  <!-- ── Header ── -->
+  <div class="header fade-in">
+    <div class="header-top">
+      <div>
+        <div class="header-greeting" id="greeting">안녕하세요 👋</div>
+        <div class="header-name" id="user-name">서프로클린 사장님</div>
       </div>
-
-      <div class="splash-features">
-        <div class="splash-feature">
-          <div class="sf-icon">📞</div>
-          <div>
-            <div class="sf-text">SMS 자동응답</div>
-            <div class="sf-desc">작업 중에도 고객 자동 응대</div>
-          </div>
-        </div>
-        <div class="splash-feature">
-          <div class="sf-icon">📅</div>
-          <div>
-            <div class="sf-text">스케줄 & 실적 관리</div>
-            <div class="sf-desc">한눈에 보이는 일정 관리</div>
-          </div>
-        </div>
-        <div class="splash-feature">
-          <div class="sf-icon">👥</div>
-          <div>
-            <div class="sf-text">인력 매칭</div>
-            <div class="sf-desc">검증된 전문인 네트워크</div>
-          </div>
-        </div>
-        <div class="splash-feature">
-          <div class="sf-icon">📋</div>
-          <div>
-            <div class="sf-text">보고서 & 계약서 자동 발송</div>
-            <div class="sf-desc">전문적인 서비스 제공</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="splash-btns">
-        <button class="btn btn-primary" onclick="showScreen('screen-signup')">
-          🚀 무료로 시작하기
+      <div class="header-right">
+        <button class="icon-btn" onclick="toast('알림 기능은 준비 중입니다')">
+          🔔
+          <div class="notif-dot"></div>
         </button>
-        <button class="btn btn-outline" onclick="showScreen('screen-login')">
-          이미 계정이 있어요
-        </button>
-        <div class="terms-text">
-          가입 시 <a href="#">이용약관</a> 및 <a href="#">개인정보처리방침</a>에 동의합니다
+        <button class="icon-btn" onclick="toast('설정 기능은 준비 중입니다')">⚙️</button>
+      </div>
+    </div>
+
+    <div class="today-stats">
+      <div class="today-stat">
+        <div class="ts-label">오늘 작업</div>
+        <div class="ts-value">2<span class="ts-unit">건</span></div>
+      </div>
+      <div class="today-stat">
+        <div class="ts-label">미답변 문의</div>
+        <div class="ts-value" style="color:#FFD700;">3<span class="ts-unit">건</span></div>
+      </div>
+      <div class="today-stat">
+        <div class="ts-label">이번 달 매출</div>
+        <div class="ts-value">84<span class="ts-unit">만</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Content ── -->
+  <div class="content">
+
+    <!-- 빠른 견적 -->
+    <button class="quick-btn fade-in fade-in-1" onclick="goTo('quote')">
+      <div class="quick-btn-icon">⚡</div>
+      <div class="quick-btn-text">
+        <div class="quick-btn-label">빠른 견적 & 자동응답</div>
+        <div class="quick-btn-desc">평수 입력 → 견적 계산 → 문자 발송</div>
+      </div>
+      <div class="quick-btn-arrow">›</div>
+    </button>
+
+    <!-- 메뉴 그리드 -->
+    <div class="section-header fade-in fade-in-2">
+      <div class="section-title">전체 메뉴</div>
+    </div>
+    <div class="menu-grid fade-in fade-in-2">
+      <div class="menu-item" onclick="goTo('quote')">
+        <div class="menu-badge">3</div>
+        <div class="menu-icon">💬</div>
+        <div class="menu-label">SMS 자동응답</div>
+      </div>
+      <div class="menu-item" onclick="goTo('schedule')">
+        <div class="menu-icon">📅</div>
+        <div class="menu-label">스케줄 관리</div>
+      </div>
+      <div class="menu-item" onclick="goTo('workforce')">
+        <div class="menu-icon">👥</div>
+        <div class="menu-label">인력 매칭</div>
+      </div>
+      <div class="menu-item coming" onclick="toast('준비 중입니다 😊')">
+        <div class="coming-tag">준비중</div>
+        <div class="menu-icon">🛒</div>
+        <div class="menu-label">중고거래</div>
+      </div>
+      <div class="menu-item coming" onclick="toast('준비 중입니다 😊')">
+        <div class="coming-tag">준비중</div>
+        <div class="menu-icon">📋</div>
+        <div class="menu-label">보고서</div>
+      </div>
+      <div class="menu-item coming" onclick="toast('준비 중입니다 😊')">
+        <div class="coming-tag">준비중</div>
+        <div class="menu-icon">📝</div>
+        <div class="menu-label">계약서</div>
+      </div>
+    </div>
+
+    <!-- 이번 달 실적 -->
+    <div class="perf-card fade-in fade-in-3">
+      <div class="perf-title">📊 이번 달 실적</div>
+      <div class="perf-grid">
+        <div class="perf-item">
+          <div class="perf-val">12</div>
+          <div class="perf-label">완료 작업</div>
+          <div class="perf-change">↑ 2건</div>
+        </div>
+        <div class="perf-item">
+          <div class="perf-val">840</div>
+          <div class="perf-label">매출 (만원)</div>
+          <div class="perf-change">↑ 12%</div>
+        </div>
+        <div class="perf-item">
+          <div class="perf-val">4.9</div>
+          <div class="perf-label">평균 평점</div>
+          <div class="perf-change">⭐ 최고</div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ── SIGNUP ── -->
-  <div class="screen" id="screen-signup">
-    <div class="login-header">
-      <button class="back-btn" onclick="showScreen('screen-splash')">← 뒤로</button>
-      <div class="login-title">회원가입</div>
-      <div class="login-subtitle">싹싹과 함께 비즈니스를 성장시키세요</div>
+    <!-- 오늘 스케줄 -->
+    <div class="section-header fade-in fade-in-3">
+      <div class="section-title">📅 오늘 스케줄</div>
+      <div class="section-more" onclick="goTo('schedule')">전체보기</div>
     </div>
-    <div class="login-body">
 
-      <button class="btn btn-kakao" onclick="kakaoLogin()">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M9 1.5C4.86 1.5 1.5 4.19 1.5 7.5c0 2.1 1.26 3.96 3.18 5.07L3.9 15.75l3.33-2.22c.57.09 1.17.15 1.77.15 4.14 0 7.5-2.69 7.5-6s-3.36-6-7.5-6z" fill="#1A1A1A"/>
-        </svg>
-        카카오로 시작하기
-      </button>
-
-      <div class="divider"><span>또는 이메일로 가입</span></div>
-
-      <div class="form-group">
-        <label class="form-label">업체명 / 이름</label>
-        <input class="form-input" id="su-name" type="text" placeholder="예: 서프로클린 or 홍길동" />
-        <div class="form-error" id="su-name-error">이름을 입력해 주세요</div>
+    <div class="schedule-card fade-in fade-in-3">
+      <div class="schedule-time">
+        <div class="st-time">10:00</div>
+        <div class="st-ampm">오전</div>
       </div>
-
-      <div class="form-group">
-        <label class="form-label">연락처</label>
-        <input class="form-input" id="su-phone" type="tel" placeholder="010-0000-0000" />
-        <div class="form-error" id="su-phone-error">연락처를 입력해 주세요</div>
+      <div class="schedule-divider"></div>
+      <div class="schedule-info">
+        <div class="si-title">강남구 34평 입주 전 청소</div>
+        <div class="si-meta">서초동 · 2인 투입 · 약 4시간</div>
       </div>
+      <div class="schedule-status ss-confirmed">확정</div>
+    </div>
 
-      <div class="form-group">
-        <label class="form-label">이메일</label>
-        <input class="form-input" id="su-email" type="email" placeholder="example@email.com" />
-        <div class="form-error" id="su-email-error">올바른 이메일을 입력해 주세요</div>
+    <div class="schedule-card fade-in fade-in-3">
+      <div class="schedule-time">
+        <div class="st-time">3:00</div>
+        <div class="st-ampm">오후</div>
       </div>
+      <div class="schedule-divider"></div>
+      <div class="schedule-info">
+        <div class="si-title">송파구 28평 이사 후 청소</div>
+        <div class="si-meta">잠실동 · 2인 투입 · 약 3시간</div>
+      </div>
+      <div class="schedule-status ss-pending">대기중</div>
+    </div>
 
-      <div class="form-group">
-        <label class="form-label">비밀번호</label>
-        <div class="input-wrap">
-          <input class="form-input" id="su-password" type="password" placeholder="8자 이상 입력" />
-          <button class="toggle-pw" onclick="togglePw('su-password', this)">👁</button>
+    <!-- 미답변 문의 -->
+    <div class="section-header fade-in fade-in-4">
+      <div class="section-title">📞 미답변 문의 <span style="color:var(--red);font-size:13px;">3건</span></div>
+      <div class="section-more" onclick="goTo('inquiries')">전체보기</div>
+    </div>
+
+    <div class="inq-card fade-in fade-in-4" onclick="goTo('quote')">
+      <div class="inq-avatar" style="background:var(--primary);">김</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="inq-name">김민지</div>
+          <span class="badge badge-new">NEW</span>
         </div>
-        <div class="form-error" id="su-pw-error">비밀번호는 8자 이상이어야 합니다</div>
+        <div class="inq-meta">010-1234-5678 · 34평 아파트</div>
+        <div class="inq-msg">입주 전 청소 견적 문의드립니다</div>
       </div>
-
-      <div class="form-group">
-        <label class="form-label">요금제 선택</label>
-        <select class="form-input" id="su-plan">
-          <option value="basic">베이직 — 6,900원/월</option>
-          <option value="standard" selected>스탠다드 — 9,900원/월 ⭐ 추천</option>
-          <option value="premium">프리미엄 — 19,900원/월</option>
-        </select>
-      </div>
-
-      <button class="btn btn-primary" onclick="signup()" style="margin-top:8px;">
-        가입하기
-      </button>
-
-      <div class="auth-switch">
-        이미 계정이 있으신가요? <a onclick="showScreen('screen-login')">로그인</a>
-      </div>
-
-      <div class="terms-text">
-        가입 시 <a href="#">이용약관</a> 및 <a href="#">개인정보처리방침</a>에 동의합니다
-      </div>
+      <div class="inq-time">방금</div>
     </div>
-  </div>
 
-  <!-- ── LOGIN ── -->
-  <div class="screen" id="screen-login">
-    <div class="login-header">
-      <button class="back-btn" onclick="showScreen('screen-splash')">← 뒤로</button>
-      <div class="login-title">로그인</div>
-      <div class="login-subtitle">다시 만나서 반가워요 😊</div>
-    </div>
-    <div class="login-body">
-
-      <button class="btn btn-kakao" onclick="kakaoLogin()">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M9 1.5C4.86 1.5 1.5 4.19 1.5 7.5c0 2.1 1.26 3.96 3.18 5.07L3.9 15.75l3.33-2.22c.57.09 1.17.15 1.77.15 4.14 0 7.5-2.69 7.5-6s-3.36-6-7.5-6z" fill="#1A1A1A"/>
-        </svg>
-        카카오로 로그인
-      </button>
-
-      <div class="divider"><span>또는 이메일로 로그인</span></div>
-
-      <div class="form-group">
-        <label class="form-label">이메일</label>
-        <input class="form-input" id="li-email" type="email" placeholder="example@email.com" />
-        <div class="form-error" id="li-email-error">이메일을 입력해 주세요</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">비밀번호</label>
-        <div class="input-wrap">
-          <input class="form-input" id="li-password" type="password" placeholder="비밀번호 입력"
-            onkeydown="if(event.key==='Enter')login()" />
-          <button class="toggle-pw" onclick="togglePw('li-password', this)">👁</button>
+    <div class="inq-card fade-in fade-in-4" onclick="goTo('quote')">
+      <div class="inq-avatar" style="background:var(--blue);">박</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="inq-name">박준호</div>
+          <span class="badge badge-wait">대기중</span>
         </div>
-        <div class="form-error" id="li-pw-error">비밀번호를 입력해 주세요</div>
+        <div class="inq-meta">010-9876-5432 · 25평 빌라</div>
+        <div class="inq-msg">이사 후 청소 가능한지요?</div>
       </div>
-
-      <div class="forgot-pw">
-        <a onclick="toast('비밀번호 재설정 기능은 준비 중입니다')">비밀번호를 잊으셨나요?</a>
-      </div>
-
-      <button class="btn btn-primary" onclick="login()">
-        로그인
-      </button>
-
-      <div class="auth-switch">
-        아직 계정이 없으신가요? <a onclick="showScreen('screen-signup')">회원가입</a>
-      </div>
+      <div class="inq-time">1시간 전</div>
     </div>
-  </div>
 
-  <!-- ── SUCCESS ── -->
-  <div class="screen" id="screen-success">
-    <div class="success-screen">
-      <div class="success-icon">🎉</div>
-      <div class="success-title">가입 완료!</div>
-      <div class="success-desc">싹싹에 오신 것을 환영합니다!<br>입주청소 비즈니스를 더 스마트하게 운영하세요</div>
-
-      <div class="user-card">
-        <div class="user-avatar" id="success-avatar">S</div>
-        <div class="user-name" id="success-name">업체명</div>
-        <div class="user-plan" id="success-plan">스탠다드</div>
-        <div class="user-phone" id="success-phone">010-0000-0000</div>
+    <div class="inq-card fade-in fade-in-4" onclick="goTo('quote')">
+      <div class="inq-avatar" style="background:var(--purple);">이</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="inq-name">이수연</div>
+          <span class="badge badge-wait">대기중</span>
+        </div>
+        <div class="inq-meta">010-5555-7777 · 42평 아파트</div>
+        <div class="inq-msg">신축 입주청소 견적 부탁드려요</div>
       </div>
-
-      <button class="btn btn-primary" style="max-width:320px;width:100%;" onclick="goToApp()">
-        싹싹 시작하기 →
-      </button>
+      <div class="inq-time">2시간 전</div>
     </div>
+
   </div>
+</div>
 
-</div><!-- /shell -->
-
-<!-- Loading -->
-<div class="loading-overlay" id="loading">
-  <div class="spinner"></div>
-  <div class="loading-text" id="loading-text">처리 중...</div>
+<!-- ── Bottom Nav ── -->
+<div class="bottom-nav">
+  <button class="nav-item active" id="nav-home" onclick="setNav('home')">
+    <div class="nav-icon">🏠</div>
+    <div>홈</div>
+  </button>
+  <button class="nav-item" id="nav-quote" onclick="setNav('quote')">
+    <div class="nav-icon">⚡</div>
+    <div>견적</div>
+  </button>
+  <button class="nav-item" id="nav-schedule" onclick="setNav('schedule')">
+    <div class="nav-icon">📅</div>
+    <div>스케줄</div>
+  </button>
+  <button class="nav-item" id="nav-community" onclick="setNav('community')">
+    <div class="nav-icon">👥</div>
+    <div>커뮤니티</div>
+  </button>
+  <button class="nav-item" id="nav-my" onclick="setNav('my')">
+    <div class="nav-icon">👤</div>
+    <div>MY</div>
+  </button>
 </div>
 
 <div id="toast"></div>
 
 <script>
-const SERVER = 'https://ssakssak-server-production-1b4b.up.railway.app';
-
-// ── 화면 전환 ──────────────────────────────
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
+// ── 인사말 ──────────────────────────────────
+function setGreeting() {
+  const hour = new Date().getHours();
+  const greetings = {
+    morning: '좋은 아침이에요 ☀️',
+    afternoon: '안녕하세요 👋',
+    evening: '수고하셨어요 🌙',
+    night: '늦은 시간까지 고생이에요 🌟'
+  };
+  let msg = hour < 12 ? greetings.morning
+    : hour < 18 ? greetings.afternoon
+    : hour < 22 ? greetings.evening
+    : greetings.night;
+  document.getElementById('greeting').textContent = msg;
 }
 
-// ── 비밀번호 토글 ───────────────────────────
-function togglePw(inputId, btn) {
-  const input = document.getElementById(inputId);
-  if (input.type === 'password') {
-    input.type = 'text';
-    btn.textContent = '🙈';
-  } else {
-    input.type = 'password';
-    btn.textContent = '👁';
+// ── 사용자 정보 로드 ─────────────────────────
+function loadUser() {
+  const saved = localStorage.getItem('ssak_user');
+  if (saved) {
+    const user = JSON.parse(saved);
+    document.getElementById('user-name').textContent = `${user.name} 사장님`;
   }
 }
 
-// ── 유효성 검사 ─────────────────────────────
-function validateEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-function validatePhone(phone) {
-  return /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/.test(phone.replace(/-/g,''));
-}
-function showError(id, show) {
-  const el = document.getElementById(id);
-  if (el) el.classList.toggle('show', show);
-}
-function setInputError(inputId, errorId, hasError) {
-  const input = document.getElementById(inputId);
-  if (input) input.classList.toggle('error', hasError);
-  showError(errorId, hasError);
+// ── 네비게이션 ───────────────────────────────
+function setNav(name) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('nav-' + name)?.classList.add('active');
+  goTo(name);
 }
 
-// ── 회원가입 ────────────────────────────────
-async function signup() {
-  const name = document.getElementById('su-name').value.trim();
-  const phone = document.getElementById('su-phone').value.trim();
-  const email = document.getElementById('su-email').value.trim();
-  const password = document.getElementById('su-password').value;
-  const plan = document.getElementById('su-plan').value;
-
-  let valid = true;
-
-  setInputError('su-name', 'su-name-error', !name);
-  if (!name) valid = false;
-
-  setInputError('su-phone', 'su-phone-error', !validatePhone(phone));
-  if (!validatePhone(phone)) valid = false;
-
-  setInputError('su-email', 'su-email-error', !validateEmail(email));
-  if (!validateEmail(email)) valid = false;
-
-  setInputError('su-password', 'su-pw-error', password.length < 8);
-  if (password.length < 8) valid = false;
-
-  if (!valid) return;
-
-  showLoading('가입 처리 중...');
-
-  try {
-    const res = await fetch(`${SERVER}/api/subscribe`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ company_name: name, phone, email, plan })
-    });
-    const data = await res.json();
-
-    hideLoading();
-
-    if (data.success || data.duplicate) {
-      // 성공 화면 표시
-      document.getElementById('success-avatar').textContent = name[0].toUpperCase();
-      document.getElementById('success-name').textContent = name;
-      document.getElementById('success-plan').textContent =
-        plan === 'basic' ? '베이직' : plan === 'standard' ? '스탠다드' : '프리미엄';
-      document.getElementById('success-phone').textContent = phone;
-
-      // 로컬 저장
-      localStorage.setItem('ssak_user', JSON.stringify({ name, phone, email, plan }));
-
-      showScreen('screen-success');
-    } else {
-      toast('오류가 발생했습니다. 다시 시도해 주세요.');
-    }
-  } catch (err) {
-    hideLoading();
-    toast('서버 연결 오류. 잠시 후 다시 시도해 주세요.');
-  }
-}
-
-// ── 로그인 ──────────────────────────────────
-async function login() {
-  const email = document.getElementById('li-email').value.trim();
-  const password = document.getElementById('li-password').value;
-
-  let valid = true;
-  setInputError('li-email', 'li-email-error', !validateEmail(email));
-  if (!validateEmail(email)) valid = false;
-
-  setInputError('li-password', 'li-pw-error', !password);
-  if (!password) valid = false;
-
-  if (!valid) return;
-
-  showLoading('로그인 중...');
-
-  // 임시: 서버에 이메일로 구독자 조회
-  try {
-    await new Promise(r => setTimeout(r, 1000)); // 시뮬레이션
-    hideLoading();
-
-    // 임시 로그인 성공 처리
-    const saved = localStorage.getItem('ssak_user');
-    if (saved) {
-      const user = JSON.parse(saved);
-      if (user.email === email) {
-        document.getElementById('success-avatar').textContent = user.name[0].toUpperCase();
-        document.getElementById('success-name').textContent = user.name;
-        document.getElementById('success-plan').textContent =
-          user.plan === 'basic' ? '베이직' : user.plan === 'standard' ? '스탠다드' : '프리미엄';
-        document.getElementById('success-phone').textContent = user.phone;
-        showScreen('screen-success');
-      } else {
-        toast('이메일 또는 비밀번호가 올바르지 않습니다');
-      }
-    } else {
-      toast('등록된 계정이 없습니다. 회원가입을 해주세요.');
-    }
-  } catch (err) {
-    hideLoading();
-    toast('서버 연결 오류. 잠시 후 다시 시도해 주세요.');
-  }
-}
-
-// ── 카카오 로그인 ────────────────────────────
-function kakaoLogin() {
-  toast('카카오 로그인은 준비 중입니다 😊');
-}
-
-// ── 앱으로 이동 ──────────────────────────────
-function goToApp() {
-  toast('메인 앱 화면은 개발 중입니다! 곧 만나요 🚀');
-}
-
-// ── 로딩 ────────────────────────────────────
-function showLoading(text) {
-  document.getElementById('loading-text').textContent = text || '처리 중...';
-  document.getElementById('loading').classList.add('show');
-}
-function hideLoading() {
-  document.getElementById('loading').classList.remove('show');
+function goTo(page) {
+  const pages = {
+    home: null,
+    quote: 'SMS 자동응답 & 견적 계산 화면은 개발 중입니다 🚀',
+    schedule: '스케줄 관리 화면은 개발 중입니다 🚀',
+    workforce: '인력 매칭 화면은 개발 중입니다 🚀',
+    inquiries: '문의 관리 화면은 개발 중입니다 🚀',
+    community: '커뮤니티 화면은 개발 중입니다 🚀',
+    my: 'MY 페이지는 개발 중입니다 🚀',
+  };
+  if (pages[page]) toast(pages[page]);
 }
 
 // ── Toast ────────────────────────────────────
@@ -625,19 +561,12 @@ function toast(msg) {
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-// ── 자동 로그인 체크 ─────────────────────────
-window.onload = () => {
-  const saved = localStorage.getItem('ssak_user');
-  if (saved) {
-    // 이미 가입한 사용자면 로그인 화면으로
-    showScreen('screen-login');
-    const user = JSON.parse(saved);
-    document.getElementById('li-email').value = user.email || '';
-  }
-};
+// ── Init ─────────────────────────────────────
+setGreeting();
+loadUser();
 </script>
 </body>
 </html>
