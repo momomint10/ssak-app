@@ -165,7 +165,7 @@ select.form-input{cursor:pointer;}
         <input class="phone-input" id="send-phone" placeholder="발송할 번호 (010-0000-0000)" type="tel"/>
         <button class="send-btn" id="send-btn" onclick="sendSMS()"><span id="send-btn-text">발송</span><div class="send-loading" id="send-loading"></div></button>
       </div>
-      <div class="api-warning" id="api-warning">⚠️ CoolSMS API 키가 없습니다. ⚙️설정 탭에서 입력해 주세요.</div>
+      <div class="api-warning" id="api-warning" style="display:none;"></div>
     </div>
     <button class="btn-primary" onclick="copyMsg()">📋 메시지 복사 → 직접 발송</button>
     <button class="btn-secondary" onclick="saveInquiry()">💾 문의 저장</button>
@@ -348,7 +348,7 @@ function copyMsg(){
 
 function updateApiWarning(){
   const w=document.getElementById('api-warning');
-  if(w)w.style.display=cfg.apiKey&&cfg.apiSecret?'none':'block';
+  if(w)w.style.display='none';
 }
 
 async function sendSMS(){
@@ -356,13 +356,12 @@ async function sendSMS(){
   const to=document.getElementById('send-phone').value.replace(/-/g,'').trim();
   if(msg.includes('자동 생성')){toast('평수를 먼저 입력해 주세요!');return;}
   if(!to||to.length<10){toast('발송할 전화번호를 입력해 주세요');return;}
-  if(!cfg.apiKey||!cfg.apiSecret){toast('⚙️설정에서 CoolSMS API 키를 입력해 주세요!');switchTab('settings',null);return;}
   const btn=document.getElementById('send-btn');
   document.getElementById('send-btn-text').textContent='발송 중';
   document.getElementById('send-loading').style.display='block';
   btn.disabled=true;
   try{
-    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,from:cfg.fromPhone.replace(/-/g,''),apiKey:cfg.apiKey,apiSecret:cfg.apiSecret})});
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg})});
     const data=await res.json();
     if(data.success)toast('✅ 문자 발송 완료!');
     else toast('❌ 발송 실패: '+(data.error||'오류'));
