@@ -5,785 +5,457 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — SMS 자동응답</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#00C896">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --primary: #00C896;
-  --primary-dark: #00A87A;
-  --primary-light: #E6FAF5;
-  --secondary: #1A1F36;
-  --gray-50: #F8FAFB;
-  --gray-100: #F1F4F6;
-  --gray-200: #E4E9EE;
-  --gray-300: #C8D0DA;
-  --gray-400: #9AA5B4;
-  --gray-500: #6B7684;
-  --gray-700: #3D4A5C;
-  --gray-900: #1A1F36;
-  --amber: #F59E0B;
-  --red: #EF4444;
-  --blue: #3B82F6;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --shadow: 0 2px 12px rgba(0,0,0,0.07);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { font-family: 'Noto Sans KR', sans-serif; background: var(--gray-50); color: var(--gray-900); }
-
-.shell { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 100px; }
-
-/* ── Header ── */
-.header {
-  background: #fff;
-  border-bottom: 1px solid var(--gray-200);
-  padding: 52px 20px 0;
-  position: sticky; top: 0; z-index: 50;
-}
-.header-inner {
-  display: flex; align-items: center; gap: 12px;
-  padding-bottom: 0;
-}
-.back-btn {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--gray-100); border: none;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; cursor: pointer; flex-shrink: 0;
-}
-.header-title { font-size: 17px; font-weight: 900; }
-
-/* ── Tabs ── */
-.tabs {
-  display: flex; gap: 0;
-  margin-top: 16px;
-  border-bottom: 2px solid var(--gray-200);
-}
-.tab {
-  flex: 1; padding: 12px 0;
-  text-align: center; font-size: 14px; font-weight: 600;
-  color: var(--gray-400); cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px; transition: all 0.2s;
-  background: none; border-top: none; border-left: none; border-right: none;
-  font-family: inherit;
-}
-.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-
-/* ── Content ── */
-.content { padding: 20px; }
-
-/* ── Pages ── */
-.page { display: none; }
-.page.active { display: block; }
-
-/* ── Form ── */
-.card {
-  background: #fff;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
-  padding: 18px;
-  margin-bottom: 14px;
-  box-shadow: var(--shadow);
-}
-.card-title {
-  font-size: 13px; font-weight: 700;
-  color: var(--gray-500); margin-bottom: 14px;
-  display: flex; align-items: center; gap: 6px;
-}
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.form-group { margin-bottom: 12px; }
-.form-group:last-child { margin-bottom: 0; }
-.form-label { font-size: 12px; font-weight: 600; color: var(--gray-500); margin-bottom: 6px; display: block; }
-.form-input {
-  width: 100%; padding: 11px 14px;
-  border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius-sm);
-  font-size: 14px; font-family: inherit;
-  color: var(--gray-900); outline: none;
-  transition: border-color 0.2s; background: #fff;
-  -webkit-appearance: none;
-}
-.form-input:focus { border-color: var(--primary); }
-select.form-input { cursor: pointer; }
-
-/* ── Chips ── */
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip {
-  padding: 7px 14px; border-radius: 20px;
-  font-size: 13px; font-weight: 500;
-  background: var(--gray-100); border: 1.5px solid var(--gray-200);
-  color: var(--gray-500); cursor: pointer;
-  transition: all 0.18s; font-family: inherit;
-  -webkit-user-select: none; user-select: none;
-}
-.chip.on {
-  background: var(--primary-light);
-  border-color: var(--primary);
-  color: var(--primary-dark);
-  font-weight: 700;
-}
-
-/* ── Quote result ── */
-.quote-result {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 14px;
-  color: #fff;
-}
-.qr-label { font-size: 12px; color: rgba(255,255,255,0.75); margin-bottom: 6px; }
-.qr-price { font-size: 36px; font-weight: 900; line-height: 1; margin-bottom: 14px; }
-.qr-rows { border-top: 1px solid rgba(255,255,255,0.2); padding-top: 12px; }
-.qr-row {
-  display: flex; justify-content: space-between;
-  font-size: 13px; color: rgba(255,255,255,0.8);
-  padding: 4px 0;
-}
-.qr-row.total {
-  color: #fff; font-weight: 700;
-  border-top: 1px dashed rgba(255,255,255,0.3);
-  margin-top: 6px; padding-top: 10px;
-}
-
-/* ── Message preview ── */
-.msg-preview {
-  background: var(--gray-50);
-  border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius-sm);
-  padding: 14px;
-  font-size: 13.5px; line-height: 1.75;
-  color: var(--gray-700);
-  white-space: pre-wrap; word-break: break-all;
-  min-height: 120px;
-  margin-bottom: 10px;
-}
-.msg-char { font-size: 11px; color: var(--gray-400); text-align: right; margin-bottom: 12px; }
-
-/* ── Buttons ── */
-.btn-primary {
-  width: 100%; padding: 16px;
-  background: var(--primary); color: #fff;
-  border: none; border-radius: var(--radius);
-  font-family: inherit; font-size: 15px; font-weight: 700;
-  cursor: pointer; margin-bottom: 10px;
-  box-shadow: 0 4px 16px rgba(0,200,150,0.3);
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: all 0.2s;
-}
-.btn-primary:active { transform: scale(0.98); }
-.btn-secondary {
-  width: 100%; padding: 14px;
-  background: #fff; color: var(--gray-700);
-  border: 1.5px solid var(--gray-200); border-radius: var(--radius);
-  font-family: inherit; font-size: 14px; font-weight: 600;
-  cursor: pointer; margin-bottom: 10px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: all 0.2s;
-}
-.btn-secondary:active { transform: scale(0.98); }
-
-/* ── Send options ── */
-.send-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-.send-opt {
-  padding: 12px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid var(--gray-200);
-  background: #fff; cursor: pointer;
-  text-align: center; font-family: inherit;
-  transition: all 0.2s;
-}
-.send-opt:active { transform: scale(0.98); }
-.send-opt.active { border-color: var(--primary); background: var(--primary-light); }
-.so-icon { font-size: 20px; margin-bottom: 4px; }
-.so-label { font-size: 12.5px; font-weight: 600; color: var(--gray-700); }
-.so-desc { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
-
-/* ── Inquiry list ── */
-.inq-item {
-  background: #fff;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  display: flex; gap: 12px; align-items: flex-start;
-  box-shadow: var(--shadow); cursor: pointer;
-  transition: all 0.15s;
-}
-.inq-item:active { transform: scale(0.98); }
-.inq-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 16px; color: #fff; flex-shrink: 0;
-}
-.inq-name { font-size: 14px; font-weight: 700; }
-.inq-meta { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
-.inq-msg { font-size: 13px; color: var(--gray-500); margin-top: 5px; }
-.badge {
-  display: inline-flex; padding: 2px 9px;
-  border-radius: 20px; font-size: 11px; font-weight: 600;
-}
-.badge-new { background: #FEE2E2; color: #DC2626; }
-.badge-wait { background: #FEF3C7; color: #D97706; }
-.badge-sent { background: var(--primary-light); color: var(--primary-dark); }
-
-/* ── FAQ ── */
-.faq-item {
-  background: #fff; border: 1px solid var(--gray-200);
-  border-radius: var(--radius); margin-bottom: 8px;
-  overflow: hidden; box-shadow: var(--shadow);
-}
-.faq-q {
-  padding: 14px 16px; font-size: 14px; font-weight: 600;
-  cursor: pointer; display: flex; align-items: center;
-  justify-content: space-between;
-}
-.faq-arrow { font-size: 12px; color: var(--gray-400); transition: transform 0.2s; }
-.faq-item.open .faq-arrow { transform: rotate(180deg); }
-.faq-a {
-  max-height: 0; overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.2s;
-  font-size: 13.5px; color: var(--gray-500); line-height: 1.7;
-  background: var(--gray-50);
-  border-top: 0px solid var(--gray-200);
-  padding: 0 16px;
-}
-.faq-item.open .faq-a {
-  max-height: 300px; padding: 14px 16px;
-  border-top: 1px solid var(--gray-200);
-}
-.faq-copy {
-  margin-top: 10px;
-  padding: 8px 14px; border-radius: 8px;
-  background: var(--primary-light); color: var(--primary-dark);
-  border: none; font-family: inherit;
-  font-size: 12.5px; font-weight: 700; cursor: pointer;
-  margin-bottom: 4px;
-}
-
-/* ── Bottom nav ── */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 100%; max-width: 480px;
-  background: rgba(255,255,255,0.95);
-  border-top: 1px solid var(--gray-200);
-  backdrop-filter: blur(20px);
-  display: flex;
-  padding: 8px 0 env(safe-area-inset-bottom, 8px);
-  z-index: 100;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-}
-.nav-item {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 3px; padding: 4px 0;
-  cursor: pointer; color: var(--gray-400); font-size: 10px;
-  transition: color 0.15s; font-family: inherit;
-  background: none; border: none;
-}
-.nav-item.active { color: var(--primary); }
-.nav-icon { font-size: 22px; line-height: 1; }
-
-/* ── Toast ── */
-#toast {
-  position: fixed; bottom: 96px; left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--gray-900); color: #fff;
-  padding: 11px 20px; border-radius: 24px;
-  font-size: 13.5px; font-weight: 500;
-  opacity: 0; transition: all 0.3s;
-  pointer-events: none; z-index: 999;
-  white-space: nowrap;
-}
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+:root{--primary:#00C896;--primary-dark:#00A87A;--primary-light:#E6FAF5;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--red:#EF4444;--blue:#3B82F6;--amber:#F59E0B;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:var(--gray-900);}
+.shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
+.header{background:#fff;border-bottom:1px solid var(--gray-200);padding:52px 20px 0;position:sticky;top:0;z-index:50;}
+.header-inner{display:flex;align-items:center;justify-content:space-between;}
+.header-left{display:flex;align-items:center;gap:12px;}
+.back-btn{width:36px;height:36px;border-radius:50%;background:var(--gray-100);border:none;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
+.header-title{font-size:17px;font-weight:900;}
+.settings-btn{width:36px;height:36px;border-radius:50%;background:var(--gray-100);border:none;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
+.tabs{display:flex;margin-top:16px;border-bottom:2px solid var(--gray-200);}
+.tab{flex:1;padding:11px 0;text-align:center;font-size:13px;font-weight:600;color:var(--gray-400);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+.content{padding:20px;}
+.page{display:none;}
+.page.active{display:block;}
+.card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);}
+.card-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:14px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-group{margin-bottom:12px;}
+.form-group:last-child{margin-bottom:0;}
+.form-label{font-size:12px;font-weight:600;color:var(--gray-500);margin-bottom:6px;display:block;}
+.form-input{width:100%;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;color:var(--gray-900);outline:none;transition:border-color 0.2s;background:#fff;-webkit-appearance:none;}
+.form-input:focus{border-color:var(--primary);}
+select.form-input{cursor:pointer;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;background:var(--gray-100);border:1.5px solid var(--gray-200);color:var(--gray-500);cursor:pointer;transition:all 0.18s;font-family:inherit;}
+.chip.on{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);font-weight:700;}
+.quote-result{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);border-radius:var(--radius);padding:20px;margin-bottom:14px;color:#fff;}
+.qr-label{font-size:12px;color:rgba(255,255,255,0.75);margin-bottom:6px;}
+.qr-price{font-size:36px;font-weight:900;line-height:1;margin-bottom:14px;}
+.qr-rows{border-top:1px solid rgba(255,255,255,0.2);padding-top:12px;}
+.qr-row{display:flex;justify-content:space-between;font-size:13px;color:rgba(255,255,255,0.8);padding:4px 0;}
+.qr-row.total{color:#fff;font-weight:700;border-top:1px dashed rgba(255,255,255,0.3);margin-top:6px;padding-top:10px;}
+.msg-preview{background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:14px;font-size:13.5px;line-height:1.75;color:var(--gray-700);white-space:pre-wrap;word-break:break-all;min-height:100px;margin-bottom:8px;}
+.msg-char{font-size:11px;color:var(--gray-400);text-align:right;margin-bottom:12px;}
+.sms-panel{background:#fff;border:1.5px solid var(--primary);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+.sms-panel-title{font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;}
+.phone-input-wrap{display:flex;gap:8px;margin-bottom:10px;}
+.phone-input{flex:1;padding:12px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;}
+.phone-input:focus{border-color:var(--primary);}
+.send-btn{padding:12px 18px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.send-btn:disabled{background:var(--gray-300);cursor:not-allowed;}
+.api-warning{font-size:11.5px;color:var(--amber);background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:8px 12px;}
+.btn-primary{width:100%;padding:16px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,200,150,0.3);display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
+.btn-primary:active{transform:scale(0.98);}
+.btn-secondary{width:100%;padding:14px;background:#fff;color:var(--gray-700);border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.tpl-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);}
+.tpl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.tpl-title{font-size:14px;font-weight:700;}
+.tpl-edit-btn{padding:5px 12px;border-radius:8px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+.faq-item{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow);}
+.faq-header{display:flex;align-items:center;padding:13px 16px;}
+.faq-q{font-size:14px;font-weight:600;flex:1;cursor:pointer;}
+.faq-btns{display:flex;gap:6px;flex-shrink:0;}
+.faq-edit-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--gray-200);background:#fff;color:var(--gray-400);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
+.faq-arrow{font-size:12px;color:var(--gray-400);cursor:pointer;transition:transform 0.2s;padding:0 4px;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.2s;font-size:13.5px;color:var(--gray-500);line-height:1.7;background:var(--gray-50);padding:0 16px;}
+.faq-item.open .faq-a{max-height:300px;padding:14px 16px;border-top:1px solid var(--gray-200);}
+.faq-copy-btn{margin-top:10px;padding:8px 14px;border-radius:8px;background:var(--primary-light);color:var(--primary-dark);border:none;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;}
+.settings-section{margin-bottom:20px;}
+.settings-title{font-size:14px;font-weight:700;color:var(--gray-700);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--primary-light);}
+.service-item{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:12px;background:var(--gray-50);border-radius:var(--radius-sm);border:1px solid var(--gray-200);}
+.service-item input{border:1px solid var(--gray-200);border-radius:8px;padding:7px 10px;font-family:inherit;font-size:13px;outline:none;background:#fff;}
+.service-item input:focus{border-color:var(--primary);}
+.service-name-input{flex:1;}
+.service-price-input{width:90px;text-align:right;}
+.service-del-btn{width:28px;height:28px;border-radius:6px;border:none;background:#FEE2E2;color:var(--red);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.add-btn{width:100%;padding:11px;border:1.5px dashed var(--gray-300);border-radius:var(--radius-sm);background:#fff;color:var(--gray-400);font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;}
+.add-btn:hover{border-color:var(--primary);color:var(--primary);}
+.price-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.price-item{text-align:center;}
+.price-item-label{font-size:11px;color:var(--gray-500);margin-bottom:6px;}
+.price-item-input{width:100%;padding:9px 8px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;font-weight:700;text-align:center;outline:none;}
+.price-item-input:focus{border-color:var(--primary);}
+.save-settings-btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,200,150,0.3);}
+.inq-item{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow);cursor:pointer;}
+.inq-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0;}
+.badge{display:inline-flex;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge-new{background:#FEE2E2;color:#DC2626;}.badge-wait{background:#FEF3C7;color:#D97706;}.badge-sent{background:var(--primary-light);color:var(--primary-dark);}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:20px 20px 40px;max-height:85vh;overflow-y:auto;}
+.modal-handle{width:36px;height:4px;background:var(--gray-200);border-radius:2px;margin:0 auto 18px;}
+.modal-title{font-size:16px;font-weight:900;margin-bottom:16px;}
+.edit-label{font-size:12px;font-weight:600;color:var(--gray-500);margin-bottom:6px;display:block;}
+.edit-input{width:100%;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;color:var(--gray-900);outline:none;margin-bottom:12px;}
+.edit-input:focus{border-color:var(--primary);}
+.edit-textarea{width:100%;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:13.5px;font-family:inherit;color:var(--gray-900);outline:none;resize:vertical;min-height:140px;line-height:1.7;margin-bottom:12px;}
+.edit-textarea:focus{border-color:var(--primary);}
+.edit-hint{font-size:11.5px;color:var(--gray-400);background:var(--gray-50);border-radius:8px;padding:10px 12px;margin-bottom:14px;line-height:1.6;}
+.edit-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-save{padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-cancel{padding:14px;background:var(--gray-100);color:var(--gray-700);border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;}
+.btn-reset{width:100%;padding:12px;margin-top:8px;background:#fff;color:var(--red);border:1.5px solid #FECACA;border-radius:var(--radius-sm);font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,0.95);border-top:1px solid var(--gray-200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;cursor:pointer;color:var(--gray-400);font-size:10px;transition:color 0.15s;font-family:inherit;background:none;border:none;}
+.nav-item.active{color:var(--primary);}
+.nav-icon{font-size:22px;line-height:1;}
+#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--gray-900);color:#fff;padding:11px 20px;border-radius:24px;font-size:13.5px;font-weight:500;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.send-loading{display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
 <div class="shell">
-
-  <!-- Header -->
-  <div class="header">
-    <div class="header-inner">
+<div class="header">
+  <div class="header-inner">
+    <div class="header-left">
       <button class="back-btn" onclick="history.back()">←</button>
       <div class="header-title">⚡ SMS 자동응답 & 견적</div>
     </div>
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('quote', this)">견적 계산</button>
-      <button class="tab" onclick="switchTab('template', this)">메시지 템플릿</button>
-      <button class="tab" onclick="switchTab('inquiry', this)">문의 목록</button>
-      <button class="tab" onclick="switchTab('faq', this)">FAQ</button>
+    <button class="settings-btn" onclick="switchTab('settings',document.querySelectorAll('.tab')[4])">⚙️</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('quote',this)">견적</button>
+    <button class="tab" onclick="switchTab('template',this)">템플릿</button>
+    <button class="tab" onclick="switchTab('inquiry',this)">문의</button>
+    <button class="tab" onclick="switchTab('faq',this)">FAQ</button>
+    <button class="tab" onclick="switchTab('settings',this)">⚙️설정</button>
+  </div>
+</div>
+<div class="content">
+
+<!-- 견적 -->
+<div id="page-quote" class="page active">
+  <div class="card">
+    <div class="card-title">👤 고객 정보</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">고객 이름</label><input class="form-input" id="q-name" placeholder="김OO" oninput="buildMsg()"/></div>
+      <div class="form-group"><label class="form-label">연락처</label><input class="form-input" id="q-phone" placeholder="010-0000-0000" type="tel"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">평수</label><input class="form-input" id="q-size" type="number" placeholder="예: 32" oninput="calcQuote()"/></div>
+      <div class="form-group"><label class="form-label">청소 유형</label><select class="form-input" id="q-type" onchange="calcQuote()"><option value="move-in">입주 전</option><option value="move-out">이사 후</option><option value="new">신축 준공</option><option value="life">생활 청소</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">주거 형태</label><select class="form-input" id="q-house" onchange="calcQuote()"><option value="1.0">아파트</option><option value="0.95">빌라/다세대</option><option value="1.1">단독주택</option><option value="1.05">오피스텔</option></select></div>
+      <div class="form-group"><label class="form-label">희망 날짜</label><input class="form-input" id="q-date" type="date" oninput="buildMsg()"/></div>
     </div>
   </div>
-
-  <div class="content">
-
-    <!-- ── 견적 계산 ── -->
-    <div id="page-quote" class="page active">
-
-      <div class="card">
-        <div class="card-title">👤 고객 정보</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">고객 이름</label>
-            <input class="form-input" id="q-name" placeholder="김OO" oninput="buildMsg()" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">연락처</label>
-            <input class="form-input" id="q-phone" placeholder="010-0000-0000" type="tel" />
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">평수</label>
-            <input class="form-input" id="q-size" type="number" placeholder="예: 32" oninput="calcQuote()" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">청소 유형</label>
-            <select class="form-input" id="q-type" onchange="calcQuote()">
-              <option value="move-in">입주 전 청소</option>
-              <option value="move-out">이사 후 청소</option>
-              <option value="new">신축 준공 청소</option>
-              <option value="life">생활 청소</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">주거 형태</label>
-            <select class="form-input" id="q-house" onchange="calcQuote()">
-              <option value="1.0">아파트</option>
-              <option value="0.95">빌라/다세대</option>
-              <option value="1.1">단독주택</option>
-              <option value="1.05">오피스텔</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">희망 날짜</label>
-            <input class="form-input" id="q-date" type="date" oninput="buildMsg()" />
-          </div>
-        </div>
+  <div class="card"><div class="card-title">✅ 추가 서비스</div><div class="chips" id="extra-chips"></div></div>
+  <div class="card"><div class="card-title">📤 발송 옵션</div><div class="chips"><button class="chip on" id="opt-video" onclick="this.classList.toggle('on');buildMsg()">📹 홍보영상</button><button class="chip on" id="opt-booking" onclick="this.classList.toggle('on');buildMsg()">📅 예약링크</button><button class="chip" id="opt-review" onclick="this.classList.toggle('on');buildMsg()">⭐ 후기링크</button><button class="chip on" id="opt-kakao" onclick="this.classList.toggle('on');buildMsg()">💬 카카오</button></div></div>
+  <div class="quote-result" id="quote-result" style="display:none;"><div class="qr-label">예상 견적금액 (VAT 포함)</div><div class="qr-price" id="qr-price">—</div><div class="qr-rows" id="qr-rows"></div></div>
+  <div class="card">
+    <div class="card-title">💬 자동 생성 메시지</div>
+    <div class="msg-preview" id="msg-preview">평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️</div>
+    <div class="msg-char" id="msg-char"></div>
+    <div class="sms-panel">
+      <div class="sms-panel-title">📱 문자 직접 발송</div>
+      <div class="phone-input-wrap">
+        <input class="phone-input" id="send-phone" placeholder="발송할 번호 (010-0000-0000)" type="tel"/>
+        <button class="send-btn" id="send-btn" onclick="sendSMS()"><span id="send-btn-text">발송</span><div class="send-loading" id="send-loading"></div></button>
       </div>
-
-      <div class="card">
-        <div class="card-title">✅ 추가 서비스</div>
-        <div class="chips">
-          <button class="chip" id="opt-balcony" onclick="toggleChip(this); calcQuote()">🪟 발코니 +3만</button>
-          <button class="chip" id="opt-window" onclick="toggleChip(this); calcQuote()">✨ 창문 +4만</button>
-          <button class="chip" id="opt-hood" onclick="toggleChip(this); calcQuote()">🍳 후드 +2.5만</button>
-          <button class="chip" id="opt-ac" onclick="toggleChip(this); calcQuote()">❄️ 에어컨 +5만</button>
-          <button class="chip" id="opt-fridge" onclick="toggleChip(this); calcQuote()">🧊 냉장고 +3.5만</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📤 발송 옵션</div>
-        <div class="chips">
-          <button class="chip on" id="opt-video" onclick="toggleChip(this); buildMsg()">📹 홍보영상</button>
-          <button class="chip on" id="opt-booking" onclick="toggleChip(this); buildMsg()">📅 예약링크</button>
-          <button class="chip" id="opt-review" onclick="toggleChip(this); buildMsg()">⭐ 후기링크</button>
-          <button class="chip on" id="opt-kakao" onclick="toggleChip(this); buildMsg()">💬 카카오</button>
-        </div>
-      </div>
-
-      <!-- 견적 결과 -->
-      <div class="quote-result" id="quote-result" style="display:none;">
-        <div class="qr-label">예상 견적금액 (VAT 포함)</div>
-        <div class="qr-price" id="qr-price">—</div>
-        <div class="qr-rows" id="qr-rows"></div>
-      </div>
-
-      <!-- 메시지 미리보기 -->
-      <div class="card">
-        <div class="card-title">💬 자동 생성 메시지</div>
-        <div class="msg-preview" id="msg-preview">평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️</div>
-        <div class="msg-char" id="msg-char"></div>
-
-        <div class="send-opts">
-          <button class="send-opt active" id="so-sms" onclick="setSendOpt('sms')">
-            <div class="so-icon">💬</div>
-            <div class="so-label">문자 발송</div>
-            <div class="so-desc">복사 후 문자앱</div>
-          </button>
-          <button class="send-opt" id="so-kakao" onclick="setSendOpt('kakao')">
-            <div class="so-icon">💛</div>
-            <div class="so-label">카카오톡</div>
-            <div class="so-desc">복사 후 카카오</div>
-          </button>
-        </div>
-
-        <button class="btn-primary" onclick="copyMsg()">📋 메시지 복사 → 바로 발송</button>
-        <button class="btn-secondary" onclick="saveInquiry()">💾 문의 저장</button>
-      </div>
+      <div class="api-warning" id="api-warning">⚠️ CoolSMS API 키가 없습니다. ⚙️설정 탭에서 입력해 주세요.</div>
     </div>
-
-    <!-- ── 메시지 템플릿 ── -->
-    <div id="page-template" class="page">
-      <div class="card" style="margin-bottom:14px;">
-        <div class="card-title">👤 개인화 설정</div>
-        <div class="form-row">
-          <div class="form-group" style="margin:0;">
-            <label class="form-label">고객 이름</label>
-            <input class="form-input" id="t-name" placeholder="김OO" oninput="renderTemplates()" />
-          </div>
-          <div class="form-group" style="margin:0;">
-            <label class="form-label">평수</label>
-            <input class="form-input" id="t-size" type="number" placeholder="32" oninput="renderTemplates()" />
-          </div>
-        </div>
-      </div>
-      <div id="template-list"></div>
-    </div>
-
-    <!-- ── 문의 목록 ── -->
-    <div id="page-inquiry" class="page">
-      <div class="card" style="margin-bottom:14px;">
-        <div class="card-title">➕ 새 문의 등록</div>
-        <div class="form-row">
-          <div class="form-group" style="margin:0;">
-            <label class="form-label">이름</label>
-            <input class="form-input" id="n-name" placeholder="김OO" />
-          </div>
-          <div class="form-group" style="margin:0;">
-            <label class="form-label">연락처</label>
-            <input class="form-input" id="n-phone" placeholder="010-0000-0000" type="tel" />
-          </div>
-        </div>
-        <div class="form-row" style="margin-top:10px;">
-          <div class="form-group" style="margin:0;">
-            <label class="form-label">평수</label>
-            <input class="form-input" id="n-size" type="number" placeholder="32" />
-          </div>
-          <div class="form-group" style="margin:0;">
-            <label class="form-label">유형</label>
-            <select class="form-input" id="n-type">
-              <option>입주 전 청소</option>
-              <option>이사 후 청소</option>
-              <option>신축 준공</option>
-              <option>생활 청소</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn-primary" style="margin-top:14px;margin-bottom:0;" onclick="addInquiry()">+ 문의 추가</button>
-      </div>
-      <div id="inquiry-list"></div>
-    </div>
-
-    <!-- ── FAQ ── -->
-    <div id="page-faq" class="page">
-      <div id="faq-list"></div>
-    </div>
-
+    <button class="btn-primary" onclick="copyMsg()">📋 메시지 복사 → 직접 발송</button>
+    <button class="btn-secondary" onclick="saveInquiry()">💾 문의 저장</button>
   </div>
 </div>
 
-<!-- Bottom Nav -->
+<!-- 템플릿 -->
+<div id="page-template" class="page">
+  <div class="card" style="margin-bottom:14px;"><div class="card-title">👤 개인화</div><div class="form-row"><div class="form-group" style="margin:0;"><label class="form-label">고객 이름</label><input class="form-input" id="t-name" placeholder="김OO" oninput="renderTemplates()"/></div><div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="t-size" type="number" placeholder="32" oninput="renderTemplates()"/></div></div></div>
+  <div id="template-list"></div>
+</div>
+
+<!-- 문의 -->
+<div id="page-inquiry" class="page">
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">➕ 새 문의 등록</div>
+    <div class="form-row"><div class="form-group" style="margin:0;"><label class="form-label">이름</label><input class="form-input" id="n-name" placeholder="김OO"/></div><div class="form-group" style="margin:0;"><label class="form-label">연락처</label><input class="form-input" id="n-phone" placeholder="010-0000-0000" type="tel"/></div></div>
+    <div class="form-row" style="margin-top:10px;"><div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="n-size" type="number" placeholder="32"/></div><div class="form-group" style="margin:0;"><label class="form-label">유형</label><select class="form-input" id="n-type"><option>입주 전 청소</option><option>이사 후 청소</option><option>신축 준공</option><option>생활 청소</option></select></div></div>
+    <button class="btn-primary" style="margin-top:14px;margin-bottom:0;" onclick="addInquiry()">+ 문의 추가</button>
+  </div>
+  <div id="inquiry-list"></div>
+</div>
+
+<!-- FAQ -->
+<div id="page-faq" class="page">
+  <div id="faq-list"></div>
+  <button class="add-btn" onclick="addFaq()" style="margin-top:4px;">+ FAQ 항목 추가</button>
+</div>
+
+<!-- 설정 -->
+<div id="page-settings" class="page">
+  <div class="settings-section">
+    <div class="settings-title">📱 CoolSMS API 설정 (문자 직접 발송)</div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="form-group"><label class="form-label">API Key</label><input class="form-input" id="s-api-key" placeholder="CoolSMS API Key" type="password"/></div>
+      <div class="form-group"><label class="form-label">API Secret</label><input class="form-input" id="s-api-secret" placeholder="CoolSMS API Secret" type="password"/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">발신 번호 (CoolSMS 등록 번호)</label><input class="form-input" id="s-from-phone" placeholder="010-0000-0000"/></div>
+      <div style="font-size:11.5px;color:var(--gray-400);margin-top:10px;line-height:1.6;">💡 <a href="https://coolsms.co.kr" target="_blank" style="color:var(--primary);">coolsms.co.kr</a> 가입 후 API 키를 발급받으세요. 건당 약 20원입니다.</div>
+    </div>
+  </div>
+  <div class="settings-section">
+    <div class="settings-title">🏢 업체 기본 정보</div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="form-row"><div class="form-group"><label class="form-label">업체명</label><input class="form-input" id="s-company" placeholder="서프로클린"/></div><div class="form-group"><label class="form-label">대표 전화</label><input class="form-input" id="s-phone" placeholder="010-0000-0000" type="tel"/></div></div>
+      <div class="form-group"><label class="form-label">홍보영상 URL</label><input class="form-input" id="s-video" placeholder="https://youtu.be/..."/></div>
+      <div class="form-group"><label class="form-label">카카오 채널</label><input class="form-input" id="s-kakao" placeholder="https://pf.kakao.com/..."/></div>
+      <div class="form-group"><label class="form-label">후기 링크</label><input class="form-input" id="s-review" placeholder="https://..."/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">예약 폼 링크</label><input class="form-input" id="s-booking" placeholder="https://forms.gle/..."/></div>
+    </div>
+  </div>
+  <div class="settings-section">
+    <div class="settings-title">💰 평당 단가 (원/평, VAT 전)</div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="price-grid">
+        <div class="price-item"><div class="price-item-label">~20평</div><input class="price-item-input" id="s-p1" type="number" value="8000"/><div style="font-size:10px;color:var(--gray-400);margin-top:4px;">원/평</div></div>
+        <div class="price-item"><div class="price-item-label">21~35평</div><input class="price-item-input" id="s-p2" type="number" value="6500"/><div style="font-size:10px;color:var(--gray-400);margin-top:4px;">원/평</div></div>
+        <div class="price-item"><div class="price-item-label">36평~</div><input class="price-item-input" id="s-p3" type="number" value="5500"/><div style="font-size:10px;color:var(--gray-400);margin-top:4px;">원/평</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="settings-section">
+    <div class="settings-title">✅ 추가 서비스 & 금액</div>
+    <div id="s-extras-list"></div>
+    <button class="add-btn" onclick="addExtraService()">+ 서비스 항목 추가</button>
+  </div>
+  <button class="save-settings-btn" onclick="saveSettings()">💾 전체 설정 저장</button>
+  <div style="height:16px;"></div>
+</div>
+
+</div>
+</div>
+
 <div class="bottom-nav">
-  <button class="nav-item" onclick="location.href='index.html'">
-    <div class="nav-icon">🏠</div><div>홈</div>
-  </button>
-  <button class="nav-item active">
-    <div class="nav-icon">⚡</div><div>견적</div>
-  </button>
-  <button class="nav-item" onclick="toast('스케줄 화면은 준비 중입니다')">
-    <div class="nav-icon">📅</div><div>스케줄</div>
-  </button>
-  <button class="nav-item" onclick="toast('커뮤니티는 준비 중입니다')">
-    <div class="nav-icon">👥</div><div>커뮤니티</div>
-  </button>
-  <button class="nav-item" onclick="toast('MY 페이지는 준비 중입니다')">
-    <div class="nav-icon">👤</div><div>MY</div>
-  </button>
+  <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">🏠</div><div>홈</div></button>
+  <button class="nav-item active"><div class="nav-icon">⚡</div><div>견적</div></button>
+  <button class="nav-item" onclick="toast('스케줄 준비 중')"><div class="nav-icon">📅</div><div>스케줄</div></button>
+  <button class="nav-item" onclick="toast('커뮤니티 준비 중')"><div class="nav-icon">👥</div><div>커뮤니티</div></button>
+  <button class="nav-item" onclick="toast('MY 준비 중')"><div class="nav-icon">👤</div><div>MY</div></button>
+</div>
+
+<!-- 템플릿 편집 모달 -->
+<div class="modal-overlay" id="tpl-modal" onclick="if(event.target===this)closeTplModal()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="tpl-modal-title">✏️ 템플릿 수정</div>
+    <label class="edit-label">이모지</label><input class="edit-input" id="tpl-icon" style="width:70px;"/>
+    <label class="edit-label">제목</label><input class="edit-input" id="tpl-title-input"/>
+    <label class="edit-label">메시지 내용</label>
+    <div class="edit-hint">💡 변수: <b>{이름}</b> · <b>{평수}</b> · <b>{업체명}</b> · <b>{전화번호}</b></div>
+    <textarea class="edit-textarea" id="tpl-content" rows="7"></textarea>
+    <div class="edit-btns"><button class="btn-cancel" onclick="closeTplModal()">취소</button><button class="btn-save" onclick="saveTpl()">저장</button></div>
+    <button class="btn-reset" onclick="resetTpl()">↺ 기본값으로 초기화</button>
+  </div>
+</div>
+
+<!-- FAQ 편집 모달 -->
+<div class="modal-overlay" id="faq-modal" onclick="if(event.target===this)closeFaqModal()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">✏️ FAQ 수정</div>
+    <label class="edit-label">질문</label><input class="edit-input" id="faq-q-input" placeholder="질문을 입력하세요"/>
+    <label class="edit-label">답변</label><textarea class="edit-textarea" id="faq-a-input" rows="5" placeholder="답변을 입력하세요"></textarea>
+    <div class="edit-btns"><button class="btn-cancel" onclick="closeFaqModal()">취소</button><button class="btn-save" onclick="saveFaqItem()">저장</button></div>
+    <button class="btn-reset" onclick="deleteFaqItem()">🗑 이 항목 삭제</button>
+  </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-// ── 설정 ──────────────────────────────────
-const cfg = {
-  company: '서프로클린',
-  phone: '010-1234-5678',
-  video: 'https://youtu.be/샘플영상링크',
-  kakao: 'https://pf.kakao.com/샘플',
-  review: 'https://naver.me/후기링크',
-  booking: 'https://forms.gle/예약폼링크',
-};
+const SERVER='https://ssakssak-server-production-1b4b.up.railway.app';
+const DEFAULT_CFG={company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}]};
+let cfg=JSON.parse(localStorage.getItem('ssak_cfg')||'null')||{...DEFAULT_CFG,extras:[...DEFAULT_CFG.extras]};
+function saveCfg(){localStorage.setItem('ssak_cfg',JSON.stringify(cfg));}
 
-// ── 탭 전환 ──────────────────────────────
-function switchTab(name, btn) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('page-' + name).classList.add('active');
-  if (name === 'template') renderTemplates();
-  if (name === 'inquiry') renderInquiries();
-  if (name === 'faq') renderFaq();
+function switchTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.getElementById('page-'+name).classList.add('active');
+  if(name==='template')renderTemplates();
+  if(name==='inquiry')renderInquiries();
+  if(name==='faq')renderFaq();
+  if(name==='settings')loadSettingsForm();
 }
 
-// ── 칩 토글 ──────────────────────────────
-function toggleChip(el) { el.classList.toggle('on'); }
-
-// ── 발송 옵션 ─────────────────────────────
-let sendOpt = 'sms';
-function setSendOpt(opt) {
-  sendOpt = opt;
-  document.querySelectorAll('.send-opt').forEach(s => s.classList.remove('active'));
-  document.getElementById('so-' + opt).classList.add('active');
+function renderExtraChips(){
+  document.getElementById('extra-chips').innerHTML=cfg.extras.map((e,i)=>
+    `<button class="chip" id="extra-${i}" onclick="this.classList.toggle('on');calcQuote()">${e.label} +${(e.price/10000).toFixed(1).replace('.0','')}만</button>`
+  ).join('');
 }
 
-// ── 견적 계산 ─────────────────────────────
-const rates = { 'move-in': 1.0, 'move-out': 0.85, 'new': 1.15, 'life': 0.65 };
-const typeLabels = { 'move-in': '입주 전', 'move-out': '이사 후', 'new': '신축 준공', 'life': '생활 청소' };
-const extraInfo = {
-  balcony: { label: '발코니', price: 30000 },
-  window:  { label: '창문청소', price: 40000 },
-  hood:    { label: '주방후드', price: 25000 },
-  ac:      { label: '에어컨', price: 50000 },
-  fridge:  { label: '냉장고', price: 35000 },
-};
+const typeRates={'move-in':1.0,'move-out':0.85,'new':1.15,'life':0.65};
+const typeLabels={'move-in':'입주 전','move-out':'이사 후','new':'신축 준공','life':'생활 청소'};
+function getBaseRate(s){return s<=20?cfg.p1:s<=35?cfg.p2:cfg.p3;}
 
-function getBaseRate(size) {
-  if (size <= 20) return 8000;
-  if (size <= 35) return 6500;
-  return 5500;
+function calcQuote(){
+  const size=parseInt(document.getElementById('q-size').value);
+  const type=document.getElementById('q-type').value;
+  const adj=parseFloat(document.getElementById('q-house').value);
+  if(!size){document.getElementById('quote-result').style.display='none';buildMsg();return;}
+  const base=Math.round(size*getBaseRate(size)*adj*typeRates[type]);
+  let extraTotal=0,extraItems=[];
+  cfg.extras.forEach((e,i)=>{if(document.getElementById('extra-'+i)?.classList.contains('on')){extraTotal+=e.price;extraItems.push(e);}});
+  const sub=base+extraTotal,vat=Math.round(sub*0.1),total=sub+vat;
+  document.getElementById('quote-result').style.display='block';
+  document.getElementById('qr-price').textContent=total.toLocaleString()+'원';
+  document.getElementById('qr-rows').innerHTML=`<div class="qr-row"><span>기본 (${size}평)</span><span>${base.toLocaleString()}원</span></div>${extraItems.map(e=>`<div class="qr-row"><span>+ ${e.label}</span><span>${e.price.toLocaleString()}원</span></div>`).join('')}<div class="qr-row"><span>부가세 10%</span><span>${vat.toLocaleString()}원</span></div><div class="qr-row total"><span>최종 합계</span><span>${total.toLocaleString()}원</span></div>`;
+  buildMsg(size,type,total,extraItems);
 }
 
-function calcQuote() {
-  const size = parseInt(document.getElementById('q-size').value);
-  const type = document.getElementById('q-type').value;
-  const houseAdj = parseFloat(document.getElementById('q-house').value);
-
-  if (!size) {
-    document.getElementById('quote-result').style.display = 'none';
-    buildMsg();
-    return;
-  }
-
-  const base = Math.round(size * getBaseRate(size) * houseAdj * rates[type]);
-  let extraTotal = 0;
-  let extraItems = [];
-
-  Object.keys(extraInfo).forEach(k => {
-    if (document.getElementById('opt-' + k)?.classList.contains('on')) {
-      extraTotal += extraInfo[k].price;
-      extraItems.push(extraInfo[k]);
-    }
-  });
-
-  const sub = base + extraTotal;
-  const vat = Math.round(sub * 0.1);
-  const total = sub + vat;
-
-  document.getElementById('quote-result').style.display = 'block';
-  document.getElementById('qr-price').textContent = total.toLocaleString() + '원';
-  document.getElementById('qr-rows').innerHTML = `
-    <div class="qr-row"><span>기본 청소 (${size}평)</span><span>${base.toLocaleString()}원</span></div>
-    ${extraItems.map(e => `<div class="qr-row"><span>+ ${e.label}</span><span>${e.price.toLocaleString()}원</span></div>`).join('')}
-    <div class="qr-row"><span>부가세 10%</span><span>${vat.toLocaleString()}원</span></div>
-    <div class="qr-row total"><span>최종 합계</span><span>${total.toLocaleString()}원</span></div>
-  `;
-
-  buildMsg(size, type, total, extraItems);
+function buildMsg(size,type,total,extraItems){
+  size=size||parseInt(document.getElementById('q-size').value);
+  const name=document.getElementById('q-name').value.trim()||'고객님';
+  const date=document.getElementById('q-date').value;
+  type=type||document.getElementById('q-type').value;
+  if(!size){document.getElementById('msg-preview').textContent='평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️';document.getElementById('msg-char').textContent='';return;}
+  if(!total){const adj=parseFloat(document.getElementById('q-house').value);const base=Math.round(size*getBaseRate(size)*adj*typeRates[type]);const vat=Math.round(base*0.1);total=base+vat;}
+  const nameStr=name==='고객님'?'고객님':name+'님';
+  let msg=`안녕하세요, ${nameStr}! 😊\n${cfg.company} 입주청소입니다.\n\n━━━━ 견적 안내 ━━━━\n🏠 ${size}평 ${typeLabels[type]} 청소\n💰 ${total.toLocaleString()}원 (VAT포함)\n⏰ 약 ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}시간\n👥 2~3명 투입\n`;
+  if(extraItems&&extraItems.length)msg+=`✅ 추가: ${extraItems.map(e=>e.label).join(', ')}\n`;
+  if(date)msg+=`📅 희망일: ${date}\n`;
+  msg+=`━━━━━━━━━━━━━━\n\n`;
+  if(document.getElementById('opt-video')?.classList.contains('on'))msg+=`📹 시공영상: ${cfg.video}\n\n`;
+  if(document.getElementById('opt-review')?.classList.contains('on'))msg+=`⭐ 고객후기: ${cfg.review}\n\n`;
+  if(document.getElementById('opt-booking')?.classList.contains('on'))msg+=`📅 예약신청: ${cfg.booking}\n\n`;
+  if(document.getElementById('opt-kakao')?.classList.contains('on'))msg+=`💬 카카오: ${cfg.kakao}\n\n`;
+  msg+=`📞 ${cfg.phone}`;
+  document.getElementById('msg-preview').textContent=msg;
+  document.getElementById('msg-char').textContent=`${msg.length}자 (${msg.length>90?'LMS 장문':'SMS 단문'})`;
+  const phone=document.getElementById('q-phone').value.trim();
+  if(phone)document.getElementById('send-phone').value=phone;
 }
 
-function buildMsg(size, type, total, extraItems) {
-  size = size || parseInt(document.getElementById('q-size').value);
-  const name = document.getElementById('q-name').value.trim() || '고객님';
-  const date = document.getElementById('q-date').value;
-  type = type || document.getElementById('q-type').value;
-
-  if (!size) {
-    document.getElementById('msg-preview').textContent = '평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️';
-    document.getElementById('msg-char').textContent = '';
-    return;
-  }
-
-  if (!total) {
-    const houseAdj = parseFloat(document.getElementById('q-house').value);
-    const base = Math.round(size * getBaseRate(size) * houseAdj * rates[type]);
-    const vat = Math.round(base * 0.1);
-    total = base + vat;
-  }
-
-  const nameStr = name === '고객님' ? '고객님' : name + '님';
-  let msg = `안녕하세요, ${nameStr}! 😊\n${cfg.company} 입주청소입니다.\n\n`;
-  msg += `━━━━ 견적 안내 ━━━━\n`;
-  msg += `🏠 ${size}평 ${typeLabels[type]} 청소\n`;
-  msg += `💰 ${total.toLocaleString()}원 (VAT포함)\n`;
-  msg += `⏰ 약 ${Math.max(3, Math.ceil(size/8))}~${Math.max(4, Math.ceil(size/6))}시간\n`;
-  msg += `👥 2~3명 투입\n`;
-  if (extraItems && extraItems.length) {
-    msg += `✅ 추가: ${extraItems.map(e => e.label).join(', ')}\n`;
-  }
-  if (date) msg += `📅 희망일: ${date}\n`;
-  msg += `━━━━━━━━━━━━━━\n\n`;
-
-  if (document.getElementById('opt-video')?.classList.contains('on')) msg += `📹 시공영상: ${cfg.video}\n\n`;
-  if (document.getElementById('opt-review')?.classList.contains('on')) msg += `⭐ 고객후기: ${cfg.review}\n\n`;
-  if (document.getElementById('opt-booking')?.classList.contains('on')) msg += `📅 예약신청: ${cfg.booking}\n\n`;
-  if (document.getElementById('opt-kakao')?.classList.contains('on')) msg += `💬 카카오: ${cfg.kakao}\n\n`;
-  msg += `📞 ${cfg.phone}`;
-
-  document.getElementById('msg-preview').textContent = msg;
-  document.getElementById('msg-char').textContent = `${msg.length}자 (${msg.length > 90 ? 'LMS 장문' : 'SMS 단문'})`;
+function copyMsg(){
+  const t=document.getElementById('msg-preview').textContent;
+  if(t.includes('자동 생성')){toast('평수를 먼저 입력해 주세요!');return;}
+  navigator.clipboard.writeText(t).then(()=>toast('📋 메시지 복사 완료!'));
 }
 
-function copyMsg() {
-  const t = document.getElementById('msg-preview').textContent;
-  if (t.includes('자동 생성')) { toast('평수를 먼저 입력해 주세요!'); return; }
-  navigator.clipboard.writeText(t).then(() => toast('📋 메시지 복사 완료! 문자앱에 붙여넣기 하세요'));
+function updateApiWarning(){
+  const w=document.getElementById('api-warning');
+  if(w)w.style.display=cfg.apiKey&&cfg.apiSecret?'none':'block';
 }
 
-// ── 문의 저장 ─────────────────────────────
-let inquiries = [
-  { id: 1, name: '김민지', phone: '010-1234-5678', size: 34, type: '입주 전 청소', status: '답변 대기' },
-  { id: 2, name: '박준호', phone: '010-9876-5432', size: 25, type: '이사 후 청소', status: '견적 발송' },
-  { id: 3, name: '이수연', phone: '010-5555-7777', size: 42, type: '신축 준공', status: '답변 대기' },
-];
-let nextId = 4;
-
-function saveInquiry() {
-  const name = document.getElementById('q-name').value.trim();
-  const phone = document.getElementById('q-phone').value.trim();
-  const size = parseInt(document.getElementById('q-size').value);
-  const type = typeLabels[document.getElementById('q-type').value] + ' 청소';
-  if (!name || !phone || !size) { toast('이름, 연락처, 평수를 입력해 주세요'); return; }
-  inquiries.unshift({ id: nextId++, name, phone, size, type, status: '견적 발송' });
-  toast('✅ 문의가 저장되었습니다!');
+async function sendSMS(){
+  const msg=document.getElementById('msg-preview').textContent;
+  const to=document.getElementById('send-phone').value.replace(/-/g,'').trim();
+  if(msg.includes('자동 생성')){toast('평수를 먼저 입력해 주세요!');return;}
+  if(!to||to.length<10){toast('발송할 전화번호를 입력해 주세요');return;}
+  if(!cfg.apiKey||!cfg.apiSecret){toast('⚙️설정에서 CoolSMS API 키를 입력해 주세요!');switchTab('settings',null);return;}
+  const btn=document.getElementById('send-btn');
+  document.getElementById('send-btn-text').textContent='발송 중';
+  document.getElementById('send-loading').style.display='block';
+  btn.disabled=true;
+  try{
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,from:cfg.fromPhone.replace(/-/g,''),apiKey:cfg.apiKey,apiSecret:cfg.apiSecret})});
+    const data=await res.json();
+    if(data.success)toast('✅ 문자 발송 완료!');
+    else toast('❌ 발송 실패: '+(data.error||'오류'));
+  }catch(err){toast('서버 연결 오류.');}
+  finally{document.getElementById('send-btn-text').textContent='발송';document.getElementById('send-loading').style.display='none';btn.disabled=false;}
 }
 
-function addInquiry() {
-  const name = document.getElementById('n-name').value.trim();
-  const phone = document.getElementById('n-phone').value.trim();
-  const size = parseInt(document.getElementById('n-size').value);
-  const type = document.getElementById('n-type').value;
-  if (!name || !phone || !size) { toast('이름, 연락처, 평수를 입력해 주세요'); return; }
-  inquiries.unshift({ id: nextId++, name, phone, size, type, status: '답변 대기' });
-  ['n-name','n-phone','n-size'].forEach(id => document.getElementById(id).value = '');
-  renderInquiries();
-  toast('✅ 문의가 추가되었습니다!');
-}
+let inquiries=[{id:1,name:'김민지',phone:'010-1234-5678',size:34,type:'입주 전 청소',status:'답변 대기'},{id:2,name:'박준호',phone:'010-9876-5432',size:25,type:'이사 후 청소',status:'견적 발송'}];
+let nextInqId=3;
+const avatarColors=['#00C896','#3B82F6','#8B5CF6','#F59E0B','#EF4444'];
+const statusBadge={'답변 대기':'badge-wait','견적 발송':'badge-sent','신규':'badge-new'};
 
-const statusBadge = {
-  '답변 대기': 'badge-wait',
-  '견적 발송': 'badge-sent',
-  '신규': 'badge-new',
-};
-const avatarColors = ['#00C896','#3B82F6','#8B5CF6','#F59E0B','#EF4444'];
+function saveInquiry(){const name=document.getElementById('q-name').value.trim();const phone=document.getElementById('q-phone').value.trim();const size=parseInt(document.getElementById('q-size').value);const type=typeLabels[document.getElementById('q-type').value]+'청소';if(!name||!phone||!size){toast('이름, 연락처, 평수를 입력해 주세요');return;}inquiries.unshift({id:nextInqId++,name,phone,size,type,status:'견적 발송'});toast('✅ 문의 저장!');}
+function addInquiry(){const name=document.getElementById('n-name').value.trim();const phone=document.getElementById('n-phone').value.trim();const size=parseInt(document.getElementById('n-size').value);const type=document.getElementById('n-type').value;if(!name||!phone||!size){toast('이름, 연락처, 평수를 입력해 주세요');return;}inquiries.unshift({id:nextInqId++,name,phone,size,type,status:'답변 대기'});['n-name','n-phone','n-size'].forEach(id=>document.getElementById(id).value='');renderInquiries();toast('✅ 추가 완료!');}
+function renderInquiries(){document.getElementById('inquiry-list').innerHTML=inquiries.map((inq,i)=>`<div class="inq-item" onclick="quickQuote('${inq.name}','${inq.phone}','${inq.size}')"><div class="inq-avatar" style="background:${avatarColors[i%5]}">${inq.name[0]}</div><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:6px;"><div style="font-size:14px;font-weight:700;">${inq.name}</div><span class="badge ${statusBadge[inq.status]||'badge-wait'}">${inq.status}</span></div><div style="font-size:12px;color:var(--gray-400);margin-top:2px;">${inq.phone} · ${inq.size}평 · ${inq.type}</div></div><div style="font-size:12px;color:var(--primary);font-weight:700;flex-shrink:0;">견적 ›</div></div>`).join('');}
+function quickQuote(name,phone,size){switchTab('quote',document.querySelectorAll('.tab')[0]);document.getElementById('q-name').value=name;document.getElementById('q-phone').value=phone;document.getElementById('q-size').value=size;calcQuote();window.scrollTo({top:0,behavior:'smooth'});}
 
-function renderInquiries() {
-  document.getElementById('inquiry-list').innerHTML = inquiries.map((inq, i) => `
-    <div class="inq-item" onclick="quickQuote('${inq.name}','${inq.phone}','${inq.size}')">
-      <div class="inq-avatar" style="background:${avatarColors[i % 5]}">${inq.name[0]}</div>
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-          <div class="inq-name">${inq.name}</div>
-          <span class="badge ${statusBadge[inq.status] || 'badge-wait'}">${inq.status}</span>
-        </div>
-        <div class="inq-meta">${inq.phone} · ${inq.size}평 · ${inq.type}</div>
-      </div>
-      <div style="font-size:12px;color:var(--primary);font-weight:700;flex-shrink:0;">견적 ›</div>
-    </div>
-  `).join('');
-}
-
-function quickQuote(name, phone, size) {
-  switchTab('quote', document.querySelectorAll('.tab')[0]);
-  document.getElementById('q-name').value = name;
-  document.getElementById('q-phone').value = phone;
-  document.getElementById('q-size').value = size;
-  calcQuote();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ── 템플릿 ────────────────────────────────
-const templates = [
-  { icon: '👋', title: '첫 문의 응답', gen: (n, s) =>
-    `안녕하세요${n ? ', ' + n + '님' : ''}! 😊\n${cfg.company} 입주청소 전문팀입니다.\n\n정확한 견적을 위해 아래 내용을 알려주시겠어요?\n\n📍 평수 / 주거 형태\n🧹 청소 유형 (입주 전/이사 후/신축)\n📅 희망 날짜\n\n빠르게 안내드리겠습니다! 🙏\n📞 ${cfg.phone}`
-  },
-  { icon: '📞', title: '부재중 자동응답', gen: (n, s) =>
-    `안녕하세요! ${cfg.company}입니다. 📞\n\n현재 작업 중이라 전화를 못 받았습니다.\n평수와 희망 날짜를 문자로 보내주시면 즉시 견적 안내드릴게요!\n\n📹 시공영상: ${cfg.video}\n💬 카카오: ${cfg.kakao}\n📞 ${cfg.phone}`
-  },
-  { icon: '✅', title: '예약 확정 안내', gen: (n, s) =>
-    `${n ? n + '님' : '고객님'}, 예약이 확정되었습니다! 🎉\n\n작업 당일 부탁드립니다:\n🚗 주차 공간 1자리\n🛗 엘리베이터 이용 가능 여부\n🔑 현관 입장 방법\n\n최선을 다하겠습니다! 💪\n📞 ${cfg.phone}`
-  },
-  { icon: '📅', title: '작업 전날 리마인더', gen: (n, s) =>
-    `${n ? n + '님' : '고객님'}, 내일 일정 확인 연락드립니다! 😊\n\n🕙 내일 오전 10시 도착 예정입니다.\n주소와 동/호수 한번 더 확인 부탁드려요!\n\n감사합니다 🙏\n📞 ${cfg.phone}`
-  },
-  { icon: '📹', title: '홍보영상 발송', gen: (n, s) =>
-    `${n ? n + '님' : '안녕하세요'} 😊\n\n${cfg.company} 시공 영상과 후기입니다!\n\n📹 시공영상: ${cfg.video}\n⭐ 고객후기: ${cfg.review}\n📅 예약신청: ${cfg.booking}\n\n언제든 연락 주세요! 📞 ${cfg.phone}`
-  },
-  { icon: '💰', title: '가격 문의 응대', gen: (n, s) =>
-    `${n ? n + '님' : '안녕하세요'}! 가격 문의 감사드립니다 😊\n\n📊 기본 요금 (VAT 포함)\n• 25평 입주 전: 약 17만원~\n• 30평 입주 전: 약 21만원~\n• 35평 입주 전: 약 24만원~\n\n평수를 알려주시면 정확한 견적 드릴게요!\n📞 ${cfg.phone}`
-  },
+const DEFAULT_TPLS=[
+  {icon:'👋',title:'첫 문의 응답',content:'안녕하세요{이름}! 😊\n{업체명} 입주청소 전문팀입니다.\n\n정확한 견적을 위해 아래 내용을 알려주시겠어요?\n\n📍 평수 / 주거 형태\n🧹 청소 유형 (입주 전/이사 후/신축)\n📅 희망 날짜\n\n빠르게 안내드리겠습니다! 🙏\n📞 {전화번호}'},
+  {icon:'📞',title:'부재중 자동응답',content:'안녕하세요! {업체명}입니다. 📞\n\n현재 작업 중이라 전화를 못 받았습니다.\n평수와 희망 날짜를 문자로 보내주시면\n즉시 견적 안내드릴게요!\n\n📞 {전화번호}'},
+  {icon:'✅',title:'예약 확정 안내',content:'{이름}, 예약이 확정되었습니다! 🎉\n\n작업 당일 부탁드립니다:\n🚗 주차 공간 1자리\n🛗 엘리베이터 이용 가능 여부\n🔑 현관 입장 방법\n\n최선을 다하겠습니다! 💪\n📞 {전화번호}'},
+  {icon:'📅',title:'작업 전날 리마인더',content:'{이름}, 내일 일정 확인 연락드립니다! 😊\n\n🕙 내일 오전 10시 도착 예정입니다.\n주소와 동/호수 한번 더 확인 부탁드려요!\n\n감사합니다 🙏\n📞 {전화번호}'},
+  {icon:'📹',title:'홍보영상 발송',content:'{이름} 😊\n\n{업체명} 시공 영상입니다!\n꼼꼼한 청소를 직접 확인해 보세요.\n\n📞 {전화번호}'},
+  {icon:'💰',title:'가격 문의 응대',content:'{이름}! 가격 문의 감사드립니다 😊\n\n📊 기본 요금 (VAT 포함)\n• 25평 입주 전: 약 17만원~\n• 30평 입주 전: 약 21만원~\n• 35평 입주 전: 약 24만원~\n\n평수를 알려주시면 정확한 견적 드릴게요!\n📞 {전화번호}'},
 ];
 
-function renderTemplates() {
-  const name = document.getElementById('t-name').value.trim();
-  const size = document.getElementById('t-size').value;
-  document.getElementById('template-list').innerHTML = templates.map((t, i) => `
-    <div class="card" style="margin-bottom:12px;">
-      <div class="card-title">${t.icon} ${t.title}</div>
-      <div class="msg-preview" style="font-size:13px;min-height:80px;">${t.gen(name, size)}</div>
-      <button class="btn-primary" style="margin-top:10px;margin-bottom:0;padding:12px;" onclick="copyTpl(${i})">📋 복사</button>
-    </div>
-  `).join('');
+let customTpls=JSON.parse(localStorage.getItem('ssak_tpls')||'null');
+if(!customTpls)customTpls=DEFAULT_TPLS.map(t=>({...t}));
+
+function applyVars(c,name,size){return c.replace(/\{이름\}/g,name?(name+'님'):'고객님').replace(/\{평수\}/g,size||'평수').replace(/\{업체명\}/g,cfg.company).replace(/\{전화번호\}/g,cfg.phone);}
+function renderTemplates(){const name=document.getElementById('t-name').value.trim();const size=document.getElementById('t-size').value;document.getElementById('template-list').innerHTML=customTpls.map((t,i)=>`<div class="tpl-card"><div class="tpl-header"><div class="tpl-title">${t.icon} ${t.title}</div><button class="tpl-edit-btn" onclick="openTplModal(${i})">✏️ 수정</button></div><div class="msg-preview" style="font-size:13px;min-height:80px;">${applyVars(t.content,name,size)}</div><button class="btn-primary" style="margin-top:10px;margin-bottom:0;padding:12px;" onclick="copyTpl(${i})">📋 복사</button></div>`).join('');}
+
+let editingTplIdx=-1;
+function openTplModal(i){editingTplIdx=i;const t=customTpls[i];document.getElementById('tpl-modal-title').textContent=`✏️ 템플릿 ${i+1} 수정`;document.getElementById('tpl-icon').value=t.icon;document.getElementById('tpl-title-input').value=t.title;document.getElementById('tpl-content').value=t.content;document.getElementById('tpl-modal').classList.add('open');}
+function closeTplModal(){document.getElementById('tpl-modal').classList.remove('open');}
+function saveTpl(){if(editingTplIdx<0)return;customTpls[editingTplIdx]={icon:document.getElementById('tpl-icon').value||DEFAULT_TPLS[editingTplIdx].icon,title:document.getElementById('tpl-title-input').value||DEFAULT_TPLS[editingTplIdx].title,content:document.getElementById('tpl-content').value};localStorage.setItem('ssak_tpls',JSON.stringify(customTpls));closeTplModal();renderTemplates();toast('✅ 템플릿 저장!');}
+function resetTpl(){if(editingTplIdx<0)return;customTpls[editingTplIdx]={...DEFAULT_TPLS[editingTplIdx]};localStorage.setItem('ssak_tpls',JSON.stringify(customTpls));closeTplModal();renderTemplates();toast('↺ 기본값으로 초기화');}
+function copyTpl(i){const name=document.getElementById('t-name').value.trim();const size=document.getElementById('t-size').value;navigator.clipboard.writeText(applyVars(customTpls[i].content,name,size)).then(()=>toast('복사 완료!'));}
+
+const DEFAULT_FAQS=[{q:'가격이 얼마예요?',a:'평수와 청소 유형에 따라 다릅니다. 25평 입주 전 기준 약 17~19만원 선입니다.'},{q:'몇 명이 오고, 얼마나 걸리나요?',a:'기본 2인 1조이며, 35평 이상은 3~4인 투입됩니다. 30평 기준 약 4~5시간 소요됩니다.'},{q:'예약은 어떻게 하나요?',a:'문자 또는 카카오로 ①날짜 ②주소 ③평수를 보내주시면 됩니다.'},{q:'당일 예약도 되나요?',a:'일정에 따라 가능합니다. 최소 하루 전 예약을 권장드립니다.'},{q:'에어컨/냉장고 청소도 되나요?',a:'별도 추가 서비스로 가능합니다.\n• 에어컨(벽걸이): 3만원\n• 에어컨(스탠드): 5만원\n• 냉장고 내부: 3.5만원'},{q:'작업 후 문제가 생기면요?',a:'작업 완료 후 48시간 이내 연락 주시면 무상 재방문 처리해 드립니다!'},{q:'친환경 세제를 사용하나요?',a:'네! 유해성분을 최소화한 친환경 세제를 사용합니다.'}];
+let customFaqs=JSON.parse(localStorage.getItem('ssak_faqs')||'null');
+if(!customFaqs)customFaqs=DEFAULT_FAQS.map(f=>({...f}));
+let editingFaqIdx=-1;
+
+function renderFaq(){document.getElementById('faq-list').innerHTML=customFaqs.map((f,i)=>`<div class="faq-item" id="faq-${i}"><div class="faq-header"><div class="faq-q" onclick="toggleFaq(${i})">Q. ${f.q}</div><div class="faq-btns"><button class="faq-edit-btn" onclick="openFaqModal(${i})">✏️</button><span class="faq-arrow" onclick="toggleFaq(${i})">▼</span></div></div><div class="faq-a">${f.a.replace(/\n/g,'<br>')}<br><button class="faq-copy-btn" onclick="copyFaq(${i})">📋 답변 복사</button></div></div>`).join('');}
+function toggleFaq(i){document.getElementById('faq-'+i).classList.toggle('open');}
+function copyFaq(i){navigator.clipboard.writeText(customFaqs[i].a).then(()=>toast('FAQ 복사!'));}
+function openFaqModal(i){editingFaqIdx=i;document.getElementById('faq-q-input').value=customFaqs[i].q;document.getElementById('faq-a-input').value=customFaqs[i].a;document.getElementById('faq-modal').classList.add('open');}
+function addFaq(){customFaqs.push({q:'새 질문',a:'답변을 입력하세요'});editingFaqIdx=customFaqs.length-1;document.getElementById('faq-q-input').value='새 질문';document.getElementById('faq-a-input').value='답변을 입력하세요';document.getElementById('faq-modal').classList.add('open');}
+function closeFaqModal(){document.getElementById('faq-modal').classList.remove('open');}
+function saveFaqItem(){if(editingFaqIdx<0)return;customFaqs[editingFaqIdx]={q:document.getElementById('faq-q-input').value,a:document.getElementById('faq-a-input').value};localStorage.setItem('ssak_faqs',JSON.stringify(customFaqs));closeFaqModal();renderFaq();toast('✅ FAQ 저장!');}
+function deleteFaqItem(){if(editingFaqIdx<0)return;customFaqs.splice(editingFaqIdx,1);localStorage.setItem('ssak_faqs',JSON.stringify(customFaqs));closeFaqModal();renderFaq();toast('삭제됨');}
+
+function loadSettingsForm(){
+  document.getElementById('s-api-key').value=cfg.apiKey||'';
+  document.getElementById('s-api-secret').value=cfg.apiSecret||'';
+  document.getElementById('s-from-phone').value=cfg.fromPhone||'';
+  document.getElementById('s-company').value=cfg.company;
+  document.getElementById('s-phone').value=cfg.phone;
+  document.getElementById('s-video').value=cfg.video;
+  document.getElementById('s-kakao').value=cfg.kakao;
+  document.getElementById('s-review').value=cfg.review;
+  document.getElementById('s-booking').value=cfg.booking;
+  document.getElementById('s-p1').value=cfg.p1;
+  document.getElementById('s-p2').value=cfg.p2;
+  document.getElementById('s-p3').value=cfg.p3;
+  renderExtrasSettings();
 }
 
-function copyTpl(i) {
-  const name = document.getElementById('t-name').value.trim();
-  const size = document.getElementById('t-size').value;
-  navigator.clipboard.writeText(templates[i].gen(name, size)).then(() => toast('메시지 복사 완료!'));
+function renderExtrasSettings(){document.getElementById('s-extras-list').innerHTML=cfg.extras.map((e,i)=>`<div class="service-item"><input class="service-name-input" value="${e.label}" onchange="cfg.extras[${i}].label=this.value" placeholder="서비스명"/><input class="service-price-input" type="number" value="${e.price}" onchange="cfg.extras[${i}].price=parseInt(this.value)||0"/><span style="font-size:11px;color:var(--gray-400);">원</span><button class="service-del-btn" onclick="deleteExtra(${i})">✕</button></div>`).join('');}
+function deleteExtra(i){cfg.extras.splice(i,1);renderExtrasSettings();renderExtraChips();}
+function addExtraService(){cfg.extras.push({id:'e'+Date.now(),label:'새 서비스',price:30000});renderExtrasSettings();renderExtraChips();}
+
+function saveSettings(){
+  cfg.apiKey=document.getElementById('s-api-key').value.trim();
+  cfg.apiSecret=document.getElementById('s-api-secret').value.trim();
+  cfg.fromPhone=document.getElementById('s-from-phone').value.trim();
+  cfg.company=document.getElementById('s-company').value.trim()||'서프로클린';
+  cfg.phone=document.getElementById('s-phone').value.trim();
+  cfg.video=document.getElementById('s-video').value.trim();
+  cfg.kakao=document.getElementById('s-kakao').value.trim();
+  cfg.review=document.getElementById('s-review').value.trim();
+  cfg.booking=document.getElementById('s-booking').value.trim();
+  cfg.p1=parseInt(document.getElementById('s-p1').value)||8000;
+  cfg.p2=parseInt(document.getElementById('s-p2').value)||6500;
+  cfg.p3=parseInt(document.getElementById('s-p3').value)||5500;
+  saveCfg();renderExtraChips();updateApiWarning();toast('✅ 설정 저장 완료!');
 }
 
-// ── FAQ ───────────────────────────────────
-const faqs = [
-  { q: '가격이 얼마예요?', a: '평수와 청소 유형에 따라 다릅니다. 25평 입주 전 기준 약 17~19만원 선입니다. 평수를 알려주시면 바로 계산해 드릴게요!' },
-  { q: '몇 명이 오고, 얼마나 걸리나요?', a: '기본 2인 1조이며, 35평 이상은 3~4인 투입됩니다. 30평 기준 약 4~5시간 소요됩니다.' },
-  { q: '예약은 어떻게 하나요?', a: `문자 또는 카카오로 ①날짜 ②주소 ③평수를 보내주시면 됩니다.\n예약폼: ${cfg.booking}` },
-  { q: '당일 예약도 되나요?', a: '일정에 따라 가능합니다. 최소 하루 전 예약을 권장드리며, 급하신 경우 연락 주세요!' },
-  { q: '에어컨/냉장고 청소도 되나요?', a: '별도 추가 서비스로 가능합니다.\n• 에어컨(벽걸이): 3만원\n• 에어컨(스탠드): 5만원\n• 냉장고 내부: 3.5만원' },
-  { q: '작업 후 문제가 생기면요?', a: '작업 완료 후 48시간 이내 연락 주시면 무상 재방문 처리해 드립니다!' },
-  { q: '주차는 어떻게 되나요?', a: '작업 당일 주차 공간 1자리를 부탁드립니다. 여의치 않으시면 미리 알려주세요.' },
-  { q: '친환경 세제를 사용하나요?', a: '네! 유해성분을 최소화한 친환경 세제를 사용합니다. 영유아·반려동물 가정도 안심하셔도 됩니다.' },
-];
-
-function renderFaq() {
-  document.getElementById('faq-list').innerHTML = faqs.map((f, i) => `
-    <div class="faq-item" id="faq-${i}">
-      <div class="faq-q" onclick="toggleFaq(${i})">
-        <span>Q. ${f.q}</span>
-        <span class="faq-arrow">▼</span>
-      </div>
-      <div class="faq-a">
-        ${f.a.replace(/\n/g, '<br>')}
-        <br>
-        <button class="faq-copy" onclick="copyFaq(${i})">📋 답변 복사</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleFaq(i) { document.getElementById('faq-' + i).classList.toggle('open'); }
-
-function copyFaq(i) {
-  navigator.clipboard.writeText(faqs[i].a).then(() => toast('FAQ 답변 복사 완료!'));
-}
-
-// ── Toast ─────────────────────────────────
 let toastTimer;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
-}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500);}
 
-// ── Init ─────────────────────────────────
-renderInquiries();
-renderTemplates();
-renderFaq();
+renderExtraChips();renderInquiries();renderTemplates();renderFaq();updateApiWarning();
 </script>
 </body>
 </html>
