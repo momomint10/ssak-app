@@ -379,23 +379,28 @@ select.form-input{cursor:pointer;}
         <div style="text-align:center;font-size:12px;color:#A0A4B0;margin:16px 0 6px;">본 계약서에 서명함으로써 위 내용에 동의합니다.</div>
         <div style="text-align:center;font-size:12px;font-weight:600;margin-bottom:16px;" id="ct-r-date"></div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-top:16px;border-top:1px dashed var(--gray-200);">
-          <div style="text-align:center;">
-            <div style="font-size:11px;color:#A0A4B0;margin-bottom:6px;">사업자 (갑)</div>
-            <div style="border-bottom:1px solid #222;height:30px;margin-bottom:6px;"></div>
-            <div style="font-size:12px;font-weight:700;" id="ct-r-company2"></div>
-            <div style="font-size:11px;color:#A0A4B0;">대표: <span id="ct-r-owner2"></span> (인)</div>
+        <!-- 서명 패드 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:16px;border-top:1px dashed var(--gray-200);">
+          <div>
+            <div style="font-size:11px;color:#A0A4B0;margin-bottom:4px;text-align:center;">사업자 (갑) 서명</div>
+            <div style="font-size:12px;font-weight:700;text-align:center;margin-bottom:4px;" id="ct-r-company2"></div>
+            <canvas id="sig-owner" width="160" height="70" style="border:1.5px solid var(--gray-200);border-radius:8px;background:#fafafa;touch-action:none;width:100%;display:block;cursor:crosshair;"></canvas>
+            <button onclick="clearSig('sig-owner')" style="width:100%;margin-top:4px;padding:4px;background:none;border:1px solid var(--gray-200);border-radius:6px;font-size:11px;color:var(--gray-400);cursor:pointer;">✕ 다시 서명</button>
           </div>
-          <div style="text-align:center;">
-            <div style="font-size:11px;color:#A0A4B0;margin-bottom:6px;">고객 (을)</div>
-            <div style="border-bottom:1px solid #222;height:30px;margin-bottom:6px;"></div>
-            <div style="font-size:12px;font-weight:700;" id="ct-r-name2"></div>
-            <div style="font-size:11px;color:#A0A4B0;">서명: ___________</div>
+          <div>
+            <div style="font-size:11px;color:#A0A4B0;margin-bottom:4px;text-align:center;">고객 (을) 서명</div>
+            <div style="font-size:12px;font-weight:700;text-align:center;margin-bottom:4px;" id="ct-r-name2"></div>
+            <canvas id="sig-customer" width="160" height="70" style="border:1.5px solid var(--gray-200);border-radius:8px;background:#fafafa;touch-action:none;width:100%;display:block;cursor:crosshair;"></canvas>
+            <button onclick="clearSig('sig-customer')" style="width:100%;margin-top:4px;padding:4px;background:none;border:1px solid var(--gray-200);border-radius:6px;font-size:11px;color:var(--gray-400);cursor:pointer;">✕ 다시 서명</button>
           </div>
         </div>
+        <div style="font-size:11px;color:var(--gray-400);text-align:center;margin-top:8px;">↑ 손가락으로 서명해주세요</div>
       </div>
 
-      <button class="btn-primary" onclick="sendContract()">📱 계약서 SMS 발송</button>
+      <button class="btn-primary" onclick="generateAndSendPDF()" id="pdf-send-btn">
+        <span id="pdf-btn-text">✅ 서명 완료 → PDF 발송</span>
+        <div class="send-loading" id="pdf-loading" style="display:none;"></div>
+      </button>
       <button class="btn-secondary" onclick="copyContract()">📋 계약서 내용 복사</button>
       <button class="btn-secondary" onclick="document.getElementById('ct-form').style.display='block';document.getElementById('ct-preview').style.display='none';" style="color:#A0A4B0;border-color:var(--gray-200);">↺ 다시 작성</button>
     </div>
@@ -1013,10 +1018,137 @@ function copyContract(){
   navigator.clipboard.writeText(msg).then(()=>toast('📋 계약서 복사 완료!'));
 }
 
+// ── 터치 서명 패드 ───────────────────────────────
+function initSigPad(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  // 실제 픽셀 해상도 맞추기
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * window.devicePixelRatio;
+  canvas.height = rect.height * window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  ctx.strokeStyle = '#1E2130';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  let drawing = false;
+
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const touch = e.touches ? e.touches[0] : e;
+    return { x: (touch.clientX - r.left), y: (touch.clientY - r.top) };
+  }
+
+  canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+  canvas.addEventListener('mousemove', e => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+  canvas.addEventListener('mouseup', () => drawing = false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, { passive: false });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, { passive: false });
+  canvas.addEventListener('touchend', () => drawing = false);
+}
+
+function clearSig(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function isSigEmpty(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return true;
+  const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+  return !data.some(v => v !== 0);
+}
+
+// 계약서 생성 후 서명 패드 초기화
+const _origGenerateContract = generateContract;
+function generateContract() {
+  _origGenerateContract();
+  setTimeout(() => { initSigPad('sig-owner'); initSigPad('sig-customer'); }, 100);
+}
+
+// ── PDF 생성 & Supabase 업로드 & SMS 발송 ─────────
+async function generateAndSendPDF() {
+  if (isSigEmpty('sig-owner')) { toast('❗ 사업자 서명을 해주세요'); return; }
+  if (isSigEmpty('sig-customer')) { toast('❗ 고객 서명을 해주세요'); return; }
+
+  const btn = document.getElementById('pdf-send-btn');
+  document.getElementById('pdf-btn-text').textContent = 'PDF 생성 중...';
+  document.getElementById('pdf-loading').style.display = 'block';
+  btn.disabled = true;
+
+  try {
+    // 계약서 div를 이미지로 캡처
+    const contractEl = document.querySelector('#ct-preview .contract-paper, #ct-preview > div:first-child');
+    const paperEl = document.querySelector('#ct-preview > div');
+
+    const canvas = await html2canvas(paperEl, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false
+    });
+
+    // jsPDF로 PDF 생성
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const imgW = 210;
+    const imgH = (canvas.height * imgW) / canvas.width;
+    const pageH = 297;
+    let y = 0;
+    while (y < imgH) {
+      if (y > 0) pdf.addPage();
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, -y, imgW, imgH);
+      y += pageH;
+    }
+
+    const pdfBase64 = pdf.output('datauristring').split(',')[1];
+
+    // 서버로 업로드 요청
+    document.getElementById('pdf-btn-text').textContent = '업로드 중...';
+    const customerPhone = document.getElementById('ct-phone').value.trim();
+    const ownerPhone = document.getElementById('ct-company-phone').value.trim() || cfg.phone;
+    const customerName = document.getElementById('ct-name').value.trim();
+    const companyName = document.getElementById('ct-company').value.trim();
+    const companyPhone = document.getElementById('ct-company-phone').value.trim();
+
+    const res = await fetch(`${SERVER}/api/contract/upload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pdfBase64, customerPhone, ownerPhone, customerName, companyName, companyPhone })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      saveHistory(customerPhone, `계약서 PDF 발송 완료\n${data.pdfUrl}`, false);
+      toast('✅ PDF 계약서가 양측에 발송되었습니다!');
+      // PDF 링크 표시
+      const linkDiv = document.createElement('div');
+      linkDiv.style.cssText = 'background:var(--primary-light);border-radius:10px;padding:12px;margin-top:12px;text-align:center;font-size:12px;';
+      linkDiv.innerHTML = `📄 계약서 저장 완료!<br><a href="${data.pdfUrl}" target="_blank" style="color:var(--primary-dark);font-weight:700;word-break:break-all;">${data.pdfUrl}</a>`;
+      btn.parentNode.insertBefore(linkDiv, btn.nextSibling);
+    } else {
+      toast('❌ 발송 실패: ' + (data.error || '오류'));
+    }
+  } catch (e) {
+    console.error(e);
+    toast('❌ PDF 생성 오류: ' + e.message);
+  } finally {
+    document.getElementById('pdf-btn-text').textContent = '✅ 서명 완료 → PDF 발송';
+    document.getElementById('pdf-loading').style.display = 'none';
+    btn.disabled = false;
+  }
+}
+
 let toastTimer;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500);}
 
 renderExtraChips();renderTemplates();renderFaq();updateApiWarning();
 </script>
+<!-- PDF 생성 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
