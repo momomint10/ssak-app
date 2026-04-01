@@ -70,7 +70,19 @@ select.form-input{cursor:pointer;}
 .faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.2s;font-size:13.5px;color:var(--gray-500);line-height:1.7;background:var(--gray-50);padding:0 16px;}
 .faq-item.open .faq-a{max-height:300px;padding:14px 16px;border-top:1px solid var(--gray-200);}
 .faq-copy-btn{margin-top:10px;padding:8px 14px;border-radius:8px;background:var(--primary-light);color:var(--primary-dark);border:none;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;}
-.settings-section{margin-bottom:20px;}
+.faq-match-card{background:var(--primary-light);border:1.5px solid var(--primary);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;}
+.faq-match-q{font-size:12px;font-weight:700;color:var(--primary-dark);margin-bottom:6px;}
+.faq-match-a{font-size:12.5px;color:var(--gray-600);line-height:1.6;white-space:pre-wrap;}
+.faq-match-btn{margin-top:10px;width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.faq-no-match{text-align:center;padding:16px;color:var(--gray-400);font-size:13px;}
+.keyword-chip:hover{background:var(--primary);color:#fff;}
+.history-item{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;}
+.history-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.history-phone{font-size:13px;font-weight:700;color:var(--primary-dark);}
+.history-time{font-size:11px;color:var(--gray-400);}
+.history-msg{font-size:12px;color:var(--gray-500);line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden;}
+.history-night{display:inline-block;background:#EEF2FF;color:#6366F1;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-bottom:4px;}
+.night-active{background:var(--primary) !important;}
 .settings-title{font-size:14px;font-weight:700;color:var(--gray-700);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--primary-light);}
 .service-item{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:12px;background:var(--gray-50);border-radius:var(--radius-sm);border:1px solid var(--gray-200);}
 .service-item input{border:1px solid var(--gray-200);border-radius:8px;padding:7px 10px;font-family:inherit;font-size:13px;outline:none;background:#fff;}
@@ -123,13 +135,13 @@ select.form-input{cursor:pointer;}
       <button class="back-btn" onclick="history.back()">←</button>
       <div class="header-title">⚡ SMS 자동응답 & 견적</div>
     </div>
-    <button class="settings-btn" onclick="switchTab('settings',document.querySelectorAll('.tab')[4])">⚙️</button>
+    <button class="settings-btn" onclick="switchTab('settings',document.querySelectorAll('.tab')[5])">⚙️</button>
   </div>
   <div class="tabs">
     <button class="tab active" onclick="switchTab('quote',this)">견적</button>
     <button class="tab" onclick="switchTab('template',this)">템플릿</button>
-    <button class="tab" onclick="switchTab('inquiry',this)">문의</button>
     <button class="tab" onclick="switchTab('faq',this)">FAQ</button>
+    <button class="tab" onclick="switchTab('history',this)">📋이력</button>
     <button class="tab" onclick="switchTab('settings',this)">⚙️설정</button>
   </div>
 </div>
@@ -168,34 +180,49 @@ select.form-input{cursor:pointer;}
       <div class="api-warning" id="api-warning" style="display:none;"></div>
     </div>
     <button class="btn-primary" onclick="copyMsg()">📋 메시지 복사 → 직접 발송</button>
-    <button class="btn-secondary" onclick="saveInquiry()">💾 문의 저장</button>
   </div>
 </div>
 
 <!-- 템플릿 -->
 <div id="page-template" class="page">
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🔍 키워드 빠른 검색</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+      <button onclick="setKeyword('견적')" class="keyword-chip">💰 견적</button>
+      <button onclick="setKeyword('예약')" class="keyword-chip">📅 예약</button>
+      <button onclick="setKeyword('완료')" class="keyword-chip">✅ 완료</button>
+      <button onclick="setKeyword('가격')" class="keyword-chip">💵 가격</button>
+      <button onclick="setKeyword('')" class="keyword-chip" style="background:var(--gray-100);color:var(--gray-400);">전체</button>
+    </div>
+    <input class="form-input" id="t-keyword" placeholder="키워드 직접 검색..." oninput="renderTemplates()" style="margin-bottom:0;"/>
+  </div>
   <div class="card" style="margin-bottom:14px;"><div class="card-title">👤 개인화</div><div class="form-row"><div class="form-group" style="margin:0;"><label class="form-label">고객 이름</label><input class="form-input" id="t-name" placeholder="김OO" oninput="renderTemplates()"/></div><div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="t-size" type="number" placeholder="32" oninput="renderTemplates()"/></div></div></div>
   <div id="template-list"></div>
 </div>
 
-<!-- 문의 -->
-<div id="page-inquiry" class="page">
-  <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">➕ 새 문의 등록</div>
-    <div class="form-row"><div class="form-group" style="margin:0;"><label class="form-label">이름</label><input class="form-input" id="n-name" placeholder="김OO"/></div><div class="form-group" style="margin:0;"><label class="form-label">연락처</label><input class="form-input" id="n-phone" placeholder="010-0000-0000" type="tel"/></div></div>
-    <div class="form-row" style="margin-top:10px;"><div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="n-size" type="number" placeholder="32"/></div><div class="form-group" style="margin:0;"><label class="form-label">유형</label><select class="form-input" id="n-type"><option>입주 전 청소</option><option>이사 후 청소</option><option>신축 준공</option><option>생활 청소</option></select></div></div>
-    <button class="btn-primary" style="margin-top:14px;margin-bottom:0;" onclick="addInquiry()">+ 문의 추가</button>
-  </div>
-  <div id="inquiry-list"></div>
-</div>
-
 <!-- FAQ -->
 <div id="page-faq" class="page">
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">🤖 FAQ 자동응답</div>
+    <div style="font-size:12px;color:var(--gray-400);margin-bottom:10px;">고객 문자 내용을 붙여넣으면 관련 FAQ를 자동으로 찾아드립니다.</div>
+    <textarea class="form-input" id="faq-auto-input" rows="3" placeholder="고객이 보낸 문자 내용을 여기에 붙여넣으세요..." oninput="matchFaq()" style="resize:none;margin-bottom:10px;"></textarea>
+    <div id="faq-auto-result"></div>
+  </div>
+  <div class="card-title" style="margin-bottom:10px;">📋 전체 FAQ 목록</div>
   <div id="faq-list"></div>
   <button class="add-btn" onclick="addFaq()" style="margin-top:4px;">+ FAQ 항목 추가</button>
 </div>
 
 <!-- 설정 -->
+<div id="page-history" class="page">
+  <div style="padding:4px 0 12px;font-size:13px;color:var(--gray-400);">발송한 문자 이력입니다.</div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;">
+    <button onclick="clearHistory()" style="padding:8px 14px;background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 전체 삭제</button>
+    <div id="history-count" style="padding:8px 0;font-size:12px;color:var(--gray-400);"></div>
+  </div>
+  <div id="history-list"></div>
+</div>
+
 <div id="page-settings" class="page">
   <div class="settings-section">
     <div class="settings-title">📱 CoolSMS API 설정 (문자 직접 발송)</div>
@@ -230,6 +257,25 @@ select.form-input{cursor:pointer;}
     <div class="settings-title">✅ 추가 서비스 & 금액</div>
     <div id="s-extras-list"></div>
     <button class="add-btn" onclick="addExtraService()">+ 서비스 항목 추가</button>
+  </div>
+  <div class="settings-section">
+    <div class="settings-title">🌙 야간 자동응답 설정</div>
+    <div class="card" style="margin-bottom:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <label style="font-size:13px;font-weight:600;">야간 자동응답 사용</label>
+        <label style="position:relative;display:inline-block;width:44px;height:24px;">
+          <input type="checkbox" id="s-night-enabled" style="opacity:0;width:0;height:0;">
+          <span onclick="document.getElementById('s-night-enabled').click()" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--gray-300);border-radius:24px;transition:.3s;" id="night-toggle-bg"></span>
+        </label>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">시작 시간</label><input class="form-input" id="s-night-start" type="time" value="21:00"/></div>
+        <div class="form-group"><label class="form-label">종료 시간</label><input class="form-input" id="s-night-end" type="time" value="09:00"/></div>
+      </div>
+      <div class="form-group" style="margin:0;"><label class="form-label">야간 자동 문구 (문자 뒤에 자동 추가)</label>
+        <textarea class="form-input" id="s-night-msg" rows="3" style="resize:none;">🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊</textarea>
+      </div>
+    </div>
   </div>
   <button class="save-settings-btn" onclick="saveSettings()">💾 전체 설정 저장</button>
   <div style="height:16px;"></div>
@@ -277,7 +323,7 @@ select.form-input{cursor:pointer;}
 
 <script>
 const SERVER='https://ssakssak-server-production.up.railway.app';
-const DEFAULT_CFG={company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}]};
+const DEFAULT_CFG={company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}]};
 let cfg=JSON.parse(localStorage.getItem('ssak_cfg')||'null')||{...DEFAULT_CFG,extras:[...DEFAULT_CFG.extras]};
 function saveCfg(){localStorage.setItem('ssak_cfg',JSON.stringify(cfg));}
 
@@ -287,9 +333,9 @@ function switchTab(name,btn){
   if(btn)btn.classList.add('active');
   document.getElementById('page-'+name).classList.add('active');
   if(name==='template')renderTemplates();
-  if(name==='inquiry')renderInquiries();
   if(name==='faq')renderFaq();
   if(name==='settings')loadSettingsForm();
+  if(name==='history')renderHistory();
 }
 
 function renderExtraChips(){
@@ -325,14 +371,21 @@ function buildMsg(size,type,total,extraItems){
   if(!size){document.getElementById('msg-preview').textContent='평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️';document.getElementById('msg-char').textContent='';return;}
   if(!total){const adj=parseFloat(document.getElementById('q-house').value);const base=Math.round(size*getBaseRate(size)*adj*typeRates[type]);const vat=Math.round(base*0.1);total=base+vat;}
   const nameStr=name==='고객님'?'고객님':name+'님';
-  let msg=`안녕하세요, ${nameStr}! 😊\n${cfg.company} 입주청소입니다.\n\n━━━━ 견적 안내 ━━━━\n🏠 ${size}평 ${typeLabels[type]} 청소\n💰 ${total.toLocaleString()}원 (VAT포함)\n⏰ 약 ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}시간\n👥 2~3명 투입\n`;
+  let msg=`안녕하세요, ${nameStr}! ${cfg.company}입니다. 😊\n`;
+  msg+=`━━━━ 견적 안내 ━━━━\n`;
+  msg+=`🏠 ${size}평 ${typeLabels[type]}\n`;
+  msg+=`💰 ${total.toLocaleString()}원 (VAT포함)\n`;
+  msg+=`⏰ 약 ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}시간\n`;
+  msg+=`👥 2~3명 투입\n`;
   if(extraItems&&extraItems.length)msg+=`✅ 추가: ${extraItems.map(e=>e.label).join(', ')}\n`;
   if(date)msg+=`📅 희망일: ${date}\n`;
-  msg+=`━━━━━━━━━━━━━━\n\n`;
-  if(document.getElementById('opt-video')?.classList.contains('on'))msg+=`📹 시공영상: ${cfg.video}\n\n`;
-  if(document.getElementById('opt-review')?.classList.contains('on'))msg+=`⭐ 고객후기: ${cfg.review}\n\n`;
-  if(document.getElementById('opt-booking')?.classList.contains('on'))msg+=`📅 예약신청: ${cfg.booking}\n\n`;
-  if(document.getElementById('opt-kakao')?.classList.contains('on'))msg+=`💬 카카오: ${cfg.kakao}\n\n`;
+  msg+=`━━━━━━━━━━━━━━\n`;
+  const links=[];
+  if(document.getElementById('opt-video')?.classList.contains('on'))links.push(`📹 시공영상: ${cfg.video}`);
+  if(document.getElementById('opt-review')?.classList.contains('on'))links.push(`⭐ 고객후기: ${cfg.review}`);
+  if(document.getElementById('opt-booking')?.classList.contains('on'))links.push(`📅 예약신청: ${cfg.booking}`);
+  if(document.getElementById('opt-kakao')?.classList.contains('on'))links.push(`💬 카카오: ${cfg.kakao}`);
+  if(links.length)msg+='\n'+links.join('\n')+'\n';
   msg+=`📞 ${cfg.phone}`;
   document.getElementById('msg-preview').textContent=msg;
   document.getElementById('msg-char').textContent=`${msg.length}자 (${msg.length>90?'LMS 장문':'SMS 단문'})`;
@@ -352,10 +405,12 @@ function updateApiWarning(){
 }
 
 async function sendSMS(){
-  const msg=document.getElementById('msg-preview').textContent;
+  let msg=document.getElementById('msg-preview').textContent;
   const to=document.getElementById('send-phone').value.replace(/-/g,'').trim();
   if(msg.includes('자동 생성')){toast('평수를 먼저 입력해 주세요!');return;}
   if(!to||to.length<10){toast('발송할 전화번호를 입력해 주세요');return;}
+  const night=isNightTime();
+  if(night)msg=msg+'\n\n'+cfg.nightMsg;
   const btn=document.getElementById('send-btn');
   document.getElementById('send-btn-text').textContent='발송 중';
   document.getElementById('send-loading').style.display='block';
@@ -363,20 +418,16 @@ async function sendSMS(){
   try{
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg})});
     const data=await res.json();
-    if(data.success)toast('✅ 문자 발송 완료!');
+    if(data.success){saveHistory(to,msg,night);toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');}
     else toast('❌ 발송 실패: '+(data.error||'오류'));
   }catch(err){toast('서버 연결 오류.');}
   finally{document.getElementById('send-btn-text').textContent='발송';document.getElementById('send-loading').style.display='none';btn.disabled=false;}
 }
 
-let inquiries=[{id:1,name:'김민지',phone:'010-1234-5678',size:34,type:'입주 전 청소',status:'답변 대기'},{id:2,name:'박준호',phone:'010-9876-5432',size:25,type:'이사 후 청소',status:'견적 발송'}];
 let nextInqId=3;
 const avatarColors=['#00C896','#3B82F6','#8B5CF6','#F59E0B','#EF4444'];
 const statusBadge={'답변 대기':'badge-wait','견적 발송':'badge-sent','신규':'badge-new'};
 
-function saveInquiry(){const name=document.getElementById('q-name').value.trim();const phone=document.getElementById('q-phone').value.trim();const size=parseInt(document.getElementById('q-size').value);const type=typeLabels[document.getElementById('q-type').value]+'청소';if(!name||!phone||!size){toast('이름, 연락처, 평수를 입력해 주세요');return;}inquiries.unshift({id:nextInqId++,name,phone,size,type,status:'견적 발송'});toast('✅ 문의 저장!');}
-function addInquiry(){const name=document.getElementById('n-name').value.trim();const phone=document.getElementById('n-phone').value.trim();const size=parseInt(document.getElementById('n-size').value);const type=document.getElementById('n-type').value;if(!name||!phone||!size){toast('이름, 연락처, 평수를 입력해 주세요');return;}inquiries.unshift({id:nextInqId++,name,phone,size,type,status:'답변 대기'});['n-name','n-phone','n-size'].forEach(id=>document.getElementById(id).value='');renderInquiries();toast('✅ 추가 완료!');}
-function renderInquiries(){document.getElementById('inquiry-list').innerHTML=inquiries.map((inq,i)=>`<div class="inq-item" onclick="quickQuote('${inq.name}','${inq.phone}','${inq.size}')"><div class="inq-avatar" style="background:${avatarColors[i%5]}">${inq.name[0]}</div><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:6px;"><div style="font-size:14px;font-weight:700;">${inq.name}</div><span class="badge ${statusBadge[inq.status]||'badge-wait'}">${inq.status}</span></div><div style="font-size:12px;color:var(--gray-400);margin-top:2px;">${inq.phone} · ${inq.size}평 · ${inq.type}</div></div><div style="font-size:12px;color:var(--primary);font-weight:700;flex-shrink:0;">견적 ›</div></div>`).join('');}
 function quickQuote(name,phone,size){switchTab('quote',document.querySelectorAll('.tab')[0]);document.getElementById('q-name').value=name;document.getElementById('q-phone').value=phone;document.getElementById('q-size').value=size;calcQuote();window.scrollTo({top:0,behavior:'smooth'});}
 
 const DEFAULT_TPLS=[
@@ -392,7 +443,48 @@ let customTpls=JSON.parse(localStorage.getItem('ssak_tpls')||'null');
 if(!customTpls)customTpls=DEFAULT_TPLS.map(t=>({...t}));
 
 function applyVars(c,name,size){return c.replace(/\{이름\}/g,name?(name+'님'):'고객님').replace(/\{평수\}/g,size||'평수').replace(/\{업체명\}/g,cfg.company).replace(/\{전화번호\}/g,cfg.phone);}
-function renderTemplates(){const name=document.getElementById('t-name').value.trim();const size=document.getElementById('t-size').value;document.getElementById('template-list').innerHTML=customTpls.map((t,i)=>`<div class="tpl-card"><div class="tpl-header"><div class="tpl-title">${t.icon} ${t.title}</div><button class="tpl-edit-btn" onclick="openTplModal(${i})">✏️ 수정</button></div><div class="msg-preview" style="font-size:13px;min-height:80px;">${applyVars(t.content,name,size)}</div><button class="btn-primary" style="margin-top:10px;margin-bottom:0;padding:12px;" onclick="copyTpl(${i})">📋 복사</button></div>`).join('');}
+function setKeyword(kw){document.getElementById('t-keyword').value=kw;renderTemplates();}
+
+function renderTemplates(){
+  const name=document.getElementById('t-name').value.trim();
+  const size=document.getElementById('t-size').value;
+  const kw=(document.getElementById('t-keyword')?document.getElementById('t-keyword').value.trim().toLowerCase():'');
+  const filtered=kw?customTpls.filter(t=>t.title.toLowerCase().includes(kw)||t.content.toLowerCase().includes(kw)):customTpls;
+  if(filtered.length===0){document.getElementById('template-list').innerHTML='<div style="text-align:center;padding:30px;color:var(--gray-400);font-size:13px;">검색 결과가 없습니다</div>';return;}
+  document.getElementById('template-list').innerHTML=filtered.map((t,i)=>{const origIdx=customTpls.indexOf(t);return`<div class="tpl-card"><div class="tpl-header"><div class="tpl-title">${t.icon} ${t.title}</div><button class="tpl-edit-btn" onclick="openTplModal(${origIdx})">✏️ 수정</button></div><div class="msg-preview" style="font-size:13px;min-height:80px;">${applyVars(t.content,name,size)}</div><button class="btn-primary" style="margin-top:10px;margin-bottom:0;padding:12px;" onclick="copyTpl(${origIdx})">📋 복사</button></div>`;}).join('');
+}
+
+// 야간 시간 체크
+function isNightTime(){
+  if(!cfg.nightEnabled)return false;
+  const now=new Date();
+  const cur=now.getHours()*60+now.getMinutes();
+  const[sh,sm]=cfg.nightStart.split(':').map(Number);
+  const[eh,em]=cfg.nightEnd.split(':').map(Number);
+  const start=sh*60+sm,end=eh*60+em;
+  return start>end?(cur>=start||cur<end):(cur>=start&&cur<end);
+}
+
+// 이력 관련
+let smsHistory=JSON.parse(localStorage.getItem('ssak_history')||'[]');
+function saveHistory(to,msg,isNight){
+  smsHistory.unshift({to,msg,isNight,time:new Date().toISOString()});
+  if(smsHistory.length>100)smsHistory=smsHistory.slice(0,100);
+  localStorage.setItem('ssak_history',JSON.stringify(smsHistory));
+  if(document.getElementById('page-history').classList.contains('active'))renderHistory();
+}
+function clearHistory(){if(!confirm('전체 이력을 삭제할까요?'))return;smsHistory=[];localStorage.removeItem('ssak_history');renderHistory();toast('이력 삭제 완료');}
+function renderHistory(){
+  const list=document.getElementById('history-list');
+  const cnt=document.getElementById('history-count');
+  if(!smsHistory.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray-400);font-size:13px;">발송 이력이 없습니다</div>';cnt.textContent='';return;}
+  cnt.textContent=`총 ${smsHistory.length}건`;
+  list.innerHTML=smsHistory.map(h=>{
+    const d=new Date(h.time);
+    const timeStr=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    return`<div class="history-item">${h.isNight?'<div class="history-night">🌙 야간</div>':''}<div class="history-meta"><span class="history-phone">📱 ${h.to}</span><span class="history-time">${timeStr}</span></div><div class="history-msg">${h.msg}</div></div>`;
+  }).join('');
+}
 
 let editingTplIdx=-1;
 function openTplModal(i){editingTplIdx=i;const t=customTpls[i];document.getElementById('tpl-modal-title').textContent=`✏️ 템플릿 ${i+1} 수정`;document.getElementById('tpl-icon').value=t.icon;document.getElementById('tpl-title-input').value=t.title;document.getElementById('tpl-content').value=t.content;document.getElementById('tpl-modal').classList.add('open');}
@@ -405,6 +497,35 @@ const DEFAULT_FAQS=[{q:'가격이 얼마예요?',a:'평수와 청소 유형에 �
 let customFaqs=JSON.parse(localStorage.getItem('ssak_faqs')||'null');
 if(!customFaqs)customFaqs=DEFAULT_FAQS.map(f=>({...f}));
 let editingFaqIdx=-1;
+
+function matchFaq(){
+  const input=document.getElementById('faq-auto-input').value.trim();
+  const result=document.getElementById('faq-auto-result');
+  if(!input){result.innerHTML='';return;}
+  const words=input.replace(/[^\w가-힣]/g,' ').split(/\s+/).filter(w=>w.length>1);
+  const scored=customFaqs.map((f,i)=>{
+    const text=(f.q+' '+f.a).toLowerCase();
+    const score=words.reduce((s,w)=>s+(text.includes(w.toLowerCase())?1:0),0);
+    return{...f,i,score};
+  }).filter(f=>f.score>0).sort((a,b)=>b.score-a.score);
+  if(!scored.length){result.innerHTML='<div class="faq-no-match">🔍 관련 FAQ를 찾지 못했습니다</div>';return;}
+  result.innerHTML=scored.slice(0,3).map(f=>`<div class="faq-match-card"><div class="faq-match-q">Q. ${f.q}</div><div class="faq-match-a">${f.a}</div><button class="faq-match-btn" onclick="sendFaqReply(${f.i})">📱 이 답변으로 문자 발송</button></div>`).join('');
+}
+
+async function sendFaqReply(i){
+  const phone=prompt('발송할 번호를 입력하세요 (예: 01012345678)');
+  if(!phone||phone.trim().length<10){toast('올바른 번호를 입력해 주세요');return;}
+  const to=phone.replace(/-/g,'').trim();
+  let msg=customFaqs[i].a;
+  const night=isNightTime();
+  if(night)msg=msg+'\n\n'+cfg.nightMsg;
+  try{
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg})});
+    const data=await res.json();
+    if(data.success){saveHistory(to,msg,night);toast(night?'✅ FAQ 발송 완료 (야간 문구 추가)':'✅ FAQ 답변 발송 완료!');}
+    else toast('❌ 발송 실패: '+(data.error||'오류'));
+  }catch(e){toast('❌ 서버 연결 오류');}
+}
 
 function renderFaq(){document.getElementById('faq-list').innerHTML=customFaqs.map((f,i)=>`<div class="faq-item" id="faq-${i}"><div class="faq-header"><div class="faq-q" onclick="toggleFaq(${i})">Q. ${f.q}</div><div class="faq-btns"><button class="faq-edit-btn" onclick="openFaqModal(${i})">✏️</button><span class="faq-arrow" onclick="toggleFaq(${i})">▼</span></div></div><div class="faq-a">${f.a.replace(/\n/g,'<br>')}<br><button class="faq-copy-btn" onclick="copyFaq(${i})">📋 답변 복사</button></div></div>`).join('');}
 function toggleFaq(i){document.getElementById('faq-'+i).classList.toggle('open');}
@@ -428,6 +549,16 @@ function loadSettingsForm(){
   document.getElementById('s-p1').value=cfg.p1;
   document.getElementById('s-p2').value=cfg.p2;
   document.getElementById('s-p3').value=cfg.p3;
+  document.getElementById('s-night-enabled').checked=cfg.nightEnabled||false;
+  document.getElementById('s-night-start').value=cfg.nightStart||'21:00';
+  document.getElementById('s-night-end').value=cfg.nightEnd||'09:00';
+  document.getElementById('s-night-msg').value=cfg.nightMsg||'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊';
+  const bg=document.getElementById('night-toggle-bg');
+  if(bg)bg.style.background=cfg.nightEnabled?'var(--primary)':'var(--gray-300)';
+  document.getElementById('s-night-enabled').onchange=function(){
+    const bg=document.getElementById('night-toggle-bg');
+    if(bg)bg.style.background=this.checked?'var(--primary)':'var(--gray-300)';
+  };
   renderExtrasSettings();
 }
 
@@ -448,13 +579,17 @@ function saveSettings(){
   cfg.p1=parseInt(document.getElementById('s-p1').value)||8000;
   cfg.p2=parseInt(document.getElementById('s-p2').value)||6500;
   cfg.p3=parseInt(document.getElementById('s-p3').value)||5500;
+  cfg.nightEnabled=document.getElementById('s-night-enabled').checked;
+  cfg.nightStart=document.getElementById('s-night-start').value;
+  cfg.nightEnd=document.getElementById('s-night-end').value;
+  cfg.nightMsg=document.getElementById('s-night-msg').value.trim();
   saveCfg();renderExtraChips();updateApiWarning();toast('✅ 설정 저장 완료!');
 }
 
 let toastTimer;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500);}
 
-renderExtraChips();renderInquiries();renderTemplates();renderFaq();updateApiWarning();
+renderExtraChips();renderTemplates();renderFaq();updateApiWarning();
 </script>
 </body>
 </html>
