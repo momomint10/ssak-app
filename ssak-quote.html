@@ -383,7 +383,8 @@ select.form-input{cursor:pointer;}
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:16px;border-top:1px dashed var(--gray-200);">
           <div>
             <div style="font-size:11px;color:#A0A4B0;margin-bottom:4px;text-align:center;">사업자 (갑) 서명</div>
-            <div style="font-size:12px;font-weight:700;text-align:center;margin-bottom:4px;" id="ct-r-company2"></div>
+            <div style="font-size:12px;font-weight:700;text-align:center;margin-bottom:2px;" id="ct-r-company2"></div>
+            <div style="font-size:11px;color:#A0A4B0;text-align:center;margin-bottom:4px;">대표: <span id="ct-r-owner2"></span></div>
             <canvas id="sig-owner" width="160" height="70" style="border:1.5px solid var(--gray-200);border-radius:8px;background:#fafafa;touch-action:none;width:100%;display:block;cursor:crosshair;"></canvas>
             <button onclick="clearSig('sig-owner')" style="width:100%;margin-top:4px;padding:4px;background:none;border:1px solid var(--gray-200);border-radius:6px;font-size:11px;color:var(--gray-400);cursor:pointer;">✕ 다시 서명</button>
           </div>
@@ -922,7 +923,10 @@ function generateContract(){
   const balance=parseInt(document.getElementById('ct-balance').value)||0;
   const isCash=document.getElementById('ct-cash').checked;
 
-  if(!name||!phone||!addr||!base){toast('❗ 고객명, 연락처, 주소, 금액은 필수입니다');return;}
+  if(!name||!phone||!base){
+    alert('❗ 고객명, 연락처, 기본 금액은 필수입니다');
+    return;
+  }
 
   const sub=base+extraPrice;
   const vat=isCash?0:Math.round(sub*0.1);
@@ -939,7 +943,7 @@ function generateContract(){
 
   document.getElementById('ct-r-service').innerHTML=
     `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">청소 유형</span>${type}</div>`+
-    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">시공 주소</span>${addr}</div>`+
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">시공 주소</span>${addr||'—'}</div>`+
     `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">평수</span>${size?size+'평':'—'}</div>`+
     `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">시공 일시</span>${workDateStr}</div>`+
     (extra?`<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">추가 서비스</span>${extra}</div>`:'');
