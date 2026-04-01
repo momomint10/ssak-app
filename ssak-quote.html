@@ -814,9 +814,14 @@ function saveSettings(){
 
 // ── 계약서 금액 자동계산 ─────────────────────
 function recalcContract(){
-  const base=parseInt(document.getElementById('ct-base').value)||0;
-  const extra=parseInt(document.getElementById('ct-extra-price').value)||0;
-  const isCash=document.getElementById('ct-cash').checked;
+  const baseEl=document.getElementById('ct-base');
+  const extraEl=document.getElementById('ct-extra-price');
+  const cashEl=document.getElementById('ct-cash');
+  if(!baseEl||!extraEl||!cashEl) return; // 요소 없으면 중단
+
+  const base=parseInt(baseEl.value)||0;
+  const extra=parseInt(extraEl.value)||0;
+  const isCash=cashEl.checked;
   const sub=base+extra;
   const vat=isCash?0:Math.round(sub*0.1);
   const total=sub+vat;
@@ -826,17 +831,23 @@ function recalcContract(){
   const dot=document.getElementById('ct-cash-dot');
   if(bg)bg.style.background=isCash?'var(--primary)':'var(--gray-300)';
   if(dot)dot.style.left=isCash?'23px':'3px';
-  document.getElementById('ct-vat-row').style.opacity=isCash?'0.3':'1';
 
-  // 요약 표시
-  document.getElementById('ct-summary-sub').textContent=sub.toLocaleString()+'원';
-  document.getElementById('ct-summary-vat').textContent=(isCash?'면제':vat.toLocaleString()+'원');
-  document.getElementById('ct-summary-total').textContent=total.toLocaleString()+'원';
+  const vatRow=document.getElementById('ct-vat-row');
+  const subEl=document.getElementById('ct-summary-sub');
+  const vatEl=document.getElementById('ct-summary-vat');
+  const totalEl=document.getElementById('ct-summary-total');
+  const depositEl=document.getElementById('ct-deposit');
+  const balanceEl=document.getElementById('ct-balance');
+
+  if(vatRow)vatRow.style.opacity=isCash?'0.3':'1';
+  if(subEl)subEl.textContent=sub.toLocaleString()+'원';
+  if(vatEl)vatEl.textContent=(isCash?'면제':vat.toLocaleString()+'원');
+  if(totalEl)totalEl.textContent=total.toLocaleString()+'원';
 
   // 계약금 10% 자동
-  const deposit=Math.round(total*0.1/100)*100; // 100원 단위 반올림
-  document.getElementById('ct-deposit').value=deposit;
-  document.getElementById('ct-balance').value=total-deposit;
+  const deposit=Math.round(total*0.1/100)*100;
+  if(depositEl)depositEl.value=deposit;
+  if(balanceEl)balanceEl.value=total-deposit;
 }
 
 function recalcBalance(){
@@ -941,14 +952,21 @@ function generateContract(){
     (deposit>0?`<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">계약금</span>${ctFmt(deposit)}</div>`:'')+
     (deposit>0?`<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">잔금</span>${ctFmt(balance||total-deposit)}</div>`:'');
 
-  document.getElementById('ct-r-date').textContent=`계약일: ${dateStr}`;
-  document.getElementById('ct-r-company2').textContent=company;
-  document.getElementById('ct-r-owner2').textContent=owner||'—';
-  document.getElementById('ct-r-name2').textContent=name+'님';
+  const dateEl=document.getElementById('ct-r-date');
+  const comp2El=document.getElementById('ct-r-company2');
+  const own2El=document.getElementById('ct-r-owner2');
+  const name2El=document.getElementById('ct-r-name2');
+  if(dateEl)dateEl.textContent=`계약일: ${dateStr}`;
+  if(comp2El)comp2El.textContent=company;
+  if(own2El)own2El.textContent=owner||'—';
+  if(name2El)name2El.textContent=name+'님';
 
   document.getElementById('ct-form').style.display='none';
   document.getElementById('ct-preview').style.display='block';
   document.getElementById('contract-modal').scrollTop=0;
+
+  // 서명 패드 초기화
+  setTimeout(() => { initSigPad('sig-owner'); initSigPad('sig-customer'); }, 150);
 }
 
 function buildContractText(){
@@ -1060,13 +1078,6 @@ function isSigEmpty(canvasId) {
   if (!canvas) return true;
   const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
   return !data.some(v => v !== 0);
-}
-
-// 계약서 생성 후 서명 패드 초기화
-const _origGenerateContract = generateContract;
-function generateContract() {
-  _origGenerateContract();
-  setTimeout(() => { initSigPad('sig-owner'); initSigPad('sig-customer'); }, 100);
 }
 
 // ── PDF 생성 & Supabase 업로드 & SMS 발송 ─────────
