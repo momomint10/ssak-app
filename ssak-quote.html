@@ -180,6 +180,226 @@ select.form-input{cursor:pointer;}
       <div class="api-warning" id="api-warning" style="display:none;"></div>
     </div>
     <button class="btn-primary" onclick="copyMsg()">📋 메시지 복사 → 직접 발송</button>
+    <button class="btn-secondary" onclick="openContract()" id="contract-btn" style="display:none;">📄 계약서 자동 작성</button>
+  </div>
+</div>
+
+<!-- 계약서 모달 -->
+<div id="contract-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;overflow-y:auto;">
+  <div style="max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:20px 20px 100px;">
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <button onclick="closeContract()" style="background:none;border:none;font-size:22px;cursor:pointer;">←</button>
+      <div style="font-size:17px;font-weight:700;">📄 계약서 자동 작성</div>
+    </div>
+
+    <div style="background:var(--primary-light);border-radius:10px;padding:12px;font-size:11.5px;color:var(--primary-dark);line-height:1.7;margin-bottom:16px;">
+      ⚖️ 소비자기본법 및 공정거래위원회 소비자분쟁해결기준에 따라 작성됩니다.
+    </div>
+
+    <!-- 계약서 입력 폼 -->
+    <div id="ct-form">
+      <div style="background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:16px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">🏢 업체 정보</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">업체명</label><input class="form-input" id="ct-company" value="서프로클린"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">대표자명</label><input class="form-input" id="ct-owner" placeholder="홍길동"/></div>
+        </div>
+        <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">연락처</label><input class="form-input" id="ct-company-phone" placeholder="010-0000-0000"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">계약일자</label><input class="form-input" id="ct-date" type="date"/></div>
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:16px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">👤 고객 정보 (견적에서 자동 입력됨)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">고객명</label><input class="form-input" id="ct-name" placeholder="김OO"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">연락처</label><input class="form-input" id="ct-phone" placeholder="010-0000-0000"/></div>
+        </div>
+        <div style="margin-top:10px;"><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">시공 주소</label><input class="form-input" id="ct-addr" placeholder="서울시 강남구 ..."/></div>
+      </div>
+
+      <div style="background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:16px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">🏠 서비스 내용 (견적에서 자동 입력됨)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">청소 유형</label><input class="form-input" id="ct-type" placeholder="입주 전 청소"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">평수</label><input class="form-input" id="ct-size" type="number" placeholder="32"/></div>
+        </div>
+        <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">시공 예정일</label><input class="form-input" id="ct-work-date" type="date"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">시공 시간</label><input class="form-input" id="ct-work-time" type="time" value="09:00"/></div>
+        </div>
+        <div style="margin-top:10px;"><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">추가 서비스</label><input class="form-input" id="ct-extra" placeholder="예: 에어컨 1대, 발코니"/></div>
+      </div>
+
+      <div style="background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:16px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">💰 금액 (견적에서 자동 입력됨)</div>
+
+        <!-- 결제 방식 토글 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--gray-100);border-radius:10px;padding:10px 14px;margin-bottom:12px;">
+          <div>
+            <div style="font-size:13px;font-weight:700;">현금 결제</div>
+            <div style="font-size:11px;color:var(--gray-400);margin-top:2px;">현금 결제 시 VAT(10%) 제외</div>
+          </div>
+          <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;">
+            <input type="checkbox" id="ct-cash" style="opacity:0;width:0;height:0;" onchange="recalcContract()">
+            <span id="ct-cash-bg" style="position:absolute;top:0;left:0;right:0;bottom:0;background:var(--gray-300);border-radius:24px;transition:.3s;"></span>
+            <span id="ct-cash-dot" style="position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,0.2);"></span>
+          </label>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">기본 금액 (VAT전)</label><input class="form-input" id="ct-base" type="number" placeholder="200000" oninput="recalcContract()"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">추가 금액 (VAT전)</label><input class="form-input" id="ct-extra-price" type="number" value="0" oninput="recalcContract()"/></div>
+        </div>
+
+        <!-- 금액 요약 -->
+        <div style="background:var(--primary-light);border-radius:10px;padding:10px 14px;margin-top:10px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+            <span style="color:#5A5F72;">소계</span><span id="ct-summary-sub" style="font-weight:600;">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;" id="ct-vat-row">
+            <span style="color:#5A5F72;">VAT (10%)</span><span id="ct-summary-vat" style="font-weight:600;">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;border-top:1px solid rgba(0,200,150,0.3);padding-top:6px;margin-top:4px;">
+            <span style="color:var(--primary-dark);">총 금액</span><span id="ct-summary-total" style="color:var(--primary-dark);">—</span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">계약금 <span style="color:var(--primary);font-weight:400;">(총액의 10% 자동)</span></label>
+            <input class="form-input" id="ct-deposit" type="number" value="0" oninput="recalcBalance()" style="background:var(--gray-100);"/>
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">잔금 <span style="color:var(--primary);font-weight:400;">(자동 계산)</span></label>
+            <input class="form-input" id="ct-balance" type="number" value="0" readonly style="background:var(--gray-100);color:var(--primary-dark);font-weight:700;"/>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="generateContract()" style="margin-bottom:0;">📋 계약서 생성</button>
+    </div>
+
+    <!-- 계약서 미리보기 -->
+    <div id="ct-preview" style="display:none;">
+      <div style="background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:24px;margin-bottom:14px;font-size:12.5px;line-height:1.9;color:#222;">
+        <div style="text-align:center;font-size:16px;font-weight:700;margin-bottom:4px;letter-spacing:2px;">청 소 서 비 스 계 약 서</div>
+        <div style="text-align:center;font-size:11px;color:#A0A4B0;margin-bottom:20px;">소비자기본법 및 공정거래위원회 소비자분쟁해결기준에 따라 작성</div>
+
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--primary-dark);border-bottom:1.5px solid var(--primary-light);padding-bottom:6px;margin-bottom:10px;">제1조 (계약 당사자)</div>
+          <div id="ct-r-parties" style="font-size:12px;line-height:2;"></div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--primary-dark);border-bottom:1.5px solid var(--primary-light);padding-bottom:6px;margin-bottom:10px;">제2조 (서비스 범위 및 내용)</div>
+          <div id="ct-r-service" style="font-size:12px;line-height:2;"></div>
+          <div style="font-size:11px;color:#555;margin-top:8px;line-height:1.7;background:#f9f9f9;padding:8px;border-radius:6px;">
+            <b>【서비스 미포함 항목 — 아래 항목은 본 계약 서비스에 포함되지 않습니다】</b><br>
+            • 가구·가전 이동 및 내부 청소 (별도 견적)<br>
+            • 외벽·옥상·외부 창문 청소<br>
+            • 곰팡이·석회·녹 제거 (특수 약품 필요 시)<br>
+            • 입주 후 발생한 오염 및 생활 쓰레기 처리<br>
+            • 계약서에 명시되지 않은 일체의 추가 작업
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--primary-dark);border-bottom:1.5px solid var(--primary-light);padding-bottom:6px;margin-bottom:10px;">제3조 (서비스 금액 및 결제)</div>
+          <div id="ct-r-price" style="font-size:12px;line-height:2;"></div>
+          <div style="font-size:11px;color:#555;margin-top:6px;line-height:1.7;">
+            ※ 잔금은 시공 완료 즉시 현장에서 결제합니다. (상법 제1조, 민법 제586조)<br>
+            ※ 현장 추가 서비스는 <b>사전 서면(문자) 동의</b> 후 별도 청구합니다. (소비자기본법 제4조)<br>
+            ※ 잔금 미결제 시 사업자는 서비스 완료 증빙 제출 후 법적 청구권을 행사할 수 있습니다.
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--primary-dark);border-bottom:1.5px solid var(--primary-light);padding-bottom:6px;margin-bottom:10px;">제4조 (계약 취소 및 환불 기준)</div>
+          <div style="font-size:11.5px;color:#333;line-height:2;">
+            <b>[고객 귀책 취소]</b> — 공정거래위원회 소비자분쟁해결기준 준수<br>
+            ① 시공 <b>4일 전 이상</b> 취소 → 계약금 전액 환불<br>
+            ② 시공 <b>2~3일 전</b> 취소 → 계약금의 <b>50% 공제</b> 후 환불<br>
+            ③ 시공 <b>1일 전 또는 당일</b> 취소 → 계약금 <b>전액 몰취</b> (인력·장비 배치 손해 발생)<br>
+            ④ 고객 부재·연락두절로 시공 불가 시 → 당일 취소와 동일 처리<br><br>
+            <b>[사업자 귀책 취소]</b><br>
+            ⑤ 사업자 사정으로 취소 시 → 계약금 전액 환불 (단, 추가 배상은 실손해 범위 내)<br>
+            ⑥ 천재지변·재해 등 불가항력 → 계약금 전액 환불, 양측 배상 책임 없음
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--primary-dark);border-bottom:1.5px solid var(--primary-light);padding-bottom:6px;margin-bottom:10px;">제5조 (A/S 및 품질 보증 범위)</div>
+          <div style="font-size:11.5px;color:#333;line-height:2;">
+            ① A/S 접수 기간: 시공 완료 후 <b>24시간 이내</b> (문자+사진 필수)<br>
+            ② A/S 범위: <b>계약서에 명시된 서비스 항목</b>에 한하여 1회 무상 재시공<br>
+            ③ 아래 사항은 A/S 대상에서 <b>제외</b>됩니다:<br>
+            &nbsp;&nbsp;- 고객 입주 후 발생한 오염·파손<br>
+            &nbsp;&nbsp;- 24시간 경과 후 접수된 민원<br>
+            &nbsp;&nbsp;- 계약 범위 외 항목 요구<br>
+            &nbsp;&nbsp;- 주관적 만족도 이유 재시공 요구<br>
+            ④ 재시공 일정은 사업자 일정에 따라 조율하며, 즉시 방문 의무는 없습니다.
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--primary-dark);border-bottom:1.5px solid var(--primary-light);padding-bottom:6px;margin-bottom:10px;">제6조 (손해배상 범위 및 면책)</div>
+          <div style="font-size:11.5px;color:#333;line-height:2;">
+            ① 사업자 과실로 인한 직접 파손 시 → 동종 물품 기준 <b>시가 보상</b> (민법 제763조)<br>
+            ② 손해배상 최대 한도는 <b>본 계약 총 금액을 초과하지 않습니다.</b> (민법 제398조 손해배상 예정)<br>
+            ③ 아래 경우 사업자는 배상 책임을 <b>지지 않습니다</b>:<br>
+            &nbsp;&nbsp;- 시공 전 사진으로 확인된 <b>기존 하자</b> 및 노후 시설<br>
+            &nbsp;&nbsp;- 고객이 사전에 고지하지 않은 <b>파손·결함</b> 부위<br>
+            &nbsp;&nbsp;- 일반적 청소 약품에 반응하는 <b>특수 소재</b> (대리석, 특수도장 등)<br>
+            &nbsp;&nbsp;- 고객 부재 중 제3자(이사업체 등)에 의한 손해<br>
+            &nbsp;&nbsp;- 천재지변, 정전 등 불가항력<br>
+            ④ 시공 전 현장 상태는 <b>사진으로 기록</b>하며, 이를 하자 판단 기준으로 합니다.
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--primary-dark);border-bottom:1.5px solid var(--primary-light);padding-bottom:6px;margin-bottom:10px;">제7조 (사진 촬영 및 활용 동의)</div>
+          <div style="font-size:11.5px;color:#333;line-height:2;">
+            ① 고객은 시공 전·중·후 사진 촬영에 동의합니다.<br>
+            ② 촬영된 사진은 하자 분쟁 증빙, 서비스 품질 관리 목적으로 활용됩니다.<br>
+            ③ 마케팅 활용(SNS, 홈페이지 등) 시 별도 동의를 받습니다.
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--primary-dark);border-bottom:1.5px solid var(--primary-light);padding-bottom:6px;margin-bottom:10px;">제8조 (개인정보 처리)</div>
+          <div style="font-size:11.5px;color:#333;line-height:1.8;">
+            수집 정보(성명·연락처·주소)는 서비스 제공 및 A/S 처리 목적으로만 사용하며, 제3자에게 제공하지 않습니다. 보유 기간은 서비스 완료 후 <b>3년</b>으로 합니다. (개인정보보호법 제15조·제21조)
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:var(--primary-dark);border-bottom:1.5px solid var(--primary-light);padding-bottom:6px;margin-bottom:10px;">제9조 (분쟁 해결 및 관할법원)</div>
+          <div style="font-size:11.5px;color:#333;line-height:1.8;">
+            ① 본 계약에 관한 분쟁은 먼저 상호 협의로 해결하며, 협의 불성립 시 한국소비자원 조정을 거칩니다.<br>
+            ② 소송이 필요한 경우 <b>사업자 소재지 관할 법원</b>을 합의 관할로 합니다. (민사소송법 제24조)<br>
+            ③ 본 계약에 명시되지 않은 사항은 민법 및 소비자기본법의 관련 규정을 따릅니다.
+          </div>
+        </div>
+
+        <div style="text-align:center;font-size:12px;color:#A0A4B0;margin:16px 0 6px;">본 계약서에 서명함으로써 위 내용에 동의합니다.</div>
+        <div style="text-align:center;font-size:12px;font-weight:600;margin-bottom:16px;" id="ct-r-date"></div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-top:16px;border-top:1px dashed var(--gray-200);">
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:#A0A4B0;margin-bottom:6px;">사업자 (갑)</div>
+            <div style="border-bottom:1px solid #222;height:30px;margin-bottom:6px;"></div>
+            <div style="font-size:12px;font-weight:700;" id="ct-r-company2"></div>
+            <div style="font-size:11px;color:#A0A4B0;">대표: <span id="ct-r-owner2"></span> (인)</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:11px;color:#A0A4B0;margin-bottom:6px;">고객 (을)</div>
+            <div style="border-bottom:1px solid #222;height:30px;margin-bottom:6px;"></div>
+            <div style="font-size:12px;font-weight:700;" id="ct-r-name2"></div>
+            <div style="font-size:11px;color:#A0A4B0;">서명: ___________</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="sendContract()">📱 계약서 SMS 발송</button>
+      <button class="btn-secondary" onclick="copyContract()">📋 계약서 내용 복사</button>
+      <button class="btn-secondary" onclick="document.getElementById('ct-form').style.display='block';document.getElementById('ct-preview').style.display='none';" style="color:#A0A4B0;border-color:var(--gray-200);">↺ 다시 작성</button>
+    </div>
+
   </div>
 </div>
 
@@ -358,6 +578,7 @@ function calcQuote(){
   cfg.extras.forEach((e,i)=>{if(document.getElementById('extra-'+i)?.classList.contains('on')){extraTotal+=e.price;extraItems.push(e);}});
   const sub=base+extraTotal,vat=Math.round(sub*0.1),total=sub+vat;
   document.getElementById('quote-result').style.display='block';
+  document.getElementById('contract-btn').style.display='flex';
   document.getElementById('qr-price').textContent=total.toLocaleString()+'원';
   document.getElementById('qr-rows').innerHTML=`<div class="qr-row"><span>기본 (${size}평)</span><span>${base.toLocaleString()}원</span></div>${extraItems.map(e=>`<div class="qr-row"><span>+ ${e.label}</span><span>${e.price.toLocaleString()}원</span></div>`).join('')}<div class="qr-row"><span>부가세 10%</span><span>${vat.toLocaleString()}원</span></div><div class="qr-row total"><span>최종 합계</span><span>${total.toLocaleString()}원</span></div>`;
   buildMsg(size,type,total,extraItems);
@@ -584,6 +805,212 @@ function saveSettings(){
   cfg.nightEnd=document.getElementById('s-night-end').value;
   cfg.nightMsg=document.getElementById('s-night-msg').value.trim();
   saveCfg();renderExtraChips();updateApiWarning();toast('✅ 설정 저장 완료!');
+}
+
+// ── 계약서 금액 자동계산 ─────────────────────
+function recalcContract(){
+  const base=parseInt(document.getElementById('ct-base').value)||0;
+  const extra=parseInt(document.getElementById('ct-extra-price').value)||0;
+  const isCash=document.getElementById('ct-cash').checked;
+  const sub=base+extra;
+  const vat=isCash?0:Math.round(sub*0.1);
+  const total=sub+vat;
+
+  // 토글 UI
+  const bg=document.getElementById('ct-cash-bg');
+  const dot=document.getElementById('ct-cash-dot');
+  if(bg)bg.style.background=isCash?'var(--primary)':'var(--gray-300)';
+  if(dot)dot.style.left=isCash?'23px':'3px';
+  document.getElementById('ct-vat-row').style.opacity=isCash?'0.3':'1';
+
+  // 요약 표시
+  document.getElementById('ct-summary-sub').textContent=sub.toLocaleString()+'원';
+  document.getElementById('ct-summary-vat').textContent=(isCash?'면제':vat.toLocaleString()+'원');
+  document.getElementById('ct-summary-total').textContent=total.toLocaleString()+'원';
+
+  // 계약금 10% 자동
+  const deposit=Math.round(total*0.1/100)*100; // 100원 단위 반올림
+  document.getElementById('ct-deposit').value=deposit;
+  document.getElementById('ct-balance').value=total-deposit;
+}
+
+function recalcBalance(){
+  const base=parseInt(document.getElementById('ct-base').value)||0;
+  const extra=parseInt(document.getElementById('ct-extra-price').value)||0;
+  const isCash=document.getElementById('ct-cash').checked;
+  const sub=base+extra;
+  const vat=isCash?0:Math.round(sub*0.1);
+  const total=sub+vat;
+  const deposit=parseInt(document.getElementById('ct-deposit').value)||0;
+  document.getElementById('ct-balance').value=Math.max(0,total-deposit);
+}
+
+// ── 계약서 기능 ──────────────────────────────
+function openContract(){
+  // 견적 탭에서 자동 입력
+  const name=document.getElementById('q-name').value.trim();
+  const phone=document.getElementById('q-phone').value.trim();
+  const size=document.getElementById('q-size').value;
+  const type=document.getElementById('q-type').value;
+  const base=parseInt(document.getElementById('qr-price')?.textContent?.replace(/[^0-9]/g,'')||0);
+
+  if(name)document.getElementById('ct-name').value=name;
+  if(phone)document.getElementById('ct-phone').value=phone;
+  if(size)document.getElementById('ct-size').value=size;
+  if(type)document.getElementById('ct-type').value=typeLabels[type]||type;
+  if(cfg.phone)document.getElementById('ct-company-phone').value=cfg.phone;
+  if(cfg.company)document.getElementById('ct-company').value=cfg.company;
+
+  // 총금액에서 역산 (VAT포함 → VAT제외)
+  const totalEl=document.getElementById('msg-preview');
+  if(totalEl){
+    const match=totalEl.textContent.match(/💰\s*([\d,]+)원/);
+    if(match){
+      const total=parseInt(match[1].replace(/,/g,''));
+      const baseNoVat=Math.round(total/1.1);
+      document.getElementById('ct-base').value=baseNoVat;
+    }
+  }
+
+  document.getElementById('ct-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('ct-cash').checked=false;
+  recalcContract();
+  document.getElementById('ct-form').style.display='block';
+  document.getElementById('ct-preview').style.display='none';
+  document.getElementById('contract-modal').style.display='block';
+  document.getElementById('contract-modal').scrollTop=0;
+}
+
+function closeContract(){
+  document.getElementById('contract-modal').style.display='none';
+}
+
+function ctFmt(n){return parseInt(n||0).toLocaleString()+'원';}
+
+function generateContract(){
+  const company=document.getElementById('ct-company').value.trim();
+  const owner=document.getElementById('ct-owner').value.trim();
+  const companyPhone=document.getElementById('ct-company-phone').value.trim();
+  const date=document.getElementById('ct-date').value;
+  const name=document.getElementById('ct-name').value.trim();
+  const phone=document.getElementById('ct-phone').value.trim();
+  const addr=document.getElementById('ct-addr').value.trim();
+  const type=document.getElementById('ct-type').value;
+  const size=document.getElementById('ct-size').value;
+  const workDate=document.getElementById('ct-work-date').value;
+  const workTime=document.getElementById('ct-work-time').value;
+  const extra=document.getElementById('ct-extra').value.trim();
+  const base=parseInt(document.getElementById('ct-base').value)||0;
+  const extraPrice=parseInt(document.getElementById('ct-extra-price').value)||0;
+  const deposit=parseInt(document.getElementById('ct-deposit').value)||0;
+  const balance=parseInt(document.getElementById('ct-balance').value)||0;
+  const isCash=document.getElementById('ct-cash').checked;
+
+  if(!name||!phone||!addr||!base){toast('❗ 고객명, 연락처, 주소, 금액은 필수입니다');return;}
+
+  const sub=base+extraPrice;
+  const vat=isCash?0:Math.round(sub*0.1);
+  const total=sub+vat;
+  const dateStr=date?new Date(date).toLocaleDateString('ko-KR'):'미정';
+  const workDateStr=workDate?`${new Date(workDate).toLocaleDateString('ko-KR')} ${workTime}`:'미정';
+
+  document.getElementById('ct-r-parties').innerHTML=
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">사업자(갑)</span><b>${company}</b></div>`+
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">대표자</span>${owner||'—'}</div>`+
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">연락처</span>${companyPhone}</div>`+
+    `<div style="margin-top:6px;"><span style="color:#5A5F72;min-width:90px;display:inline-block;">고객(을)</span><b>${name}님</b></div>`+
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">연락처</span>${phone}</div>`;
+
+  document.getElementById('ct-r-service').innerHTML=
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">청소 유형</span>${type}</div>`+
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">시공 주소</span>${addr}</div>`+
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">평수</span>${size?size+'평':'—'}</div>`+
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">시공 일시</span>${workDateStr}</div>`+
+    (extra?`<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">추가 서비스</span>${extra}</div>`:'');
+
+  document.getElementById('ct-r-price').innerHTML=
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">기본 금액</span>${ctFmt(base)}</div>`+
+    (extraPrice>0?`<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">추가 금액</span>${ctFmt(extraPrice)}</div>`:'')+
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">VAT (10%)</span>${ctFmt(vat)}</div>`+
+    `<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">총 금액</span><b style="color:var(--primary-dark);font-size:14px;">${ctFmt(total)}</b></div>`+
+    (deposit>0?`<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">계약금</span>${ctFmt(deposit)}</div>`:'')+
+    (deposit>0?`<div><span style="color:#5A5F72;min-width:90px;display:inline-block;">잔금</span>${ctFmt(balance||total-deposit)}</div>`:'');
+
+  document.getElementById('ct-r-date').textContent=`계약일: ${dateStr}`;
+  document.getElementById('ct-r-company2').textContent=company;
+  document.getElementById('ct-r-owner2').textContent=owner||'—';
+  document.getElementById('ct-r-name2').textContent=name+'님';
+
+  document.getElementById('ct-form').style.display='none';
+  document.getElementById('ct-preview').style.display='block';
+  document.getElementById('contract-modal').scrollTop=0;
+}
+
+function buildContractText(){
+  const company=document.getElementById('ct-company').value.trim();
+  const owner=document.getElementById('ct-owner').value.trim();
+  const companyPhone=document.getElementById('ct-company-phone').value.trim();
+  const name=document.getElementById('ct-name').value.trim();
+  const phone=document.getElementById('ct-phone').value.trim();
+  const addr=document.getElementById('ct-addr').value.trim();
+  const type=document.getElementById('ct-type').value;
+  const size=document.getElementById('ct-size').value;
+  const workDate=document.getElementById('ct-work-date').value;
+  const workTime=document.getElementById('ct-work-time').value;
+  const extra=document.getElementById('ct-extra').value.trim();
+  const base=parseInt(document.getElementById('ct-base').value)||0;
+  const extraPrice=parseInt(document.getElementById('ct-extra-price').value)||0;
+  const deposit=parseInt(document.getElementById('ct-deposit').value)||0;
+  const isCash=document.getElementById('ct-cash').checked;
+  const sub=base+extraPrice;
+  const vat=isCash?0:Math.round(sub*0.1);
+  const total=sub+vat;
+  const workDateStr=workDate?`${new Date(workDate).toLocaleDateString('ko-KR')} ${workTime}`:'미정';
+
+  let msg=`📋 청소서비스 계약서\n`;
+  msg+=`━━━━━━━━━━━━━━\n`;
+  msg+=`[업체] ${company} (${owner})\n[연락처] ${companyPhone}\n\n`;
+  msg+=`[고객] ${name}님 (${phone})\n[주소] ${addr}\n\n`;
+  msg+=`━━ 서비스 내용 ━━\n`;
+  msg+=`🏠 ${type} / ${size}평\n📅 시공일: ${workDateStr}\n`;
+  if(extra)msg+=`✅ 추가: ${extra}\n`;
+  msg+=`\n━━ 금액 ━━\n`;
+  msg+=`기본: ${ctFmt(base)}\n`;
+  if(extraPrice>0)msg+=`추가: ${ctFmt(extraPrice)}\n`;
+  msg+=`VAT: ${ctFmt(vat)}\n총액: ${ctFmt(total)}\n`;
+  if(deposit>0)msg+=`계약금: ${ctFmt(deposit)}\n잔금: ${ctFmt(total-deposit)}\n`;
+  msg+=`\n━━ 주요 계약 조건 ━━\n`;
+  msg+=`[취소/환불]\n`;
+  msg+=`• 4일전 이상: 전액환불\n`;
+  msg+=`• 2~3일전: 50% 공제\n`;
+  msg+=`• 1일전~당일: 계약금 몰취\n`;
+  msg+=`• 고객 부재·연락두절: 당일취소 동일\n\n`;
+  msg+=`[A/S] 시공 후 24시간 이내 문자+사진 접수\n`;
+  msg+=`(입주 후 오염, 범위 외 항목 제외)\n\n`;
+  msg+=`[손해배상] 최대 한도: 계약 총금액\n`;
+  msg+=`(기존 하자·미고지 결함·특수소재 제외)\n\n`;
+  msg+=`[관할] 사업자 소재지 법원\n\n`;
+  msg+=`📞 ${companyPhone}`;
+  return msg;
+}
+
+async function sendContract(){
+  const phone=document.getElementById('ct-phone').value.trim();
+  if(!phone){toast('고객 연락처를 입력해주세요');return;}
+  const to=phone.replace(/-/g,'');
+  const msg=buildContractText();
+  try{
+    toast('📤 발송 중...');
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg})});
+    const data=await res.json();
+    if(data.success){saveHistory(to,msg,false);toast('✅ 계약서 SMS 발송 완료!');}
+    else toast('❌ 발송 실패: '+(data.error||'오류'));
+  }catch(e){toast('❌ 서버 연결 오류');}
+}
+
+function copyContract(){
+  const msg=buildContractText();
+  navigator.clipboard.writeText(msg).then(()=>toast('📋 계약서 복사 완료!'));
 }
 
 let toastTimer;
