@@ -1100,10 +1100,11 @@ async function generateAndSendPDF() {
     const paperEl = document.querySelector('#ct-preview > div');
 
     const canvas = await html2canvas(paperEl, {
-      scale: 2,
+      scale: 1.5,
       useCORS: true,
       backgroundColor: '#ffffff',
-      logging: false
+      logging: false,
+      imageTimeout: 0
     });
 
     // jsPDF로 PDF 생성
@@ -1115,14 +1116,17 @@ async function generateAndSendPDF() {
     let y = 0;
     while (y < imgH) {
       if (y > 0) pdf.addPage();
-      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, -y, imgW, imgH);
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.75), 'JPEG', 0, -y, imgW, imgH);
       y += pageH;
     }
 
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
 
-    // 서버로 업로드 요청
+    // 서버로 업로드 요청 (30초 타임아웃)
     document.getElementById('pdf-btn-text').textContent = '업로드 중...';
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
     const customerPhone = document.getElementById('ct-phone').value.trim();
     const ownerPhone = document.getElementById('ct-company-phone').value.trim() || cfg.phone;
     const customerName = document.getElementById('ct-name').value.trim();
@@ -1132,8 +1136,10 @@ async function generateAndSendPDF() {
     const res = await fetch(`${SERVER}/api/contract/upload`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pdfBase64, customerPhone, ownerPhone, customerName, companyName, companyPhone })
+      body: JSON.stringify({ pdfBase64, customerPhone, ownerPhone, customerName, companyName, companyPhone }),
+      signal: controller.signal
     });
+    clearTimeout(timeout);
     const data = await res.json();
 
     if (data.success) {
