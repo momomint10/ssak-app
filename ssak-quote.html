@@ -83,6 +83,20 @@ select.form-input{cursor:pointer;}
 .history-msg{font-size:12px;color:var(--gray-500);line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden;}
 .history-night{display:inline-block;background:#EEF2FF;color:#6366F1;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-bottom:4px;}
 .night-active{background:var(--primary) !important;}
+/* 보고서 항목 선택 버튼 */
+.rp-item-btn{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:8px;border:1px solid var(--gray-200);background:var(--gray-100);cursor:pointer;user-select:none;}
+.rp-item-btn.on{background:var(--primary-light);border-color:var(--primary);}
+.rp-item-check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--gray-300);background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;}
+.rp-item-btn.on .rp-item-check{background:var(--primary);border-color:var(--primary);color:#fff;}
+.rp-item-name{font-size:12px;color:var(--gray-700);}
+.rp-item-btn.on .rp-item-name{color:var(--primary-dark);font-weight:600;}
+/* 사진 업로드 */
+.rp-photo-label{position:relative;display:block;cursor:pointer;border-radius:7px;overflow:hidden;background:var(--gray-100);border:1.5px dashed var(--gray-200);}
+.rp-photo-label:hover{border-color:var(--primary);}
+.rp-photo-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:var(--gray-400);gap:3px;}
+.rp-photo-img{width:100%;height:100%;object-fit:cover;display:none;}
+.rp-section-head{font-size:11px;font-weight:600;color:var(--gray-600);margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.rp-section-head::after{content:'';flex:1;height:0.5px;background:var(--gray-200);}
 .settings-title{font-size:14px;font-weight:700;color:var(--gray-700);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--primary-light);}
 .service-item{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:12px;background:var(--gray-50);border-radius:var(--radius-sm);border:1px solid var(--gray-200);}
 .service-item input{border:1px solid var(--gray-200);border-radius:8px;padding:7px 10px;font-family:inherit;font-size:13px;outline:none;background:#fff;}
@@ -135,12 +149,13 @@ select.form-input{cursor:pointer;}
       <button class="back-btn" onclick="history.back()">←</button>
       <div class="header-title">⚡ SMS 자동응답 & 견적</div>
     </div>
-    <button class="settings-btn" onclick="switchTab('settings',document.querySelectorAll('.tab')[5])">⚙️</button>
+    <button class="settings-btn" onclick="switchTab('settings',document.querySelectorAll('.tab')[6])">⚙️</button>
   </div>
   <div class="tabs">
     <button class="tab active" onclick="switchTab('quote',this)">견적</button>
     <button class="tab" onclick="switchTab('template',this)">템플릿</button>
     <button class="tab" onclick="switchTab('faq',this)">FAQ</button>
+    <button class="tab" onclick="switchTab('report',this)">📸보고서</button>
     <button class="tab" onclick="switchTab('history',this)">📋이력</button>
     <button class="tab" onclick="switchTab('settings',this)">⚙️설정</button>
   </div>
@@ -487,6 +502,92 @@ select.form-input{cursor:pointer;}
 </div>
 
 <!-- 설정 -->
+<!-- 완료보고서 -->
+<div id="page-report" class="page">
+
+  <!-- STEP 1: 고객 정보 -->
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-title">👤 고객 정보</div>
+    <div class="form-row">
+      <div class="form-group" style="margin:0;"><label class="form-label">고객명</label><input class="form-input" id="rp-name" placeholder="김OO"/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">연락처</label><input class="form-input" id="rp-phone" placeholder="010-0000-0000" type="tel"/></div>
+    </div>
+    <div style="margin-top:10px;" class="form-row">
+      <div class="form-group" style="margin:0;"><label class="form-label">청소 유형</label>
+        <select class="form-input" id="rp-type">
+          <option>입주 전 청소</option><option>이사 후 청소</option><option>신축 준공 청소</option><option>생활 청소</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="rp-size" type="number" placeholder="32"/></div>
+    </div>
+    <div style="margin-top:10px;" class="form-row">
+      <div class="form-group" style="margin:0;"><label class="form-label">시공 주소</label><input class="form-input" id="rp-addr" placeholder="인천 부평구 ..."/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">작업인원·시간</label><input class="form-input" id="rp-crew" placeholder="2명 · 4시간"/></div>
+    </div>
+  </div>
+
+  <!-- STEP 2: 항목 선택 -->
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-title">📋 공통항목 선택</div>
+    <div id="rp-item-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;"></div>
+    <div style="display:flex;gap:6px;">
+      <button onclick="rpSelectAll()" style="flex:1;padding:7px;background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">전체 선택</button>
+      <button onclick="rpClearAll()" style="flex:1;padding:7px;background:var(--gray-100);color:var(--gray-500);border:1px solid var(--gray-200);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">전체 해제</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: 전/후 사진 -->
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-title">📸 시공 전/후 사진 <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(항목당 전1·후1)</span></div>
+    <div id="rp-photo-area"></div>
+  </div>
+
+  <!-- STEP 4: 완료 문구 -->
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-title">💬 시공 완료 내용 <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(직접 편집 가능)</span></div>
+    <textarea class="form-input" id="rp-notes" rows="6" style="resize:none;font-size:13px;line-height:1.75;"></textarea>
+    <button onclick="rpAutoNotes()" style="margin-top:6px;padding:7px 14px;background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">↺ 기본 문구로 초기화</button>
+  </div>
+
+  <!-- STEP 5: 특이사항 (선택) -->
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="card-title" style="margin-bottom:0;">⚠️ 특이사항 <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(없으면 생략)</span></div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;">
+        <input type="checkbox" id="rp-issue-toggle" onchange="document.getElementById('rp-issue-body').style.display=this.checked?'block':'none'"> 포함
+      </label>
+    </div>
+    <div id="rp-issue-body" style="display:none;">
+      <textarea class="form-input" id="rp-issue-text" rows="4" style="resize:none;font-size:12.5px;line-height:1.75;margin-bottom:10px;" placeholder="예) 주방 타일 석회 잔존 (제거 불가), 안방 벽지 기존 하자 등"></textarea>
+      <div class="form-label" style="margin-bottom:6px;">특이사항 사진 (최대 2장)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div>
+          <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px;">사진 1</div>
+          <label style="display:block;aspect-ratio:4/3;background:var(--gray-100);border:1.5px dashed var(--gray-200);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <input type="file" id="rp-issue-img1" accept="image/*" style="display:none;" onchange="rpPreviewIssue(this,'rp-issue-prev1')">
+            <img id="rp-issue-prev1" src="" style="display:none;width:100%;height:100%;object-fit:cover;">
+            <span id="rp-issue-ph1" style="font-size:11px;color:var(--gray-400);">+ 사진 추가</span>
+          </label>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px;">사진 2</div>
+          <label style="display:block;aspect-ratio:4/3;background:var(--gray-100);border:1.5px dashed var(--gray-200);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <input type="file" id="rp-issue-img2" accept="image/*" style="display:none;" onchange="rpPreviewIssue(this,'rp-issue-prev2')">
+            <img id="rp-issue-prev2" src="" style="display:none;width:100%;height:100%;object-fit:cover;">
+            <span id="rp-issue-ph2" style="font-size:11px;color:var(--gray-400);">+ 사진 추가</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 발송 버튼 -->
+  <button class="btn-primary" onclick="generateReport()" id="rp-send-btn">
+    <span id="rp-btn-text">📄 보고서 생성 → PDF 발송</span>
+    <div class="send-loading" id="rp-loading" style="display:none;"></div>
+  </button>
+</div>
+
 <div id="page-history" class="page">
   <div style="padding:4px 0 12px;font-size:13px;color:var(--gray-400);">발송한 문자 이력입니다.</div>
   <div style="display:flex;gap:8px;margin-bottom:12px;">
@@ -609,6 +710,7 @@ function switchTab(name,btn){
   if(name==='faq')renderFaq();
   if(name==='settings')loadSettingsForm();
   if(name==='history')renderHistory();
+  if(name==='report')initReportTab();
 }
 
 function renderExtraChips(){
@@ -1229,6 +1331,369 @@ function autoFitChips(container) {
 
 function autoFitAllChips() {
   document.querySelectorAll('.chips').forEach(c => autoFitChips(c));
+}
+
+// ── 완료보고서 기능 ──────────────────────────────
+const RP_ITEMS = [
+  {key:'living',label:'거실'},{key:'kitchen',label:'주방'},
+  {key:'bathroom',label:'화장실'},{key:'room1',label:'방 1'},
+  {key:'room2',label:'방 2'},{key:'room3',label:'방 3'},
+  {key:'room4',label:'방 4'},{key:'balcony',label:'발코니'},
+  {key:'entrance',label:'현관'},{key:'etc',label:'기타'}
+];
+
+let rpInitialized = false;
+
+function initReportTab(){
+  if(rpInitialized) return;
+  rpInitialized = true;
+
+  // 항목 선택 그리드 렌더링
+  const grid = document.getElementById('rp-item-grid');
+  grid.innerHTML = RP_ITEMS.map(item=>`
+    <div class="rp-item-btn on" data-key="${item.key}" onclick="rpToggleItem(this)">
+      <div class="rp-item-check">✓</div>
+      <div class="rp-item-name">${item.label}</div>
+    </div>`).join('');
+
+  rpRenderPhotos();
+  rpAutoNotes();
+}
+
+function rpToggleItem(el){
+  el.classList.toggle('on');
+  el.querySelector('.rp-item-check').textContent = el.classList.contains('on') ? '✓' : '';
+  rpRenderPhotos();
+}
+
+function rpSelectAll(){
+  document.querySelectorAll('#rp-item-grid .rp-item-btn').forEach(b=>{
+    b.classList.add('on'); b.querySelector('.rp-item-check').textContent='✓';
+  });
+  rpRenderPhotos();
+}
+
+function rpClearAll(){
+  document.querySelectorAll('#rp-item-grid .rp-item-btn').forEach(b=>{
+    b.classList.remove('on'); b.querySelector('.rp-item-check').textContent='';
+  });
+  rpRenderPhotos();
+}
+
+function rpRenderPhotos(){
+  const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b=>b.dataset.key);
+  const area = document.getElementById('rp-photo-area');
+  if(!selected.length){area.innerHTML='<div style="text-align:center;padding:20px;font-size:12px;color:var(--gray-400);">항목을 선택해주세요</div>';return;}
+
+  const label = k => RP_ITEMS.find(i=>i.key===k)?.label || k;
+  area.innerHTML = selected.map(key=>`
+    <div style="margin-bottom:14px;">
+      <div class="rp-section-head">${label(key)}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div>
+          <div style="font-size:10px;color:var(--gray-400);text-align:center;background:#FCEBEB;border-radius:4px;padding:2px 0;margin-bottom:4px;font-weight:500;">시공 전</div>
+          <label class="rp-photo-label" style="aspect-ratio:4/3;">
+            <input type="file" accept="image/*" style="display:none;" onchange="rpPreview(this)">
+            <img class="rp-photo-img" src="">
+            <div class="rp-photo-placeholder"><span style="font-size:18px;">+</span><span>사진 추가</span></div>
+          </label>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--gray-400);text-align:center;background:#E1F5EE;border-radius:4px;padding:2px 0;margin-bottom:4px;font-weight:500;">시공 후</div>
+          <label class="rp-photo-label" style="aspect-ratio:4/3;">
+            <input type="file" accept="image/*" style="display:none;" onchange="rpPreview(this)">
+            <img class="rp-photo-img" src="">
+            <div class="rp-photo-placeholder"><span style="font-size:18px;">+</span><span>사진 추가</span></div>
+          </label>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function rpPreview(input){
+  if(!input.files[0]) return;
+  const label = input.parentElement;
+  const img = label.querySelector('.rp-photo-img');
+  const ph = label.querySelector('.rp-photo-placeholder');
+  const reader = new FileReader();
+  reader.onload = e => {
+    img.src = e.target.result;
+    img.style.display = 'block';
+    if(ph) ph.style.display = 'none';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function rpPreviewIssue(input, imgId){
+  if(!input.files[0]) return;
+  const img = document.getElementById(imgId);
+  const ph = input.parentElement.querySelector('span');
+  const reader = new FileReader();
+  reader.onload = e => {
+    img.src = e.target.result;
+    img.style.display = 'block';
+    if(ph) ph.style.display = 'none';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function rpAutoNotes(){
+  const name = document.getElementById('rp-name')?.value.trim() || '고객님';
+  const type = document.getElementById('rp-type')?.value || '입주 전 청소';
+  const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b=>{
+    const label = b.querySelector('.rp-item-name').textContent;
+    return `· ${label} 바닥·벽면 청소`;
+  });
+  const nameStr = name === '고객님' ? '고객님' : name + '님';
+  const notes = `안녕하세요, ${nameStr}.\n새로운 보금자리의 시작을 진심으로 축하드립니다.\n\n${selected.join('\n')}\n\n행복한 새 출발을 응원합니다.`;
+  const el = document.getElementById('rp-notes');
+  if(el) el.value = notes;
+}
+
+// 이미지 압축 함수
+function rpCompressImage(dataUrl, maxW=800, quality=0.75){
+  return new Promise(resolve=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if(w > maxW){ h = Math.round(h * maxW/w); w = maxW; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataUrl;
+  });
+}
+
+// PDF 레포트 HTML 생성
+async function buildReportHTML(){
+  const name = document.getElementById('rp-name').value.trim() || '고객님';
+  const phone = document.getElementById('rp-phone').value.trim();
+  const type = document.getElementById('rp-type').value;
+  const size = document.getElementById('rp-size').value;
+  const addr = document.getElementById('rp-addr').value.trim() || '—';
+  const crew = document.getElementById('rp-crew').value.trim() || '—';
+  const notes = document.getElementById('rp-notes').value.trim();
+  const hasIssue = document.getElementById('rp-issue-toggle').checked;
+  const issueText = document.getElementById('rp-issue-text').value.trim();
+  const today = new Date().toLocaleDateString('ko-KR');
+  const nameStr = name === '고객님' ? '고객님' : name + '님';
+  const companyName = cfg.company || '서프로클린';
+  const companyPhone = cfg.phone || '';
+
+  // 선택된 항목 + 사진 수집
+  const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b=>b.dataset.key);
+  const labelOf = k => RP_ITEMS.find(i=>i.key===k)?.label || k;
+
+  // 사진 수집 및 압축
+  const photoSections = await Promise.all(
+    [...document.querySelectorAll('#rp-photo-area > div')].map(async (div, i)=>{
+      const key = selected[i];
+      const imgs = div.querySelectorAll('.rp-photo-img');
+      const before = imgs[0]?.src && imgs[0].style.display!=='none' ? await rpCompressImage(imgs[0].src) : null;
+      const after  = imgs[1]?.src && imgs[1].style.display!=='none' ? await rpCompressImage(imgs[1].src) : null;
+      return {key, label:labelOf(key), before, after};
+    })
+  );
+
+  // 특이사항 사진
+  const ip1El = document.getElementById('rp-issue-prev1');
+  const ip2El = document.getElementById('rp-issue-prev2');
+  const ip1 = ip1El?.src && ip1El.style.display!=='none' ? await rpCompressImage(ip1El.src) : null;
+  const ip2 = ip2El?.src && ip2El.style.display!=='none' ? await rpCompressImage(ip2El.src) : null;
+
+  const photoCell = (src, label) => src
+    ? `<img src="${src}" style="width:100%;height:100%;object-fit:cover;">`
+    : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#a08060;">${label}</div>`;
+
+  const sectionRows = photoSections.map(s=>`
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:500;color:#2e1f0e;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+        ${s.label}<span style="flex:1;height:0.5px;background:#e0d0b8;display:inline-block;"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+        <div>
+          <div style="font-size:9px;letter-spacing:1px;text-align:center;padding:3px 0;background:#f5e8dc;color:#7a4020;margin-bottom:4px;border-radius:3px;font-weight:500;">BEFORE</div>
+          <div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#e0ceb8;">${photoCell(s.before,'시공 전')}</div>
+        </div>
+        <div>
+          <div style="font-size:9px;letter-spacing:1px;text-align:center;padding:3px 0;background:#e4f0e0;color:#2a5a30;margin-bottom:4px;border-radius:3px;font-weight:500;">AFTER</div>
+          <div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#cce4cc;">${photoCell(s.after,'시공 후')}</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  const issueSectionHTML = hasIssue ? `
+    <div style="page-break-before:always;"></div>
+    <div style="background:#fffdf8;font-family:Arial,sans-serif;padding:0;">
+      <div style="background:#2e1f0e;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:11px;font-weight:500;color:#f5ede0;letter-spacing:1.5px;">SPECIAL NOTES</div>
+        <div style="font-size:10px;color:#8a6a50;">특이사항 · 2 / 2</div>
+      </div>
+      <div style="padding:20px 22px;">
+        <div style="font-size:9px;font-weight:500;letter-spacing:2px;color:#a07850;border-bottom:1px solid #e8ddd0;padding-bottom:6px;margin-bottom:12px;">SITE INSPECTION NOTES</div>
+        <div style="border:1px solid #e8d8b0;border-radius:3px;padding:12px 14px;background:#fffbf0;font-size:11.5px;color:#2e1f0e;line-height:1.85;margin-bottom:16px;">${(issueText||'').replace(/\n/g,'<br>')}</div>
+        ${(ip1||ip2) ? `
+        <div style="font-size:9px;font-weight:500;letter-spacing:2px;color:#a07850;border-bottom:1px solid #e8ddd0;padding-bottom:6px;margin-bottom:12px;">EVIDENCE PHOTOS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+          ${ip1?`<div><div style="font-size:10px;color:#a08060;margin-bottom:4px;">사진 1</div><div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;"><img src="${ip1}" style="width:100%;height:100%;object-fit:cover;"></div></div>`:'<div></div>'}
+          ${ip2?`<div><div style="font-size:10px;color:#a08060;margin-bottom:4px;">사진 2</div><div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;"><img src="${ip2}" style="width:100%;height:100%;object-fit:cover;"></div></div>`:'<div></div>'}
+        </div>` : ''}
+        <div style="font-size:9px;font-weight:500;letter-spacing:2px;color:#a07850;border-bottom:1px solid #e8ddd0;padding-bottom:6px;margin-bottom:12px;">ADDITIONAL NOTES</div>
+        <div style="background:#f8f0e4;border-left:3px solid #c89a5a;padding:12px 14px;font-size:11.5px;color:#2e1f0e;line-height:1.85;border-radius:0 4px 4px 0;">
+          특이사항 내용은 시공 전 현장 상태를 사진으로 기록하였으며, 당사 귀책 사유가 아님을 확인합니다.<br><br>
+          추가 문의사항은 언제든지 연락 주시기 바랍니다.<br>
+          <span style="color:#c89a5a;font-weight:500;">${companyPhone}</span>
+        </div>
+      </div>
+      <div style="background:#2e1f0e;padding:9px 22px;display:flex;justify-content:space-between;">
+        <div style="font-size:10px;color:#8a6a50;">${companyName}</div>
+        <div style="font-size:10px;color:#8a6a50;">2 / 2</div>
+      </div>
+    </div>` : '';
+
+  const totalPages = hasIssue ? 3 : 2;
+
+  return `<div style="background:#fffdf8;font-family:Arial,sans-serif;width:794px;">
+
+    <!-- 표지 -->
+    <div style="background:#2e1f0e;padding:32px 22px 26px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-40px;right:-30px;width:130px;height:130px;background:#c89a5a;opacity:0.15;border-radius:50%;"></div>
+      <div style="position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;background:#8a6a3a;opacity:0.12;border-radius:50%;"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;position:relative;">
+        <div style="width:38px;height:38px;background:#c89a5a;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#2e1f0e;font-size:16px;font-weight:700;">${companyName.charAt(0)}</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;color:#f5ede0;">${companyName}</div>
+          <div style="font-size:10px;color:#8a6a50;">입주청소 전문</div>
+        </div>
+      </div>
+      <div style="font-size:9px;letter-spacing:3px;color:#c89a5a;font-weight:500;margin-bottom:10px;position:relative;">CLEANING COMPLETION REPORT</div>
+      <div style="font-size:28px;font-weight:500;color:#f5ede0;line-height:1.2;margin-bottom:6px;position:relative;">청소 완료<br>보고서</div>
+      <div style="width:32px;height:2px;background:#c89a5a;margin:14px 0;position:relative;"></div>
+      <div style="font-size:11px;color:#8a6a50;font-style:italic;position:relative;">새로운 시작을 위하여 최선을 다하는 입주청소</div>
+    </div>
+
+    <div style="padding:20px 22px;">
+      <div style="font-size:9px;font-weight:500;letter-spacing:2px;color:#a07850;border-bottom:1px solid #e8ddd0;padding-bottom:6px;margin-bottom:12px;">CLIENT INFORMATION</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin-bottom:16px;">
+        <div><div style="font-size:11px;color:#a08060;">고객</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${nameStr}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">청소 유형</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${type}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">시공 주소</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${addr}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">시공 일자</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${today}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">평수</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${size?size+'평':'—'}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">작업 인원·시간</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${crew}</div></div>
+      </div>
+      <div style="background:#2e1f0e;border-radius:3px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:22px;height:22px;border:2px solid #c89a5a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c89a5a;font-size:11px;">✓</div>
+          <div><div style="font-size:12px;font-weight:500;color:#f5ede0;">시공 완료</div><div style="font-size:9px;color:#8a6a50;">${today} · 총 ${totalPages}페이지</div></div>
+        </div>
+        <div style="font-size:9px;color:#c89a5a;letter-spacing:1px;">COMPLETED</div>
+      </div>
+      <div style="border:1px solid #d4a870;border-radius:3px;padding:12px 14px;">
+        <div style="font-size:9px;letter-spacing:2px;color:#a07840;font-weight:500;margin-bottom:10px;">A/S INFORMATION</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#a08060;">접수 기간</span><span style="font-size:11px;font-weight:500;color:#2e1f0e;">시공 후 <span style="color:#c89a5a;">24시간 이내</span></span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:11px;color:#a08060;">접수 방법</span><span style="font-size:11px;font-weight:500;color:#2e1f0e;">문자 + 사진 첨부</span></div>
+        <div style="height:0.5px;background:#e0d0b8;margin-bottom:8px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:11px;color:#a08060;">담당자 연락처</span><span style="font-size:16px;font-weight:500;color:#c89a5a;">${companyPhone}</span></div>
+      </div>
+    </div>
+    <div style="background:#2e1f0e;padding:9px 22px;display:flex;justify-content:space-between;">
+      <div style="font-size:10px;color:#8a6a50;">${companyName}</div>
+      <div style="font-size:10px;color:#8a6a50;">총 ${totalPages}페이지</div>
+    </div>
+
+    <!-- 공통항목 -->
+    <div style="background:#2e1f0e;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
+      <div style="font-size:11px;font-weight:500;color:#f5ede0;letter-spacing:1.5px;">COMMON ITEMS</div>
+      <div style="font-size:10px;color:#8a6a50;">공통 항목 · 1 / ${totalPages-1}</div>
+    </div>
+    <div style="padding:20px 22px;">
+      ${sectionRows}
+      <div style="font-size:9px;font-weight:500;letter-spacing:2px;color:#a07850;border-bottom:1px solid #e8ddd0;padding-bottom:6px;margin-bottom:12px;margin-top:4px;">COMPLETION NOTES</div>
+      <div style="background:#f8f0e4;border-left:3px solid #c89a5a;padding:12px 14px;font-size:11.5px;color:#2e1f0e;line-height:1.85;border-radius:0 4px 4px 0;">${notes.replace(/\n/g,'<br>')}</div>
+    </div>
+    <div style="background:#2e1f0e;padding:9px 22px;display:flex;justify-content:space-between;">
+      <div style="font-size:10px;color:#8a6a50;">${companyName}</div>
+      <div style="font-size:10px;color:#8a6a50;">1 / ${totalPages-1}</div>
+    </div>
+
+    ${issueSectionHTML}
+  </div>`;
+}
+
+async function generateReport(){
+  const name = document.getElementById('rp-name').value.trim();
+  const phone = document.getElementById('rp-phone').value.trim();
+  if(!name || !phone){ alert('❗ 고객명과 연락처는 필수입니다'); return; }
+
+  const btn = document.getElementById('rp-send-btn');
+  const txtEl = document.getElementById('rp-btn-text');
+  const loadEl = document.getElementById('rp-loading');
+  btn.disabled = true;
+  loadEl.style.display = 'block';
+
+  try {
+    txtEl.textContent = '보고서 생성 중...';
+    const html = await buildReportHTML();
+
+    // 임시 DOM에 렌더링
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#fff;';
+    container.innerHTML = html;
+    document.body.appendChild(container);
+
+    txtEl.textContent = 'PDF 변환 중...';
+    await new Promise(r=>setTimeout(r,300));
+
+    const canvas = await html2canvas(container, {
+      scale:1.5, useCORS:true, backgroundColor:'#fffdf8', logging:false
+    });
+    document.body.removeChild(container);
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const imgW=210, imgH=(canvas.height*imgW)/canvas.width;
+    const pageH=297;
+    let y=0;
+    while(y<imgH){
+      if(y>0) pdf.addPage();
+      pdf.addImage(canvas.toDataURL('image/jpeg',0.8),'JPEG',0,-y,imgW,imgH);
+      y+=pageH;
+    }
+    const pdfBase64 = pdf.output('datauristring').split(',')[1];
+
+    txtEl.textContent = '업로드 중...';
+    const ownerPhone = cfg.phone;
+    const res = await fetch(`${SERVER}/api/contract/upload`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        pdfBase64,
+        customerPhone: phone.replace(/-/g,''),
+        ownerPhone: ownerPhone?.replace(/-/g,''),
+        customerName: name,
+        companyName: cfg.company || '서프로클린',
+        companyPhone: cfg.phone || ''
+      })
+    });
+    const data = await res.json();
+
+    if(data.success){
+      saveHistory(phone, `청소완료 보고서 발송\n${data.pdfUrl}`, false);
+      toast('✅ 완료 보고서가 발송되었습니다!');
+    } else {
+      toast('❌ 발송 실패: '+(data.error||'오류'));
+    }
+  } catch(e){
+    console.error(e);
+    toast('❌ 오류: '+e.message);
+  } finally {
+    btn.disabled = false;
+    loadEl.style.display = 'none';
+    txtEl.textContent = '📄 보고서 생성 → PDF 발송';
+  }
 }
 
 let toastTimer;
