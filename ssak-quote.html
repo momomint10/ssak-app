@@ -812,8 +812,28 @@ async function sendSMS(){
   btn.disabled=true;
   try{
     // subject: msg-preview에 저장된 인사말 사용 (본문 첫줄과 달라야 [Web발신] 중복 방지)
-    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적 안내`;
-    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,subject})});
+    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적안내`;
+    // 예약링크 단축: 긴 URL을 토큰 URL로 교체
+    let finalMsg = msg;
+    const bookingLongUrl = msg.match(/https:\/\/momomint10\.github\.io\/ssak-app\/booking\.html\?[^\s\n]+/);
+    if (bookingLongUrl) {
+      try {
+        const tokenRes = await fetch(`${SERVER}/api/booking/token`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            name:  document.getElementById('q-name')?.value?.trim() || '',
+            phone: document.getElementById('q-phone')?.value?.trim() || to,
+            size:  document.getElementById('q-size')?.value || '',
+            type:  document.getElementById('q-type')?.value || '',
+            price: document.getElementById('qr-price')?.textContent?.replace(/[^0-9]/g,'') || '',
+            companyName: cfg.company || '서프로클린'
+          })
+        });
+        const td = await tokenRes.json();
+        if (td.success) finalMsg = msg.replace(bookingLongUrl[0], td.url);
+      } catch(e) { /* 실패 시 기존 URL 유지 */ }
+    }
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg:finalMsg,subject})});
     const data=await res.json();
     if(data.success){saveHistory(to,msg,night);toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');}
     else toast('❌ 발송 실패: '+(data.error||'오류'));
@@ -918,8 +938,28 @@ async function sendFaqReply(i){
   if(night)msg=msg+'\n\n'+cfg.nightMsg;
   try{
     // subject: msg-preview에 저장된 인사말 사용 (본문 첫줄과 달라야 [Web발신] 중복 방지)
-    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적 안내`;
-    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,subject})});
+    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적안내`;
+    // 예약링크 단축: 긴 URL을 토큰 URL로 교체
+    let finalMsg = msg;
+    const bookingLongUrl = msg.match(/https:\/\/momomint10\.github\.io\/ssak-app\/booking\.html\?[^\s\n]+/);
+    if (bookingLongUrl) {
+      try {
+        const tokenRes = await fetch(`${SERVER}/api/booking/token`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            name:  document.getElementById('q-name')?.value?.trim() || '',
+            phone: document.getElementById('q-phone')?.value?.trim() || to,
+            size:  document.getElementById('q-size')?.value || '',
+            type:  document.getElementById('q-type')?.value || '',
+            price: document.getElementById('qr-price')?.textContent?.replace(/[^0-9]/g,'') || '',
+            companyName: cfg.company || '서프로클린'
+          })
+        });
+        const td = await tokenRes.json();
+        if (td.success) finalMsg = msg.replace(bookingLongUrl[0], td.url);
+      } catch(e) { /* 실패 시 기존 URL 유지 */ }
+    }
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg:finalMsg,subject})});
     const data=await res.json();
     if(data.success){saveHistory(to,msg,night);toast(night?'✅ FAQ 발송 완료 (야간 문구 추가)':'✅ FAQ 답변 발송 완료!');}
     else toast('❌ 발송 실패: '+(data.error||'오류'));
@@ -1199,8 +1239,28 @@ async function sendContract(){
   try{
     toast('📤 발송 중...');
     // subject: msg-preview에 저장된 인사말 사용 (본문 첫줄과 달라야 [Web발신] 중복 방지)
-    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적 안내`;
-    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,subject})});
+    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적안내`;
+    // 예약링크 단축: 긴 URL을 토큰 URL로 교체
+    let finalMsg = msg;
+    const bookingLongUrl = msg.match(/https:\/\/momomint10\.github\.io\/ssak-app\/booking\.html\?[^\s\n]+/);
+    if (bookingLongUrl) {
+      try {
+        const tokenRes = await fetch(`${SERVER}/api/booking/token`, {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            name:  document.getElementById('q-name')?.value?.trim() || '',
+            phone: document.getElementById('q-phone')?.value?.trim() || to,
+            size:  document.getElementById('q-size')?.value || '',
+            type:  document.getElementById('q-type')?.value || '',
+            price: document.getElementById('qr-price')?.textContent?.replace(/[^0-9]/g,'') || '',
+            companyName: cfg.company || '서프로클린'
+          })
+        });
+        const td = await tokenRes.json();
+        if (td.success) finalMsg = msg.replace(bookingLongUrl[0], td.url);
+      } catch(e) { /* 실패 시 기존 URL 유지 */ }
+    }
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg:finalMsg,subject})});
     const data=await res.json();
     if(data.success){saveHistory(to,msg,false);toast('✅ 계약서 SMS 발송 완료!');}
     else toast('❌ 발송 실패: '+(data.error||'오류'));

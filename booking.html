@@ -208,33 +208,53 @@ const urlCompany= params.get('company') || '서프로클린';
 
 const typeLabels = {'move-in':'입주 전','move-out':'이사 후','new':'신축 준공','life':'생활 청소'};
 
-window.onload = () => {
-  // 헤더 업데이트
-  document.getElementById('hdr-logo').textContent = urlCompany.charAt(0);
-  document.getElementById('hdr-company').textContent = urlCompany;
-  document.getElementById('footer-company').textContent = urlCompany + ' 입주청소';
-  document.title = urlCompany + ' — 예약 신청';
+function applyQuoteData(d) {
+  const company = d.companyName || urlCompany || '서프로클린';
+  document.getElementById('hdr-logo').textContent = company.charAt(0);
+  document.getElementById('hdr-company').textContent = company;
+  document.getElementById('footer-company').textContent = company + ' 입주청소';
+  document.title = company + ' — 예약 신청';
 
-  // URL 파라미터로 폼 자동 채우기
-  if (urlName)  { const el = document.getElementById('f-name');  el.value = urlName;  el.classList.add('prefilled'); }
-  if (urlPhone) { const el = document.getElementById('f-phone'); el.value = urlPhone; el.classList.add('prefilled'); }
-  if (urlSize)  { const el = document.getElementById('f-size');  el.value = urlSize;  el.classList.add('prefilled'); }
-  if (urlType)  { const el = document.getElementById('f-type');  el.value = urlType;  el.classList.add('prefilled'); }
+  if (d.name)  { const el = document.getElementById('f-name');  el.value = d.name;  el.classList.add('prefilled'); }
+  if (d.phone) { const el = document.getElementById('f-phone'); el.value = d.phone; el.classList.add('prefilled'); }
+  if (d.size)  { const el = document.getElementById('f-size');  el.value = d.size;  el.classList.add('prefilled'); }
+  if (d.type)  { const el = document.getElementById('f-type');  el.value = d.type;  el.classList.add('prefilled'); }
 
-  // 견적 요약 카드
-  if (urlSize || urlPrice) {
+  if (d.size || d.price) {
     document.getElementById('quote-summary').style.display = 'block';
-    document.getElementById('summary-type').textContent = typeLabels[urlType] || '입주 전 청소';
-    if (urlSize)  document.getElementById('summary-size').textContent  = urlSize + '평';
-    if (urlPrice) document.getElementById('summary-price').textContent = parseInt(urlPrice).toLocaleString() + '원';
+    document.getElementById('summary-type').textContent = typeLabels[d.type] || '입주 전 청소';
+    if (d.size)  document.getElementById('summary-size').textContent  = d.size + '평';
+    if (d.price) document.getElementById('summary-price').textContent = parseInt(d.price).toLocaleString() + '원';
   }
 
-  // 오늘 이전 날짜 비활성화
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('f-date').min = today;
-
   document.getElementById('screen-loading').style.display = 'none';
   document.getElementById('screen-main').style.display = 'block';
+}
+
+window.onload = async () => {
+  const token = params.get('t'); // 단축 토큰
+
+  if (token) {
+    // 토큰 방식: 서버에서 견적 데이터 가져오기
+    try {
+      const res = await fetch(`${SERVER}/api/booking/token/${token}`);
+      const json = await res.json();
+      if (!res.ok) {
+        document.getElementById('screen-loading').innerHTML =
+          '<div class="state-icon">⚠️</div><div class="state-title">' + (json.error || '유효하지 않은 링크') + '</div><div class="state-sub">새 견적을 요청해 주세요</div>';
+        return;
+      }
+      applyQuoteData(json.data);
+    } catch(e) {
+      document.getElementById('screen-loading').innerHTML =
+        '<div class="state-icon">❌</div><div class="state-title">서버 연결 오류</div><div class="state-sub">잠시 후 다시 시도해주세요</div>';
+    }
+  } else {
+    // URL 파라미터 방식 (fallback)
+    applyQuoteData({ name: urlName, phone: urlPhone, size: urlSize, type: urlType, price: urlPrice, companyName: urlCompany });
+  }
 };
 
 function checkReady() {
