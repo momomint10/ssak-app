@@ -749,9 +749,10 @@ function buildMsg(size,type,total,extraItems){
   if(!size){document.getElementById('msg-preview').textContent='평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️';document.getElementById('msg-char').textContent='';return;}
   if(!total){const adj=parseFloat(document.getElementById('q-house').value);const base=Math.round(size*getBaseRate(size)*adj*typeRates[type]);const vat=Math.round(base*0.1);total=base+vat;}
   const nameStr=name==='고객님'?'고객님':name+'님';
-  // ★ 인사말은 subject(제목)에만 → 본문에서 제거해야 [Web발신] 앞뒤 중복 방지
-  const smsSubject=`안녕하세요, ${nameStr}! ${cfg.company}`;
-  let msg=`━━━━ 견적 안내 ━━━━\n`;
+  // ★ 구조: 첫 줄(제목) + 둘째 줄(인사말) + 내용
+  // 서버가 첫 줄을 LMS subject로 분리 → [Web발신] 앞엔 제목만, 본문엔 인사말+내용만 표시
+  const smsSubject=`━━━━ 견적 안내 ━━━━`; // 첫 줄(자동으로 subject 처리됨)
+  let msg=`━━━━ 견적 안내 ━━━━\n안녕하세요, ${nameStr}! 😊 ${cfg.company}\n`;
   msg+=`🏠 ${size}평 ${typeLabels[type]}\n`;
   msg+=`💰 ${total.toLocaleString()}원 (VAT포함)\n`;
   msg+=`⏰ 약 ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}시간\n`;
