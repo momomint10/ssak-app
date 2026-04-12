@@ -1319,25 +1319,27 @@ async function generateAndSendPDF() {
     const paperEl = document.getElementById('ct-paper');
 
     const canvas = await html2canvas(paperEl, {
-      scale: 1.5,
+      scale: 2,
       useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
-      imageTimeout: 0
+      imageTimeout: 0,
+      windowWidth: paperEl.scrollWidth,
+      windowHeight: paperEl.scrollHeight
     });
 
-    // jsPDF로 PDF 생성
+    // A4 PDF — 여백 12mm, 한 장에 맞게
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    const imgW = 210;
-    const imgH = (canvas.height * imgW) / canvas.width;
-    const pageH = 297;
-    let y = 0;
-    while (y < imgH) {
-      if (y > 0) pdf.addPage();
-      pdf.addImage(canvas.toDataURL('image/jpeg', 0.75), 'JPEG', 0, -y, imgW, imgH);
-      y += pageH;
-    }
+    const margin = 12;
+    const maxW = 210 - margin * 2;
+    const maxH = 297 - margin * 2;
+    const ratio = canvas.width / canvas.height;
+    let pW = maxW, pH = maxW / ratio;
+    if (pH > maxH) { pH = maxH; pW = maxH * ratio; }
+    const offsetX = margin + (maxW - pW) / 2;
+    const offsetY = margin + (maxH - pH) / 2;
+    pdf.addImage(canvas.toDataURL('image/jpeg', 0.88), 'JPEG', offsetX, offsetY, pW, pH);
 
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
 
