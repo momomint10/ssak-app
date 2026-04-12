@@ -752,7 +752,7 @@ function buildMsg(size,type,total,extraItems){
   // ★ 구조: 첫 줄(제목) + 둘째 줄(인사말) + 내용
   // 서버가 첫 줄을 LMS subject로 분리 → [Web발신] 앞엔 제목만, 본문엔 인사말+내용만 표시
   const smsSubject=`━━━━ 견적 안내 ━━━━`; // 첫 줄(자동으로 subject 처리됨)
-  let msg=`━━━━ 견적 안내 ━━━━\n안녕하세요, ${nameStr}! 😊 ${cfg.company}\n`;
+  let msg=`\n\n안녕하세요, ${nameStr}! 😊 ${cfg.company}\n`;
   msg+=`🏠 ${size}평 ${typeLabels[type]}\n`;
   msg+=`💰 ${total.toLocaleString()}원 (VAT포함)\n`;
   msg+=`⏰ 약 ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}시간\n`;
