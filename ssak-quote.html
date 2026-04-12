@@ -749,8 +749,8 @@ function buildMsg(size,type,total,extraItems){
   if(!size){document.getElementById('msg-preview').textContent='평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️';document.getElementById('msg-char').textContent='';return;}
   if(!total){const adj=parseFloat(document.getElementById('q-house').value);const base=Math.round(size*getBaseRate(size)*adj*typeRates[type]);const vat=Math.round(base*0.1);total=base+vat;}
   const nameStr=name==='고객님'?'고객님':name+'님';
-  // subject=' '(공백) 고정 → CoolSMS 첫줄 자동추출 방지 → [Web발신] 앞 중복 제거
-  const smsSubject = ' ';
+  // subject를 [업체명] 견적안내로 명시 → 본문 첫줄 자동추출 방지
+  const smsSubject = `[${cfg.company||'서프로클린'}] 견적안내`;
   let msg=`안녕하세요, ${nameStr}!\n${cfg.company} 입주청소입니다.\n\n`;
   msg+=`━━━━ 견적 안내 ━━━━\n`;
   msg+=`${size}평 ${typeLabels[type]} 청소\n`;
