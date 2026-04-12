@@ -463,6 +463,123 @@ app.post('/api/contract/:token/sign', async (req, res) => {
   }
 });
 
+// ── 예약 신청 접수 ─────────────────────────────────────────────────────────
+app.post('/api/booking', async (req, res) => {
+  const { name, phone, address, size, type, date, time, notes, price, companyName } = req.body;
+
+  if (!name || !phone || !address) {
+    return res.status(400).json({ error: '이름, 연락처, 주소는 필수입니다' });
+  }
+
+  const typeLabels = { 'move-in':'입주 전', 'move-out':'이사 후', 'new':'신축 준공', 'life':'생활 청소' };
+
+  try {
+    // Supabase bookings 테이블에 저장
+    const { data: booking, error } = await supabase
+      .from('bookings')
+      .insert([{
+        name,
+        phone: phone.replace(/-/g, ''),
+        address,
+        size: size ? parseInt(size) : null,
+        type: type || 'move-in',
+        preferred_date: date || null,
+        preferred_time: time || null,
+        notes: notes || null,
+        price: price ? parseInt(price) : null,
+        company_name: companyName || '서프로클린',
+        status: 'pending',
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    // 사장님에게 SMS 알림 발송
+    const ownerPhone = process.env.COOLSMS_FROM; // 알림 수신 번호 (발신번호 재사용)
+    const typeLabel  = typeLabels[type] || type || '입주 전';
+    const ownerMsg   =
+      `안녕하세요! 새 예약이 접수됐어요.\n\n` +
+      `고객: ${name} (${phone})\n` +
+      `주소: ${address}\n` +
+      `유형: ${size ? size + '평 ' : ''}${typeLabel}\n` +
+      (date ? `희망일: ${date}${time ? ' ' + time : ''}\n` : '') +
+      (price ? `견적: ${parseInt(price).toLocaleString()}원\n` : '') +
+      (notes ? `요청: ${notes}\n` : '') +
+      `\n싹싹 앱에서 확인하세요 🧹`;
+
+    if (ownerPhone) {
+      await sendSMSUtil(ownerPhone.replace(/-/g, ''), ownerMsg, '새 예약 접수');
+    }
+
+    // 고객에게 접수 확인 SMS 발송
+    const customerMsg =
+      `안녕하세요, ${name}님!\n${companyName || '서프로클린'} 입주청소입니다.\n\n` +
+      `예약 신청이 접수됐어요.\n` +
+      `담당자가 확인 후 빠르게 연락드리겠습니다 😊\n\n` +
+      (date ? `희망일: ${date}${time ? ' ' + time : ''}\n` : '') +
+      `문의: ${process.env.COOLSMS_FROM || ''}`;
+
+    await sendSMSUtil(phone.replace(/-/g, ''), customerMsg, `[${companyName || '서프로클린'}] 예약접수`);
+
+    console.log(`예약 접수: ${name} (${phone})`);
+    res.json({ success: true, bookingId: booking.id });
+
+  } catch (err) {
+    console.error('예약 접수 오류:', err);
+    res.status(500).json({ error: '서버 오류: ' + err.message });
+  }
+});
+
+// ── 예약 목록 조회 (사장님용) ───────────────────────────────────────────────
+app.get('/api/bookings', async (req, res) => {
+  const adminKey = req.headers['x-admin-key'];
+  if (adminKey !== process.env.ADMIN_KEY) {
+    return res.status(401).json({ error: '인증 실패' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(100);
+
+    if (error) throw error;
+    res.json({ success: true, count: data.length, data });
+
+  } catch (err) {
+    console.error('예약 조회 오류:', err);
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
+
+// ── 예약 상태 변경 (사장님용) ───────────────────────────────────────────────
+app.put('/api/bookings/:id/status', async (req, res) => {
+  const adminKey = req.headers['x-admin-key'];
+  if (adminKey !== process.env.ADMIN_KEY) {
+    return res.status(401).json({ error: '인증 실패' });
+  }
+
+  const { id } = req.params;
+  const { status } = req.body; // pending | confirmed | completed | cancelled
+
+  try {
+    const { data, error } = await supabase
+      .from('bookings')
+      .update({ status })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.json({ success: true, data });
+
+  } catch (err) {
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
+
 // 서버 시작
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

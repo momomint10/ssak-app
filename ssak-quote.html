@@ -763,7 +763,21 @@ function buildMsg(size,type,total,extraItems){
   const links=[];
   if(document.getElementById('opt-video')?.classList.contains('on'))links.push(`\n📹 시공영상: ${cfg.video}`);
   if(document.getElementById('opt-review')?.classList.contains('on'))links.push(`\n⭐ 고객후기: ${cfg.review}`);
-  if(document.getElementById('opt-booking')?.classList.contains('on'))links.push(`\n📅 예약신청: ${cfg.booking}`);
+  if(document.getElementById('opt-booking')?.classList.contains('on')){
+    // 고객 정보를 URL에 담아 booking.html로 연결
+    const bookingBase = 'https://momomint10.github.io/ssak-app/booking.html';
+    const bParams = new URLSearchParams({
+      name:    name !== '고객님' ? name : '',
+      phone:   document.getElementById('q-phone')?.value?.trim() || '',
+      size:    String(size || ''),
+      type:    type || '',
+      price:   String(total || ''),
+      company: cfg.company || '서프로클린',
+    });
+    // 빈 값 제거
+    [...bParams.keys()].forEach(k => { if(!bParams.get(k)) bParams.delete(k); });
+    links.push(`\n📅 예약신청: ${bookingBase}?${bParams.toString()}`);
+  }
   if(document.getElementById('opt-kakao')?.classList.contains('on'))links.push(`\n💬 카카오: ${cfg.kakao}`);
   if(links.length)msg+=links.join('');
   const previewEl=document.getElementById('msg-preview');
