@@ -277,15 +277,27 @@ app.post('/api/sms/send', async (req, res) => {
         'Content-Type': 'application/json',
         'Authorization': `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
       },
-      body: JSON.stringify({
-        message: {
-          to: to.replace(/-/g, ''),
-          from: from.replace(/-/g, ''),
-          text: finalText,
-          type: msgType,
-          ...(msgType === 'LMS' && finalSubject ? { subject: finalSubject } : {})
-        }
-      })
+body: JSON.stringify((() => {
+  // LMS: 첫 줄을 subject로 분리 → [Web발신] 앞뒤 중복 제거
+  let finalText = msg;
+  let finalSubject = '';
+  if (msgType === 'LMS') {
+    const lines = msg.split('\n');
+    if (lines.length > 1) {
+      finalSubject = lines[0].trim().slice(0, 20);
+      finalText = lines.slice(1).join('\n').replace(/^\n+/, '');
+    }
+  }
+  return {
+    message: {
+      to: to.replace(/-/g, ''),
+      from: from.replace(/-/g, ''),
+      text: finalText,
+      type: msgType,
+      ...(finalSubject ? { subject: finalSubject } : {})
+    }
+  };
+})())
     });
 
     const data = await response.json();
