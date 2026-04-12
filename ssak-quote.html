@@ -749,8 +749,9 @@ function buildMsg(size,type,total,extraItems){
   if(!size){document.getElementById('msg-preview').textContent='평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️';document.getElementById('msg-char').textContent='';return;}
   if(!total){const adj=parseFloat(document.getElementById('q-house').value);const base=Math.round(size*getBaseRate(size)*adj*typeRates[type]);const vat=Math.round(base*0.1);total=base+vat;}
   const nameStr=name==='고객님'?'고객님':name+'님';
-  let msg=`안녕하세요, ${nameStr}! ${cfg.company}입니다. 😊\n`;
-  msg+=`━━━━ 견적 안내 ━━━━\n`;
+  // ★ 인사말은 subject(제목)에만 → 본문에서 제거해야 [Web발신] 앞뒤 중복 방지
+  const smsSubject=`안녕하세요, ${nameStr}! ${cfg.company}`;
+  let msg=`━━━━ 견적 안내 ━━━━\n`;
   msg+=`🏠 ${size}평 ${typeLabels[type]}\n`;
   msg+=`💰 ${total.toLocaleString()}원 (VAT포함)\n`;
   msg+=`⏰ 약 ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}시간\n`;
@@ -765,7 +766,9 @@ function buildMsg(size,type,total,extraItems){
   if(document.getElementById('opt-kakao')?.classList.contains('on'))links.push(`💬 카카오: ${cfg.kakao}`);
   if(links.length)msg+='\n'+links.join('\n')+'\n';
   msg+=`📞 ${cfg.phone}`;
-  document.getElementById('msg-preview').textContent=msg;
+  const previewEl=document.getElementById('msg-preview');
+  previewEl.textContent=msg;
+  previewEl.dataset.smsSubject=smsSubject; // [Web발신] 중복 방지용 subject
   document.getElementById('msg-char').textContent=`${msg.length}자 (${msg.length>90?'LMS 장문':'SMS 단문'})`;
   const phone=document.getElementById('q-phone').value.trim();
   if(phone)document.getElementById('send-phone').value=phone;
@@ -794,8 +797,8 @@ async function sendSMS(){
   document.getElementById('send-loading').style.display='block';
   btn.disabled=true;
   try{
-    // subject 설정: [Web발신] 앞에 표시될 제목 (미설정 시 본문 첫 줄이 중복 노출됨)
-    const subject = `[${cfg.company||'서프로클린'}] 견적 안내`;
+    // subject: msg-preview에 저장된 인사말 사용 (본문 첫줄과 달라야 [Web발신] 중복 방지)
+    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적 안내`;
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,subject})});
     const data=await res.json();
     if(data.success){saveHistory(to,msg,night);toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');}
@@ -900,8 +903,8 @@ async function sendFaqReply(i){
   const night=isNightTime();
   if(night)msg=msg+'\n\n'+cfg.nightMsg;
   try{
-    // subject 설정: [Web발신] 앞에 표시될 제목 (미설정 시 본문 첫 줄이 중복 노출됨)
-    const subject = `[${cfg.company||'서프로클린'}] 견적 안내`;
+    // subject: msg-preview에 저장된 인사말 사용 (본문 첫줄과 달라야 [Web발신] 중복 방지)
+    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적 안내`;
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,subject})});
     const data=await res.json();
     if(data.success){saveHistory(to,msg,night);toast(night?'✅ FAQ 발송 완료 (야간 문구 추가)':'✅ FAQ 답변 발송 완료!');}
@@ -1181,8 +1184,8 @@ async function sendContract(){
   const msg=buildContractText();
   try{
     toast('📤 발송 중...');
-    // subject 설정: [Web발신] 앞에 표시될 제목 (미설정 시 본문 첫 줄이 중복 노출됨)
-    const subject = `[${cfg.company||'서프로클린'}] 견적 안내`;
+    // subject: msg-preview에 저장된 인사말 사용 (본문 첫줄과 달라야 [Web발신] 중복 방지)
+    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적 안내`;
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,subject})});
     const data=await res.json();
     if(data.success){saveHistory(to,msg,false);toast('✅ 계약서 SMS 발송 완료!');}
