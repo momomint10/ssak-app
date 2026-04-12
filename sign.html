@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>싹싹 — 계약서 서명</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+  :root{--primary:#00C896;--primary-dark:#009E78;--primary-light:#E6FBF5;--gray-100:#F7F8FA;--gray-200:#EEEFF2;--gray-400:#A0A4B0;--gray-600:#5A5F72;--gray-800:#1E2130;--warm-dark:#2e1f0e;--gold:#c89a5a;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans KR',sans-serif;background:#f5f3ef;min-height:100vh;}
+  .app{max-width:480px;margin:0 auto;background:#fffdf8;min-height:100vh;}
+
+  /* 상태 화면 */
+  .state-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;text-align:center;}
+  .state-icon{font-size:56px;margin-bottom:20px;}
+  .state-title{font-size:20px;font-weight:700;color:var(--gray-800);margin-bottom:8px;}
+  .state-sub{font-size:14px;color:var(--gray-400);line-height:1.6;}
+
+  /* 헤더 */
+  .header{background:var(--warm-dark);padding:16px 20px;display:flex;align-items:center;gap:12px;}
+  .header-logo{width:32px;height:32px;background:var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--warm-dark);font-size:14px;font-weight:700;}
+  .header-title{font-size:15px;font-weight:600;color:#f5ede0;}
+  .header-sub{font-size:11px;color:#8a6a50;margin-top:1px;}
+
+  /* 계약서 본문 */
+  .content{padding:16px 20px 100px;}
+  .contract-paper{background:#fff;border:0.5px solid #ddd0c0;border-radius:8px;padding:20px;margin-bottom:16px;font-family:'Noto Sans KR',sans-serif;}
+  .ct-title{text-align:center;font-size:16px;font-weight:700;letter-spacing:2px;margin-bottom:4px;color:var(--warm-dark);}
+  .ct-subtitle{text-align:center;font-size:10px;color:#a08060;margin-bottom:16px;}
+  table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:11px;}
+  th{background:#f5f0e8;padding:5px 8px;font-weight:600;border:1px solid #ddd0c0;color:var(--warm-dark);text-align:left;}
+  td{padding:5px 8px;border:1px solid #ddd0c0;color:#2a2010;}
+  .clause-box{border:1px solid #ddd0c0;border-radius:6px;padding:10px 12px;margin-bottom:10px;font-size:11px;line-height:1.75;color:#2a2010;}
+  .clause-title{font-size:11px;font-weight:700;color:var(--warm-dark);margin-bottom:6px;}
+  .clause-item{margin-bottom:3px;}
+
+  /* 사업자 서명 미리보기 */
+  .owner-sig-box{border:1px solid #ddd0c0;border-radius:6px;padding:10px;margin-bottom:16px;}
+  .owner-sig-label{font-size:10px;color:#a08060;margin-bottom:6px;text-align:center;}
+  .owner-sig-img{width:100%;max-height:80px;object-fit:contain;border-radius:4px;}
+
+  /* 고객 서명 */
+  .sig-section{background:#fff;border:1.5px solid var(--primary);border-radius:12px;padding:16px;margin-bottom:16px;}
+  .sig-title{font-size:14px;font-weight:700;color:var(--primary-dark);margin-bottom:4px;}
+  .sig-desc{font-size:12px;color:var(--gray-400);margin-bottom:12px;}
+  canvas{border:1.5px solid var(--gray-200);border-radius:8px;background:#fafafa;touch-action:none;width:100%;display:block;cursor:crosshair;}
+  .sig-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+  .btn-clear{padding:10px;background:#fff;color:var(--gray-600);border:1.5px solid var(--gray-200);border-radius:8px;font-family:inherit;font-size:13px;cursor:pointer;}
+  .btn-confirm{padding:10px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+  .btn-confirm:disabled{background:var(--gray-200);cursor:not-allowed;}
+
+  /* 동의 체크 */
+  .agree-box{display:flex;align-items:flex-start;gap:10px;background:var(--primary-light);border-radius:8px;padding:12px;margin-bottom:16px;}
+  .agree-box input{width:18px;height:18px;margin-top:1px;flex-shrink:0;accent-color:var(--primary);}
+  .agree-text{font-size:12px;color:var(--gray-600);line-height:1.6;}
+
+  /* 완료 버튼 */
+  .btn-submit{width:100%;padding:16px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .btn-submit:disabled{background:var(--gray-200);cursor:not-allowed;}
+  .loading{width:18px;height:18px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* 토스트 */
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#1E2130;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 로딩 -->
+  <div id="screen-loading" class="state-screen">
+    <div class="state-icon">⏳</div>
+    <div class="state-title">계약서를 불러오는 중...</div>
+  </div>
+
+  <!-- 오류 -->
+  <div id="screen-error" class="state-screen" style="display:none;">
+    <div class="state-icon">❌</div>
+    <div class="state-title" id="error-title">계약서를 찾을 수 없습니다</div>
+    <div class="state-sub" id="error-sub">링크가 만료되었거나 잘못된 링크입니다.</div>
+  </div>
+
+  <!-- 완료 -->
+  <div id="screen-done" class="state-screen" style="display:none;">
+    <div class="state-icon">✅</div>
+    <div class="state-title">서명이 완료되었습니다!</div>
+    <div class="state-sub">계약서 PDF가 양측에 문자로 발송되었습니다.<br>편안한 입주 되세요 😊</div>
+  </div>
+
+  <!-- 이미 서명됨 -->
+  <div id="screen-already" class="state-screen" style="display:none;">
+    <div class="state-icon">📋</div>
+    <div class="state-title">이미 서명된 계약서입니다</div>
+    <div class="state-sub" id="pdf-link-area"></div>
+  </div>
+
+  <!-- 계약서 본문 -->
+  <div id="screen-main" style="display:none;">
+    <div class="header">
+      <div class="header-logo" id="hdr-logo">S</div>
+      <div>
+        <div class="header-title" id="hdr-company">서프로클린</div>
+        <div class="header-sub">청소서비스 계약서 서명 요청</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- 계약서 내용 -->
+      <div class="contract-paper" id="contract-paper">
+        <div class="ct-title">청 소 서 비 스 계 약 서</div>
+        <div class="ct-subtitle">소비자기본법 및 공정거래위원회 소비자분쟁해결기준에 따라 작성</div>
+
+        <table>
+          <tr><th colspan="4">제1조 계약 당사자</th></tr>
+          <tr><td style="background:#f5f0e8;font-weight:600;">사업자(갑)</td><td id="td-company"></td><td style="background:#f5f0e8;font-weight:600;">대표자</td><td id="td-owner"></td></tr>
+          <tr><td style="background:#f5f0e8;font-weight:600;">연락처</td><td id="td-cphone"></td><td style="background:#f5f0e8;font-weight:600;">고객(을)</td><td id="td-name"></td></tr>
+          <tr><td style="background:#f5f0e8;font-weight:600;">고객 연락처</td><td colspan="3" id="td-phone"></td></tr>
+        </table>
+
+        <table>
+          <tr><th colspan="4">제2조 서비스 내용</th></tr>
+          <tr><td style="background:#f5f0e8;font-weight:600;">청소 유형</td><td id="td-type"></td><td style="background:#f5f0e8;font-weight:600;">평수</td><td id="td-size"></td></tr>
+          <tr><td style="background:#f5f0e8;font-weight:600;">시공 주소</td><td colspan="3" id="td-addr"></td></tr>
+          <tr><td style="background:#f5f0e8;font-weight:600;">시공 일시</td><td colspan="3" id="td-wdate"></td></tr>
+          <tr id="tr-extra" style="display:none;"><td style="background:#f5f0e8;font-weight:600;">추가 서비스</td><td colspan="3" id="td-extra"></td></tr>
+          <tr><td colspan="4" style="font-size:10px;color:#7a6040;background:#fefbf5;">※ 미포함: 가구·가전 내부, 외벽·외부창문, 곰팡이·석회, 입주 후 오염, 계약 외 추가작업</td></tr>
+        </table>
+
+        <table>
+          <tr><th colspan="4">제3조 금액 및 결제</th></tr>
+          <tr><td style="background:#f5f0e8;font-weight:600;">기본금액</td><td id="td-base"></td><td style="background:#f5f0e8;font-weight:600;" id="td-vat-label">VAT(10%)</td><td id="td-vat"></td></tr>
+          <tr><td style="background:#f5f0e8;font-weight:700;">총 금액</td><td style="font-weight:700;color:#009E78;" id="td-total"></td><td style="background:#f5f0e8;font-weight:600;">계약금</td><td id="td-deposit"></td></tr>
+          <tr><td style="background:#f5f0e8;font-weight:600;">잔금</td><td colspan="3" id="td-balance"></td></tr>
+          <tr><td colspan="4" style="font-size:10px;color:#7a6040;background:#fefbf5;">※ 잔금은 시공 완료 즉시 결제 · 추가서비스는 사전 문자 동의 후 청구</td></tr>
+        </table>
+
+        <div class="clause-box">
+          <div class="clause-title">제4조 취소·환불</div>
+          <div class="clause-item">① 4일전↑ 취소 → 전액환불</div>
+          <div class="clause-item">② 2~3일전 취소 → 50% 공제 후 환불</div>
+          <div class="clause-item">③ 1일전·당일 취소 → 계약금 몰취</div>
+          <div class="clause-item">④ 사업자 귀책 취소 → 전액환불</div>
+          <div class="clause-item">⑤ 불가항력 → 전액환불, 배상 없음</div>
+        </div>
+
+        <div class="clause-box">
+          <div class="clause-title">제5조 A/S · 제6조 손해배상 · 제7~9조 기타</div>
+          <div class="clause-item">· A/S: 시공 후 24시간 이내 문자+사진 접수, 계약 명시 항목 1회 무상</div>
+          <div class="clause-item">· 손해배상 한도: 계약 총금액 이내 (기존하자·미고지결함·특수소재 면책)</div>
+          <div class="clause-item">· 개인정보: 서비스 목적 한정, 3년 보유 (개인정보보호법 제15조)</div>
+          <div class="clause-item">· 관할법원: 사업자 소재지 (민사소송법 제24조)</div>
+        </div>
+
+        <!-- 사업자 서명 표시 -->
+        <div class="owner-sig-box" id="owner-sig-box" style="display:none;">
+          <div class="owner-sig-label">사업자 (갑) 서명</div>
+          <img class="owner-sig-img" id="owner-sig-img" src="" alt="사업자 서명">
+        </div>
+      </div>
+
+      <!-- 동의 체크 -->
+      <div class="agree-box">
+        <input type="checkbox" id="agree-check" onchange="checkReady()">
+        <div class="agree-text">위 계약서 내용을 모두 읽었으며, 내용에 동의합니다.</div>
+      </div>
+
+      <!-- 고객 서명 -->
+      <div class="sig-section">
+        <div class="sig-title">✍️ 고객 서명</div>
+        <div class="sig-desc">아래 서명란에 손가락으로 서명해 주세요</div>
+        <canvas id="sig-canvas" height="100"></canvas>
+        <div class="sig-actions">
+          <button class="btn-clear" onclick="clearSig()">✕ 다시 서명</button>
+          <button class="btn-confirm" id="btn-confirm" onclick="submitSign()" disabled>✅ 서명 완료</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const SERVER = 'https://ssakssak-server-production.up.railway.app';
+let token = null;
+let contractData = null;
+let drawing = false;
+let hasSig = false;
+
+// 토큰 파싱
+const params = new URLSearchParams(location.search);
+token = params.get('token');
+
+window.onload = async () => {
+  if (!token) { showError('잘못된 링크', '서명 링크가 올바르지 않습니다.'); return; }
+  try {
+    const res = await fetch(`${SERVER}/api/contract/${token}`);
+    const json = await res.json();
+    if (!res.ok) {
+      if (res.status === 410) showError('만료된 링크', '계약서 서명 링크가 만료되었습니다.\n사업자에게 재발송을 요청해 주세요.');
+      else showError('계약서 없음', json.error || '계약서를 찾을 수 없습니다.');
+      return;
+    }
+    if (json.data.status === 'completed') {
+      document.getElementById('screen-already').style.display = 'flex';
+      document.getElementById('screen-loading').style.display = 'none';
+      const linkEl = document.getElementById('pdf-link-area');
+      if (json.data.pdf_url) {
+        linkEl.innerHTML = `계약서 PDF를 확인하세요:<br><a href="${json.data.pdf_url}" target="_blank" style="color:var(--primary);font-weight:600;">📄 계약서 보기</a>`;
+      }
+      return;
+    }
+    contractData = json.data.contract_data;
+    fillContract(contractData, json.data.owner_signature);
+    document.getElementById('screen-loading').style.display = 'none';
+    document.getElementById('screen-main').style.display = 'block';
+    initCanvas();
+  } catch(e) {
+    showError('연결 오류', '서버에 연결할 수 없습니다.');
+  }
+};
+
+function showError(title, sub) {
+  document.getElementById('screen-loading').style.display = 'none';
+  document.getElementById('screen-error').style.display = 'flex';
+  document.getElementById('error-title').textContent = title;
+  document.getElementById('error-sub').textContent = sub;
+}
+
+function fmt(n) { return parseInt(n||0).toLocaleString() + '원'; }
+
+function fillContract(cd, ownerSig) {
+  const s = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v || '—'; };
+  document.getElementById('hdr-logo').textContent = (cd.companyName||'S').charAt(0);
+  document.getElementById('hdr-company').textContent = cd.companyName || '서프로클린';
+  s('td-company', cd.companyName); s('td-owner', cd.owner);
+  s('td-cphone', cd.companyPhone); s('td-name', (cd.name||'고객')+'님');
+  s('td-phone', cd.phone);
+  s('td-type', cd.type); s('td-size', cd.size ? cd.size+'평' : '—');
+  s('td-addr', cd.addr||'—'); s('td-wdate', cd.workDateStr||'미정');
+  if (cd.extra) { s('td-extra', cd.extra); document.getElementById('tr-extra').style.display = ''; }
+  const isCash = cd.isCash;
+  s('td-base', fmt(cd.base) + (cd.extraPrice > 0 ? ' + ' + fmt(cd.extraPrice) : ''));
+  s('td-vat', isCash ? '면제 (현금)' : fmt(cd.vat));
+  document.getElementById('td-total').textContent = fmt(cd.total);
+  s('td-deposit', fmt(cd.deposit));
+  s('td-balance', fmt(cd.balance) + ' (시공 완료 즉시)');
+  if (cd.dateStr) {
+    const dateEl = document.createElement('div');
+    dateEl.style.cssText = 'text-align:center;font-size:11px;font-weight:600;margin:12px 0;color:#2e1f0e;';
+    dateEl.textContent = '계약일: ' + cd.dateStr;
+    document.getElementById('contract-paper').appendChild(dateEl);
+  }
+  if (ownerSig) {
+    document.getElementById('owner-sig-box').style.display = 'block';
+    document.getElementById('owner-sig-img').src = ownerSig;
+  }
+}
+
+function initCanvas() {
+  const canvas = document.getElementById('sig-canvas');
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * window.devicePixelRatio;
+  canvas.height = 100 * window.devicePixelRatio;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  ctx.strokeStyle = '#1e2130'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+  function pos(e) {
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - r.left, y: t.clientY - r.top };
+  }
+  canvas.addEventListener('mousedown', e => { drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); });
+  canvas.addEventListener('mousemove', e => { if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); hasSig=true; checkReady(); });
+  canvas.addEventListener('mouseup', ()=>drawing=false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); }, {passive:false});
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); hasSig=true; checkReady(); }, {passive:false});
+  canvas.addEventListener('touchend', ()=>drawing=false);
+}
+
+function clearSig() {
+  const canvas = document.getElementById('sig-canvas');
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  hasSig = false; checkReady();
+}
+
+function checkReady() {
+  const agreed = document.getElementById('agree-check').checked;
+  document.getElementById('btn-confirm').disabled = !(agreed && hasSig);
+}
+
+async function submitSign() {
+  const btn = document.getElementById('btn-confirm');
+  btn.disabled = true;
+  btn.textContent = 'PDF 생성 중...';
+  try {
+    const canvas = document.getElementById('sig-canvas');
+    const customerSig = canvas.toDataURL('image/png');
+
+    // PDF 생성
+    const paperEl = document.getElementById('contract-paper');
+    const pdfCanvas = await html2canvas(paperEl, { scale:1.5, useCORS:true, backgroundColor:'#fff', logging:false });
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+    const imgW=210, imgH=(pdfCanvas.height*imgW)/pdfCanvas.width, pageH=297;
+    let y=0;
+    while(y<imgH){ if(y>0) pdf.addPage(); pdf.addImage(pdfCanvas.toDataURL('image/jpeg',0.8),'JPEG',0,-y,imgW,imgH); y+=pageH; }
+
+    // 서명 페이지 추가
+    pdf.addPage();
+    pdf.setFontSize(14); pdf.text('서명 확인', 20, 20);
+    pdf.setFontSize(10); pdf.text(`계약일: ${contractData?.dateStr || new Date().toLocaleDateString('ko-KR')}`, 20, 35);
+    if (contractData?.ownerSignature) {
+      pdf.text('사업자 (갑) 서명:', 20, 50);
+      pdf.addImage(contractData.ownerSignature, 'PNG', 20, 55, 80, 30);
+    }
+    pdf.text('고객 (을) 서명:', 120, 50);
+    pdf.addImage(customerSig, 'PNG', 120, 55, 80, 30);
+
+    const pdfBase64 = pdf.output('datauristring').split(',')[1];
+
+    btn.textContent = '서버 전송 중...';
+    const res = await fetch(`${SERVER}/api/contract/${token}/sign`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ customerSignature: customerSig, pdfBase64 })
+    });
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('screen-main').style.display = 'none';
+      document.getElementById('screen-done').style.display = 'flex';
+    } else {
+      toast('❌ 오류: ' + (data.error||'알 수 없는 오류'));
+      btn.disabled = false; btn.textContent = '✅ 서명 완료';
+    }
+  } catch(e) {
+    toast('❌ 오류: ' + e.message);
+    btn.disabled = false; btn.textContent = '✅ 서명 완료';
+  }
+}
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
