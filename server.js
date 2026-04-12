@@ -250,54 +250,24 @@ app.post('/api/sms/send', async (req, res) => {
 
     const msgType = Buffer.byteLength(msg, 'utf8') > 90 ? 'LMS' : 'SMS';
 
-  // ── LMS 중복 방지 핵심 로직 ───────────────────────────────────────────────
-  // CoolSMS는 메시지 첫 줄을 LMS 제목으로 자동 추출 후 [Web발신] 앞에 표시하고,
-  // 본문에도 동일 내용이 남아 중복이 발생한다.
-  // 해결: 첫 줄을 subject로만 사용하고 본문(text)에서는 제거한다.
-  let finalText = msg;
-  let finalSubject = (subject || '').slice(0, 20);
-  if (msgType === 'LMS') {
-    const lines = msg.split('\n');
-    if (!finalSubject && lines.length > 1) {
-      finalSubject = lines[0].trim().slice(0, 20); // 첫 줄 → subject
-      finalText = lines.slice(1).join('\n').replace(/^\n+/, ''); // 첫 줄 본문에서 제거
-    } else if (finalSubject) {
-      // 명시적 subject가 있으면 본문 첫 줄도 같은지 확인 후 제거
-      const firstLine = lines[0].trim();
-      if (firstLine === finalSubject.trim() && lines.length > 1) {
-        finalText = lines.slice(1).join('\n').replace(/^\n+/, '');
-      }
-    }
-  }
-  // ─────────────────────────────────────────────────────────────────────────
-
     const response = await fetch('https://api.coolsms.co.kr/messages/v4/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `HMAC-SHA256 apiKey=${apiKey}, date=${date}, salt=${salt}, signature=${signature}`
       },
-body: JSON.stringify((() => {
-  // LMS: 첫 줄을 subject로 분리 → [Web발신] 앞뒤 중복 제거
-  let finalText = msg;
-  let finalSubject = '';
-  if (msgType === 'LMS') {
-    const lines = msg.split('\n');
-    if (lines.length > 1) {
-      finalSubject = lines[0].trim().slice(0, 20);
-      finalText = lines.slice(1).join('\n').replace(/^\n+/, '');
-    }
-  }
-  return {
-    message: {
-      to: to.replace(/-/g, ''),
-      from: from.replace(/-/g, ''),
-      text: finalText,
-      type: msgType,
-      ...(finalSubject ? { subject: finalSubject } : {})
-    }
-  };
-})())
+      body: JSON.stringify({
+        message: {
+          to: to.replace(/-/g, ''),
+          from: from.replace(/-/g, ''),
+          text: msg,
+          type: msgType,
+          // LMS: subject를 공백(' ')으로 명시 설정
+          // → CoolSMS가 첫 줄을 subject로 자동추출하는 것을 막음
+          // → [Web발신] 앞에 아무 내용도 표시되지 않음 (중복 완전 제거)
+          ...(msgType === 'LMS' ? { subject: ' ' } : {})
+        }
+      })
     });
 
     const data = await response.json();

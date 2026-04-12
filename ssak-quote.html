@@ -749,24 +749,23 @@ function buildMsg(size,type,total,extraItems){
   if(!size){document.getElementById('msg-preview').textContent='평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️';document.getElementById('msg-char').textContent='';return;}
   if(!total){const adj=parseFloat(document.getElementById('q-house').value);const base=Math.round(size*getBaseRate(size)*adj*typeRates[type]);const vat=Math.round(base*0.1);total=base+vat;}
   const nameStr=name==='고객님'?'고객님':name+'님';
-  // ★ 구조: 첫 줄(제목) + 둘째 줄(인사말) + 내용
-  // 서버가 첫 줄을 LMS subject로 분리 → [Web발신] 앞엔 제목만, 본문엔 인사말+내용만 표시
-  const smsSubject=`━━━━ 견적 안내 ━━━━`; // 첫 줄(자동으로 subject 처리됨)
-  let msg=`\n\n안녕하세요, ${nameStr}! 😊 ${cfg.company}\n`;
-  msg+=`🏠 ${size}평 ${typeLabels[type]}\n`;
-  msg+=`💰 ${total.toLocaleString()}원 (VAT포함)\n`;
-  msg+=`⏰ 약 ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}시간\n`;
-  msg+=`👥 2~3명 투입\n`;
-  if(extraItems&&extraItems.length)msg+=`✅ 추가: ${extraItems.map(e=>e.label).join(', ')}\n`;
-  if(date)msg+=`📅 희망일: ${date}\n`;
-  msg+=`━━━━━━━━━━━━━━\n`;
+  // subject=' '(공백) 고정 → CoolSMS 첫줄 자동추출 방지 → [Web발신] 앞 중복 제거
+  const smsSubject = ' ';
+  let msg=`안녕하세요, ${nameStr}!\n${cfg.company} 입주청소입니다.\n\n`;
+  msg+=`━━━━ 견적 안내 ━━━━\n`;
+  msg+=`${size}평 ${typeLabels[type]} 청소\n`;
+  msg+=`${total.toLocaleString()}원 (VAT포함)\n`;
+  msg+=`약 ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}시간\n`;
+  msg+=`2~3명 투입\n`;
+  if(extraItems&&extraItems.length)msg+=`추가: ${extraItems.map(e=>e.label).join(', ')}\n`;
+  if(date)msg+=`희망일: ${date}\n`;
+  msg+=`━━━━━━━━━━━━━━`;
   const links=[];
-  if(document.getElementById('opt-video')?.classList.contains('on'))links.push(`📹 시공영상: ${cfg.video}`);
-  if(document.getElementById('opt-review')?.classList.contains('on'))links.push(`⭐ 고객후기: ${cfg.review}`);
-  if(document.getElementById('opt-booking')?.classList.contains('on'))links.push(`📅 예약신청: ${cfg.booking}`);
-  if(document.getElementById('opt-kakao')?.classList.contains('on'))links.push(`💬 카카오: ${cfg.kakao}`);
-  if(links.length)msg+='\n'+links.join('\n')+'\n';
-  msg+=`📞 ${cfg.phone}`;
+  if(document.getElementById('opt-video')?.classList.contains('on'))links.push(`\n📹 시공영상: ${cfg.video}`);
+  if(document.getElementById('opt-review')?.classList.contains('on'))links.push(`\n⭐ 고객후기: ${cfg.review}`);
+  if(document.getElementById('opt-booking')?.classList.contains('on'))links.push(`\n📅 예약신청: ${cfg.booking}`);
+  if(document.getElementById('opt-kakao')?.classList.contains('on'))links.push(`\n💬 카카오: ${cfg.kakao}`);
+  if(links.length)msg+=links.join('');
   const previewEl=document.getElementById('msg-preview');
   previewEl.textContent=msg;
   previewEl.dataset.smsSubject=smsSubject; // [Web발신] 중복 방지용 subject
