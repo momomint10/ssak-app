@@ -794,7 +794,9 @@ async function sendSMS(){
   document.getElementById('send-loading').style.display='block';
   btn.disabled=true;
   try{
-    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg})});
+    // subject 설정: [Web발신] 앞에 표시될 제목 (미설정 시 본문 첫 줄이 중복 노출됨)
+    const subject = `[${cfg.company||'서프로클린'}] 견적 안내`;
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,subject})});
     const data=await res.json();
     if(data.success){saveHistory(to,msg,night);toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');}
     else toast('❌ 발송 실패: '+(data.error||'오류'));
@@ -898,7 +900,9 @@ async function sendFaqReply(i){
   const night=isNightTime();
   if(night)msg=msg+'\n\n'+cfg.nightMsg;
   try{
-    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg})});
+    // subject 설정: [Web발신] 앞에 표시될 제목 (미설정 시 본문 첫 줄이 중복 노출됨)
+    const subject = `[${cfg.company||'서프로클린'}] 견적 안내`;
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,subject})});
     const data=await res.json();
     if(data.success){saveHistory(to,msg,night);toast(night?'✅ FAQ 발송 완료 (야간 문구 추가)':'✅ FAQ 답변 발송 완료!');}
     else toast('❌ 발송 실패: '+(data.error||'오류'));
@@ -1177,7 +1181,9 @@ async function sendContract(){
   const msg=buildContractText();
   try{
     toast('📤 발송 중...');
-    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg})});
+    // subject 설정: [Web발신] 앞에 표시될 제목 (미설정 시 본문 첫 줄이 중복 노출됨)
+    const subject = `[${cfg.company||'서프로클린'}] 견적 안내`;
+    const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg,subject})});
     const data=await res.json();
     if(data.success){saveHistory(to,msg,false);toast('✅ 계약서 SMS 발송 완료!');}
     else toast('❌ 발송 실패: '+(data.error||'오류'));
