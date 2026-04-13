@@ -1091,14 +1091,26 @@ function openContract(){
   if(cfg.company)document.getElementById('ct-company').value=cfg.company;
 
   // 총금액에서 역산 (VAT포함 → VAT제외)
-  const totalEl=document.getElementById('msg-preview');
-  if(totalEl){
-    const match=totalEl.textContent.match(/💰\s*([\d,]+)원/);
-    if(match){
-      const total=parseInt(match[1].replace(/,/g,''));
-      const baseNoVat=Math.round(total/1.1);
-      document.getElementById('ct-base').value=baseNoVat;
-    }
+  // 1순위: qr-price 요소 (견적 계산 결과)
+  // 2순위: msg-preview에서 패턴 매칭 (이모지 없는 새 형식 지원)
+  const qrPrice = document.getElementById('qr-price');
+  const msgPreview = document.getElementById('msg-preview');
+  let totalForContract = 0;
+
+  if (qrPrice && qrPrice.textContent) {
+    // "228,800원" 형태에서 숫자 추출
+    totalForContract = parseInt(qrPrice.textContent.replace(/[^0-9]/g, '')) || 0;
+  }
+
+  if (!totalForContract && msgPreview) {
+    // msg-preview에서 금액 패턴 찾기 (💰 이모지 유무 모두 지원)
+    const match = msgPreview.textContent.match(/(?:💰\s*)?([\d,]+)원\s*\(VAT포함\)/);
+    if (match) totalForContract = parseInt(match[1].replace(/,/g, '')) || 0;
+  }
+
+  if (totalForContract) {
+    const baseNoVat = Math.round(totalForContract / 1.1);
+    document.getElementById('ct-base').value = baseNoVat;
   }
 
   document.getElementById('ct-date').value=new Date().toISOString().split('T')[0];
