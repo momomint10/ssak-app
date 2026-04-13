@@ -1,0 +1,36 @@
+{
+  "name": "싹싹 — 입주청소 플랫폼",
+  "short_name": "싹싹",
+  "description": "입주청소 전문 SMS 자동응답 & 견적 플랫폼",
+  "start_url": "/ssak-quote.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#00C896",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "견적 발송",
+      "url": "/ssak-quote.html",
+      "description": "빠른 견적 계산 및 문자 발송"
+    },
+    {
+      "name": "예약 확인",
+      "url": "/ssak-quote.html#booking",
+      "description": "접수된 예약 목록 확인"
+    }
+  ]
+}

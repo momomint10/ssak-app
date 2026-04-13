@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — SMS 자동응답</title>
+<!-- PWA 홈화면 아이콘 설정 -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#00C896">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="싹싹">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#00C896">
@@ -153,6 +161,7 @@ select.form-input{cursor:pointer;}
   </div>
   <div class="tabs">
     <button class="tab active" onclick="switchTab('quote',this)">견적</button>
+    <button class="tab" onclick="switchTab('booking',this)">📅예약</button>
     <button class="tab" onclick="switchTab('template',this)">템플릿</button>
     <button class="tab" onclick="switchTab('faq',this)">FAQ</button>
     <button class="tab" onclick="switchTab('report',this)">📸보고서</button>
@@ -490,6 +499,28 @@ select.form-input{cursor:pointer;}
 </div>
 
 <!-- FAQ -->
+
+<!-- 예약 목록 -->
+<div id="page-booking" class="page">
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:0;">📅 예약 목록</div>
+      <button onclick="loadBookings()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새로고침</button>
+    </div>
+    <!-- 상태 필터 -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
+      <button class="chip on" id="bf-all"     onclick="filterBookings('all',this)">전체</button>
+      <button class="chip"    id="bf-pending"  onclick="filterBookings('pending',this)">대기중</button>
+      <button class="chip"    id="bf-confirmed"onclick="filterBookings('confirmed',this)">확정</button>
+      <button class="chip"    id="bf-completed"onclick="filterBookings('completed',this)">완료</button>
+      <button class="chip"    id="bf-cancelled"onclick="filterBookings('cancelled',this)">취소</button>
+    </div>
+    <div id="booking-list">
+      <div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">로딩 중...</div>
+    </div>
+  </div>
+</div>
+
 <div id="page-faq" class="page">
   <div class="card" style="margin-bottom:14px;">
     <div class="card-title">🤖 FAQ 자동응답</div>
@@ -600,7 +631,9 @@ select.form-input{cursor:pointer;}
 
 <div id="page-settings" class="page">
   <div class="settings-section">
-    <div class="settings-title">📱 CoolSMS API 설정 (문자 직접 발송)</div>
+    <div class="settings-title">🔑 관리자 설정</div>
+    <div class="form-group"><label class="form-label">관리자 키 (예약 목록 조회용)</label><input class="form-input" id="s-admin-key" placeholder="ADMIN_KEY 환경변수 값" type="password"/></div>
+    <div class="settings-title" style="margin-top:14px;">📱 CoolSMS API 설정 (문자 직접 발송)</div>
     <div class="card" style="margin-bottom:0;">
       <div class="form-group"><label class="form-label">API Key</label><input class="form-input" id="s-api-key" placeholder="CoolSMS API Key" type="password"/></div>
       <div class="form-group"><label class="form-label">API Secret</label><input class="form-input" id="s-api-secret" placeholder="CoolSMS API Secret" type="password"/></div>
@@ -698,7 +731,7 @@ select.form-input{cursor:pointer;}
 
 <script>
 const SERVER='https://ssakssak-server-production.up.railway.app';
-const DEFAULT_CFG={company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}]};
+const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}]};
 let cfg=JSON.parse(localStorage.getItem('ssak_cfg')||'null')||{...DEFAULT_CFG,extras:[...DEFAULT_CFG.extras]};
 function saveCfg(){localStorage.setItem('ssak_cfg',JSON.stringify(cfg));}
 
@@ -712,6 +745,7 @@ function switchTab(name,btn){
   if(name==='settings')loadSettingsForm();
   if(name==='history')renderHistory();
   if(name==='report')initReportTab();
+  if(name==='booking')loadBookings();
 }
 
 function renderExtraChips(){
@@ -891,6 +925,127 @@ function saveHistory(to,msg,isNight){
   if(document.getElementById('page-history').classList.contains('active'))renderHistory();
 }
 function clearHistory(){if(!confirm('전체 이력을 삭제할까요?'))return;smsHistory=[];localStorage.removeItem('ssak_history');renderHistory();toast('이력 삭제 완료');}
+
+// ══════════════════════════════════════════════════════════════════
+// 📅 예약 목록 관리
+// ══════════════════════════════════════════════════════════════════
+const STATUS_LABELS = { pending:'대기중', confirmed:'확정', completed:'완료', cancelled:'취소' };
+const STATUS_COLORS = { pending:'#F59E0B', confirmed:'#3B82F6', completed:'#10B981', cancelled:'#EF4444' };
+const TYPE_LABELS   = { 'move-in':'입주 전','move-out':'이사 후','new':'신축 준공','life':'생활 청소' };
+let allBookings = [];
+let currentFilter = 'all';
+
+async function loadBookings() {
+  const listEl = document.getElementById('booking-list');
+  if (!listEl) return;
+  listEl.innerHTML = '<div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">로딩 중...</div>';
+
+  try {
+    const res = await fetch(`${SERVER}/api/bookings`, {
+      headers: { 'x-admin-key': cfg.adminKey || '' }
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        listEl.innerHTML = `<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">
+          ⚠️ 관리자 키가 필요합니다.<br><br>
+          <span style="color:#888;">설정 탭에서 관리자 키를 입력해주세요</span>
+        </div>`;
+      } else {
+        listEl.innerHTML = `<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">오류: ${data.error || '불러오기 실패'}</div>`;
+      }
+      return;
+    }
+
+    allBookings = data.data || [];
+    renderBookingList();
+
+  } catch(e) {
+    listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">서버 연결 오류</div>';
+  }
+}
+
+function renderBookingList() {
+  const listEl = document.getElementById('booking-list');
+  if (!listEl) return;
+
+  const filtered = currentFilter === 'all'
+    ? allBookings
+    : allBookings.filter(b => b.status === currentFilter);
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">
+      ${currentFilter === 'all' ? '아직 예약이 없어요' : STATUS_LABELS[currentFilter] + ' 예약이 없어요'}
+    </div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(b => {
+    const date = new Date(b.created_at).toLocaleDateString('ko-KR', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const typeLabel = TYPE_LABELS[b.type] || b.type || '—';
+    const statusColor = STATUS_COLORS[b.status] || '#888';
+    const statusLabel = STATUS_LABELS[b.status] || b.status;
+
+    return `<div style="border:1px solid #e8edf2;border-radius:10px;padding:14px;margin-bottom:10px;background:#fff;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+        <div>
+          <span style="font-size:15px;font-weight:700;color:#1a1f36;">${b.name}</span>
+          <span style="font-size:12px;color:#888;margin-left:8px;">${b.phone}</span>
+        </div>
+        <span style="background:${statusColor}20;color:${statusColor};font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;">${statusLabel}</span>
+      </div>
+      <div style="font-size:12px;color:#555;line-height:1.8;">
+        📍 ${b.address || '—'}<br>
+        🏠 ${b.size ? b.size+'평 ' : ''}${typeLabel}
+        ${b.price ? ' · ' + parseInt(b.price).toLocaleString() + '원' : ''}
+        ${b.preferred_date ? '<br>📅 ' + b.preferred_date + (b.preferred_time ? ' ' + b.preferred_time : '') : ''}
+        ${b.notes ? '<br>💬 ' + b.notes : ''}
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px;align-items:center;">
+        <span style="font-size:11px;color:#bbb;flex:1;">${date} 접수</span>
+        <select onchange="updateBookingStatus('${b.id}',this.value,this)"
+          style="font-size:11px;padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-family:inherit;">
+          <option value="pending"   ${b.status==='pending'   ?'selected':''}>대기중</option>
+          <option value="confirmed" ${b.status==='confirmed' ?'selected':''}>확정</option>
+          <option value="completed" ${b.status==='completed' ?'selected':''}>완료</option>
+          <option value="cancelled" ${b.status==='cancelled' ?'selected':''}>취소</option>
+        </select>
+        <a href="tel:${b.phone}" style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;text-decoration:none;">📞 전화</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterBookings(status, btn) {
+  currentFilter = status;
+  document.querySelectorAll('[id^="bf-"]').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  renderBookingList();
+}
+
+async function updateBookingStatus(id, status, selectEl) {
+  try {
+    const res = await fetch(`${SERVER}/api/bookings/${id}/status`, {
+      method: 'PUT',
+      headers: { 'Content-Type':'application/json', 'x-admin-key': cfg.adminKey || '' },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      // 로컬 데이터 업데이트
+      const b = allBookings.find(b => b.id === id);
+      if (b) b.status = status;
+      toast('✅ 상태 변경: ' + STATUS_LABELS[status]);
+      renderBookingList();
+    } else {
+      toast('❌ 상태 변경 실패');
+      if (selectEl) { const b=allBookings.find(b=>b.id===id); if(b) selectEl.value=b.status; }
+    }
+  } catch(e) {
+    toast('❌ 서버 오류');
+  }
+}
+
 function renderHistory(){
   const list=document.getElementById('history-list');
   const cnt=document.getElementById('history-count');
@@ -976,6 +1131,7 @@ function saveFaqItem(){if(editingFaqIdx<0)return;customFaqs[editingFaqIdx]={q:do
 function deleteFaqItem(){if(editingFaqIdx<0)return;customFaqs.splice(editingFaqIdx,1);localStorage.setItem('ssak_faqs',JSON.stringify(customFaqs));closeFaqModal();renderFaq();toast('삭제됨');}
 
 function loadSettingsForm(){
+  document.getElementById('s-admin-key').value=cfg.adminKey||'';
   document.getElementById('s-api-key').value=cfg.apiKey||'';
   document.getElementById('s-api-secret').value=cfg.apiSecret||'';
   document.getElementById('s-from-phone').value=cfg.fromPhone||'';
@@ -1006,6 +1162,7 @@ function deleteExtra(i){cfg.extras.splice(i,1);renderExtrasSettings();renderExtr
 function addExtraService(){cfg.extras.push({id:'e'+Date.now(),label:'새 서비스',price:30000});renderExtrasSettings();renderExtraChips();}
 
 function saveSettings(){
+  cfg.adminKey=document.getElementById('s-admin-key').value.trim();
   cfg.apiKey=document.getElementById('s-api-key').value.trim();
   cfg.apiSecret=document.getElementById('s-api-secret').value.trim();
   cfg.fromPhone=document.getElementById('s-from-phone').value.trim();
