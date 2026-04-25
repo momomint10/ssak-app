@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>ì¹ì¹ â SMS ìëìëµ</title>
-<!-- PWA ííë©´ ìì´ì½ ì¤ì  -->
+<title>싹싹 — SMS 자동응답</title>
+<!-- PWA 홈화면 아이콘 설정 -->
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#00C896">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="ì¹ì¹">
+<meta name="apple-mobile-web-app-title" content="싹싹">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="ì¹ì¹">
+<meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#00C896">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -93,14 +93,14 @@ select.form-input{cursor:pointer;}
 .history-msg{font-size:12px;color:var(--gray-500);line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden;}
 .history-night{display:inline-block;background:#EEF2FF;color:#6366F1;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-bottom:4px;}
 .night-active{background:var(--primary) !important;}
-/* ë³´ê³ ì í­ëª© ì í ë²í¼ */
+/* 보고서 항목 선택 버튼 */
 .rp-item-btn{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:8px;border:1px solid var(--gray-200);background:var(--gray-100);cursor:pointer;user-select:none;}
 .rp-item-btn.on{background:var(--primary-light);border-color:var(--primary);}
 .rp-item-check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--gray-300);background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;}
 .rp-item-btn.on .rp-item-check{background:var(--primary);border-color:var(--primary);color:#fff;}
 .rp-item-name{font-size:12px;color:var(--gray-700);}
 .rp-item-btn.on .rp-item-name{color:var(--primary-dark);font-weight:600;}
-/* ì¬ì§ ìë¡ë */
+/* 사진 업로드 */
 .rp-photo-label{position:relative;display:block;cursor:pointer;border-radius:7px;overflow:hidden;background:var(--gray-100);border:1.5px dashed var(--gray-200);}
 .rp-photo-label:hover{border-color:var(--primary);}
 .rp-photo-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:var(--gray-400);gap:3px;}
@@ -156,117 +156,117 @@ select.form-input{cursor:pointer;}
 <div class="header">
   <div class="header-inner">
     <div class="header-left">
-      <button class="back-btn" onclick="history.back()">â</button>
-      <div class="header-title">â¡ SMS ìëìëµ & ê²¬ì </div>
+      <button class="back-btn" onclick="history.back()">←</button>
+      <div class="header-title">⚡ SMS 자동응답 & 견적</div>
     </div>
-    <button class="settings-btn" onclick="switchTab('settings',document.querySelectorAll('.tab')[6])">âï¸</button>
+    <button class="settings-btn" onclick="switchTab('settings',document.querySelectorAll('.tab')[6])">⚙️</button>
   </div>
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('quote',this)">ê²¬ì </button>
-    <button class="tab" onclick="switchTab('booking',this)">ðìì½</button>
-    <button class="tab" onclick="switchTab('template',this)">ííë¦¿</button>
+    <button class="tab active" onclick="switchTab('quote',this)">견적</button>
+    <button class="tab" onclick="switchTab('booking',this)">📅예약</button>
+    <button class="tab" onclick="switchTab('template',this)">템플릿</button>
     <button class="tab" onclick="switchTab('faq',this)">FAQ</button>
-    <button class="tab" onclick="switchTab('report',this)">ð¸ë³´ê³ ì</button>
-    <button class="tab" onclick="switchTab('history',this)">ðì´ë ¥</button>
-    <button class="tab" onclick="switchTab('settings',this)">âï¸ì¤ì </button>
+    <button class="tab" onclick="switchTab('report',this)">📸보고서</button>
+    <button class="tab" onclick="switchTab('history',this)">📋이력</button>
+    <button class="tab" onclick="switchTab('settings',this)">⚙️설정</button>
   </div>
 </div>
 <div class="content">
 
-<!-- ê²¬ì  -->
+<!-- 견적 -->
 <div id="page-quote" class="page active">
   <div class="card">
-    <div class="card-title">ð¤ ê³ ê° ì ë³´</div>
+    <div class="card-title">👤 고객 정보</div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">ê³ ê° ì´ë¦</label><input class="form-input" id="q-name" placeholder="ê¹OO" oninput="buildMsg()"/></div>
-      <div class="form-group"><label class="form-label">ì°ë½ì²</label><input class="form-input" id="q-phone" placeholder="010-0000-0000" type="tel"/></div>
+      <div class="form-group"><label class="form-label">고객 이름</label><input class="form-input" id="q-name" placeholder="김OO" oninput="buildMsg()"/></div>
+      <div class="form-group"><label class="form-label">연락처</label><input class="form-input" id="q-phone" placeholder="010-0000-0000" type="tel"/></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">íì</label><input class="form-input" id="q-size" type="number" placeholder="ì: 32" oninput="calcQuote()"/></div>
-      <div class="form-group"><label class="form-label">ì²­ì ì í</label><select class="form-input" id="q-type" onchange="calcQuote()"><option value="move-in">ìì£¼ ì </option><option value="move-out">ì´ì¬ í</option><option value="new">ì ì¶ ì¤ê³µ</option><option value="life">ìí ì²­ì</option></select></div>
+      <div class="form-group"><label class="form-label">평수</label><input class="form-input" id="q-size" type="number" placeholder="예: 32" oninput="calcQuote()"/></div>
+      <div class="form-group"><label class="form-label">청소 유형</label><select class="form-input" id="q-type" onchange="calcQuote()"><option value="move-in">입주 전</option><option value="move-out">이사 후</option><option value="new">신축 준공</option><option value="life">생활 청소</option></select></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">ì£¼ê±° íí</label><select class="form-input" id="q-house" onchange="calcQuote()"><option value="1.0">ìíí¸</option><option value="0.95">ë¹ë¼/ë¤ì¸ë</option><option value="1.1">ë¨ëì£¼í</option><option value="1.05">ì¤í¼ì¤í</option></select></div>
-      <div class="form-group"><label class="form-label">í¬ë§ ë ì§</label><input class="form-input" id="q-date" type="date" oninput="buildMsg()"/></div>
+      <div class="form-group"><label class="form-label">주거 형태</label><select class="form-input" id="q-house" onchange="calcQuote()"><option value="1.0">아파트</option><option value="0.95">빌라/다세대</option><option value="1.1">단독주택</option><option value="1.05">오피스텔</option></select></div>
+      <div class="form-group"><label class="form-label">희망 날짜</label><input class="form-input" id="q-date" type="date" oninput="buildMsg()"/></div>
     </div>
   </div>
-  <div class="card"><div class="card-title">â ì¶ê° ìë¹ì¤</div><div class="chips" id="extra-chips"></div></div>
-  <div class="card"><div class="card-title">ð¤ ë°ì¡ ìµì</div><div class="chips"><button class="chip on" id="opt-video" onclick="this.classList.toggle('on');buildMsg()">ð¹ íë³´ìì</button><button class="chip on" id="opt-booking" onclick="this.classList.toggle('on');buildMsg()">ð ìì½ë§í¬</button><button class="chip" id="opt-review" onclick="this.classList.toggle('on');buildMsg()">â­ íê¸°ë§í¬</button><button class="chip on" id="opt-kakao" onclick="this.classList.toggle('on');buildMsg()">ð¬ ì¹´ì¹´ì¤</button></div></div>
-  <div class="quote-result" id="quote-result" style="display:none;"><div class="qr-label">ìì ê²¬ì ê¸ì¡ (VAT í¬í¨)</div><div class="qr-price" id="qr-price">â</div><div class="qr-rows" id="qr-rows"></div></div>
+  <div class="card"><div class="card-title">✅ 추가 서비스</div><div class="chips" id="extra-chips"></div></div>
+  <div class="card"><div class="card-title">📤 발송 옵션</div><div class="chips"><button class="chip on" id="opt-video" onclick="this.classList.toggle('on');buildMsg()">📹 홍보영상</button><button class="chip on" id="opt-booking" onclick="this.classList.toggle('on');buildMsg()">📅 예약링크</button><button class="chip" id="opt-review" onclick="this.classList.toggle('on');buildMsg()">⭐ 후기링크</button><button class="chip on" id="opt-kakao" onclick="this.classList.toggle('on');buildMsg()">💬 카카오</button></div></div>
+  <div class="quote-result" id="quote-result" style="display:none;"><div class="qr-label">예상 견적금액 (VAT 포함)</div><div class="qr-price" id="qr-price">—</div><div class="qr-rows" id="qr-rows"></div></div>
   <div class="card">
-    <div class="card-title">ð¬ ìë ìì± ë©ìì§</div>
-    <div class="msg-preview" id="msg-preview">íìì ê³ ê°ëªì ìë ¥íë©´ ë©ìì§ê° ìë ìì±ë©ëë¤ âï¸</div>
+    <div class="card-title">💬 자동 생성 메시지</div>
+    <div class="msg-preview" id="msg-preview">평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️</div>
     <div class="msg-char" id="msg-char"></div>
     <div class="sms-panel">
-      <div class="sms-panel-title">ð± ë¬¸ì ì§ì  ë°ì¡</div>
+      <div class="sms-panel-title">📱 문자 직접 발송</div>
       <div class="phone-input-wrap">
-        <input class="phone-input" id="send-phone" placeholder="ë°ì¡í  ë²í¸ (010-0000-0000)" type="tel"/>
-        <button class="send-btn" id="send-btn" onclick="sendSMS()"><span id="send-btn-text">ë°ì¡</span><div class="send-loading" id="send-loading"></div></button>
+        <input class="phone-input" id="send-phone" placeholder="발송할 번호 (010-0000-0000)" type="tel"/>
+        <button class="send-btn" id="send-btn" onclick="sendSMS()"><span id="send-btn-text">발송</span><div class="send-loading" id="send-loading"></div></button>
       </div>
       <div class="api-warning" id="api-warning" style="display:none;"></div>
     </div>
-    <button class="btn-primary" onclick="copyMsg()">ð ë©ìì§ ë³µì¬ â ì§ì  ë°ì¡</button>
-    <button class="btn-secondary" onclick="openContract()" id="contract-btn" style="display:none;">ð ê³ì½ì ìë ìì±</button>
+    <button class="btn-primary" onclick="copyMsg()">📋 메시지 복사 → 직접 발송</button>
+    <button class="btn-secondary" onclick="openContract()" id="contract-btn" style="display:none;">📄 계약서 자동 작성</button>
   </div>
 </div>
 
-<!-- ê³ì½ì ëª¨ë¬ -->
+<!-- 계약서 모달 -->
 <div id="contract-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;overflow-y:auto;">
   <div style="max-width:480px;margin:0 auto;background:#fff;min-height:100vh;padding:20px 20px 100px;">
 
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-      <button onclick="closeContract()" style="background:none;border:none;font-size:22px;cursor:pointer;">â</button>
-      <div style="font-size:17px;font-weight:700;">ð ê³ì½ì ìë ìì±</div>
+      <button onclick="closeContract()" style="background:none;border:none;font-size:22px;cursor:pointer;">←</button>
+      <div style="font-size:17px;font-weight:700;">📄 계약서 자동 작성</div>
     </div>
 
     <div style="background:var(--primary-light);border-radius:10px;padding:12px;font-size:11.5px;color:var(--primary-dark);line-height:1.7;margin-bottom:16px;">
-      âï¸ ìë¹ìê¸°ë³¸ë² ë° ê³µì ê±°ëììí ìë¹ìë¶ìí´ê²°ê¸°ì¤ì ë°ë¼ ìì±ë©ëë¤.
+      ⚖️ 소비자기본법 및 공정거래위원회 소비자분쟁해결기준에 따라 작성됩니다.
     </div>
 
-    <!-- ê³ì½ì ìë ¥ í¼ -->
+    <!-- 계약서 입력 폼 -->
     <div id="ct-form">
       <div style="background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:16px;margin-bottom:14px;">
-        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">ð¢ ìì²´ ì ë³´</div>
+        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">🏢 업체 정보</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ìì²´ëª</label><input class="form-input" id="ct-company" value="ìíë¡í´ë¦°"/></div>
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ëíìëª</label><input class="form-input" id="ct-owner" placeholder="íê¸¸ë"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">업체명</label><input class="form-input" id="ct-company" value="서프로클린"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">대표자명</label><input class="form-input" id="ct-owner" placeholder="홍길동"/></div>
         </div>
         <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ì°ë½ì²</label><input class="form-input" id="ct-company-phone" placeholder="010-0000-0000"/></div>
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ê³ì½ì¼ì</label><input class="form-input" id="ct-date" type="date"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">연락처</label><input class="form-input" id="ct-company-phone" placeholder="010-0000-0000"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">계약일자</label><input class="form-input" id="ct-date" type="date"/></div>
         </div>
       </div>
 
       <div style="background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:16px;margin-bottom:14px;">
-        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">ð¤ ê³ ê° ì ë³´ (ê²¬ì ìì ìë ìë ¥ë¨)</div>
+        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">👤 고객 정보 (견적에서 자동 입력됨)</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ê³ ê°ëª</label><input class="form-input" id="ct-name" placeholder="ê¹OO"/></div>
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ì°ë½ì²</label><input class="form-input" id="ct-phone" placeholder="010-0000-0000"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">고객명</label><input class="form-input" id="ct-name" placeholder="김OO"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">연락처</label><input class="form-input" id="ct-phone" placeholder="010-0000-0000"/></div>
         </div>
-        <div style="margin-top:10px;"><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ìê³µ ì£¼ì</label><input class="form-input" id="ct-addr" placeholder="ìì¸ì ê°ë¨êµ¬ ..."/></div>
+        <div style="margin-top:10px;"><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">시공 주소</label><input class="form-input" id="ct-addr" placeholder="서울시 강남구 ..."/></div>
       </div>
 
       <div style="background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:16px;margin-bottom:14px;">
-        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">ð  ìë¹ì¤ ë´ì© (ê²¬ì ìì ìë ìë ¥ë¨)</div>
+        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">🏠 서비스 내용 (견적에서 자동 입력됨)</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ì²­ì ì í</label><input class="form-input" id="ct-type" placeholder="ìì£¼ ì  ì²­ì"/></div>
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">íì</label><input class="form-input" id="ct-size" type="number" placeholder="32"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">청소 유형</label><input class="form-input" id="ct-type" placeholder="입주 전 청소"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">평수</label><input class="form-input" id="ct-size" type="number" placeholder="32"/></div>
         </div>
         <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ìê³µ ìì ì¼</label><input class="form-input" id="ct-work-date" type="date"/></div>
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ìê³µ ìê°</label><input class="form-input" id="ct-work-time" type="time" value="09:00"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">시공 예정일</label><input class="form-input" id="ct-work-date" type="date"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">시공 시간</label><input class="form-input" id="ct-work-time" type="time" value="09:00"/></div>
         </div>
-        <div style="margin-top:10px;"><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ì¶ê° ìë¹ì¤</label><input class="form-input" id="ct-extra" placeholder="ì: ìì´ì»¨ 1ë, ë°ì½ë"/></div>
+        <div style="margin-top:10px;"><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">추가 서비스</label><input class="form-input" id="ct-extra" placeholder="예: 에어컨 1대, 발코니"/></div>
       </div>
 
       <div style="background:#fff;border:1.5px solid var(--gray-200);border-radius:14px;padding:16px;margin-bottom:14px;">
-        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">ð° ê¸ì¡ (ê²¬ì ìì ìë ìë ¥ë¨)</div>
+        <div style="font-size:13px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;">💰 금액 (견적에서 자동 입력됨)</div>
 
-        <!-- ê²°ì  ë°©ì í ê¸ -->
+        <!-- 결제 방식 토글 -->
         <div style="display:flex;align-items:center;justify-content:space-between;background:var(--gray-100);border-radius:10px;padding:10px 14px;margin-bottom:12px;">
           <div>
-            <div style="font-size:13px;font-weight:700;">íê¸ ê²°ì </div>
-            <div style="font-size:11px;color:var(--gray-400);margin-top:2px;">íê¸ ê²°ì  ì VAT(10%) ì ì¸</div>
+            <div style="font-size:13px;font-weight:700;">현금 결제</div>
+            <div style="font-size:11px;color:var(--gray-400);margin-top:2px;">현금 결제 시 VAT(10%) 제외</div>
           </div>
           <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;">
             <input type="checkbox" id="ct-cash" style="opacity:0;width:0;height:0;" onchange="recalcContract()">
@@ -276,356 +276,356 @@ select.form-input{cursor:pointer;}
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ê¸°ë³¸ ê¸ì¡ (VATì )</label><input class="form-input" id="ct-base" type="number" placeholder="200000" oninput="recalcContract()"/></div>
-          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ì¶ê° ê¸ì¡ (VATì )</label><input class="form-input" id="ct-extra-price" type="number" value="0" oninput="recalcContract()"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">기본 금액 (VAT전)</label><input class="form-input" id="ct-base" type="number" placeholder="200000" oninput="recalcContract()"/></div>
+          <div><label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">추가 금액 (VAT전)</label><input class="form-input" id="ct-extra-price" type="number" value="0" oninput="recalcContract()"/></div>
         </div>
 
-        <!-- ê¸ì¡ ìì½ -->
+        <!-- 금액 요약 -->
         <div style="background:var(--primary-light);border-radius:10px;padding:10px 14px;margin-top:10px;margin-bottom:10px;">
           <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
-            <span style="color:#5A5F72;">ìê³</span><span id="ct-summary-sub" style="font-weight:600;">â</span>
+            <span style="color:#5A5F72;">소계</span><span id="ct-summary-sub" style="font-weight:600;">—</span>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;" id="ct-vat-row">
-            <span style="color:#5A5F72;">VAT (10%)</span><span id="ct-summary-vat" style="font-weight:600;">â</span>
+            <span style="color:#5A5F72;">VAT (10%)</span><span id="ct-summary-vat" style="font-weight:600;">—</span>
           </div>
           <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;border-top:1px solid rgba(0,200,150,0.3);padding-top:6px;margin-top:4px;">
-            <span style="color:var(--primary-dark);">ì´ ê¸ì¡</span><span id="ct-summary-total" style="color:var(--primary-dark);">â</span>
+            <span style="color:var(--primary-dark);">총 금액</span><span id="ct-summary-total" style="color:var(--primary-dark);">—</span>
           </div>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div>
-            <label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ê³ì½ê¸ <span style="color:var(--primary);font-weight:400;">(ì´ì¡ì 10% ìë)</span></label>
+            <label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">계약금 <span style="color:var(--primary);font-weight:400;">(총액의 10% 자동)</span></label>
             <input class="form-input" id="ct-deposit" type="number" value="0" oninput="recalcBalance()" style="background:var(--gray-100);"/>
           </div>
           <div>
-            <label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">ìê¸ <span style="color:var(--primary);font-weight:400;">(ìë ê³ì°)</span></label>
+            <label style="font-size:12px;font-weight:600;color:#5A5F72;display:block;margin-bottom:5px;">잔금 <span style="color:var(--primary);font-weight:400;">(자동 계산)</span></label>
             <input class="form-input" id="ct-balance" type="number" value="0" readonly style="background:var(--gray-100);color:var(--primary-dark);font-weight:700;"/>
           </div>
         </div>
       </div>
 
-      <button class="btn-primary" onclick="generateContract()" style="margin-bottom:0;">ð ê³ì½ì ìì±</button>
+      <button class="btn-primary" onclick="generateContract()" style="margin-bottom:0;">📋 계약서 생성</button>
     </div>
 
-    <!-- ê³ì½ì ë¯¸ë¦¬ë³´ê¸° -->
+    <!-- 계약서 미리보기 -->
     <div id="ct-preview" style="display:none;">
-      <!-- ê³ì½ì ë³¸ë¬¸ -->
+      <!-- 계약서 본문 -->
       <div id="ct-paper" style="background:#fff;border:1px solid #ddd;border-radius:8px;padding:28px 24px;margin-bottom:14px;font-family:'Noto Sans KR',sans-serif;color:#1a1a1a;">
 
-        <!-- ì ëª© -->
+        <!-- 제목 -->
         <div style="text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:12px;margin-bottom:16px;">
-          <div style="font-size:17px;font-weight:900;letter-spacing:3px;margin-bottom:4px;">ì²­ììë¹ì¤ ê³ì½ì</div>
-          <div style="font-size:9.5px;color:#888;">ìë¹ìê¸°ë³¸ë² ë° ê³µì ê±°ëììí ìë¹ìë¶ìí´ê²°ê¸°ì¤ì ë°ë¼ ìì±</div>
+          <div style="font-size:17px;font-weight:900;letter-spacing:3px;margin-bottom:4px;">청소서비스 계약서</div>
+          <div style="font-size:9.5px;color:#888;">소비자기본법 및 공정거래위원회 소비자분쟁해결기준에 따라 작성</div>
         </div>
 
-        <!-- ë¹ì¬ì íì´ë¸ -->
+        <!-- 당사자 테이블 -->
         <table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:10.5px;">
           <tr style="background:#f5f5f5;">
-            <td colspan="4" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">ì 1ì¡° ê³ì½ ë¹ì¬ì</td>
+            <td colspan="4" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">제1조 계약 당사자</td>
           </tr>
           <tr>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;white-space:nowrap;">ì¬ìì(ê°)</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;white-space:nowrap;">사업자(갑)</td>
             <td style="padding:4px 8px;border:1px solid #ddd;width:32%;" id="ct-r-company-t"></td>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;white-space:nowrap;">ëíì</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;white-space:nowrap;">대표자</td>
             <td style="padding:4px 8px;border:1px solid #ddd;width:32%;" id="ct-r-owner-t"></td>
           </tr>
           <tr>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">ì°ë½ì²</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">연락처</td>
             <td style="padding:4px 8px;border:1px solid #ddd;" id="ct-r-cphone-t"></td>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">ê³ ê°(ì)</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">고객(을)</td>
             <td style="padding:4px 8px;border:1px solid #ddd;" id="ct-r-name-t"></td>
           </tr>
           <tr>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">ê³ ê° ì°ë½ì²</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">고객 연락처</td>
             <td colspan="3" style="padding:4px 8px;border:1px solid #ddd;" id="ct-r-phone-t"></td>
           </tr>
         </table>
 
-        <!-- ìë¹ì¤ ë´ì© -->
+        <!-- 서비스 내용 -->
         <table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:10.5px;">
           <tr style="background:#f5f5f5;">
-            <td colspan="4" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">ì 2ì¡° ìë¹ì¤ ë´ì©</td>
+            <td colspan="4" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">제2조 서비스 내용</td>
           </tr>
           <tr>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;white-space:nowrap;">ì²­ì ì í</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;white-space:nowrap;">청소 유형</td>
             <td style="padding:4px 8px;border:1px solid #ddd;width:32%;" id="ct-r-type-t"></td>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;white-space:nowrap;">íì</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;white-space:nowrap;">평수</td>
             <td style="padding:4px 8px;border:1px solid #ddd;width:32%;" id="ct-r-size-t"></td>
           </tr>
           <tr>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">ìê³µ ì£¼ì</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">시공 주소</td>
             <td colspan="3" style="padding:4px 8px;border:1px solid #ddd;" id="ct-r-addr-t"></td>
           </tr>
           <tr>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">ìê³µ ì¼ì</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">시공 일시</td>
             <td colspan="3" style="padding:4px 8px;border:1px solid #ddd;" id="ct-r-wdate-t"></td>
           </tr>
           <tr id="ct-r-extra-tr" style="display:none;">
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">ì¶ê° ìë¹ì¤</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">추가 서비스</td>
             <td colspan="3" style="padding:4px 8px;border:1px solid #ddd;" id="ct-r-extra-t"></td>
           </tr>
           <tr>
             <td colspan="4" style="padding:5px 8px;border:1px solid #ddd;font-size:9.5px;color:#555;background:#fefefe;">
-              <b>â» ë¯¸í¬í¨ í­ëª©:</b> ê°êµ¬Â·ê°ì  ë´ë¶ì²­ì, ì¸ë²½Â·ì¸ë¶ì°½ë¬¸, ê³°í¡ì´Â·ìí ì ê±°, ìì£¼ í ì¤ì¼, ê³ì½ ì¸ ì¶ê°ìì
+              <b>※ 미포함 항목:</b> 가구·가전 내부청소, 외벽·외부창문, 곰팡이·석회 제거, 입주 후 오염, 계약 외 추가작업
             </td>
           </tr>
         </table>
 
-        <!-- ê¸ì¡ -->
+        <!-- 금액 -->
         <table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:10.5px;">
           <tr style="background:#f5f5f5;">
-            <td colspan="4" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">ì 3ì¡° ìë¹ì¤ ê¸ì¡ ë° ê²°ì </td>
+            <td colspan="4" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">제3조 서비스 금액 및 결제</td>
           </tr>
           <tr>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;">ê¸°ë³¸ê¸ì¡</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;">기본금액</td>
             <td style="padding:4px 8px;border:1px solid #ddd;width:32%;" id="ct-r-base-t"></td>
             <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;width:18%;" id="ct-r-vat-label">VAT(10%)</td>
             <td style="padding:4px 8px;border:1px solid #ddd;width:32%;" id="ct-r-vat-t"></td>
           </tr>
           <tr>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:700;">ì´ ê¸ì¡</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:700;">총 금액</td>
             <td style="padding:4px 8px;border:1px solid #ddd;font-weight:700;color:#009E78;" id="ct-r-total-t"></td>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">ê³ì½ê¸</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">계약금</td>
             <td style="padding:4px 8px;border:1px solid #ddd;" id="ct-r-deposit-t"></td>
           </tr>
           <tr>
-            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">ìê¸</td>
+            <td style="padding:4px 8px;border:1px solid #ddd;background:#fafafa;font-weight:600;">잔금</td>
             <td colspan="3" style="padding:4px 8px;border:1px solid #ddd;" id="ct-r-balance-t"></td>
           </tr>
           <tr>
             <td colspan="4" style="padding:5px 8px;border:1px solid #ddd;font-size:9.5px;color:#555;background:#fefefe;">
-              â» ìê¸ì ìê³µ ìë£ ì¦ì ê²°ì  Â· íì¥ ì¶ê°ìë¹ì¤ë ì¬ì  ë¬¸ì ëì í ì²­êµ¬ (ìë¹ìê¸°ë³¸ë² ì 4ì¡°)
+              ※ 잔금은 시공 완료 즉시 결제 · 현장 추가서비스는 사전 문자 동의 후 청구 (소비자기본법 제4조)
             </td>
           </tr>
         </table>
 
-        <!-- ì½ê´ (2ë¨ êµ¬ì±ì¼ë¡ ê³µê° ì ì½) -->
+        <!-- 약관 (2단 구성으로 공간 절약) -->
         <table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:10px;">
           <tr style="background:#f5f5f5;">
-            <td colspan="2" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">ì 4ì¡° ì·¨ìÂ·íë¶  /  ì 5ì¡° A/S ë³´ì¦</td>
+            <td colspan="2" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">제4조 취소·환불  /  제5조 A/S 보증</td>
           </tr>
           <tr>
             <td style="padding:6px 8px;border:1px solid #ddd;vertical-align:top;width:50%;font-size:9.5px;line-height:1.65;">
-              <b>[ê³ ê° ê·ì±]</b><br>
-              Â· 4ì¼ì â ì·¨ì â ì ì¡íë¶<br>
-              Â· 2~3ì¼ì  ì·¨ì â 50% ê³µì  í íë¶<br>
-              Â· 1ì¼ì Â·ë¹ì¼ ì·¨ì â ê³ì½ê¸ ëª°ì·¨<br>
-              Â· ê³ ê° ë¶ì¬Â·ì°ë½ëì  â ë¹ì¼ì·¨ì ëì¼<br>
-              <b>[ì¬ìì ê·ì±]</b><br>
-              Â· ì¬ìì ê·ì± ì·¨ì â ì ì¡íë¶<br>
-              Â· ë¶ê°í­ë ¥ â ì ì¡íë¶, ë°°ì ìì
+              <b>[고객 귀책]</b><br>
+              · 4일전↑ 취소 → 전액환불<br>
+              · 2~3일전 취소 → 50% 공제 후 환불<br>
+              · 1일전·당일 취소 → 계약금 몰취<br>
+              · 고객 부재·연락두절 → 당일취소 동일<br>
+              <b>[사업자 귀책]</b><br>
+              · 사업자 귀책 취소 → 전액환불<br>
+              · 불가항력 → 전액환불, 배상 없음
             </td>
             <td style="padding:6px 8px;border:1px solid #ddd;vertical-align:top;font-size:9.5px;line-height:1.65;">
-              Â· ì ìê¸°ê°: ìê³µ í <b>24ìê° ì´ë´</b> (ë¬¸ì+ì¬ì§)<br>
-              Â· ë²ì: ê³ì½ ëªì í­ëª© ííì¬ 1í ë¬´ì<br>
-              <b>[A/S ì ì¸]</b><br>
-              Â· ìì£¼ í ë°ì ì¤ì¼Â·íì<br>
-              Â· 24ìê° ê²½ê³¼ í ì ì ë¯¼ì<br>
-              Â· ê³ì½ ë²ì ì¸ í­ëª© ìêµ¬<br>
-              Â· ì£¼ê´ì  ë§ì¡±ë ì¬ìê³µ ìêµ¬
+              · 접수기간: 시공 후 <b>24시간 이내</b> (문자+사진)<br>
+              · 범위: 계약 명시 항목 한하여 1회 무상<br>
+              <b>[A/S 제외]</b><br>
+              · 입주 후 발생 오염·파손<br>
+              · 24시간 경과 후 접수 민원<br>
+              · 계약 범위 외 항목 요구<br>
+              · 주관적 만족도 재시공 요구
             </td>
           </tr>
         </table>
 
         <table style="width:100%;border-collapse:collapse;margin-bottom:14px;font-size:10px;">
           <tr style="background:#f5f5f5;">
-            <td colspan="2" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">ì 6ì¡° ìí´ë°°ìÂ·ë©´ì±  /  ì 7~9ì¡° ê¸°í</td>
+            <td colspan="2" style="padding:4px 8px;font-weight:700;border:1px solid #ddd;">제6조 손해배상·면책  /  제7~9조 기타</td>
           </tr>
           <tr>
             <td style="padding:6px 8px;border:1px solid #ddd;vertical-align:top;width:50%;font-size:9.5px;line-height:1.65;">
-              Â· ê³¼ì¤ íì: ìê° ê¸°ì¤ ë³´ì (ë¯¼ë² ì 763ì¡°)<br>
-              Â· ë°°ìíë: ê³ì½ ì´ê¸ì¡ ì´ë´<br>
-              <b>[ë©´ì±]</b> ê¸°ì¡´íìÂ·ë¯¸ê³ ì§ê²°í¨Â·í¹ììì¬Â·<br>
-              &nbsp;&nbsp;ì 3ì ìí´Â·ë¶ê°í­ë ¥
+              · 과실 파손: 시가 기준 보상 (민법 제763조)<br>
+              · 배상한도: 계약 총금액 이내<br>
+              <b>[면책]</b> 기존하자·미고지결함·특수소재·<br>
+              &nbsp;&nbsp;제3자 손해·불가항력
             </td>
             <td style="padding:6px 8px;border:1px solid #ddd;vertical-align:top;font-size:9.5px;line-height:1.65;">
-              Â· ìê³µ ì Â·ì¤Â·í ì¬ì§ ì´¬ì ëì<br>
-              Â· ê°ì¸ì ë³´: ìë¹ì¤ ëª©ì  íì , 3ë ë³´ì <br>
-              Â· ë¶ì: íì â ìë¹ìì ì¡°ì <br>
-              Â· ê´í ë²ì: ì¬ìì ìì¬ì§ (ë¯¼ìë² ì 24ì¡°)
+              · 시공 전·중·후 사진 촬영 동의<br>
+              · 개인정보: 서비스 목적 한정, 3년 보유<br>
+              · 분쟁: 협의 → 소비자원 조정<br>
+              · 관할법원: 사업자 소재지 (민소법 제24조)
             </td>
           </tr>
         </table>
 
-        <!-- ìëªë -->
+        <!-- 서명란 -->
         <div style="border:1px solid #ddd;border-radius:6px;padding:12px;margin-top:4px;">
-          <div style="text-align:center;font-size:10px;color:#888;margin-bottom:8px;">ë³¸ ê³ì½ìì ìëªí¨ì¼ë¡ì¨ ì ë´ì©ì ëìí©ëë¤.</div>
+          <div style="text-align:center;font-size:10px;color:#888;margin-bottom:8px;">본 계약서에 서명함으로써 위 내용에 동의합니다.</div>
           <div style="text-align:center;font-size:11px;font-weight:700;margin-bottom:12px;" id="ct-r-date"></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
             <div style="border:1px solid #ddd;border-radius:6px;padding:10px;text-align:center;">
-              <div style="font-size:10px;color:#888;margin-bottom:2px;">ì¬ìì (ê°)</div>
+              <div style="font-size:10px;color:#888;margin-bottom:2px;">사업자 (갑)</div>
               <div style="font-size:12px;font-weight:700;margin-bottom:1px;" id="ct-r-company2"></div>
-              <div style="font-size:10px;color:#888;margin-bottom:6px;">ëí: <span id="ct-r-owner2"></span></div>
+              <div style="font-size:10px;color:#888;margin-bottom:6px;">대표: <span id="ct-r-owner2"></span></div>
               <canvas id="sig-owner" width="160" height="65" style="border:1px solid #e0e0e0;border-radius:6px;background:#fafafa;touch-action:none;width:100%;display:block;cursor:crosshair;"></canvas>
-              <button onclick="clearSig('sig-owner')" style="width:100%;margin-top:6px;padding:5px;background:none;border:1px solid #e0e0e0;border-radius:5px;font-size:10px;color:#999;cursor:pointer;">â ë¤ì ìëª</button>
+              <button onclick="clearSig('sig-owner')" style="width:100%;margin-top:6px;padding:5px;background:none;border:1px solid #e0e0e0;border-radius:5px;font-size:10px;color:#999;cursor:pointer;">✕ 다시 서명</button>
             </div>
             <div style="border:1px solid #ddd;border-radius:6px;padding:10px;text-align:center;">
-              <div style="font-size:10px;color:#888;margin-bottom:2px;">ê³ ê° (ì)</div>
+              <div style="font-size:10px;color:#888;margin-bottom:2px;">고객 (을)</div>
               <div style="font-size:12px;font-weight:700;margin-bottom:8px;" id="ct-r-name2"></div>
               <canvas id="sig-customer" width="160" height="65" style="border:1px solid #e0e0e0;border-radius:6px;background:#fafafa;touch-action:none;width:100%;display:block;cursor:crosshair;"></canvas>
-              <button onclick="clearSig('sig-customer')" style="width:100%;margin-top:6px;padding:5px;background:none;border:1px solid #e0e0e0;border-radius:5px;font-size:10px;color:#999;cursor:pointer;">â ë¤ì ìëª</button>
+              <button onclick="clearSig('sig-customer')" style="width:100%;margin-top:6px;padding:5px;background:none;border:1px solid #e0e0e0;border-radius:5px;font-size:10px;color:#999;cursor:pointer;">✕ 다시 서명</button>
             </div>
           </div>
-          <div style="text-align:center;font-size:10px;color:#bbb;margin-top:8px;">âï¸ ìê°ë½ì¼ë¡ ìëªí´ì£¼ì¸ì</div>
+          <div style="text-align:center;font-size:10px;color:#bbb;margin-top:8px;">☝️ 손가락으로 서명해주세요</div>
         </div>
 
       </div>
 
       <button class="btn-primary" onclick="sendRemoteSign()" id="pdf-send-btn">
-        <span id="pdf-btn-text">ð¤ ìëª ë§í¬ ê³ ê°ìê² ë°ì¡</span>
+        <span id="pdf-btn-text">📤 서명 링크 고객에게 발송</span>
         <div class="send-loading" id="pdf-loading" style="display:none;"></div>
       </button>
-      <button class="btn-secondary" style="margin-top:6px;font-size:12px;color:var(--gray-400);border-color:var(--gray-200);" onclick="generateAndSendPDF()">âï¸ ì§ì  ë§ëì ìëª (ê¸°ì¡´ ë°©ì)</button>
-      <button class="btn-secondary" onclick="document.getElementById('ct-form').style.display='block';document.getElementById('ct-preview').style.display='none';" style="color:#A0A4B0;border-color:var(--gray-200);">âº ë¤ì ìì±</button>
+      <button class="btn-secondary" style="margin-top:6px;font-size:12px;color:var(--gray-400);border-color:var(--gray-200);" onclick="generateAndSendPDF()">✍️ 직접 만나서 서명 (기존 방식)</button>
+      <button class="btn-secondary" onclick="document.getElementById('ct-form').style.display='block';document.getElementById('ct-preview').style.display='none';" style="color:#A0A4B0;border-color:var(--gray-200);">↺ 다시 작성</button>
     </div>
 
   </div>
 </div>
 
-<!-- ííë¦¿ -->
+<!-- 템플릿 -->
 <div id="page-template" class="page">
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">ð í¤ìë ë¹ ë¥¸ ê²ì</div>
+    <div class="card-title">🔍 키워드 빠른 검색</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
-      <button onclick="setKeyword('ê²¬ì ')" class="keyword-chip">ð° ê²¬ì </button>
-      <button onclick="setKeyword('ìì½')" class="keyword-chip">ð ìì½</button>
-      <button onclick="setKeyword('ìë£')" class="keyword-chip">â ìë£</button>
-      <button onclick="setKeyword('ê°ê²©')" class="keyword-chip">ðµ ê°ê²©</button>
-      <button onclick="setKeyword('')" class="keyword-chip" style="background:var(--gray-100);color:var(--gray-400);">ì ì²´</button>
+      <button onclick="setKeyword('견적')" class="keyword-chip">💰 견적</button>
+      <button onclick="setKeyword('예약')" class="keyword-chip">📅 예약</button>
+      <button onclick="setKeyword('완료')" class="keyword-chip">✅ 완료</button>
+      <button onclick="setKeyword('가격')" class="keyword-chip">💵 가격</button>
+      <button onclick="setKeyword('')" class="keyword-chip" style="background:var(--gray-100);color:var(--gray-400);">전체</button>
     </div>
-    <input class="form-input" id="t-keyword" placeholder="í¤ìë ì§ì  ê²ì..." oninput="renderTemplates()" style="margin-bottom:0;"/>
+    <input class="form-input" id="t-keyword" placeholder="키워드 직접 검색..." oninput="renderTemplates()" style="margin-bottom:0;"/>
   </div>
-  <div class="card" style="margin-bottom:14px;"><div class="card-title">ð¤ ê°ì¸í</div><div class="form-row"><div class="form-group" style="margin:0;"><label class="form-label">ê³ ê° ì´ë¦</label><input class="form-input" id="t-name" placeholder="ê¹OO" oninput="renderTemplates()"/></div><div class="form-group" style="margin:0;"><label class="form-label">íì</label><input class="form-input" id="t-size" type="number" placeholder="32" oninput="renderTemplates()"/></div></div></div>
+  <div class="card" style="margin-bottom:14px;"><div class="card-title">👤 개인화</div><div class="form-row"><div class="form-group" style="margin:0;"><label class="form-label">고객 이름</label><input class="form-input" id="t-name" placeholder="김OO" oninput="renderTemplates()"/></div><div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="t-size" type="number" placeholder="32" oninput="renderTemplates()"/></div></div></div>
   <div id="template-list"></div>
 </div>
 
 <!-- FAQ -->
 
-<!-- ìì½ ëª©ë¡ -->
+<!-- 예약 목록 -->
 <div id="page-booking" class="page">
   <div class="card" style="margin-bottom:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-      <div class="card-title" style="margin-bottom:0;">ð ìì½ ëª©ë¡</div>
-      <button onclick="loadBookings()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">ð ìë¡ê³ ì¹¨</button>
+      <div class="card-title" style="margin-bottom:0;">📅 예약 목록</div>
+      <button onclick="loadBookings()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새로고침</button>
     </div>
-    <!-- ìí íí° -->
+    <!-- 상태 필터 -->
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
-      <button class="chip on" id="bf-all"     onclick="filterBookings('all',this)">ì ì²´</button>
-      <button class="chip"    id="bf-pending"  onclick="filterBookings('pending',this)">ëê¸°ì¤</button>
-      <button class="chip"    id="bf-confirmed"onclick="filterBookings('confirmed',this)">íì </button>
-      <button class="chip"    id="bf-completed"onclick="filterBookings('completed',this)">ìë£</button>
-      <button class="chip"    id="bf-cancelled"onclick="filterBookings('cancelled',this)">ì·¨ì</button>
+      <button class="chip on" id="bf-all"     onclick="filterBookings('all',this)">전체</button>
+      <button class="chip"    id="bf-pending"  onclick="filterBookings('pending',this)">대기중</button>
+      <button class="chip"    id="bf-confirmed"onclick="filterBookings('confirmed',this)">확정</button>
+      <button class="chip"    id="bf-completed"onclick="filterBookings('completed',this)">완료</button>
+      <button class="chip"    id="bf-cancelled"onclick="filterBookings('cancelled',this)">취소</button>
     </div>
     <div id="booking-list">
-      <div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">ë¡ë© ì¤...</div>
+      <div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">로딩 중...</div>
     </div>
   </div>
 </div>
 
 <div id="page-faq" class="page">
   <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">ð¤ FAQ ìëìëµ</div>
-    <div style="font-size:12px;color:var(--gray-400);margin-bottom:10px;">ê³ ê° ë¬¸ì ë´ì©ì ë¶ì¬ë£ì¼ë©´ ê´ë ¨ FAQë¥¼ ìëì¼ë¡ ì°¾ìëë¦½ëë¤.</div>
-    <textarea class="form-input" id="faq-auto-input" rows="3" placeholder="ê³ ê°ì´ ë³´ë¸ ë¬¸ì ë´ì©ì ì¬ê¸°ì ë¶ì¬ë£ì¼ì¸ì..." oninput="matchFaq()" style="resize:none;margin-bottom:10px;"></textarea>
+    <div class="card-title">🤖 FAQ 자동응답</div>
+    <div style="font-size:12px;color:var(--gray-400);margin-bottom:10px;">고객 문자 내용을 붙여넣으면 관련 FAQ를 자동으로 찾아드립니다.</div>
+    <textarea class="form-input" id="faq-auto-input" rows="3" placeholder="고객이 보낸 문자 내용을 여기에 붙여넣으세요..." oninput="matchFaq()" style="resize:none;margin-bottom:10px;"></textarea>
     <div id="faq-auto-result"></div>
   </div>
-  <div class="card-title" style="margin-bottom:10px;">ð ì ì²´ FAQ ëª©ë¡</div>
+  <div class="card-title" style="margin-bottom:10px;">📋 전체 FAQ 목록</div>
   <div id="faq-list"></div>
-  <button class="add-btn" onclick="addFaq()" style="margin-top:4px;">+ FAQ í­ëª© ì¶ê°</button>
+  <button class="add-btn" onclick="addFaq()" style="margin-top:4px;">+ FAQ 항목 추가</button>
 </div>
 
-<!-- ì¤ì  -->
-<!-- ìë£ë³´ê³ ì -->
+<!-- 설정 -->
+<!-- 완료보고서 -->
 <div id="page-report" class="page">
 
-  <!-- STEP 1: ê³ ê° ì ë³´ -->
+  <!-- STEP 1: 고객 정보 -->
   <div class="card" style="margin-bottom:12px;">
-    <div class="card-title">ð¤ ê³ ê° ì ë³´</div>
+    <div class="card-title">👤 고객 정보</div>
     <div class="form-row">
-      <div class="form-group" style="margin:0;"><label class="form-label">ê³ ê°ëª</label><input class="form-input" id="rp-name" placeholder="ê¹OO"/></div>
-      <div class="form-group" style="margin:0;"><label class="form-label">ì°ë½ì²</label><input class="form-input" id="rp-phone" placeholder="010-0000-0000" type="tel"/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">고객명</label><input class="form-input" id="rp-name" placeholder="김OO"/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">연락처</label><input class="form-input" id="rp-phone" placeholder="010-0000-0000" type="tel"/></div>
     </div>
     <div style="margin-top:10px;" class="form-row">
-      <div class="form-group" style="margin:0;"><label class="form-label">ì²­ì ì í</label>
+      <div class="form-group" style="margin:0;"><label class="form-label">청소 유형</label>
         <select class="form-input" id="rp-type">
-          <option>ìì£¼ ì  ì²­ì</option><option>ì´ì¬ í ì²­ì</option><option>ì ì¶ ì¤ê³µ ì²­ì</option><option>ìí ì²­ì</option>
+          <option>입주 전 청소</option><option>이사 후 청소</option><option>신축 준공 청소</option><option>생활 청소</option>
         </select>
       </div>
-      <div class="form-group" style="margin:0;"><label class="form-label">íì</label><input class="form-input" id="rp-size" type="number" placeholder="32"/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="rp-size" type="number" placeholder="32"/></div>
     </div>
     <div style="margin-top:10px;" class="form-row">
-      <div class="form-group" style="margin:0;"><label class="form-label">ìê³µ ì£¼ì</label><input class="form-input" id="rp-addr" placeholder="ì¸ì² ë¶íêµ¬ ..."/></div>
-      <div class="form-group" style="margin:0;"><label class="form-label">ììì¸ìÂ·ìê°</label><input class="form-input" id="rp-crew" placeholder="2ëª Â· 4ìê°"/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">시공 주소</label><input class="form-input" id="rp-addr" placeholder="인천 부평구 ..."/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">작업인원·시간</label><input class="form-input" id="rp-crew" placeholder="2명 · 4시간"/></div>
     </div>
   </div>
 
-  <!-- STEP 2: í­ëª© ì í -->
+  <!-- STEP 2: 항목 선택 -->
   <div class="card" style="margin-bottom:12px;">
-    <div class="card-title">ð ê³µíµí­ëª© ì í</div>
+    <div class="card-title">📋 공통항목 선택</div>
     <div id="rp-item-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;"></div>
     <div style="display:flex;gap:6px;">
-      <button onclick="rpSelectAll()" style="flex:1;padding:7px;background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">ì ì²´ ì í</button>
-      <button onclick="rpClearAll()" style="flex:1;padding:7px;background:var(--gray-100);color:var(--gray-500);border:1px solid var(--gray-200);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">ì ì²´ í´ì </button>
+      <button onclick="rpSelectAll()" style="flex:1;padding:7px;background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">전체 선택</button>
+      <button onclick="rpClearAll()" style="flex:1;padding:7px;background:var(--gray-100);color:var(--gray-500);border:1px solid var(--gray-200);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">전체 해제</button>
     </div>
   </div>
 
-  <!-- STEP 3: ì /í ì¬ì§ -->
+  <!-- STEP 3: 전/후 사진 -->
   <div class="card" style="margin-bottom:12px;">
-    <div class="card-title">ð¸ ìê³µ ì /í ì¬ì§ <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(í­ëª©ë¹ ì 1Â·í1)</span></div>
+    <div class="card-title">📸 시공 전/후 사진 <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(항목당 전1·후1)</span></div>
     <div id="rp-photo-area"></div>
   </div>
 
-  <!-- STEP 4: ìë£ ë¬¸êµ¬ -->
+  <!-- STEP 4: 완료 문구 -->
   <div class="card" style="margin-bottom:12px;">
-    <div class="card-title">ð¬ ìê³µ ìë£ ë´ì© <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(ì§ì  í¸ì§ ê°ë¥)</span></div>
+    <div class="card-title">💬 시공 완료 내용 <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(직접 편집 가능)</span></div>
     <textarea class="form-input" id="rp-notes" rows="6" style="resize:none;font-size:13px;line-height:1.75;"></textarea>
-    <button onclick="rpAutoNotes()" style="margin-top:6px;padding:7px 14px;background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">âº ê¸°ë³¸ ë¬¸êµ¬ë¡ ì´ê¸°í</button>
+    <button onclick="rpAutoNotes()" style="margin-top:6px;padding:7px 14px;background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">↺ 기본 문구로 초기화</button>
   </div>
 
-  <!-- STEP 5: í¹ì´ì¬í­ (ì í) -->
+  <!-- STEP 5: 특이사항 (선택) -->
   <div class="card" style="margin-bottom:12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-      <div class="card-title" style="margin-bottom:0;">â ï¸ í¹ì´ì¬í­ <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(ìì¼ë©´ ìëµ)</span></div>
+      <div class="card-title" style="margin-bottom:0;">⚠️ 특이사항 <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(없으면 생략)</span></div>
       <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;">
-        <input type="checkbox" id="rp-issue-toggle" onchange="document.getElementById('rp-issue-body').style.display=this.checked?'block':'none'"> í¬í¨
+        <input type="checkbox" id="rp-issue-toggle" onchange="document.getElementById('rp-issue-body').style.display=this.checked?'block':'none'"> 포함
       </label>
     </div>
     <div id="rp-issue-body" style="display:none;">
-      <textarea class="form-input" id="rp-issue-text" rows="4" style="resize:none;font-size:12.5px;line-height:1.75;margin-bottom:10px;" placeholder="ì) ì£¼ë°© íì¼ ìí ìì¡´ (ì ê±° ë¶ê°), ìë°© ë²½ì§ ê¸°ì¡´ íì ë±"></textarea>
-      <div class="form-label" style="margin-bottom:6px;">í¹ì´ì¬í­ ì¬ì§ (ìµë 2ì¥)</div>
+      <textarea class="form-input" id="rp-issue-text" rows="4" style="resize:none;font-size:12.5px;line-height:1.75;margin-bottom:10px;" placeholder="예) 주방 타일 석회 잔존 (제거 불가), 안방 벽지 기존 하자 등"></textarea>
+      <div class="form-label" style="margin-bottom:6px;">특이사항 사진 (최대 2장)</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         <div>
-          <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px;">ì¬ì§ 1</div>
+          <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px;">사진 1</div>
           <label style="display:block;aspect-ratio:4/3;background:var(--gray-100);border:1.5px dashed var(--gray-200);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;">
             <input type="file" id="rp-issue-img1" accept="image/*" style="display:none;" onchange="rpPreviewIssue(this,'rp-issue-prev1')">
             <img id="rp-issue-prev1" src="" style="display:none;width:100%;height:100%;object-fit:cover;">
-            <span id="rp-issue-ph1" style="font-size:11px;color:var(--gray-400);">+ ì¬ì§ ì¶ê°</span>
+            <span id="rp-issue-ph1" style="font-size:11px;color:var(--gray-400);">+ 사진 추가</span>
           </label>
         </div>
         <div>
-          <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px;">ì¬ì§ 2</div>
+          <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px;">사진 2</div>
           <label style="display:block;aspect-ratio:4/3;background:var(--gray-100);border:1.5px dashed var(--gray-200);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;">
             <input type="file" id="rp-issue-img2" accept="image/*" style="display:none;" onchange="rpPreviewIssue(this,'rp-issue-prev2')">
             <img id="rp-issue-prev2" src="" style="display:none;width:100%;height:100%;object-fit:cover;">
-            <span id="rp-issue-ph2" style="font-size:11px;color:var(--gray-400);">+ ì¬ì§ ì¶ê°</span>
+            <span id="rp-issue-ph2" style="font-size:11px;color:var(--gray-400);">+ 사진 추가</span>
           </label>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ë°ì¡ ë²í¼ -->
+  <!-- 발송 버튼 -->
   <button class="btn-primary" onclick="generateReport()" id="rp-send-btn">
-    <span id="rp-btn-text">ð ë³´ê³ ì ìì± â PDF ë°ì¡</span>
+    <span id="rp-btn-text">📄 보고서 생성 → PDF 발송</span>
     <div class="send-loading" id="rp-loading" style="display:none;"></div>
   </button>
 </div>
 
 <div id="page-history" class="page">
-  <div style="padding:4px 0 12px;font-size:13px;color:var(--gray-400);">ë°ì¡í ë¬¸ì ì´ë ¥ìëë¤.</div>
+  <div style="padding:4px 0 12px;font-size:13px;color:var(--gray-400);">발송한 문자 이력입니다.</div>
   <div style="display:flex;gap:8px;margin-bottom:12px;">
-    <button onclick="clearHistory()" style="padding:8px 14px;background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;color:var(--gray-400);cursor:pointer;">ðï¸ ì ì²´ ì­ì </button>
+    <button onclick="clearHistory()" style="padding:8px 14px;background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 전체 삭제</button>
     <div id="history-count" style="padding:8px 0;font-size:12px;color:var(--gray-400);"></div>
   </div>
   <div id="history-list"></div>
@@ -633,61 +633,65 @@ select.form-input{cursor:pointer;}
 
 <div id="page-settings" class="page">
   <div class="settings-section">
-    <div class="settings-title">ð ê´ë¦¬ì ì¤ì </div>
-    <div class="form-group"><label class="form-label">ê´ë¦¬ì í¤ (ìì½ ëª©ë¡ ì¡°íì©)</label><input class="form-input" id="s-admin-key" placeholder="ADMIN_KEY íê²½ë³ì ê°" type="password"/></div>
-    <div class="settings-title" style="margin-top:14px;">ð± CoolSMS API ì¤ì  (ë¬¸ì ì§ì  ë°ì¡)</div>
+    <div class="settings-title">🔑 관리자 설정</div>
+    <div class="form-group"><label class="form-label">관리자 키 (예약 목록 조회용)</label><input class="form-input" id="s-admin-key" placeholder="ADMIN_KEY 환경변수 값" type="password"/></div>
+    <div class="settings-title" style="margin-top:14px;">📱 CoolSMS API 설정 (문자 직접 발송)</div>
     <div class="card" style="margin-bottom:0;">
       <div class="form-group"><label class="form-label">API Key</label><input class="form-input" id="s-api-key" placeholder="CoolSMS API Key" type="password"/></div>
       <div class="form-group"><label class="form-label">API Secret</label><input class="form-input" id="s-api-secret" placeholder="CoolSMS API Secret" type="password"/></div>
-      <div class="form-group" style="margin:0;"><label class="form-label">ë°ì  ë²í¸ (CoolSMS ë±ë¡ ë²í¸)</label><input class="form-input" id="s-from-phone" placeholder="010-0000-0000"/></div>
-      <div style="font-size:11.5px;color:var(--gray-400);margin-top:10px;line-height:1.6;">ð¡ <a href="https://coolsms.co.kr" target="_blank" style="color:var(--primary);">coolsms.co.kr</a> ê°ì í API í¤ë¥¼ ë°ê¸ë°ì¼ì¸ì. ê±´ë¹ ì½ 20ììëë¤.</div>
+      <div class="form-group" style="margin:0;"><label class="form-label">발신 번호 (CoolSMS 등록 번호)</label><input class="form-input" id="s-from-phone" placeholder="010-0000-0000"/></div>
+      <div style="font-size:11.5px;color:var(--gray-400);margin-top:10px;line-height:1.6;">💡 <a href="https://coolsms.co.kr" target="_blank" style="color:var(--primary);">coolsms.co.kr</a> 가입 후 API 키를 발급받으세요. 건당 약 20원입니다.</div>
     </div>
   </div>
   <div class="settings-section">
-    <div class="settings-title">ð¢ ìì²´ ê¸°ë³¸ ì ë³´</div>
+    <div class="settings-title">🏢 업체 기본 정보</div>
     <div class="card" style="margin-bottom:0;">
-      <div class="form-row"><div class="form-group"><label class="form-label">ìì²´ëª</label><input class="form-input" id="s-company" placeholder="ìíë¡í´ë¦°"/></div><div class="form-group"><label class="form-label">ëí ì í</label><input class="form-input" id="s-phone" placeholder="010-0000-0000" type="tel"/></div></div>
-      <div class="form-group"><label class="form-label">íë³´ìì URL</label><input class="form-input" id="s-video" placeholder="https://youtu.be/..."/></div>
-      <div class="form-group"><label class="form-label">ì¹´ì¹´ì¤ ì±ë</label><input class="form-input" id="s-kakao" placeholder="https://pf.kakao.com/..."/></div>
-      <div class="form-group"><label class="form-label">íê¸° ë§í¬</label><input class="form-input" id="s-review" placeholder="https://..."/></div>
-      <div class="form-group" style="margin:0;"><label class="form-label">ìì½ í¼ ë§í¬</label><input class="form-input" id="s-booking" placeholder="https://forms.gle/..."/></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">업체명</label><input class="form-input" id="s-company" placeholder="서프로클린"/></div><div class="form-group"><label class="form-label">대표 전화</label><input class="form-input" id="s-phone" placeholder="010-0000-0000" type="tel"/></div></div>
+      <div class="form-group"><label class="form-label">홍보영상 URL</label><input class="form-input" id="s-video" placeholder="https://youtu.be/..."/></div>
+      <div class="form-group"><label class="form-label">카카오 채널</label><input class="form-input" id="s-kakao" placeholder="https://pf.kakao.com/..."/></div>
+      <div class="form-group"><label class="form-label">후기 링크</label><input class="form-input" id="s-review" placeholder="https://..."/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">예약 폼 링크</label><input class="form-input" id="s-booking" placeholder="https://forms.gle/..."/></div>
     </div>
   </div>
   <div class="settings-section">
-    <div class="settings-title">ð° íë¹ ë¨ê° (ì/í, VAT ì )</div>
+    <div class="settings-title">💰 평당 단가 (원/평, VAT 전)</div>
     <div class="card" style="margin-bottom:0;">
       <div class="price-grid">
-        <div class="price-item"><div class="price-item-label">~20í</div><input class="price-item-input" id="s-p1" type="number" value="8000"/><div style="font-size:10px;color:var(--gray-400);margin-top:4px;">ì/í</div></div>
-        <div class="price-item"><div class="price-item-label">21~35í</div><input class="price-item-input" id="s-p2" type="number" value="6500"/><div style="font-size:10px;color:var(--gray-400);margin-top:4px;">ì/í</div></div>
-        <div class="price-item"><div class="price-item-label">36í~</div><input class="price-item-input" id="s-p3" type="number" value="5500"/><div style="font-size:10px;color:var(--gray-400);margin-top:4px;">ì/í</div></div>
+        <div class="price-item"><div class="price-item-label">~20평</div><input class="price-item-input" id="s-p1" type="number" value="8000"/><div style="font-size:10px;color:var(--gray-400);margin-top:4px;">원/평</div></div>
+        <div class="price-item"><div class="price-item-label">21~35평</div><input class="price-item-input" id="s-p2" type="number" value="6500"/><div style="font-size:10px;color:var(--gray-400);margin-top:4px;">원/평</div></div>
+        <div class="price-item"><div class="price-item-label">36평~</div><input class="price-item-input" id="s-p3" type="number" value="5500"/><div style="font-size:10px;color:var(--gray-400);margin-top:4px;">원/평</div></div>
       </div>
     </div>
   </div>
   <div class="settings-section">
-    <div class="settings-title">â ì¶ê° ìë¹ì¤ & ê¸ì¡</div>
-    <div id="s-extras-list"></div>
-    <button class="add-btn" onclick="addExtraService()">+ ìë¹ì¤ í­ëª© ì¶ê°</button>
+    <div class="settings-title">🔑 관리자 인증 키</div>
+    <div class="card" style="margin-bottom:0;"><div class="form-group" style="margin:0;"><label class="form-label">ADMIN_KEY <span style="font-size:11px;font-weight:400;color:var(--gray-400);">(Railway 환경변수 값)</span></label><input class="form-input" id="s-admin-key" placeholder="Railway에 설정한 ADMIN_KEY 값" type="password"/></div><div style="font-size:11.5px;color:var(--gray-400);margin-top:10px;line-height:1.6;">💡 Railway 대시보드 → Variables → ADMIN_KEY 값을 입력하세요.</div></div>
   </div>
   <div class="settings-section">
-    <div class="settings-title">ð ì¼ê° ìëìëµ ì¤ì </div>
+    <div class="settings-title">✅ 추가 서비스 & 금액</div>
+    <div id="s-extras-list"></div>
+    <button class="add-btn" onclick="addExtraService()">+ 서비스 항목 추가</button>
+  </div>
+  <div class="settings-section">
+    <div class="settings-title">🌙 야간 자동응답 설정</div>
     <div class="card" style="margin-bottom:0;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-        <label style="font-size:13px;font-weight:600;">ì¼ê° ìëìëµ ì¬ì©</label>
+        <label style="font-size:13px;font-weight:600;">야간 자동응답 사용</label>
         <label style="position:relative;display:inline-block;width:44px;height:24px;">
           <input type="checkbox" id="s-night-enabled" style="opacity:0;width:0;height:0;">
           <span onclick="document.getElementById('s-night-enabled').click()" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--gray-300);border-radius:24px;transition:.3s;" id="night-toggle-bg"></span>
         </label>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">ìì ìê°</label><input class="form-input" id="s-night-start" type="time" value="21:00"/></div>
-        <div class="form-group"><label class="form-label">ì¢ë£ ìê°</label><input class="form-input" id="s-night-end" type="time" value="09:00"/></div>
+        <div class="form-group"><label class="form-label">시작 시간</label><input class="form-input" id="s-night-start" type="time" value="21:00"/></div>
+        <div class="form-group"><label class="form-label">종료 시간</label><input class="form-input" id="s-night-end" type="time" value="09:00"/></div>
       </div>
-      <div class="form-group" style="margin:0;"><label class="form-label">ì¼ê° ìë ë¬¸êµ¬ (ë¬¸ì ë¤ì ìë ì¶ê°)</label>
-        <textarea class="form-input" id="s-night-msg" rows="3" style="resize:none;">ð ì¼ê°ì ë¬¸ì ì£¼ì¨ë¤ì! ë´ì¼ ì¤ì  9ì ì´í ì°ë½ëë¦¬ê² ìµëë¤. ê°ì¬í©ëë¤ ð</textarea>
+      <div class="form-group" style="margin:0;"><label class="form-label">야간 자동 문구 (문자 뒤에 자동 추가)</label>
+        <textarea class="form-input" id="s-night-msg" rows="3" style="resize:none;">🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊</textarea>
       </div>
     </div>
   </div>
-  <button class="save-settings-btn" onclick="saveSettings()">ð¾ ì ì²´ ì¤ì  ì ì¥</button>
+  <button class="save-settings-btn" onclick="saveSettings()">💾 전체 설정 저장</button>
   <div style="height:16px;"></div>
 </div>
 
@@ -695,37 +699,37 @@ select.form-input{cursor:pointer;}
 </div>
 
 <div class="bottom-nav">
-  <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">ð </div><div>í</div></button>
-  <button class="nav-item active"><div class="nav-icon">â¡</div><div>ê²¬ì </div></button>
-  <button class="nav-item" onclick="location.href='schedule.html'"><div class="nav-icon">ð</div><div>ì¤ì¼ì¤</div></button>
-  <button class="nav-item" onclick="toast('ì»¤ë®¤ëí° ì¤ë¹ ì¤')"><div class="nav-icon">ð¥</div><div>ì»¤ë®¤ëí°</div></button>
-  <button class="nav-item" onclick="toast('MY ì¤ë¹ ì¤')"><div class="nav-icon">ð¤</div><div>MY</div></button>
+  <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">🏠</div><div>홈</div></button>
+  <button class="nav-item active"><div class="nav-icon">⚡</div><div>견적</div></button>
+  <button class="nav-item" onclick="location.href='schedule.html'"><div class="nav-icon">📅</div><div>스케줄</div></button>
+  <button class="nav-item" onclick="toast('커뮤니티 준비 중')"><div class="nav-icon">👥</div><div>커뮤니티</div></button>
+  <button class="nav-item" onclick="toast('MY 준비 중')"><div class="nav-icon">👤</div><div>MY</div></button>
 </div>
 
-<!-- ííë¦¿ í¸ì§ ëª¨ë¬ -->
+<!-- 템플릿 편집 모달 -->
 <div class="modal-overlay" id="tpl-modal" onclick="if(event.target===this)closeTplModal()">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="tpl-modal-title">âï¸ ííë¦¿ ìì </div>
-    <label class="edit-label">ì´ëª¨ì§</label><input class="edit-input" id="tpl-icon" style="width:70px;"/>
-    <label class="edit-label">ì ëª©</label><input class="edit-input" id="tpl-title-input"/>
-    <label class="edit-label">ë©ìì§ ë´ì©</label>
-    <div class="edit-hint">ð¡ ë³ì: <b>{ì´ë¦}</b> Â· <b>{íì}</b> Â· <b>{ìì²´ëª}</b> Â· <b>{ì íë²í¸}</b></div>
+    <div class="modal-title" id="tpl-modal-title">✏️ 템플릿 수정</div>
+    <label class="edit-label">이모지</label><input class="edit-input" id="tpl-icon" style="width:70px;"/>
+    <label class="edit-label">제목</label><input class="edit-input" id="tpl-title-input"/>
+    <label class="edit-label">메시지 내용</label>
+    <div class="edit-hint">💡 변수: <b>{이름}</b> · <b>{평수}</b> · <b>{업체명}</b> · <b>{전화번호}</b></div>
     <textarea class="edit-textarea" id="tpl-content" rows="7"></textarea>
-    <div class="edit-btns"><button class="btn-cancel" onclick="closeTplModal()">ì·¨ì</button><button class="btn-save" onclick="saveTpl()">ì ì¥</button></div>
-    <button class="btn-reset" onclick="resetTpl()">âº ê¸°ë³¸ê°ì¼ë¡ ì´ê¸°í</button>
+    <div class="edit-btns"><button class="btn-cancel" onclick="closeTplModal()">취소</button><button class="btn-save" onclick="saveTpl()">저장</button></div>
+    <button class="btn-reset" onclick="resetTpl()">↺ 기본값으로 초기화</button>
   </div>
 </div>
 
-<!-- FAQ í¸ì§ ëª¨ë¬ -->
+<!-- FAQ 편집 모달 -->
 <div class="modal-overlay" id="faq-modal" onclick="if(event.target===this)closeFaqModal()">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">âï¸ FAQ ìì </div>
-    <label class="edit-label">ì§ë¬¸</label><input class="edit-input" id="faq-q-input" placeholder="ì§ë¬¸ì ìë ¥íì¸ì"/>
-    <label class="edit-label">ëµë³</label><textarea class="edit-textarea" id="faq-a-input" rows="5" placeholder="ëµë³ì ìë ¥íì¸ì"></textarea>
-    <div class="edit-btns"><button class="btn-cancel" onclick="closeFaqModal()">ì·¨ì</button><button class="btn-save" onclick="saveFaqItem()">ì ì¥</button></div>
-    <button class="btn-reset" onclick="deleteFaqItem()">ð ì´ í­ëª© ì­ì </button>
+    <div class="modal-title">✏️ FAQ 수정</div>
+    <label class="edit-label">질문</label><input class="edit-input" id="faq-q-input" placeholder="질문을 입력하세요"/>
+    <label class="edit-label">답변</label><textarea class="edit-textarea" id="faq-a-input" rows="5" placeholder="답변을 입력하세요"></textarea>
+    <div class="edit-btns"><button class="btn-cancel" onclick="closeFaqModal()">취소</button><button class="btn-save" onclick="saveFaqItem()">저장</button></div>
+    <button class="btn-reset" onclick="deleteFaqItem()">🗑 이 항목 삭제</button>
   </div>
 </div>
 
@@ -733,7 +737,7 @@ select.form-input{cursor:pointer;}
 
 <script>
 const SERVER='https://ssakssak-server-production.up.railway.app';
-const DEFAULT_CFG={adminKey:'',company:'ìíë¡í´ë¦°',phone:'010-1234-5678',video:'https://youtu.be/ìí',kakao:'https://pf.kakao.com/ìí',review:'https://naver.me/íê¸°',booking:'https://forms.gle/ìì½',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'ð ì¼ê°ì ë¬¸ì ì£¼ì¨ë¤ì! ë´ì¼ ì¤ì  9ì ì´í ì°ë½ëë¦¬ê² ìµëë¤. ê°ì¬í©ëë¤ ð',extras:[{id:'balcony',label:'ðª ë°ì½ë',price:30000},{id:'window',label:'â¨ ì°½ë¬¸ì²­ì',price:40000},{id:'hood',label:'ð³ ì£¼ë°©íë',price:25000},{id:'ac',label:'âï¸ ìì´ì»¨',price:50000},{id:'fridge',label:'ð§ ëì¥ê³ ',price:35000}]};
+const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}]};
 let cfg=JSON.parse(localStorage.getItem('ssak_cfg')||'null')||{...DEFAULT_CFG,extras:[...DEFAULT_CFG.extras]};
 function saveCfg(){localStorage.setItem('ssak_cfg',JSON.stringify(cfg));}
 
@@ -752,13 +756,13 @@ function switchTab(name,btn){
 
 function renderExtraChips(){
   document.getElementById('extra-chips').innerHTML=cfg.extras.map((e,i)=>
-    `<button class="chip" id="extra-${i}" onclick="this.classList.toggle('on');calcQuote()">${e.label} +${(e.price/10000).toFixed(1).replace('.0','')}ë§</button>`
+    `<button class="chip" id="extra-${i}" onclick="this.classList.toggle('on');calcQuote()">${e.label} +${(e.price/10000).toFixed(1).replace('.0','')}만</button>`
   ).join('');
   setTimeout(autoFitAllChips, 50);
 }
 
 const typeRates={'move-in':1.0,'move-out':0.85,'new':1.15,'life':0.65};
-const typeLabels={'move-in':'ìì£¼ ì ','move-out':'ì´ì¬ í','new':'ì ì¶ ì¤ê³µ','life':'ìí ì²­ì'};
+const typeLabels={'move-in':'입주 전','move-out':'이사 후','new':'신축 준공','life':'생활 청소'};
 function getBaseRate(s){return s<=20?cfg.p1:s<=35?cfg.p2:cfg.p3;}
 
 function calcQuote(){
@@ -772,62 +776,62 @@ function calcQuote(){
   const sub=base+extraTotal,vat=Math.round(sub*0.1),total=sub+vat;
   document.getElementById('quote-result').style.display='block';
   document.getElementById('contract-btn').style.display='flex';
-  document.getElementById('qr-price').textContent=total.toLocaleString()+'ì';
-  document.getElementById('qr-rows').innerHTML=`<div class="qr-row"><span>ê¸°ë³¸ (${size}í)</span><span>${base.toLocaleString()}ì</span></div>${extraItems.map(e=>`<div class="qr-row"><span>+ ${e.label}</span><span>${e.price.toLocaleString()}ì</span></div>`).join('')}<div class="qr-row"><span>ë¶ê°ì¸ 10%</span><span>${vat.toLocaleString()}ì</span></div><div class="qr-row total"><span>ìµì¢ í©ê³</span><span>${total.toLocaleString()}ì</span></div>`;
+  document.getElementById('qr-price').textContent=total.toLocaleString()+'원';
+  document.getElementById('qr-rows').innerHTML=`<div class="qr-row"><span>기본 (${size}평)</span><span>${base.toLocaleString()}원</span></div>${extraItems.map(e=>`<div class="qr-row"><span>+ ${e.label}</span><span>${e.price.toLocaleString()}원</span></div>`).join('')}<div class="qr-row"><span>부가세 10%</span><span>${vat.toLocaleString()}원</span></div><div class="qr-row total"><span>최종 합계</span><span>${total.toLocaleString()}원</span></div>`;
   buildMsg(size,type,total,extraItems);
 }
 
 function buildMsg(size,type,total,extraItems){
   size=size||parseInt(document.getElementById('q-size').value);
-  const name=document.getElementById('q-name').value.trim()||'ê³ ê°ë';
+  const name=document.getElementById('q-name').value.trim()||'고객님';
   const date=document.getElementById('q-date').value;
   type=type||document.getElementById('q-type').value;
-  if(!size){document.getElementById('msg-preview').textContent='íìì ê³ ê°ëªì ìë ¥íë©´ ë©ìì§ê° ìë ìì±ë©ëë¤ âï¸';document.getElementById('msg-char').textContent='';return;}
+  if(!size){document.getElementById('msg-preview').textContent='평수와 고객명을 입력하면 메시지가 자동 생성됩니다 ✍️';document.getElementById('msg-char').textContent='';return;}
   if(!total){const adj=parseFloat(document.getElementById('q-house').value);const base=Math.round(size*getBaseRate(size)*adj*typeRates[type]);const vat=Math.round(base*0.1);total=base+vat;}
-  const nameStr=name==='ê³ ê°ë'?'ê³ ê°ë':name+'ë';
-  // subjectë¥¼ [ìì²´ëª] ê²¬ì ìë´ë¡ ëªì â ë³¸ë¬¸ ì²«ì¤ ìëì¶ì¶ ë°©ì§
-  const smsSubject = `[${cfg.company||'ìíë¡í´ë¦°'}] ê²¬ì ìë´`;
-  let msg=`ìëíì¸ì, ${nameStr}!\n${cfg.company} ìì£¼ì²­ììëë¤.\n\n`;
-  msg+=`ââââ ê²¬ì  ìë´ ââââ\n`;
-  msg+=`${size}í ${typeLabels[type]} ì²­ì\n`;
-  msg+=`${total.toLocaleString()}ì (VATí¬í¨)\n`;
-  msg+=`ì½ ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}ìê°\n`;
-  msg+=`2~3ëª í¬ì\n`;
-  if(extraItems&&extraItems.length)msg+=`ì¶ê°: ${extraItems.map(e=>e.label).join(', ')}\n`;
-  if(date)msg+=`í¬ë§ì¼: ${date}\n`;
-  msg+=`ââââââââââââââ`;
+  const nameStr=name==='고객님'?'고객님':name+'님';
+  // subject를 [업체명] 견적안내로 명시 → 본문 첫줄 자동추출 방지
+  const smsSubject = `[${cfg.company||'서프로클린'}] 견적안내`;
+  let msg=`안녕하세요, ${nameStr}!\n${cfg.company} 입주청소입니다.\n\n`;
+  msg+=`━━━━ 견적 안내 ━━━━\n`;
+  msg+=`${size}평 ${typeLabels[type]} 청소\n`;
+  msg+=`${total.toLocaleString()}원 (VAT포함)\n`;
+  msg+=`약 ${Math.max(3,Math.ceil(size/8))}~${Math.max(4,Math.ceil(size/6))}시간\n`;
+  msg+=`2~3명 투입\n`;
+  if(extraItems&&extraItems.length)msg+=`추가: ${extraItems.map(e=>e.label).join(', ')}\n`;
+  if(date)msg+=`희망일: ${date}\n`;
+  msg+=`━━━━━━━━━━━━━━`;
   const links=[];
-  if(document.getElementById('opt-video')?.classList.contains('on'))links.push(`\nð¹ ìê³µìì: ${cfg.video}`);
-  if(document.getElementById('opt-review')?.classList.contains('on'))links.push(`\nâ­ ê³ ê°íê¸°: ${cfg.review}`);
+  if(document.getElementById('opt-video')?.classList.contains('on'))links.push(`\n📹 시공영상: ${cfg.video}`);
+  if(document.getElementById('opt-review')?.classList.contains('on'))links.push(`\n⭐ 고객후기: ${cfg.review}`);
   if(document.getElementById('opt-booking')?.classList.contains('on')){
-    // ê³ ê° ì ë³´ë¥¼ URLì ë´ì booking.htmlë¡ ì°ê²°
+    // 고객 정보를 URL에 담아 booking.html로 연결
     const bookingBase = 'https://momomint10.github.io/ssak-app/booking.html';
     const bParams = new URLSearchParams({
-      name:    name !== 'ê³ ê°ë' ? name : '',
+      name:    name !== '고객님' ? name : '',
       phone:   document.getElementById('q-phone')?.value?.trim() || '',
       size:    String(size || ''),
       type:    type || '',
       price:   String(total || ''),
-      company: cfg.company || 'ìíë¡í´ë¦°',
+      company: cfg.company || '서프로클린',
     });
-    // ë¹ ê° ì ê±°
+    // 빈 값 제거
     [...bParams.keys()].forEach(k => { if(!bParams.get(k)) bParams.delete(k); });
-    links.push(`\nð ìì½ì ì²­: ${bookingBase}?${bParams.toString()}`);
+    links.push(`\n📅 예약신청: ${bookingBase}?${bParams.toString()}`);
   }
-  if(document.getElementById('opt-kakao')?.classList.contains('on'))links.push(`\nð¬ ì¹´ì¹´ì¤: ${cfg.kakao}`);
+  if(document.getElementById('opt-kakao')?.classList.contains('on'))links.push(`\n💬 카카오: ${cfg.kakao}`);
   if(links.length)msg+=links.join('');
   const previewEl=document.getElementById('msg-preview');
   previewEl.textContent=msg;
-  previewEl.dataset.smsSubject=smsSubject; // [Webë°ì ] ì¤ë³µ ë°©ì§ì© subject
-  document.getElementById('msg-char').textContent=`${msg.length}ì (${msg.length>90?'LMS ì¥ë¬¸':'SMS ë¨ë¬¸'})`;
+  previewEl.dataset.smsSubject=smsSubject; // [Web발신] 중복 방지용 subject
+  document.getElementById('msg-char').textContent=`${msg.length}자 (${msg.length>90?'LMS 장문':'SMS 단문'})`;
   const phone=document.getElementById('q-phone').value.trim();
   if(phone)document.getElementById('send-phone').value=phone;
 }
 
 function copyMsg(){
   const t=document.getElementById('msg-preview').textContent;
-  if(t.includes('ìë ìì±')){toast('íìë¥¼ ë¨¼ì  ìë ¥í´ ì£¼ì¸ì!');return;}
-  navigator.clipboard.writeText(t).then(()=>toast('ð ë©ìì§ ë³µì¬ ìë£!'));
+  if(t.includes('자동 생성')){toast('평수를 먼저 입력해 주세요!');return;}
+  navigator.clipboard.writeText(t).then(()=>toast('📋 메시지 복사 완료!'));
 }
 
 function updateApiWarning(){
@@ -838,18 +842,18 @@ function updateApiWarning(){
 async function sendSMS(){
   let msg=document.getElementById('msg-preview').textContent;
   const to=document.getElementById('send-phone').value.replace(/-/g,'').trim();
-  if(msg.includes('ìë ìì±')){toast('íìë¥¼ ë¨¼ì  ìë ¥í´ ì£¼ì¸ì!');return;}
-  if(!to||to.length<10){toast('ë°ì¡í  ì íë²í¸ë¥¼ ìë ¥í´ ì£¼ì¸ì');return;}
+  if(msg.includes('자동 생성')){toast('평수를 먼저 입력해 주세요!');return;}
+  if(!to||to.length<10){toast('발송할 전화번호를 입력해 주세요');return;}
   const night=isNightTime();
   if(night)msg=msg+'\n\n'+cfg.nightMsg;
   const btn=document.getElementById('send-btn');
-  document.getElementById('send-btn-text').textContent='ë°ì¡ ì¤';
+  document.getElementById('send-btn-text').textContent='발송 중';
   document.getElementById('send-loading').style.display='block';
   btn.disabled=true;
   try{
-    // subject: msg-previewì ì ì¥ë ì¸ì¬ë§ ì¬ì© (ë³¸ë¬¸ ì²«ì¤ê³¼ ë¬ë¼ì¼ [Webë°ì ] ì¤ë³µ ë°©ì§)
-    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'ìíë¡í´ë¦°'}] ê²¬ì ìë´`;
-    // ìì½ë§í¬ ë¨ì¶: ê¸´ URLì í í° URLë¡ êµì²´
+    // subject: msg-preview에 저장된 인사말 사용 (본문 첫줄과 달라야 [Web발신] 중복 방지)
+    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적안내`;
+    // 예약링크 단축: 긴 URL을 토큰 URL로 교체
     let finalMsg = msg;
     const bookingLongUrl = msg.match(/https:\/\/momomint10\.github\.io\/ssak-app\/booking\.html\?[^\s\n]+/);
     if (bookingLongUrl) {
@@ -862,40 +866,40 @@ async function sendSMS(){
             size:  document.getElementById('q-size')?.value || '',
             type:  document.getElementById('q-type')?.value || '',
             price: document.getElementById('qr-price')?.textContent?.replace(/[^0-9]/g,'') || '',
-            companyName: cfg.company || 'ìíë¡í´ë¦°'
+            companyName: cfg.company || '서프로클린'
           })
         });
         const td = await tokenRes.json();
         if (td.success) finalMsg = msg.replace(bookingLongUrl[0], td.url);
-      } catch(e) { /* ì¤í¨ ì ê¸°ì¡´ URL ì ì§ */ }
+      } catch(e) { /* 실패 시 기존 URL 유지 */ }
     }
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg:finalMsg,subject})});
     const data=await res.json();
-    if(data.success){saveHistory(to,msg,night);toast(night?'â ë°ì¡ ìë£ (ì¼ê° ë¬¸êµ¬ ì¶ê°ë¨)':'â ë¬¸ì ë°ì¡ ìë£!');}
-    else toast('â ë°ì¡ ì¤í¨: '+(data.error||'ì¤ë¥'));
-  }catch(err){toast('ìë² ì°ê²° ì¤ë¥.');}
-  finally{document.getElementById('send-btn-text').textContent='ë°ì¡';document.getElementById('send-loading').style.display='none';btn.disabled=false;}
+    if(data.success){saveHistory(to,msg,night);toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');}
+    else toast('❌ 발송 실패: '+(data.error||'오류'));
+  }catch(err){toast('서버 연결 오류.');}
+  finally{document.getElementById('send-btn-text').textContent='발송';document.getElementById('send-loading').style.display='none';btn.disabled=false;}
 }
 
 let nextInqId=3;
 const avatarColors=['#00C896','#3B82F6','#8B5CF6','#F59E0B','#EF4444'];
-const statusBadge={'ëµë³ ëê¸°':'badge-wait','ê²¬ì  ë°ì¡':'badge-sent','ì ê·':'badge-new'};
+const statusBadge={'답변 대기':'badge-wait','견적 발송':'badge-sent','신규':'badge-new'};
 
 function quickQuote(name,phone,size){switchTab('quote',document.querySelectorAll('.tab')[0]);document.getElementById('q-name').value=name;document.getElementById('q-phone').value=phone;document.getElementById('q-size').value=size;calcQuote();window.scrollTo({top:0,behavior:'smooth'});}
 
 const DEFAULT_TPLS=[
-  {icon:'ð',title:'ì²« ë¬¸ì ìëµ',content:'ìëíì¸ì{ì´ë¦}! ð\n{ìì²´ëª} ìì£¼ì²­ì ì ë¬¸íìëë¤.\n\nì íí ê²¬ì ì ìí´ ìë ë´ì©ì ìë ¤ì£¼ìê² ì´ì?\n\nð íì / ì£¼ê±° íí\nð§¹ ì²­ì ì í (ìì£¼ ì /ì´ì¬ í/ì ì¶)\nð í¬ë§ ë ì§\n\në¹ ë¥´ê² ìë´ëë¦¬ê² ìµëë¤! ð\nð {ì íë²í¸}'},
-  {icon:'ð',title:'ë¶ì¬ì¤ ìëìëµ',content:'ìëíì¸ì! {ìì²´ëª}ìëë¤. ð\n\níì¬ ìì ì¤ì´ë¼ ì íë¥¼ ëª» ë°ììµëë¤.\níìì í¬ë§ ë ì§ë¥¼ ë¬¸ìë¡ ë³´ë´ì£¼ìë©´\nì¦ì ê²¬ì  ìë´ëë¦´ê²ì!\n\nð {ì íë²í¸}'},
-  {icon:'â',title:'ìì½ íì  ìë´',content:'{ì´ë¦}, ìì½ì´ íì ëììµëë¤! ð\n\nìì ë¹ì¼ ë¶íëë¦½ëë¤:\nð ì£¼ì°¨ ê³µê° 1ìë¦¬\nð ìë¦¬ë² ì´í° ì´ì© ê°ë¥ ì¬ë¶\nð íê´ ìì¥ ë°©ë²\n\nìµì ì ë¤íê² ìµëë¤! ðª\nð {ì íë²í¸}'},
-  {icon:'ð',title:'ìì ì ë  ë¦¬ë§ì¸ë',content:'{ì´ë¦}, ë´ì¼ ì¼ì  íì¸ ì°ë½ëë¦½ëë¤! ð\n\nð ë´ì¼ ì¤ì  10ì ëì°© ìì ìëë¤.\nì£¼ìì ë/í¸ì íë² ë íì¸ ë¶íëë ¤ì!\n\nê°ì¬í©ëë¤ ð\nð {ì íë²í¸}'},
-  {icon:'ð¹',title:'íë³´ìì ë°ì¡',content:'{ì´ë¦} ð\n\n{ìì²´ëª} ìê³µ ìììëë¤!\nê¼¼ê¼¼í ì²­ìë¥¼ ì§ì  íì¸í´ ë³´ì¸ì.\n\nð {ì íë²í¸}'},
-  {icon:'ð°',title:'ê°ê²© ë¬¸ì ìë',content:'{ì´ë¦}! ê°ê²© ë¬¸ì ê°ì¬ëë¦½ëë¤ ð\n\nð ê¸°ë³¸ ìê¸ (VAT í¬í¨)\nâ¢ 25í ìì£¼ ì : ì½ 17ë§ì~\nâ¢ 30í ìì£¼ ì : ì½ 21ë§ì~\nâ¢ 35í ìì£¼ ì : ì½ 24ë§ì~\n\níìë¥¼ ìë ¤ì£¼ìë©´ ì íí ê²¬ì  ëë¦´ê²ì!\nð {ì íë²í¸}'},
+  {icon:'👋',title:'첫 문의 응답',content:'안녕하세요{이름}! 😊\n{업체명} 입주청소 전문팀입니다.\n\n정확한 견적을 위해 아래 내용을 알려주시겠어요?\n\n📍 평수 / 주거 형태\n🧹 청소 유형 (입주 전/이사 후/신축)\n📅 희망 날짜\n\n빠르게 안내드리겠습니다! 🙏\n📞 {전화번호}'},
+  {icon:'📞',title:'부재중 자동응답',content:'안녕하세요! {업체명}입니다. 📞\n\n현재 작업 중이라 전화를 못 받았습니다.\n평수와 희망 날짜를 문자로 보내주시면\n즉시 견적 안내드릴게요!\n\n📞 {전화번호}'},
+  {icon:'✅',title:'예약 확정 안내',content:'{이름}, 예약이 확정되었습니다! 🎉\n\n작업 당일 부탁드립니다:\n🚗 주차 공간 1자리\n🛗 엘리베이터 이용 가능 여부\n🔑 현관 입장 방법\n\n최선을 다하겠습니다! 💪\n📞 {전화번호}'},
+  {icon:'📅',title:'작업 전날 리마인더',content:'{이름}, 내일 일정 확인 연락드립니다! 😊\n\n🕙 내일 오전 10시 도착 예정입니다.\n주소와 동/호수 한번 더 확인 부탁드려요!\n\n감사합니다 🙏\n📞 {전화번호}'},
+  {icon:'📹',title:'홍보영상 발송',content:'{이름} 😊\n\n{업체명} 시공 영상입니다!\n꼼꼼한 청소를 직접 확인해 보세요.\n\n📞 {전화번호}'},
+  {icon:'💰',title:'가격 문의 응대',content:'{이름}! 가격 문의 감사드립니다 😊\n\n📊 기본 요금 (VAT 포함)\n• 25평 입주 전: 약 17만원~\n• 30평 입주 전: 약 21만원~\n• 35평 입주 전: 약 24만원~\n\n평수를 알려주시면 정확한 견적 드릴게요!\n📞 {전화번호}'},
 ];
 
 let customTpls=JSON.parse(localStorage.getItem('ssak_tpls')||'null');
 if(!customTpls)customTpls=DEFAULT_TPLS.map(t=>({...t}));
 
-function applyVars(c,name,size){return c.replace(/\{ì´ë¦\}/g,name?(name+'ë'):'ê³ ê°ë').replace(/\{íì\}/g,size||'íì').replace(/\{ìì²´ëª\}/g,cfg.company).replace(/\{ì íë²í¸\}/g,cfg.phone);}
+function applyVars(c,name,size){return c.replace(/\{이름\}/g,name?(name+'님'):'고객님').replace(/\{평수\}/g,size||'평수').replace(/\{업체명\}/g,cfg.company).replace(/\{전화번호\}/g,cfg.phone);}
 function setKeyword(kw){document.getElementById('t-keyword').value=kw;renderTemplates();}
 
 function renderTemplates(){
@@ -903,11 +907,11 @@ function renderTemplates(){
   const size=document.getElementById('t-size').value;
   const kw=(document.getElementById('t-keyword')?document.getElementById('t-keyword').value.trim().toLowerCase():'');
   const filtered=kw?customTpls.filter(t=>t.title.toLowerCase().includes(kw)||t.content.toLowerCase().includes(kw)):customTpls;
-  if(filtered.length===0){document.getElementById('template-list').innerHTML='<div style="text-align:center;padding:30px;color:var(--gray-400);font-size:13px;">ê²ì ê²°ê³¼ê° ììµëë¤</div>';return;}
-  document.getElementById('template-list').innerHTML=filtered.map((t,i)=>{const origIdx=customTpls.indexOf(t);return`<div class="tpl-card"><div class="tpl-header"><div class="tpl-title">${t.icon} ${t.title}</div><button class="tpl-edit-btn" onclick="openTplModal(${origIdx})">âï¸ ìì </button></div><div class="msg-preview" style="font-size:13px;min-height:80px;">${applyVars(t.content,name,size)}</div><button class="btn-primary" style="margin-top:10px;margin-bottom:0;padding:12px;" onclick="copyTpl(${origIdx})">ð ë³µì¬</button></div>`;}).join('');
+  if(filtered.length===0){document.getElementById('template-list').innerHTML='<div style="text-align:center;padding:30px;color:var(--gray-400);font-size:13px;">검색 결과가 없습니다</div>';return;}
+  document.getElementById('template-list').innerHTML=filtered.map((t,i)=>{const origIdx=customTpls.indexOf(t);return`<div class="tpl-card"><div class="tpl-header"><div class="tpl-title">${t.icon} ${t.title}</div><button class="tpl-edit-btn" onclick="openTplModal(${origIdx})">✏️ 수정</button></div><div class="msg-preview" style="font-size:13px;min-height:80px;">${applyVars(t.content,name,size)}</div><button class="btn-primary" style="margin-top:10px;margin-bottom:0;padding:12px;" onclick="copyTpl(${origIdx})">📋 복사</button></div>`;}).join('');
 }
 
-// ì¼ê° ìê° ì²´í¬
+// 야간 시간 체크
 function isNightTime(){
   if(!cfg.nightEnabled)return false;
   const now=new Date();
@@ -918,7 +922,7 @@ function isNightTime(){
   return start>end?(cur>=start||cur<end):(cur>=start&&cur<end);
 }
 
-// ì´ë ¥ ê´ë ¨
+// 이력 관련
 let smsHistory=JSON.parse(localStorage.getItem('ssak_history')||'[]');
 function saveHistory(to,msg,isNight){
   smsHistory.unshift({to,msg,isNight,time:new Date().toISOString()});
@@ -926,21 +930,21 @@ function saveHistory(to,msg,isNight){
   localStorage.setItem('ssak_history',JSON.stringify(smsHistory));
   if(document.getElementById('page-history').classList.contains('active'))renderHistory();
 }
-function clearHistory(){if(!confirm('ì ì²´ ì´ë ¥ì ì­ì í ê¹ì?'))return;smsHistory=[];localStorage.removeItem('ssak_history');renderHistory();toast('ì´ë ¥ ì­ì  ìë£');}
+function clearHistory(){if(!confirm('전체 이력을 삭제할까요?'))return;smsHistory=[];localStorage.removeItem('ssak_history');renderHistory();toast('이력 삭제 완료');}
 
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-// ð ìì½ ëª©ë¡ ê´ë¦¬
-// ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-const STATUS_LABELS = { pending:'ëê¸°ì¤', confirmed:'íì ', completed:'ìë£', cancelled:'ì·¨ì' };
+// ══════════════════════════════════════════════════════════════════
+// 📅 예약 목록 관리
+// ══════════════════════════════════════════════════════════════════
+const STATUS_LABELS = { pending:'대기중', confirmed:'확정', completed:'완료', cancelled:'취소' };
 const STATUS_COLORS = { pending:'#F59E0B', confirmed:'#3B82F6', completed:'#10B981', cancelled:'#EF4444' };
-const TYPE_LABELS   = { 'move-in':'ìì£¼ ì ','move-out':'ì´ì¬ í','new':'ì ì¶ ì¤ê³µ','life':'ìí ì²­ì' };
+const TYPE_LABELS   = { 'move-in':'입주 전','move-out':'이사 후','new':'신축 준공','life':'생활 청소' };
 let allBookings = [];
 let currentFilter = 'all';
 
 async function loadBookings() {
   const listEl = document.getElementById('booking-list');
   if (!listEl) return;
-  listEl.innerHTML = '<div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">ë¡ë© ì¤...</div>';
+  listEl.innerHTML = '<div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">로딩 중...</div>';
 
   try {
     const res = await fetch(`${SERVER}/api/bookings`, {
@@ -951,11 +955,11 @@ async function loadBookings() {
     if (!res.ok) {
       if (res.status === 401) {
         listEl.innerHTML = `<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">
-          â ï¸ ê´ë¦¬ì í¤ê° íìí©ëë¤.<br><br>
-          <span style="color:#888;">ì¤ì  í­ìì ê´ë¦¬ì í¤ë¥¼ ìë ¥í´ì£¼ì¸ì</span>
+          ⚠️ 관리자 키가 필요합니다.<br><br>
+          <span style="color:#888;">설정 탭에서 관리자 키를 입력해주세요</span>
         </div>`;
       } else {
-        listEl.innerHTML = `<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">ì¤ë¥: ${data.error || 'ë¶ë¬ì¤ê¸° ì¤í¨'}</div>`;
+        listEl.innerHTML = `<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">오류: ${data.error || '불러오기 실패'}</div>`;
       }
       return;
     }
@@ -964,7 +968,7 @@ async function loadBookings() {
     renderBookingList();
 
   } catch(e) {
-    listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">ìë² ì°ê²° ì¤ë¥</div>';
+    listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">서버 연결 오류</div>';
   }
 }
 
@@ -978,14 +982,14 @@ function renderBookingList() {
 
   if (filtered.length === 0) {
     listEl.innerHTML = `<div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">
-      ${currentFilter === 'all' ? 'ìì§ ìì½ì´ ìì´ì' : STATUS_LABELS[currentFilter] + ' ìì½ì´ ìì´ì'}
+      ${currentFilter === 'all' ? '아직 예약이 없어요' : STATUS_LABELS[currentFilter] + ' 예약이 없어요'}
     </div>`;
     return;
   }
 
   listEl.innerHTML = filtered.map(b => {
     const date = new Date(b.created_at).toLocaleDateString('ko-KR', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
-    const typeLabel = TYPE_LABELS[b.type] || b.type || 'â';
+    const typeLabel = TYPE_LABELS[b.type] || b.type || '—';
     const statusColor = STATUS_COLORS[b.status] || '#888';
     const statusLabel = STATUS_LABELS[b.status] || b.status;
 
@@ -998,22 +1002,22 @@ function renderBookingList() {
         <span style="background:${statusColor}20;color:${statusColor};font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;">${statusLabel}</span>
       </div>
       <div style="font-size:12px;color:#555;line-height:1.8;">
-        ð ${b.address || 'â'}<br>
-        ð  ${b.size ? b.size+'í ' : ''}${typeLabel}
-        ${b.price ? ' Â· ' + parseInt(b.price).toLocaleString() + 'ì' : ''}
-        ${b.preferred_date ? '<br>ð ' + b.preferred_date + (b.preferred_time ? ' ' + b.preferred_time : '') : ''}
-        ${b.notes ? '<br>ð¬ ' + b.notes : ''}
+        📍 ${b.address || '—'}<br>
+        🏠 ${b.size ? b.size+'평 ' : ''}${typeLabel}
+        ${b.price ? ' · ' + parseInt(b.price).toLocaleString() + '원' : ''}
+        ${b.preferred_date ? '<br>📅 ' + b.preferred_date + (b.preferred_time ? ' ' + b.preferred_time : '') : ''}
+        ${b.notes ? '<br>💬 ' + b.notes : ''}
       </div>
       <div style="display:flex;gap:6px;margin-top:10px;align-items:center;">
-        <span style="font-size:11px;color:#bbb;flex:1;">${date} ì ì</span>
+        <span style="font-size:11px;color:#bbb;flex:1;">${date} 접수</span>
         <select onchange="updateBookingStatus('${b.id}',this.value,this)"
           style="font-size:11px;padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-family:inherit;">
-          <option value="pending"   ${b.status==='pending'   ?'selected':''}>ëê¸°ì¤</option>
-          <option value="confirmed" ${b.status==='confirmed' ?'selected':''}>íì </option>
-          <option value="completed" ${b.status==='completed' ?'selected':''}>ìë£</option>
-          <option value="cancelled" ${b.status==='cancelled' ?'selected':''}>ì·¨ì</option>
+          <option value="pending"   ${b.status==='pending'   ?'selected':''}>대기중</option>
+          <option value="confirmed" ${b.status==='confirmed' ?'selected':''}>확정</option>
+          <option value="completed" ${b.status==='completed' ?'selected':''}>완료</option>
+          <option value="cancelled" ${b.status==='cancelled' ?'selected':''}>취소</option>
         </select>
-        <a href="tel:${b.phone}" style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;text-decoration:none;">ð ì í</a>
+        <a href="tel:${b.phone}" style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;text-decoration:none;">📞 전화</a>
       </div>
     </div>`;
   }).join('');
@@ -1034,40 +1038,40 @@ async function updateBookingStatus(id, status, selectEl) {
       body: JSON.stringify({ status })
     });
     if (res.ok) {
-      // ë¡ì»¬ ë°ì´í° ìë°ì´í¸
+      // 로컬 데이터 업데이트
       const b = allBookings.find(b => b.id === id);
       if (b) b.status = status;
-      toast('â ìí ë³ê²½: ' + STATUS_LABELS[status]);
+      toast('✅ 상태 변경: ' + STATUS_LABELS[status]);
       renderBookingList();
     } else {
-      toast('â ìí ë³ê²½ ì¤í¨');
+      toast('❌ 상태 변경 실패');
       if (selectEl) { const b=allBookings.find(b=>b.id===id); if(b) selectEl.value=b.status; }
     }
   } catch(e) {
-    toast('â ìë² ì¤ë¥');
+    toast('❌ 서버 오류');
   }
 }
 
 function renderHistory(){
   const list=document.getElementById('history-list');
   const cnt=document.getElementById('history-count');
-  if(!smsHistory.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray-400);font-size:13px;">ë°ì¡ ì´ë ¥ì´ ììµëë¤</div>';cnt.textContent='';return;}
-  cnt.textContent=`ì´ ${smsHistory.length}ê±´`;
+  if(!smsHistory.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray-400);font-size:13px;">발송 이력이 없습니다</div>';cnt.textContent='';return;}
+  cnt.textContent=`총 ${smsHistory.length}건`;
   list.innerHTML=smsHistory.map(h=>{
     const d=new Date(h.time);
     const timeStr=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-    return`<div class="history-item">${h.isNight?'<div class="history-night">ð ì¼ê°</div>':''}<div class="history-meta"><span class="history-phone">ð± ${h.to}</span><span class="history-time">${timeStr}</span></div><div class="history-msg">${h.msg}</div></div>`;
+    return`<div class="history-item">${h.isNight?'<div class="history-night">🌙 야간</div>':''}<div class="history-meta"><span class="history-phone">📱 ${h.to}</span><span class="history-time">${timeStr}</span></div><div class="history-msg">${h.msg}</div></div>`;
   }).join('');
 }
 
 let editingTplIdx=-1;
-function openTplModal(i){editingTplIdx=i;const t=customTpls[i];document.getElementById('tpl-modal-title').textContent=`âï¸ ííë¦¿ ${i+1} ìì `;document.getElementById('tpl-icon').value=t.icon;document.getElementById('tpl-title-input').value=t.title;document.getElementById('tpl-content').value=t.content;document.getElementById('tpl-modal').classList.add('open');}
+function openTplModal(i){editingTplIdx=i;const t=customTpls[i];document.getElementById('tpl-modal-title').textContent=`✏️ 템플릿 ${i+1} 수정`;document.getElementById('tpl-icon').value=t.icon;document.getElementById('tpl-title-input').value=t.title;document.getElementById('tpl-content').value=t.content;document.getElementById('tpl-modal').classList.add('open');}
 function closeTplModal(){document.getElementById('tpl-modal').classList.remove('open');}
-function saveTpl(){if(editingTplIdx<0)return;customTpls[editingTplIdx]={icon:document.getElementById('tpl-icon').value||DEFAULT_TPLS[editingTplIdx].icon,title:document.getElementById('tpl-title-input').value||DEFAULT_TPLS[editingTplIdx].title,content:document.getElementById('tpl-content').value};localStorage.setItem('ssak_tpls',JSON.stringify(customTpls));closeTplModal();renderTemplates();toast('â ííë¦¿ ì ì¥!');}
-function resetTpl(){if(editingTplIdx<0)return;customTpls[editingTplIdx]={...DEFAULT_TPLS[editingTplIdx]};localStorage.setItem('ssak_tpls',JSON.stringify(customTpls));closeTplModal();renderTemplates();toast('âº ê¸°ë³¸ê°ì¼ë¡ ì´ê¸°í');}
-function copyTpl(i){const name=document.getElementById('t-name').value.trim();const size=document.getElementById('t-size').value;navigator.clipboard.writeText(applyVars(customTpls[i].content,name,size)).then(()=>toast('ë³µì¬ ìë£!'));}
+function saveTpl(){if(editingTplIdx<0)return;customTpls[editingTplIdx]={icon:document.getElementById('tpl-icon').value||DEFAULT_TPLS[editingTplIdx].icon,title:document.getElementById('tpl-title-input').value||DEFAULT_TPLS[editingTplIdx].title,content:document.getElementById('tpl-content').value};localStorage.setItem('ssak_tpls',JSON.stringify(customTpls));closeTplModal();renderTemplates();toast('✅ 템플릿 저장!');}
+function resetTpl(){if(editingTplIdx<0)return;customTpls[editingTplIdx]={...DEFAULT_TPLS[editingTplIdx]};localStorage.setItem('ssak_tpls',JSON.stringify(customTpls));closeTplModal();renderTemplates();toast('↺ 기본값으로 초기화');}
+function copyTpl(i){const name=document.getElementById('t-name').value.trim();const size=document.getElementById('t-size').value;navigator.clipboard.writeText(applyVars(customTpls[i].content,name,size)).then(()=>toast('복사 완료!'));}
 
-const DEFAULT_FAQS=[{q:'ê°ê²©ì´ ì¼ë§ìì?',a:'íìì ì²­ì ì íì ë°ë¼ ë¤ë¦ëë¤. 25í ìì£¼ ì  ê¸°ì¤ ì½ 17~19ë§ì ì ìëë¤.'},{q:'ëª ëªì´ ì¤ê³ , ì¼ë§ë ê±¸ë¦¬ëì?',a:'ê¸°ë³¸ 2ì¸ 1ì¡°ì´ë©°, 35í ì´ìì 3~4ì¸ í¬ìë©ëë¤. 30í ê¸°ì¤ ì½ 4~5ìê° ììë©ëë¤.'},{q:'ìì½ì ì´ë»ê² íëì?',a:'ë¬¸ì ëë ì¹´ì¹´ì¤ë¡ â ë ì§ â¡ì£¼ì â¢íìë¥¼ ë³´ë´ì£¼ìë©´ ë©ëë¤.'},{q:'ë¹ì¼ ìì½ë ëëì?',a:'ì¼ì ì ë°ë¼ ê°ë¥í©ëë¤. ìµì íë£¨ ì  ìì½ì ê¶ì¥ëë¦½ëë¤.'},{q:'ìì´ì»¨/ëì¥ê³  ì²­ìë ëëì?',a:'ë³ë ì¶ê° ìë¹ì¤ë¡ ê°ë¥í©ëë¤.\nâ¢ ìì´ì»¨(ë²½ê±¸ì´): 3ë§ì\nâ¢ ìì´ì»¨(ì¤í ë): 5ë§ì\nâ¢ ëì¥ê³  ë´ë¶: 3.5ë§ì'},{q:'ìì í ë¬¸ì ê° ìê¸°ë©´ì?',a:'ìì ìë£ í 48ìê° ì´ë´ ì°ë½ ì£¼ìë©´ ë¬´ì ì¬ë°©ë¬¸ ì²ë¦¬í´ ëë¦½ëë¤!'},{q:'ì¹íê²½ ì¸ì ë¥¼ ì¬ì©íëì?',a:'ë¤! ì í´ì±ë¶ì ìµìíí ì¹íê²½ ì¸ì ë¥¼ ì¬ì©í©ëë¤.'}];
+const DEFAULT_FAQS=[{q:'가격이 얼마예요?',a:'평수와 청소 유형에 따라 다릅니다. 25평 입주 전 기준 약 17~19만원 선입니다.'},{q:'몇 명이 오고, 얼마나 걸리나요?',a:'기본 2인 1조이며, 35평 이상은 3~4인 투입됩니다. 30평 기준 약 4~5시간 소요됩니다.'},{q:'예약은 어떻게 하나요?',a:'문자 또는 카카오로 ①날짜 ②주소 ③평수를 보내주시면 됩니다.'},{q:'당일 예약도 되나요?',a:'일정에 따라 가능합니다. 최소 하루 전 예약을 권장드립니다.'},{q:'에어컨/냉장고 청소도 되나요?',a:'별도 추가 서비스로 가능합니다.\n• 에어컨(벽걸이): 3만원\n• 에어컨(스탠드): 5만원\n• 냉장고 내부: 3.5만원'},{q:'작업 후 문제가 생기면요?',a:'작업 완료 후 48시간 이내 연락 주시면 무상 재방문 처리해 드립니다!'},{q:'친환경 세제를 사용하나요?',a:'네! 유해성분을 최소화한 친환경 세제를 사용합니다.'}];
 let customFaqs=JSON.parse(localStorage.getItem('ssak_faqs')||'null');
 if(!customFaqs)customFaqs=DEFAULT_FAQS.map(f=>({...f}));
 let editingFaqIdx=-1;
@@ -1076,27 +1080,27 @@ function matchFaq(){
   const input=document.getElementById('faq-auto-input').value.trim();
   const result=document.getElementById('faq-auto-result');
   if(!input){result.innerHTML='';return;}
-  const words=input.replace(/[^\wê°-í£]/g,' ').split(/\s+/).filter(w=>w.length>1);
+  const words=input.replace(/[^\w가-힣]/g,' ').split(/\s+/).filter(w=>w.length>1);
   const scored=customFaqs.map((f,i)=>{
     const text=(f.q+' '+f.a).toLowerCase();
     const score=words.reduce((s,w)=>s+(text.includes(w.toLowerCase())?1:0),0);
     return{...f,i,score};
   }).filter(f=>f.score>0).sort((a,b)=>b.score-a.score);
-  if(!scored.length){result.innerHTML='<div class="faq-no-match">ð ê´ë ¨ FAQë¥¼ ì°¾ì§ ëª»íìµëë¤</div>';return;}
-  result.innerHTML=scored.slice(0,3).map(f=>`<div class="faq-match-card"><div class="faq-match-q">Q. ${f.q}</div><div class="faq-match-a">${f.a}</div><button class="faq-match-btn" onclick="sendFaqReply(${f.i})">ð± ì´ ëµë³ì¼ë¡ ë¬¸ì ë°ì¡</button></div>`).join('');
+  if(!scored.length){result.innerHTML='<div class="faq-no-match">🔍 관련 FAQ를 찾지 못했습니다</div>';return;}
+  result.innerHTML=scored.slice(0,3).map(f=>`<div class="faq-match-card"><div class="faq-match-q">Q. ${f.q}</div><div class="faq-match-a">${f.a}</div><button class="faq-match-btn" onclick="sendFaqReply(${f.i})">📱 이 답변으로 문자 발송</button></div>`).join('');
 }
 
 async function sendFaqReply(i){
-  const phone=prompt('ë°ì¡í  ë²í¸ë¥¼ ìë ¥íì¸ì (ì: 01012345678)');
-  if(!phone||phone.trim().length<10){toast('ì¬ë°ë¥¸ ë²í¸ë¥¼ ìë ¥í´ ì£¼ì¸ì');return;}
+  const phone=prompt('발송할 번호를 입력하세요 (예: 01012345678)');
+  if(!phone||phone.trim().length<10){toast('올바른 번호를 입력해 주세요');return;}
   const to=phone.replace(/-/g,'').trim();
   let msg=customFaqs[i].a;
   const night=isNightTime();
   if(night)msg=msg+'\n\n'+cfg.nightMsg;
   try{
-    // subject: msg-previewì ì ì¥ë ì¸ì¬ë§ ì¬ì© (ë³¸ë¬¸ ì²«ì¤ê³¼ ë¬ë¼ì¼ [Webë°ì ] ì¤ë³µ ë°©ì§)
-    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'ìíë¡í´ë¦°'}] ê²¬ì ìë´`;
-    // ìì½ë§í¬ ë¨ì¶: ê¸´ URLì í í° URLë¡ êµì²´
+    // subject: msg-preview에 저장된 인사말 사용 (본문 첫줄과 달라야 [Web발신] 중복 방지)
+    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적안내`;
+    // 예약링크 단축: 긴 URL을 토큰 URL로 교체
     let finalMsg = msg;
     const bookingLongUrl = msg.match(/https:\/\/momomint10\.github\.io\/ssak-app\/booking\.html\?[^\s\n]+/);
     if (bookingLongUrl) {
@@ -1109,28 +1113,28 @@ async function sendFaqReply(i){
             size:  document.getElementById('q-size')?.value || '',
             type:  document.getElementById('q-type')?.value || '',
             price: document.getElementById('qr-price')?.textContent?.replace(/[^0-9]/g,'') || '',
-            companyName: cfg.company || 'ìíë¡í´ë¦°'
+            companyName: cfg.company || '서프로클린'
           })
         });
         const td = await tokenRes.json();
         if (td.success) finalMsg = msg.replace(bookingLongUrl[0], td.url);
-      } catch(e) { /* ì¤í¨ ì ê¸°ì¡´ URL ì ì§ */ }
+      } catch(e) { /* 실패 시 기존 URL 유지 */ }
     }
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg:finalMsg,subject})});
     const data=await res.json();
-    if(data.success){saveHistory(to,msg,night);toast(night?'â FAQ ë°ì¡ ìë£ (ì¼ê° ë¬¸êµ¬ ì¶ê°)':'â FAQ ëµë³ ë°ì¡ ìë£!');}
-    else toast('â ë°ì¡ ì¤í¨: '+(data.error||'ì¤ë¥'));
-  }catch(e){toast('â ìë² ì°ê²° ì¤ë¥');}
+    if(data.success){saveHistory(to,msg,night);toast(night?'✅ FAQ 발송 완료 (야간 문구 추가)':'✅ FAQ 답변 발송 완료!');}
+    else toast('❌ 발송 실패: '+(data.error||'오류'));
+  }catch(e){toast('❌ 서버 연결 오류');}
 }
 
-function renderFaq(){document.getElementById('faq-list').innerHTML=customFaqs.map((f,i)=>`<div class="faq-item" id="faq-${i}"><div class="faq-header"><div class="faq-q" onclick="toggleFaq(${i})">Q. ${f.q}</div><div class="faq-btns"><button class="faq-edit-btn" onclick="openFaqModal(${i})">âï¸</button><span class="faq-arrow" onclick="toggleFaq(${i})">â¼</span></div></div><div class="faq-a">${f.a.replace(/\n/g,'<br>')}<br><button class="faq-copy-btn" onclick="copyFaq(${i})">ð ëµë³ ë³µì¬</button></div></div>`).join('');}
+function renderFaq(){document.getElementById('faq-list').innerHTML=customFaqs.map((f,i)=>`<div class="faq-item" id="faq-${i}"><div class="faq-header"><div class="faq-q" onclick="toggleFaq(${i})">Q. ${f.q}</div><div class="faq-btns"><button class="faq-edit-btn" onclick="openFaqModal(${i})">✏️</button><span class="faq-arrow" onclick="toggleFaq(${i})">▼</span></div></div><div class="faq-a">${f.a.replace(/\n/g,'<br>')}<br><button class="faq-copy-btn" onclick="copyFaq(${i})">📋 답변 복사</button></div></div>`).join('');}
 function toggleFaq(i){document.getElementById('faq-'+i).classList.toggle('open');}
-function copyFaq(i){navigator.clipboard.writeText(customFaqs[i].a).then(()=>toast('FAQ ë³µì¬!'));}
+function copyFaq(i){navigator.clipboard.writeText(customFaqs[i].a).then(()=>toast('FAQ 복사!'));}
 function openFaqModal(i){editingFaqIdx=i;document.getElementById('faq-q-input').value=customFaqs[i].q;document.getElementById('faq-a-input').value=customFaqs[i].a;document.getElementById('faq-modal').classList.add('open');}
-function addFaq(){customFaqs.push({q:'ì ì§ë¬¸',a:'ëµë³ì ìë ¥íì¸ì'});editingFaqIdx=customFaqs.length-1;document.getElementById('faq-q-input').value='ì ì§ë¬¸';document.getElementById('faq-a-input').value='ëµë³ì ìë ¥íì¸ì';document.getElementById('faq-modal').classList.add('open');}
+function addFaq(){customFaqs.push({q:'새 질문',a:'답변을 입력하세요'});editingFaqIdx=customFaqs.length-1;document.getElementById('faq-q-input').value='새 질문';document.getElementById('faq-a-input').value='답변을 입력하세요';document.getElementById('faq-modal').classList.add('open');}
 function closeFaqModal(){document.getElementById('faq-modal').classList.remove('open');}
-function saveFaqItem(){if(editingFaqIdx<0)return;customFaqs[editingFaqIdx]={q:document.getElementById('faq-q-input').value,a:document.getElementById('faq-a-input').value};localStorage.setItem('ssak_faqs',JSON.stringify(customFaqs));closeFaqModal();renderFaq();toast('â FAQ ì ì¥!');}
-function deleteFaqItem(){if(editingFaqIdx<0)return;customFaqs.splice(editingFaqIdx,1);localStorage.setItem('ssak_faqs',JSON.stringify(customFaqs));closeFaqModal();renderFaq();toast('ì­ì ë¨');}
+function saveFaqItem(){if(editingFaqIdx<0)return;customFaqs[editingFaqIdx]={q:document.getElementById('faq-q-input').value,a:document.getElementById('faq-a-input').value};localStorage.setItem('ssak_faqs',JSON.stringify(customFaqs));closeFaqModal();renderFaq();toast('✅ FAQ 저장!');}
+function deleteFaqItem(){if(editingFaqIdx<0)return;customFaqs.splice(editingFaqIdx,1);localStorage.setItem('ssak_faqs',JSON.stringify(customFaqs));closeFaqModal();renderFaq();toast('삭제됨');}
 
 function loadSettingsForm(){
   document.getElementById('s-admin-key').value=cfg.adminKey||'';
@@ -1150,7 +1154,7 @@ function loadSettingsForm(){
   document.getElementById('s-night-enabled').checked=cfg.nightEnabled||false;
   document.getElementById('s-night-start').value=cfg.nightStart||'21:00';
   document.getElementById('s-night-end').value=cfg.nightEnd||'09:00';
-  document.getElementById('s-night-msg').value=cfg.nightMsg||'ð ì¼ê°ì ë¬¸ì ì£¼ì¨ë¤ì! ë´ì¼ ì¤ì  9ì ì´í ì°ë½ëë¦¬ê² ìµëë¤. ê°ì¬í©ëë¤ ð';
+  document.getElementById('s-night-msg').value=cfg.nightMsg||'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊';
   const bg=document.getElementById('night-toggle-bg');
   if(bg)bg.style.background=cfg.nightEnabled?'var(--primary)':'var(--gray-300)';
   document.getElementById('s-night-enabled').onchange=function(){
@@ -1160,9 +1164,9 @@ function loadSettingsForm(){
   renderExtrasSettings();
 }
 
-function renderExtrasSettings(){document.getElementById('s-extras-list').innerHTML=cfg.extras.map((e,i)=>`<div class="service-item"><input class="service-name-input" value="${e.label}" onchange="cfg.extras[${i}].label=this.value" placeholder="ìë¹ì¤ëª"/><input class="service-price-input" type="number" value="${e.price}" onchange="cfg.extras[${i}].price=parseInt(this.value)||0"/><span style="font-size:11px;color:var(--gray-400);">ì</span><button class="service-del-btn" onclick="deleteExtra(${i})">â</button></div>`).join('');}
+function renderExtrasSettings(){document.getElementById('s-extras-list').innerHTML=cfg.extras.map((e,i)=>`<div class="service-item"><input class="service-name-input" value="${e.label}" onchange="cfg.extras[${i}].label=this.value" placeholder="서비스명"/><input class="service-price-input" type="number" value="${e.price}" onchange="cfg.extras[${i}].price=parseInt(this.value)||0"/><span style="font-size:11px;color:var(--gray-400);">원</span><button class="service-del-btn" onclick="deleteExtra(${i})">✕</button></div>`).join('');}
 function deleteExtra(i){cfg.extras.splice(i,1);renderExtrasSettings();renderExtraChips();}
-function addExtraService(){cfg.extras.push({id:'e'+Date.now(),label:'ì ìë¹ì¤',price:30000});renderExtrasSettings();renderExtraChips();}
+function addExtraService(){cfg.extras.push({id:'e'+Date.now(),label:'새 서비스',price:30000});renderExtrasSettings();renderExtraChips();}
 
 function saveSettings(){
   cfg.adminKey=document.getElementById('s-admin-key').value.trim();
@@ -1170,7 +1174,7 @@ function saveSettings(){
   cfg.apiSecret=document.getElementById('s-api-secret').value.trim();
   cfg.fromPhone=document.getElementById('s-from-phone').value.trim();
   cfg.adminKey=document.getElementById('s-admin-key').value.trim();
-  cfg.company=document.getElementById('s-company').value.trim()||'ìíë¡í´ë¦°';
+  cfg.company=document.getElementById('s-company').value.trim()||'서프로클린';
   cfg.phone=document.getElementById('s-phone').value.trim();
   cfg.video=document.getElementById('s-video').value.trim();
   cfg.kakao=document.getElementById('s-kakao').value.trim();
@@ -1183,15 +1187,15 @@ function saveSettings(){
   cfg.nightStart=document.getElementById('s-night-start').value;
   cfg.nightEnd=document.getElementById('s-night-end').value;
   cfg.nightMsg=document.getElementById('s-night-msg').value.trim();
-  saveCfg();renderExtraChips();updateApiWarning();toast('â ì¤ì  ì ì¥ ìë£!');
+  saveCfg();renderExtraChips();updateApiWarning();toast('✅ 설정 저장 완료!');
 }
 
-// ââ ê³ì½ì ê¸ì¡ ìëê³ì° âââââââââââââââââââââ
+// ── 계약서 금액 자동계산 ─────────────────────
 function recalcContract(){
   const baseEl=document.getElementById('ct-base');
   const extraEl=document.getElementById('ct-extra-price');
   const cashEl=document.getElementById('ct-cash');
-  if(!baseEl||!extraEl||!cashEl) return; // ìì ìì¼ë©´ ì¤ë¨
+  if(!baseEl||!extraEl||!cashEl) return; // 요소 없으면 중단
 
   const base=parseInt(baseEl.value)||0;
   const extra=parseInt(extraEl.value)||0;
@@ -1200,7 +1204,7 @@ function recalcContract(){
   const vat=isCash?0:Math.round(sub*0.1);
   const total=sub+vat;
 
-  // í ê¸ UI
+  // 토글 UI
   const bg=document.getElementById('ct-cash-bg');
   const dot=document.getElementById('ct-cash-dot');
   if(bg)bg.style.background=isCash?'var(--primary)':'var(--gray-300)';
@@ -1214,11 +1218,11 @@ function recalcContract(){
   const balanceEl=document.getElementById('ct-balance');
 
   if(vatRow)vatRow.style.opacity=isCash?'0.3':'1';
-  if(subEl)subEl.textContent=sub.toLocaleString()+'ì';
-  if(vatEl)vatEl.textContent=(isCash?'ë©´ì ':vat.toLocaleString()+'ì');
-  if(totalEl)totalEl.textContent=total.toLocaleString()+'ì';
+  if(subEl)subEl.textContent=sub.toLocaleString()+'원';
+  if(vatEl)vatEl.textContent=(isCash?'면제':vat.toLocaleString()+'원');
+  if(totalEl)totalEl.textContent=total.toLocaleString()+'원';
 
-  // ê³ì½ê¸ 10% ìë
+  // 계약금 10% 자동
   const deposit=Math.round(total*0.1/100)*100;
   if(depositEl)depositEl.value=deposit;
   if(balanceEl)balanceEl.value=total-deposit;
@@ -1235,9 +1239,9 @@ function recalcBalance(){
   document.getElementById('ct-balance').value=Math.max(0,total-deposit);
 }
 
-// ââ ê³ì½ì ê¸°ë¥ ââââââââââââââââââââââââââââââ
+// ── 계약서 기능 ──────────────────────────────
 function openContract(){
-  // ê²¬ì  í­ìì ìë ìë ¥
+  // 견적 탭에서 자동 입력
   const name=document.getElementById('q-name').value.trim();
   const phone=document.getElementById('q-phone').value.trim();
   const size=document.getElementById('q-size').value;
@@ -1251,21 +1255,21 @@ function openContract(){
   if(cfg.phone)document.getElementById('ct-company-phone').value=cfg.phone;
   if(cfg.company)document.getElementById('ct-company').value=cfg.company;
 
-  // ì´ê¸ì¡ìì ì­ì° (VATí¬í¨ â VATì ì¸)
-  // 1ìì: qr-price ìì (ê²¬ì  ê³ì° ê²°ê³¼)
-  // 2ìì: msg-previewìì í¨í´ ë§¤ì¹­ (ì´ëª¨ì§ ìë ì íì ì§ì)
+  // 총금액에서 역산 (VAT포함 → VAT제외)
+  // 1순위: qr-price 요소 (견적 계산 결과)
+  // 2순위: msg-preview에서 패턴 매칭 (이모지 없는 새 형식 지원)
   const qrPrice = document.getElementById('qr-price');
   const msgPreview = document.getElementById('msg-preview');
   let totalForContract = 0;
 
   if (qrPrice && qrPrice.textContent) {
-    // "228,800ì" ííìì ì«ì ì¶ì¶
+    // "228,800원" 형태에서 숫자 추출
     totalForContract = parseInt(qrPrice.textContent.replace(/[^0-9]/g, '')) || 0;
   }
 
   if (!totalForContract && msgPreview) {
-    // msg-previewìì ê¸ì¡ í¨í´ ì°¾ê¸° (ð° ì´ëª¨ì§ ì ë¬´ ëª¨ë ì§ì)
-    const match = msgPreview.textContent.match(/(?:ð°\s*)?([\d,]+)ì\s*\(VATí¬í¨\)/);
+    // msg-preview에서 금액 패턴 찾기 (💰 이모지 유무 모두 지원)
+    const match = msgPreview.textContent.match(/(?:💰\s*)?([\d,]+)원\s*\(VAT포함\)/);
     if (match) totalForContract = parseInt(match[1].replace(/,/g, '')) || 0;
   }
 
@@ -1287,7 +1291,7 @@ function closeContract(){
   document.getElementById('contract-modal').style.display='none';
 }
 
-function ctFmt(n){return parseInt(n||0).toLocaleString()+'ì';}
+function ctFmt(n){return parseInt(n||0).toLocaleString()+'원';}
 
 function generateContract(){
   const company=document.getElementById('ct-company').value.trim();
@@ -1309,50 +1313,50 @@ function generateContract(){
   const isCash=document.getElementById('ct-cash').checked;
 
   if(!name||!phone||!base){
-    alert('â ê³ ê°ëª, ì°ë½ì², ê¸°ë³¸ ê¸ì¡ì íììëë¤');
+    alert('❗ 고객명, 연락처, 기본 금액은 필수입니다');
     return;
   }
 
   const sub=base+extraPrice;
   const vat=isCash?0:Math.round(sub*0.1);
   const total=sub+vat;
-  const dateStr=date?new Date(date).toLocaleDateString('ko-KR'):'ë¯¸ì ';
-  const workDateStr=workDate?`${new Date(workDate).toLocaleDateString('ko-KR')} ${workTime}`:'ë¯¸ì ';
+  const dateStr=date?new Date(date).toLocaleDateString('ko-KR'):'미정';
+  const workDateStr=workDate?`${new Date(workDate).toLocaleDateString('ko-KR')} ${workTime}`:'미정';
 
-  // íì´ë¸ íìì¼ë¡ ë°ì´í° ì±ì°ê¸°
+  // 테이블 형식으로 데이터 채우기
   const s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   const h=(id,v)=>{const el=document.getElementById(id);if(el)el.innerHTML=v;};
 
   s('ct-r-company-t', company);
-  s('ct-r-owner-t', owner||'â');
+  s('ct-r-owner-t', owner||'—');
   s('ct-r-cphone-t', companyPhone);
-  s('ct-r-name-t', name+'ë');
+  s('ct-r-name-t', name+'님');
   s('ct-r-phone-t', phone);
   s('ct-r-type-t', type);
-  s('ct-r-size-t', size?size+'í':'â');
-  s('ct-r-addr-t', addr||'â');
+  s('ct-r-size-t', size?size+'평':'—');
+  s('ct-r-addr-t', addr||'—');
   s('ct-r-wdate-t', workDateStr);
   if(extra){s('ct-r-extra-t',extra);const tr=document.getElementById('ct-r-extra-tr');if(tr)tr.style.display='';}
   s('ct-r-base-t', ctFmt(base)+(extraPrice>0?' + '+ctFmt(extraPrice):''));
-  s('ct-r-vat-t', isCash?'ë©´ì  (íê¸ê²°ì )':ctFmt(vat));
+  s('ct-r-vat-t', isCash?'면제 (현금결제)':ctFmt(vat));
   h('ct-r-total-t', `<b>${ctFmt(total)}</b>`);
   s('ct-r-deposit-t', ctFmt(deposit));
-  s('ct-r-balance-t', ctFmt(balance||total-deposit)+' (ìê³µ ìë£ ì¦ì ê²°ì )');
+  s('ct-r-balance-t', ctFmt(balance||total-deposit)+' (시공 완료 즉시 결제)');
 
   const dateEl=document.getElementById('ct-r-date');
   const comp2El=document.getElementById('ct-r-company2');
   const own2El=document.getElementById('ct-r-owner2');
   const name2El=document.getElementById('ct-r-name2');
-  if(dateEl)dateEl.textContent=`ê³ì½ì¼: ${dateStr}`;
+  if(dateEl)dateEl.textContent=`계약일: ${dateStr}`;
   if(comp2El)comp2El.textContent=company;
-  if(own2El)own2El.textContent=owner||'â';
-  if(name2El)name2El.textContent=name+'ë';
+  if(own2El)own2El.textContent=owner||'—';
+  if(name2El)name2El.textContent=name+'님';
 
   document.getElementById('ct-form').style.display='none';
   document.getElementById('ct-preview').style.display='block';
   document.getElementById('contract-modal').scrollTop=0;
 
-  // ìëª í¨ë ì´ê¸°í
+  // 서명 패드 초기화
   setTimeout(() => { initSigPad('sig-owner'); initSigPad('sig-customer'); }, 150);
 }
 
@@ -1375,45 +1379,45 @@ function buildContractText(){
   const sub=base+extraPrice;
   const vat=isCash?0:Math.round(sub*0.1);
   const total=sub+vat;
-  const workDateStr=workDate?`${new Date(workDate).toLocaleDateString('ko-KR')} ${workTime}`:'ë¯¸ì ';
+  const workDateStr=workDate?`${new Date(workDate).toLocaleDateString('ko-KR')} ${workTime}`:'미정';
 
-  let msg=`ð ì²­ììë¹ì¤ ê³ì½ì\n`;
-  msg+=`ââââââââââââââ\n`;
-  msg+=`[ìì²´] ${company} (${owner})\n[ì°ë½ì²] ${companyPhone}\n\n`;
-  msg+=`[ê³ ê°] ${name}ë (${phone})\n[ì£¼ì] ${addr}\n\n`;
-  msg+=`ââ ìë¹ì¤ ë´ì© ââ\n`;
-  msg+=`ð  ${type} / ${size}í\nð ìê³µì¼: ${workDateStr}\n`;
-  if(extra)msg+=`â ì¶ê°: ${extra}\n`;
-  msg+=`\nââ ê¸ì¡ ââ\n`;
-  msg+=`ê¸°ë³¸: ${ctFmt(base)}\n`;
-  if(extraPrice>0)msg+=`ì¶ê°: ${ctFmt(extraPrice)}\n`;
-  msg+=`VAT: ${ctFmt(vat)}\nì´ì¡: ${ctFmt(total)}\n`;
-  if(deposit>0)msg+=`ê³ì½ê¸: ${ctFmt(deposit)}\nìê¸: ${ctFmt(total-deposit)}\n`;
-  msg+=`\nââ ì£¼ì ê³ì½ ì¡°ê±´ ââ\n`;
-  msg+=`[ì·¨ì/íë¶]\n`;
-  msg+=`â¢ 4ì¼ì  ì´ì: ì ì¡íë¶\n`;
-  msg+=`â¢ 2~3ì¼ì : 50% ê³µì \n`;
-  msg+=`â¢ 1ì¼ì ~ë¹ì¼: ê³ì½ê¸ ëª°ì·¨\n`;
-  msg+=`â¢ ê³ ê° ë¶ì¬Â·ì°ë½ëì : ë¹ì¼ì·¨ì ëì¼\n\n`;
-  msg+=`[A/S] ìê³µ í 24ìê° ì´ë´ ë¬¸ì+ì¬ì§ ì ì\n`;
-  msg+=`(ìì£¼ í ì¤ì¼, ë²ì ì¸ í­ëª© ì ì¸)\n\n`;
-  msg+=`[ìí´ë°°ì] ìµë íë: ê³ì½ ì´ê¸ì¡\n`;
-  msg+=`(ê¸°ì¡´ íìÂ·ë¯¸ê³ ì§ ê²°í¨Â·í¹ììì¬ ì ì¸)\n\n`;
-  msg+=`[ê´í ] ì¬ìì ìì¬ì§ ë²ì\n\n`;
-  msg+=`ð ${companyPhone}`;
+  let msg=`📋 청소서비스 계약서\n`;
+  msg+=`━━━━━━━━━━━━━━\n`;
+  msg+=`[업체] ${company} (${owner})\n[연락처] ${companyPhone}\n\n`;
+  msg+=`[고객] ${name}님 (${phone})\n[주소] ${addr}\n\n`;
+  msg+=`━━ 서비스 내용 ━━\n`;
+  msg+=`🏠 ${type} / ${size}평\n📅 시공일: ${workDateStr}\n`;
+  if(extra)msg+=`✅ 추가: ${extra}\n`;
+  msg+=`\n━━ 금액 ━━\n`;
+  msg+=`기본: ${ctFmt(base)}\n`;
+  if(extraPrice>0)msg+=`추가: ${ctFmt(extraPrice)}\n`;
+  msg+=`VAT: ${ctFmt(vat)}\n총액: ${ctFmt(total)}\n`;
+  if(deposit>0)msg+=`계약금: ${ctFmt(deposit)}\n잔금: ${ctFmt(total-deposit)}\n`;
+  msg+=`\n━━ 주요 계약 조건 ━━\n`;
+  msg+=`[취소/환불]\n`;
+  msg+=`• 4일전 이상: 전액환불\n`;
+  msg+=`• 2~3일전: 50% 공제\n`;
+  msg+=`• 1일전~당일: 계약금 몰취\n`;
+  msg+=`• 고객 부재·연락두절: 당일취소 동일\n\n`;
+  msg+=`[A/S] 시공 후 24시간 이내 문자+사진 접수\n`;
+  msg+=`(입주 후 오염, 범위 외 항목 제외)\n\n`;
+  msg+=`[손해배상] 최대 한도: 계약 총금액\n`;
+  msg+=`(기존 하자·미고지 결함·특수소재 제외)\n\n`;
+  msg+=`[관할] 사업자 소재지 법원\n\n`;
+  msg+=`📞 ${companyPhone}`;
   return msg;
 }
 
 async function sendContract(){
   const phone=document.getElementById('ct-phone').value.trim();
-  if(!phone){toast('ê³ ê° ì°ë½ì²ë¥¼ ìë ¥í´ì£¼ì¸ì');return;}
+  if(!phone){toast('고객 연락처를 입력해주세요');return;}
   const to=phone.replace(/-/g,'');
   const msg=buildContractText();
   try{
-    toast('ð¤ ë°ì¡ ì¤...');
-    // subject: msg-previewì ì ì¥ë ì¸ì¬ë§ ì¬ì© (ë³¸ë¬¸ ì²«ì¤ê³¼ ë¬ë¼ì¼ [Webë°ì ] ì¤ë³µ ë°©ì§)
-    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'ìíë¡í´ë¦°'}] ê²¬ì ìë´`;
-    // ìì½ë§í¬ ë¨ì¶: ê¸´ URLì í í° URLë¡ êµì²´
+    toast('📤 발송 중...');
+    // subject: msg-preview에 저장된 인사말 사용 (본문 첫줄과 달라야 [Web발신] 중복 방지)
+    const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적안내`;
+    // 예약링크 단축: 긴 URL을 토큰 URL로 교체
     let finalMsg = msg;
     const bookingLongUrl = msg.match(/https:\/\/momomint10\.github\.io\/ssak-app\/booking\.html\?[^\s\n]+/);
     if (bookingLongUrl) {
@@ -1426,31 +1430,31 @@ async function sendContract(){
             size:  document.getElementById('q-size')?.value || '',
             type:  document.getElementById('q-type')?.value || '',
             price: document.getElementById('qr-price')?.textContent?.replace(/[^0-9]/g,'') || '',
-            companyName: cfg.company || 'ìíë¡í´ë¦°'
+            companyName: cfg.company || '서프로클린'
           })
         });
         const td = await tokenRes.json();
         if (td.success) finalMsg = msg.replace(bookingLongUrl[0], td.url);
-      } catch(e) { /* ì¤í¨ ì ê¸°ì¡´ URL ì ì§ */ }
+      } catch(e) { /* 실패 시 기존 URL 유지 */ }
     }
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg:finalMsg,subject})});
     const data=await res.json();
-    if(data.success){saveHistory(to,msg,false);toast('â ê³ì½ì SMS ë°ì¡ ìë£!');}
-    else toast('â ë°ì¡ ì¤í¨: '+(data.error||'ì¤ë¥'));
-  }catch(e){toast('â ìë² ì°ê²° ì¤ë¥');}
+    if(data.success){saveHistory(to,msg,false);toast('✅ 계약서 SMS 발송 완료!');}
+    else toast('❌ 발송 실패: '+(data.error||'오류'));
+  }catch(e){toast('❌ 서버 연결 오류');}
 }
 
 function copyContract(){
   const msg=buildContractText();
-  navigator.clipboard.writeText(msg).then(()=>toast('ð ê³ì½ì ë³µì¬ ìë£!'));
+  navigator.clipboard.writeText(msg).then(()=>toast('📋 계약서 복사 완료!'));
 }
 
-// ââ í°ì¹ ìëª í¨ë âââââââââââââââââââââââââââââââ
+// ── 터치 서명 패드 ───────────────────────────────
 function initSigPad(canvasId) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  // ì¤ì  í½ì í´ìë ë§ì¶ê¸°
+  // 실제 픽셀 해상도 맞추기
   const rect = canvas.getBoundingClientRect();
   canvas.width = rect.width * window.devicePixelRatio;
   canvas.height = rect.height * window.devicePixelRatio;
@@ -1489,7 +1493,7 @@ function isSigEmpty(canvasId) {
   return !data.some(v => v !== 0);
 }
 
-// ââ ë¹ëë©´ ê³ì½ì ë°ì¡ ââââââââââââââââââââââââââ
+// ── 비대면 계약서 발송 ──────────────────────────
 async function sendRemoteSign(){
   const company=document.getElementById('ct-company').value.trim();
   const owner=document.getElementById('ct-owner').value.trim();
@@ -1508,11 +1512,11 @@ async function sendRemoteSign(){
   const balance=parseInt(document.getElementById('ct-balance').value)||0;
   const isCash=document.getElementById('ct-cash').checked;
 
-  if(!name||!phone||!base){alert('â ê³ ê°ëª, ì°ë½ì², ê¸ì¡ì íììëë¤');return;}
-  if(isSigEmpty('sig-owner')){alert('â ì¬ìì ìëªì ë¨¼ì  í´ì£¼ì¸ì');return;}
+  if(!name||!phone||!base){alert('❗ 고객명, 연락처, 금액은 필수입니다');return;}
+  if(isSigEmpty('sig-owner')){alert('❗ 사업자 서명을 먼저 해주세요');return;}
 
   const btn=document.getElementById('pdf-send-btn');
-  document.getElementById('pdf-btn-text').textContent='ë§í¬ ìì± ì¤...';
+  document.getElementById('pdf-btn-text').textContent='링크 생성 중...';
   document.getElementById('pdf-loading').style.display='block';
   btn.disabled=true;
 
@@ -1540,38 +1544,38 @@ async function sendRemoteSign(){
     });
     const data=await res.json();
     if(data.success){
-      saveHistory(phone,`ê³ì½ì ìëªë§í¬ ë°ì¡\n${data.signUrl}`,false);
-      toast('â ìëª ë§í¬ê° ê³ ê°ìê² ë°ì¡ëììµëë¤!');
+      saveHistory(phone,`계약서 서명링크 발송\n${data.signUrl}`,false);
+      toast('✅ 서명 링크가 고객에게 발송되었습니다!');
 
-      // ë§í¬ íì
+      // 링크 표시
       const linkDiv=document.createElement('div');
       linkDiv.style.cssText='background:var(--primary-light);border-radius:10px;padding:12px;margin-top:12px;font-size:11.5px;color:var(--primary-dark);line-height:1.7;';
-      linkDiv.innerHTML=`ð¤ ê³ ê° ìëª ë§í¬ ë°ì¡ ìë£!<br><a href="${data.signUrl}" target="_blank" style="color:var(--primary-dark);font-weight:700;word-break:break-all;">${data.signUrl}</a><br><span style="font-size:10.5px;color:var(--gray-400);">ê³ ê°ì´ ë§í¬ë¥¼ í´ë¦­í´ ìëªíë©´ ìì¸¡ì PDFê° ìë ë°ì¡ë©ëë¤.</span>`;
+      linkDiv.innerHTML=`📤 고객 서명 링크 발송 완료!<br><a href="${data.signUrl}" target="_blank" style="color:var(--primary-dark);font-weight:700;word-break:break-all;">${data.signUrl}</a><br><span style="font-size:10.5px;color:var(--gray-400);">고객이 링크를 클릭해 서명하면 양측에 PDF가 자동 발송됩니다.</span>`;
       btn.parentNode.insertBefore(linkDiv, btn.nextSibling);
     } else {
-      toast('â ë°ì¡ ì¤í¨: '+(data.error||'ì¤ë¥'));
+      toast('❌ 발송 실패: '+(data.error||'오류'));
     }
   }catch(e){
-    toast('â ì¤ë¥: '+e.message);
+    toast('❌ 오류: '+e.message);
   } finally {
-    document.getElementById('pdf-btn-text').textContent='ð¤ ìëª ë§í¬ ê³ ê°ìê² ë°ì¡';
+    document.getElementById('pdf-btn-text').textContent='📤 서명 링크 고객에게 발송';
     document.getElementById('pdf-loading').style.display='none';
     btn.disabled=false;
   }
 }
 
-// ââ ê¸°ì¡´ ì§ì  ìëª ë°©ì âââââââââââââââââââââââââââ
+// ── 기존 직접 서명 방식 ───────────────────────────
 async function generateAndSendPDF() {
-  if (isSigEmpty('sig-owner')) { toast('â ì¬ìì ìëªì í´ì£¼ì¸ì'); return; }
-  if (isSigEmpty('sig-customer')) { toast('â ê³ ê° ìëªì í´ì£¼ì¸ì'); return; }
+  if (isSigEmpty('sig-owner')) { toast('❗ 사업자 서명을 해주세요'); return; }
+  if (isSigEmpty('sig-customer')) { toast('❗ 고객 서명을 해주세요'); return; }
 
   const btn = document.getElementById('pdf-send-btn');
-  document.getElementById('pdf-btn-text').textContent = 'PDF ìì± ì¤...';
+  document.getElementById('pdf-btn-text').textContent = 'PDF 생성 중...';
   document.getElementById('pdf-loading').style.display = 'block';
   btn.disabled = true;
 
   try {
-    // ê³ì½ì divë¥¼ ì´ë¯¸ì§ë¡ ìº¡ì²
+    // 계약서 div를 이미지로 캡처
     const paperEl = document.getElementById('ct-paper');
 
     const canvas = await html2canvas(paperEl, {
@@ -1584,7 +1588,7 @@ async function generateAndSendPDF() {
       windowHeight: paperEl.scrollHeight
     });
 
-    // A4 PDF â ì¬ë°± 12mm, í ì¥ì ë§ê²
+    // A4 PDF — 여백 12mm, 한 장에 맞게
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const margin = 12;
@@ -1599,8 +1603,8 @@ async function generateAndSendPDF() {
 
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
 
-    // ìë²ë¡ ìë¡ë ìì²­ (30ì´ íììì)
-    document.getElementById('pdf-btn-text').textContent = 'ìë¡ë ì¤...';
+    // 서버로 업로드 요청 (30초 타임아웃)
+    document.getElementById('pdf-btn-text').textContent = '업로드 중...';
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
 
@@ -1620,36 +1624,36 @@ async function generateAndSendPDF() {
     const data = await res.json();
 
     if (data.success) {
-      saveHistory(customerPhone, `ê³ì½ì PDF ë°ì¡ ìë£\n${data.pdfUrl}`, false);
-      toast('â PDF ê³ì½ìê° ìì¸¡ì ë°ì¡ëììµëë¤!');
-      // PDF ë§í¬ íì
+      saveHistory(customerPhone, `계약서 PDF 발송 완료\n${data.pdfUrl}`, false);
+      toast('✅ PDF 계약서가 양측에 발송되었습니다!');
+      // PDF 링크 표시
       const linkDiv = document.createElement('div');
       linkDiv.style.cssText = 'background:var(--primary-light);border-radius:10px;padding:12px;margin-top:12px;text-align:center;font-size:12px;';
-      linkDiv.innerHTML = `ð ê³ì½ì ì ì¥ ìë£!<br><a href="${data.pdfUrl}" target="_blank" style="color:var(--primary-dark);font-weight:700;word-break:break-all;">${data.pdfUrl}</a>`;
+      linkDiv.innerHTML = `📄 계약서 저장 완료!<br><a href="${data.pdfUrl}" target="_blank" style="color:var(--primary-dark);font-weight:700;word-break:break-all;">${data.pdfUrl}</a>`;
       btn.parentNode.insertBefore(linkDiv, btn.nextSibling);
     } else {
-      toast('â ë°ì¡ ì¤í¨: ' + (data.error || 'ì¤ë¥'));
+      toast('❌ 발송 실패: ' + (data.error || '오류'));
     }
   } catch (e) {
     console.error(e);
-    toast('â PDF ìì± ì¤ë¥: ' + e.message);
+    toast('❌ PDF 생성 오류: ' + e.message);
   } finally {
-    document.getElementById('pdf-btn-text').textContent = 'â ìëª ìë£ â PDF ë°ì¡';
+    document.getElementById('pdf-btn-text').textContent = '✅ 서명 완료 → PDF 발송';
     document.getElementById('pdf-loading').style.display = 'none';
     btn.disabled = false;
   }
 }
 
-// ì¹© ê¸ì í¬ê¸° ìë ì¡°ì 
+// 칩 글자 크기 자동 조정
 function autoFitChips(container) {
   if (!container) return;
   const chips = container.querySelectorAll('.chip');
   if (!chips.length) return;
-  // ìµë/ìµì í°í¸ í¬ê¸°
+  // 최대/최소 폰트 크기
   let fontSize = 13;
   const minSize = 9;
   chips.forEach(c => c.style.fontSize = fontSize + 'px');
-  // ì»¨íì´ë ëë¹ì ë§ì ëê¹ì§ ì¤ì
+  // 컨테이너 너비에 맞을 때까지 줄임
   while (fontSize > minSize) {
     const totalW = Array.from(chips).reduce((s, c) => s + c.offsetWidth, 0)
       + (chips.length - 1) * 6; // gap
@@ -1663,13 +1667,13 @@ function autoFitAllChips() {
   document.querySelectorAll('.chips').forEach(c => autoFitChips(c));
 }
 
-// ââ ìë£ë³´ê³ ì ê¸°ë¥ ââââââââââââââââââââââââââââââ
+// ── 완료보고서 기능 ──────────────────────────────
 const RP_ITEMS = [
-  {key:'living',label:'ê±°ì¤'},{key:'kitchen',label:'ì£¼ë°©'},
-  {key:'bathroom',label:'íì¥ì¤'},{key:'room1',label:'ë°© 1'},
-  {key:'room2',label:'ë°© 2'},{key:'room3',label:'ë°© 3'},
-  {key:'room4',label:'ë°© 4'},{key:'balcony',label:'ë°ì½ë'},
-  {key:'entrance',label:'íê´'},{key:'etc',label:'ê¸°í'}
+  {key:'living',label:'거실'},{key:'kitchen',label:'주방'},
+  {key:'bathroom',label:'화장실'},{key:'room1',label:'방 1'},
+  {key:'room2',label:'방 2'},{key:'room3',label:'방 3'},
+  {key:'room4',label:'방 4'},{key:'balcony',label:'발코니'},
+  {key:'entrance',label:'현관'},{key:'etc',label:'기타'}
 ];
 
 let rpInitialized = false;
@@ -1678,11 +1682,11 @@ function initReportTab(){
   if(rpInitialized) return;
   rpInitialized = true;
 
-  // í­ëª© ì í ê·¸ë¦¬ë ë ëë§
+  // 항목 선택 그리드 렌더링
   const grid = document.getElementById('rp-item-grid');
   grid.innerHTML = RP_ITEMS.map(item=>`
     <div class="rp-item-btn on" data-key="${item.key}" onclick="rpToggleItem(this)">
-      <div class="rp-item-check">â</div>
+      <div class="rp-item-check">✓</div>
       <div class="rp-item-name">${item.label}</div>
     </div>`).join('');
 
@@ -1692,13 +1696,13 @@ function initReportTab(){
 
 function rpToggleItem(el){
   el.classList.toggle('on');
-  el.querySelector('.rp-item-check').textContent = el.classList.contains('on') ? 'â' : '';
+  el.querySelector('.rp-item-check').textContent = el.classList.contains('on') ? '✓' : '';
   rpRenderPhotos();
 }
 
 function rpSelectAll(){
   document.querySelectorAll('#rp-item-grid .rp-item-btn').forEach(b=>{
-    b.classList.add('on'); b.querySelector('.rp-item-check').textContent='â';
+    b.classList.add('on'); b.querySelector('.rp-item-check').textContent='✓';
   });
   rpRenderPhotos();
 }
@@ -1713,7 +1717,7 @@ function rpClearAll(){
 function rpRenderPhotos(){
   const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b=>b.dataset.key);
   const area = document.getElementById('rp-photo-area');
-  if(!selected.length){area.innerHTML='<div style="text-align:center;padding:20px;font-size:12px;color:var(--gray-400);">í­ëª©ì ì íí´ì£¼ì¸ì</div>';return;}
+  if(!selected.length){area.innerHTML='<div style="text-align:center;padding:20px;font-size:12px;color:var(--gray-400);">항목을 선택해주세요</div>';return;}
 
   const label = k => RP_ITEMS.find(i=>i.key===k)?.label || k;
   area.innerHTML = selected.map(key=>`
@@ -1721,19 +1725,19 @@ function rpRenderPhotos(){
       <div class="rp-section-head">${label(key)}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
         <div>
-          <div style="font-size:10px;color:var(--gray-400);text-align:center;background:#FCEBEB;border-radius:4px;padding:2px 0;margin-bottom:4px;font-weight:500;">ìê³µ ì </div>
+          <div style="font-size:10px;color:var(--gray-400);text-align:center;background:#FCEBEB;border-radius:4px;padding:2px 0;margin-bottom:4px;font-weight:500;">시공 전</div>
           <label class="rp-photo-label" style="aspect-ratio:4/3;">
             <input type="file" accept="image/*" style="display:none;" onchange="rpPreview(this)">
             <img class="rp-photo-img" src="">
-            <div class="rp-photo-placeholder"><span style="font-size:18px;">+</span><span>ì¬ì§ ì¶ê°</span></div>
+            <div class="rp-photo-placeholder"><span style="font-size:18px;">+</span><span>사진 추가</span></div>
           </label>
         </div>
         <div>
-          <div style="font-size:10px;color:var(--gray-400);text-align:center;background:#E1F5EE;border-radius:4px;padding:2px 0;margin-bottom:4px;font-weight:500;">ìê³µ í</div>
+          <div style="font-size:10px;color:var(--gray-400);text-align:center;background:#E1F5EE;border-radius:4px;padding:2px 0;margin-bottom:4px;font-weight:500;">시공 후</div>
           <label class="rp-photo-label" style="aspect-ratio:4/3;">
             <input type="file" accept="image/*" style="display:none;" onchange="rpPreview(this)">
             <img class="rp-photo-img" src="">
-            <div class="rp-photo-placeholder"><span style="font-size:18px;">+</span><span>ì¬ì§ ì¶ê°</span></div>
+            <div class="rp-photo-placeholder"><span style="font-size:18px;">+</span><span>사진 추가</span></div>
           </label>
         </div>
       </div>
@@ -1768,19 +1772,19 @@ function rpPreviewIssue(input, imgId){
 }
 
 function rpAutoNotes(){
-  const name = document.getElementById('rp-name')?.value.trim() || 'ê³ ê°ë';
-  const type = document.getElementById('rp-type')?.value || 'ìì£¼ ì  ì²­ì';
+  const name = document.getElementById('rp-name')?.value.trim() || '고객님';
+  const type = document.getElementById('rp-type')?.value || '입주 전 청소';
   const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b=>{
     const label = b.querySelector('.rp-item-name').textContent;
-    return `Â· ${label} ë°ë¥Â·ë²½ë©´ ì²­ì`;
+    return `· ${label} 바닥·벽면 청소`;
   });
-  const nameStr = name === 'ê³ ê°ë' ? 'ê³ ê°ë' : name + 'ë';
-  const notes = `ìëíì¸ì, ${nameStr}.\nìë¡ì´ ë³´ê¸ìë¦¬ì ììì ì§ì¬ì¼ë¡ ì¶íëë¦½ëë¤.\n\n${selected.join('\n')}\n\níë³µí ì ì¶ë°ì ììí©ëë¤.`;
+  const nameStr = name === '고객님' ? '고객님' : name + '님';
+  const notes = `안녕하세요, ${nameStr}.\n새로운 보금자리의 시작을 진심으로 축하드립니다.\n\n${selected.join('\n')}\n\n행복한 새 출발을 응원합니다.`;
   const el = document.getElementById('rp-notes');
   if(el) el.value = notes;
 }
 
-// ì´ë¯¸ì§ ìì¶ í¨ì
+// 이미지 압축 함수
 function rpCompressImage(dataUrl, maxW=800, quality=0.75){
   return new Promise(resolve=>{
     const img = new Image();
@@ -1796,27 +1800,27 @@ function rpCompressImage(dataUrl, maxW=800, quality=0.75){
   });
 }
 
-// PDF ë í¬í¸ HTML ìì±
+// PDF 레포트 HTML 생성
 async function buildReportHTML(){
-  const name = document.getElementById('rp-name').value.trim() || 'ê³ ê°ë';
+  const name = document.getElementById('rp-name').value.trim() || '고객님';
   const phone = document.getElementById('rp-phone').value.trim();
   const type = document.getElementById('rp-type').value;
   const size = document.getElementById('rp-size').value;
-  const addr = document.getElementById('rp-addr').value.trim() || 'â';
-  const crew = document.getElementById('rp-crew').value.trim() || 'â';
+  const addr = document.getElementById('rp-addr').value.trim() || '—';
+  const crew = document.getElementById('rp-crew').value.trim() || '—';
   const notes = document.getElementById('rp-notes').value.trim();
   const hasIssue = document.getElementById('rp-issue-toggle').checked;
   const issueText = document.getElementById('rp-issue-text').value.trim();
   const today = new Date().toLocaleDateString('ko-KR');
-  const nameStr = name === 'ê³ ê°ë' ? 'ê³ ê°ë' : name + 'ë';
-  const companyName = cfg.company || 'ìíë¡í´ë¦°';
+  const nameStr = name === '고객님' ? '고객님' : name + '님';
+  const companyName = cfg.company || '서프로클린';
   const companyPhone = cfg.phone || '';
 
-  // ì íë í­ëª© + ì¬ì§ ìì§
+  // 선택된 항목 + 사진 수집
   const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b=>b.dataset.key);
   const labelOf = k => RP_ITEMS.find(i=>i.key===k)?.label || k;
 
-  // ì¬ì§ ìì§ ë° ìì¶
+  // 사진 수집 및 압축
   const photoSections = await Promise.all(
     [...document.querySelectorAll('#rp-photo-area > div')].map(async (div, i)=>{
       const key = selected[i];
@@ -1827,7 +1831,7 @@ async function buildReportHTML(){
     })
   );
 
-  // í¹ì´ì¬í­ ì¬ì§
+  // 특이사항 사진
   const ip1El = document.getElementById('rp-issue-prev1');
   const ip2El = document.getElementById('rp-issue-prev2');
   const ip1 = ip1El?.src && ip1El.style.display!=='none' ? await rpCompressImage(ip1El.src) : null;
@@ -1845,11 +1849,11 @@ async function buildReportHTML(){
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
         <div>
           <div style="font-size:9px;letter-spacing:1px;text-align:center;padding:3px 0;background:#f5e8dc;color:#7a4020;margin-bottom:4px;border-radius:3px;font-weight:500;">BEFORE</div>
-          <div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#e0ceb8;">${photoCell(s.before,'ìê³µ ì ')}</div>
+          <div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#e0ceb8;">${photoCell(s.before,'시공 전')}</div>
         </div>
         <div>
           <div style="font-size:9px;letter-spacing:1px;text-align:center;padding:3px 0;background:#e4f0e0;color:#2a5a30;margin-bottom:4px;border-radius:3px;font-weight:500;">AFTER</div>
-          <div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#cce4cc;">${photoCell(s.after,'ìê³µ í')}</div>
+          <div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#cce4cc;">${photoCell(s.after,'시공 후')}</div>
         </div>
       </div>
     </div>`).join('');
@@ -1859,7 +1863,7 @@ async function buildReportHTML(){
     <div style="background:#fffdf8;font-family:Arial,sans-serif;padding:0;">
       <div style="background:#2e1f0e;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;">
         <div style="font-size:11px;font-weight:500;color:#f5ede0;letter-spacing:1.5px;">SPECIAL NOTES</div>
-        <div style="font-size:10px;color:#8a6a50;">í¹ì´ì¬í­ Â· 2 / 2</div>
+        <div style="font-size:10px;color:#8a6a50;">특이사항 · 2 / 2</div>
       </div>
       <div style="padding:20px 22px;">
         <div style="font-size:9px;font-weight:500;letter-spacing:2px;color:#a07850;border-bottom:1px solid #e8ddd0;padding-bottom:6px;margin-bottom:12px;">SITE INSPECTION NOTES</div>
@@ -1867,13 +1871,13 @@ async function buildReportHTML(){
         ${(ip1||ip2) ? `
         <div style="font-size:9px;font-weight:500;letter-spacing:2px;color:#a07850;border-bottom:1px solid #e8ddd0;padding-bottom:6px;margin-bottom:12px;">EVIDENCE PHOTOS</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
-          ${ip1?`<div><div style="font-size:10px;color:#a08060;margin-bottom:4px;">ì¬ì§ 1</div><div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;"><img src="${ip1}" style="width:100%;height:100%;object-fit:cover;"></div></div>`:'<div></div>'}
-          ${ip2?`<div><div style="font-size:10px;color:#a08060;margin-bottom:4px;">ì¬ì§ 2</div><div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;"><img src="${ip2}" style="width:100%;height:100%;object-fit:cover;"></div></div>`:'<div></div>'}
+          ${ip1?`<div><div style="font-size:10px;color:#a08060;margin-bottom:4px;">사진 1</div><div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;"><img src="${ip1}" style="width:100%;height:100%;object-fit:cover;"></div></div>`:'<div></div>'}
+          ${ip2?`<div><div style="font-size:10px;color:#a08060;margin-bottom:4px;">사진 2</div><div style="aspect-ratio:4/3;border-radius:4px;overflow:hidden;"><img src="${ip2}" style="width:100%;height:100%;object-fit:cover;"></div></div>`:'<div></div>'}
         </div>` : ''}
         <div style="font-size:9px;font-weight:500;letter-spacing:2px;color:#a07850;border-bottom:1px solid #e8ddd0;padding-bottom:6px;margin-bottom:12px;">ADDITIONAL NOTES</div>
         <div style="background:#f8f0e4;border-left:3px solid #c89a5a;padding:12px 14px;font-size:11.5px;color:#2e1f0e;line-height:1.85;border-radius:0 4px 4px 0;">
-          í¹ì´ì¬í­ ë´ì©ì ìê³µ ì  íì¥ ìíë¥¼ ì¬ì§ì¼ë¡ ê¸°ë¡íìì¼ë©°, ë¹ì¬ ê·ì± ì¬ì ê° ìëì íì¸í©ëë¤.<br><br>
-          ì¶ê° ë¬¸ìì¬í­ì ì¸ì ë ì§ ì°ë½ ì£¼ìê¸° ë°ëëë¤.<br>
+          특이사항 내용은 시공 전 현장 상태를 사진으로 기록하였으며, 당사 귀책 사유가 아님을 확인합니다.<br><br>
+          추가 문의사항은 언제든지 연락 주시기 바랍니다.<br>
           <span style="color:#c89a5a;font-weight:500;">${companyPhone}</span>
         </div>
       </div>
@@ -1887,7 +1891,7 @@ async function buildReportHTML(){
 
   return `<div style="background:#fffdf8;font-family:Arial,sans-serif;width:794px;">
 
-    <!-- íì§ -->
+    <!-- 표지 -->
     <div style="background:#2e1f0e;padding:32px 22px 26px;position:relative;overflow:hidden;">
       <div style="position:absolute;top:-40px;right:-30px;width:130px;height:130px;background:#c89a5a;opacity:0.15;border-radius:50%;"></div>
       <div style="position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;background:#8a6a3a;opacity:0.12;border-radius:50%;"></div>
@@ -1895,49 +1899,49 @@ async function buildReportHTML(){
         <div style="width:38px;height:38px;background:#c89a5a;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#2e1f0e;font-size:16px;font-weight:700;">${companyName.charAt(0)}</div>
         <div>
           <div style="font-size:13px;font-weight:500;color:#f5ede0;">${companyName}</div>
-          <div style="font-size:10px;color:#8a6a50;">ìì£¼ì²­ì ì ë¬¸</div>
+          <div style="font-size:10px;color:#8a6a50;">입주청소 전문</div>
         </div>
       </div>
       <div style="font-size:9px;letter-spacing:3px;color:#c89a5a;font-weight:500;margin-bottom:10px;position:relative;">CLEANING COMPLETION REPORT</div>
-      <div style="font-size:28px;font-weight:500;color:#f5ede0;line-height:1.2;margin-bottom:6px;position:relative;">ì²­ì ìë£<br>ë³´ê³ ì</div>
+      <div style="font-size:28px;font-weight:500;color:#f5ede0;line-height:1.2;margin-bottom:6px;position:relative;">청소 완료<br>보고서</div>
       <div style="width:32px;height:2px;background:#c89a5a;margin:14px 0;position:relative;"></div>
-      <div style="font-size:11px;color:#8a6a50;font-style:italic;position:relative;">ìë¡ì´ ììì ìíì¬ ìµì ì ë¤íë ìì£¼ì²­ì</div>
+      <div style="font-size:11px;color:#8a6a50;font-style:italic;position:relative;">새로운 시작을 위하여 최선을 다하는 입주청소</div>
     </div>
 
     <div style="padding:20px 22px;">
       <div style="font-size:9px;font-weight:500;letter-spacing:2px;color:#a07850;border-bottom:1px solid #e8ddd0;padding-bottom:6px;margin-bottom:12px;">CLIENT INFORMATION</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin-bottom:16px;">
-        <div><div style="font-size:11px;color:#a08060;">ê³ ê°</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${nameStr}</div></div>
-        <div><div style="font-size:11px;color:#a08060;">ì²­ì ì í</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${type}</div></div>
-        <div><div style="font-size:11px;color:#a08060;">ìê³µ ì£¼ì</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${addr}</div></div>
-        <div><div style="font-size:11px;color:#a08060;">ìê³µ ì¼ì</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${today}</div></div>
-        <div><div style="font-size:11px;color:#a08060;">íì</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${size?size+'í':'â'}</div></div>
-        <div><div style="font-size:11px;color:#a08060;">ìì ì¸ìÂ·ìê°</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${crew}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">고객</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${nameStr}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">청소 유형</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${type}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">시공 주소</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${addr}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">시공 일자</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${today}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">평수</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${size?size+'평':'—'}</div></div>
+        <div><div style="font-size:11px;color:#a08060;">작업 인원·시간</div><div style="font-size:11px;color:#2e1f0e;font-weight:500;">${crew}</div></div>
       </div>
       <div style="background:#2e1f0e;border-radius:3px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <div style="display:flex;align-items:center;gap:10px;">
-          <div style="width:22px;height:22px;border:2px solid #c89a5a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c89a5a;font-size:11px;">â</div>
-          <div><div style="font-size:12px;font-weight:500;color:#f5ede0;">ìê³µ ìë£</div><div style="font-size:9px;color:#8a6a50;">${today} Â· ì´ ${totalPages}íì´ì§</div></div>
+          <div style="width:22px;height:22px;border:2px solid #c89a5a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#c89a5a;font-size:11px;">✓</div>
+          <div><div style="font-size:12px;font-weight:500;color:#f5ede0;">시공 완료</div><div style="font-size:9px;color:#8a6a50;">${today} · 총 ${totalPages}페이지</div></div>
         </div>
         <div style="font-size:9px;color:#c89a5a;letter-spacing:1px;">COMPLETED</div>
       </div>
       <div style="border:1px solid #d4a870;border-radius:3px;padding:12px 14px;">
         <div style="font-size:9px;letter-spacing:2px;color:#a07840;font-weight:500;margin-bottom:10px;">A/S INFORMATION</div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#a08060;">ì ì ê¸°ê°</span><span style="font-size:11px;font-weight:500;color:#2e1f0e;">ìê³µ í <span style="color:#c89a5a;">24ìê° ì´ë´</span></span></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:11px;color:#a08060;">ì ì ë°©ë²</span><span style="font-size:11px;font-weight:500;color:#2e1f0e;">ë¬¸ì + ì¬ì§ ì²¨ë¶</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:11px;color:#a08060;">접수 기간</span><span style="font-size:11px;font-weight:500;color:#2e1f0e;">시공 후 <span style="color:#c89a5a;">24시간 이내</span></span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:11px;color:#a08060;">접수 방법</span><span style="font-size:11px;font-weight:500;color:#2e1f0e;">문자 + 사진 첨부</span></div>
         <div style="height:0.5px;background:#e0d0b8;margin-bottom:8px;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:11px;color:#a08060;">ë´ë¹ì ì°ë½ì²</span><span style="font-size:16px;font-weight:500;color:#c89a5a;">${companyPhone}</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:11px;color:#a08060;">담당자 연락처</span><span style="font-size:16px;font-weight:500;color:#c89a5a;">${companyPhone}</span></div>
       </div>
     </div>
     <div style="background:#2e1f0e;padding:9px 22px;display:flex;justify-content:space-between;">
       <div style="font-size:10px;color:#8a6a50;">${companyName}</div>
-      <div style="font-size:10px;color:#8a6a50;">ì´ ${totalPages}íì´ì§</div>
+      <div style="font-size:10px;color:#8a6a50;">총 ${totalPages}페이지</div>
     </div>
 
-    <!-- ê³µíµí­ëª© -->
+    <!-- 공통항목 -->
     <div style="background:#2e1f0e;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
       <div style="font-size:11px;font-weight:500;color:#f5ede0;letter-spacing:1.5px;">COMMON ITEMS</div>
-      <div style="font-size:10px;color:#8a6a50;">ê³µíµ í­ëª© Â· 1 / ${totalPages-1}</div>
+      <div style="font-size:10px;color:#8a6a50;">공통 항목 · 1 / ${totalPages-1}</div>
     </div>
     <div style="padding:20px 22px;">
       ${sectionRows}
@@ -1956,7 +1960,7 @@ async function buildReportHTML(){
 async function generateReport(){
   const name = document.getElementById('rp-name').value.trim();
   const phone = document.getElementById('rp-phone').value.trim();
-  if(!name || !phone){ alert('â ê³ ê°ëªê³¼ ì°ë½ì²ë íììëë¤'); return; }
+  if(!name || !phone){ alert('❗ 고객명과 연락처는 필수입니다'); return; }
 
   const btn = document.getElementById('rp-send-btn');
   const txtEl = document.getElementById('rp-btn-text');
@@ -1965,16 +1969,16 @@ async function generateReport(){
   loadEl.style.display = 'block';
 
   try {
-    txtEl.textContent = 'ë³´ê³ ì ìì± ì¤...';
+    txtEl.textContent = '보고서 생성 중...';
     const html = await buildReportHTML();
 
-    // ìì DOMì ë ëë§
+    // 임시 DOM에 렌더링
     const container = document.createElement('div');
     container.style.cssText = 'position:fixed;left:-9999px;top:0;width:794px;background:#fff;';
     container.innerHTML = html;
     document.body.appendChild(container);
 
-    txtEl.textContent = 'PDF ë³í ì¤...';
+    txtEl.textContent = 'PDF 변환 중...';
     await new Promise(r=>setTimeout(r,300));
 
     const canvas = await html2canvas(container, {
@@ -1994,7 +1998,7 @@ async function generateReport(){
     }
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
 
-    txtEl.textContent = 'ìë¡ë ì¤...';
+    txtEl.textContent = '업로드 중...';
     const ownerPhone = cfg.phone;
     const res = await fetch(`${SERVER}/api/contract/upload`,{
       method:'POST',
@@ -2004,25 +2008,25 @@ async function generateReport(){
         customerPhone: phone.replace(/-/g,''),
         ownerPhone: ownerPhone?.replace(/-/g,''),
         customerName: name,
-        companyName: cfg.company || 'ìíë¡í´ë¦°',
+        companyName: cfg.company || '서프로클린',
         companyPhone: cfg.phone || ''
       })
     });
     const data = await res.json();
 
     if(data.success){
-      saveHistory(phone, `ì²­ììë£ ë³´ê³ ì ë°ì¡\n${data.pdfUrl}`, false);
-      toast('â ìë£ ë³´ê³ ìê° ë°ì¡ëììµëë¤!');
+      saveHistory(phone, `청소완료 보고서 발송\n${data.pdfUrl}`, false);
+      toast('✅ 완료 보고서가 발송되었습니다!');
     } else {
-      toast('â ë°ì¡ ì¤í¨: '+(data.error||'ì¤ë¥'));
+      toast('❌ 발송 실패: '+(data.error||'오류'));
     }
   } catch(e){
     console.error(e);
-    toast('â ì¤ë¥: '+e.message);
+    toast('❌ 오류: '+e.message);
   } finally {
     btn.disabled = false;
     loadEl.style.display = 'none';
-    txtEl.textContent = 'ð ë³´ê³ ì ìì± â PDF ë°ì¡';
+    txtEl.textContent = '📄 보고서 생성 → PDF 발송';
   }
 }
 
@@ -2030,11 +2034,11 @@ let toastTimer;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2500);}
 
 renderExtraChips();renderTemplates();renderFaq();updateApiWarning();
-// ì´ê¸° ë¡ë© í ì¹© ì¬ì´ì¦ ì¡°ì 
+// 초기 로딩 후 칩 사이즈 조정
 setTimeout(autoFitAllChips, 100);
 window.addEventListener('resize', autoFitAllChips);
 </script>
-<!-- PDF ìì± ë¼ì´ë¸ë¬ë¦¬ -->
+<!-- PDF 생성 라이브러리 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
