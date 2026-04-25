@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>ì¹ì¹ â ì¤ì¼ì¤</title>
+<title>Ã¬ÂÂ¹Ã¬ÂÂ¹ Ã¢ÂÂ Ã¬ÂÂ¤Ã¬Â¼ÂÃ¬Â¤Â</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="ì¹ì¹">
+<meta name="apple-mobile-web-app-title" content="Ã¬ÂÂ¹Ã¬ÂÂ¹">
 <meta name="theme-color" content="#00C896">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -14,18 +14,18 @@
 html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:var(--gray-900);}
 .shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
 
-/* í¤ë */
+/* Ã­ÂÂ¤Ã«ÂÂ */
 .header{background:#fff;border-bottom:1px solid var(--gray-200);padding:52px 20px 0;position:sticky;top:0;z-index:50;}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;}
 .header-title{font-size:18px;font-weight:900;}
 .add-btn-top{width:36px;height:36px;border-radius:50%;background:var(--primary);border:none;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;cursor:pointer;line-height:1;}
 
-/* ì ë¤ë¹ê²ì´ì */
+/* Ã¬ÂÂ Ã«ÂÂ¤Ã«Â¹ÂÃªÂ²ÂÃ¬ÂÂ´Ã¬ÂÂ */
 .month-nav{background:#fff;padding:0 20px 14px;display:flex;align-items:center;justify-content:space-between;}
 .month-nav-btn{width:34px;height:34px;border-radius:50%;background:var(--gray-100);border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .month-label{font-size:16px;font-weight:700;color:var(--gray-900);}
 
-/* ìºë¦°ë */
+/* Ã¬ÂºÂÃ«Â¦Â°Ã«ÂÂ */
 .calendar-wrap{background:#fff;padding:0 12px 12px;border-bottom:1px solid var(--gray-200);}
 .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px;}
 .cal-wd{text-align:center;font-size:11px;font-weight:600;color:var(--gray-400);padding:4px 0;}
@@ -46,13 +46,13 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 .cal-dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px;min-height:6px;}
 .cal-dot{width:5px;height:5px;border-radius:50%;}
 
-/* ì½íì¸  */
+/* Ã¬Â½ÂÃ­ÂÂÃ¬Â¸Â  */
 .content{padding:16px 20px;}
 .section-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .section-title span{flex:1;}
 .section-title .count-badge{background:var(--primary-light);color:var(--primary-dark);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
 
-/* ìì½ ì¹´ë */
+/* Ã¬ÂÂÃ¬ÂÂ½ Ã¬Â¹Â´Ã«ÂÂ */
 .booking-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.15s;}
 .booking-card:active{transform:scale(0.98);}
 .booking-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
@@ -69,18 +69,18 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 .card-action-btn.primary{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
 .card-action-btn.danger{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
 
-/* ë¹ ìí */
+/* Ã«Â¹Â Ã¬ÂÂÃ­ÂÂ */
 .empty-state{text-align:center;padding:40px 20px;color:var(--gray-400);}
 .empty-icon{font-size:40px;margin-bottom:10px;}
 .empty-text{font-size:14px;line-height:1.6;}
 
-/* íë¨ ë¤ë¹ê²ì´ì */
+/* Ã­ÂÂÃ«ÂÂ¨ Ã«ÂÂ¤Ã«Â¹ÂÃªÂ²ÂÃ¬ÂÂ´Ã¬ÂÂ */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,0.95);border-top:1px solid var(--gray-200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--gray-400);cursor:pointer;}
 .nav-item.active{color:var(--primary);font-weight:700;}
 .nav-icon{font-size:20px;line-height:1;}
 
-/* ëª¨ë¬ */
+/* Ã«ÂªÂ¨Ã«ÂÂ¬ */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;overflow-y:auto;padding:20px;}
 .modal-overlay.open{display:flex;align-items:flex-end;}
 .modal-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:480px;margin:0 auto;padding:20px 20px env(safe-area-inset-bottom,20px);max-height:90vh;overflow-y:auto;}
@@ -98,7 +98,7 @@ textarea.form-input{resize:none;}
 .btn-save{flex:2;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
 .btn-delete{width:100%;padding:13px;background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;}
 
-/* ìí ì í ì¹© */
+/* Ã¬ÂÂÃ­ÂÂ Ã¬ÂÂ Ã­ÂÂ Ã¬Â¹Â© */
 .status-chips{display:flex;gap:6px;flex-wrap:wrap;}
 .status-chip{padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);background:var(--gray-100);color:var(--gray-500);font-family:inherit;transition:all 0.15s;}
 .status-chip.sel-confirmed{background:#EEF2FF;border-color:#A5B4FC;color:#6366F1;}
@@ -106,15 +106,15 @@ textarea.form-input{resize:none;}
 .status-chip.sel-done{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
 .status-chip.sel-cancelled{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
 
-/* SMS ë°ì¡ í¨ë */
+/* SMS Ã«Â°ÂÃ¬ÂÂ¡ Ã­ÂÂ¨Ã«ÂÂ */
 .sms-quick{background:var(--primary-light);border:1.5px solid var(--primary);border-radius:var(--radius-sm);padding:12px 14px;margin-top:12px;}
 .sms-quick-title{font-size:12px;font-weight:700;color:var(--primary-dark);margin-bottom:8px;}
 .sms-tpl-btn{padding:7px 12px;border-radius:8px;background:#fff;border:1px solid var(--primary);color:var(--primary-dark);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-right:6px;margin-bottom:6px;}
 
-/* í ì¤í¸ */
+/* Ã­ÂÂ Ã¬ÂÂ¤Ã­ÂÂ¸ */
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,54,0.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
 
-/* ì ê· ìì½ì ì²­ ë°°ë */
+/* Ã¬ÂÂ ÃªÂ·Â Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ Ã¬Â²Â­ Ã«Â°Â°Ã«ÂÂ */
 .pending-banner{background:linear-gradient(135deg,#6366F1,#8B5CF6);padding:12px 20px;cursor:pointer;}
 .pending-banner-inner{display:flex;align-items:center;gap:10px;}
 .pending-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:pulse 1.5s infinite;}
@@ -134,81 +134,81 @@ textarea.form-input{resize:none;}
 <body>
 <div class="shell">
 
-  <!-- í¤ë -->
+  <!-- Ã­ÂÂ¤Ã«ÂÂ -->
   <div class="header">
     <div class="header-inner">
-      <div class="header-title">ð ì¤ì¼ì¤</div>
+      <div class="header-title">Ã°ÂÂÂ Ã¬ÂÂ¤Ã¬Â¼ÂÃ¬Â¤Â</div>
       <button class="add-btn-top" onclick="openAddModal()">+</button>
     </div>
   </div>
 
 
-  <!-- ì ê· ìì½ì ì²­ ë°°ë -->
+  <!-- Ã¬ÂÂ ÃªÂ·Â Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ Ã¬Â²Â­ Ã«Â°Â°Ã«ÂÂ -->
   <div id="pending-banner" class="pending-banner" style="display:none;" onclick="togglePendingSheet()">
     <div class="pending-banner-inner">
       <div class="pending-dot"></div>
-      <div class="pending-text">ð¬ ì ê· ìì½ì ì²­ì´ ììµëë¤</div>
-      <div class="pending-count" id="pending-count">0ê±´</div>
+      <div class="pending-text">Ã°ÂÂÂ¬ Ã¬ÂÂ ÃªÂ·Â Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ Ã¬Â²Â­Ã¬ÂÂ´ Ã¬ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤</div>
+      <div class="pending-count" id="pending-count">0ÃªÂ±Â´</div>
     </div>
   </div>
   <div class="pending-sheet" id="pending-sheet">
     <div id="pending-list"></div>
   </div>
 
-  <!-- ì ë¤ë¹ê²ì´ì -->
+  <!-- Ã¬ÂÂ Ã«ÂÂ¤Ã«Â¹ÂÃªÂ²ÂÃ¬ÂÂ´Ã¬ÂÂ -->
   <div class="month-nav">
-    <button class="month-nav-btn" onclick="changeMonth(-1)">â¹</button>
+    <button class="month-nav-btn" onclick="changeMonth(-1)">Ã¢ÂÂ¹</button>
     <span class="month-label" id="month-label"></span>
-    <button class="month-nav-btn" onclick="changeMonth(1)">âº</button>
+    <button class="month-nav-btn" onclick="changeMonth(1)">Ã¢ÂÂº</button>
   </div>
 
-  <!-- ìºë¦°ë -->
+  <!-- Ã¬ÂºÂÃ«Â¦Â°Ã«ÂÂ -->
   <div class="calendar-wrap">
     <div class="cal-weekdays">
-      <div class="cal-wd">ì¼</div>
-      <div class="cal-wd">ì</div>
-      <div class="cal-wd">í</div>
-      <div class="cal-wd">ì</div>
-      <div class="cal-wd">ëª©</div>
-      <div class="cal-wd">ê¸</div>
-      <div class="cal-wd">í </div>
+      <div class="cal-wd">Ã¬ÂÂ¼</div>
+      <div class="cal-wd">Ã¬ÂÂ</div>
+      <div class="cal-wd">Ã­ÂÂ</div>
+      <div class="cal-wd">Ã¬ÂÂ</div>
+      <div class="cal-wd">Ã«ÂªÂ©</div>
+      <div class="cal-wd">ÃªÂ¸Â</div>
+      <div class="cal-wd">Ã­ÂÂ </div>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
   </div>
 
-  <!-- ìì½ ëª©ë¡ -->
+  <!-- Ã¬ÂÂÃ¬ÂÂ½ Ã«ÂªÂ©Ã«Â¡Â -->
   <div class="content">
     <div class="section-title">
-      <span id="list-label">ì¤ëì ìì½</span>
-      <span class="count-badge" id="list-count">0ê±´</span>
+      <span id="list-label">Ã¬ÂÂ¤Ã«ÂÂÃ¬ÂÂ Ã¬ÂÂÃ¬ÂÂ½</span>
+      <span class="count-badge" id="list-count">0ÃªÂ±Â´</span>
     </div>
     <div id="booking-list"></div>
   </div>
 
 </div>
 
-<!-- íë¨ ë¤ë¹ê²ì´ì -->
+<!-- Ã­ÂÂÃ«ÂÂ¨ Ã«ÂÂ¤Ã«Â¹ÂÃªÂ²ÂÃ¬ÂÂ´Ã¬ÂÂ -->
 <div class="bottom-nav">
-  <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">ð </div><div>í</div></button>
-  <button class="nav-item" onclick="location.href='ssak-quote.html'"><div class="nav-icon">â¡</div><div>ê²¬ì </div></button>
-  <button class="nav-item active"><div class="nav-icon">ð</div><div>ì¤ì¼ì¤</div></button>
-  <button class="nav-item" onclick="toast('ì»¤ë®¤ëí° ì¤ë¹ ì¤')"><div class="nav-icon">ð¥</div><div>ì»¤ë®¤ëí°</div></button>
-  <button class="nav-item" onclick="toast('MY ì¤ë¹ ì¤')"><div class="nav-icon">ð¤</div><div>MY</div></button>
+  <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">Ã°ÂÂÂ </div><div>Ã­ÂÂ</div></button>
+  <button class="nav-item" onclick="location.href='ssak-quote.html'"><div class="nav-icon">Ã¢ÂÂ¡</div><div>ÃªÂ²Â¬Ã¬Â Â</div></button>
+  <button class="nav-item active"><div class="nav-icon">Ã°ÂÂÂ</div><div>Ã¬ÂÂ¤Ã¬Â¼ÂÃ¬Â¤Â</div></button>
+  <button class="nav-item" onclick="toast('Ã¬Â»Â¤Ã«Â®Â¤Ã«ÂÂÃ­ÂÂ° Ã¬Â¤ÂÃ«Â¹Â Ã¬Â¤Â')"><div class="nav-icon">Ã°ÂÂÂ¥</div><div>Ã¬Â»Â¤Ã«Â®Â¤Ã«ÂÂÃ­ÂÂ°</div></button>
+  <button class="nav-item" onclick="toast('MY Ã¬Â¤ÂÃ«Â¹Â Ã¬Â¤Â')"><div class="nav-icon">Ã°ÂÂÂ¤</div><div>MY</div></button>
 </div>
 
-<!-- ìì½ ì¶ê°/ìì  ëª¨ë¬ -->
+<!-- Ã¬ÂÂÃ¬ÂÂ½ Ã¬Â¶ÂÃªÂ°Â/Ã¬ÂÂÃ¬Â Â Ã«ÂªÂ¨Ã«ÂÂ¬ -->
 <div class="modal-overlay" id="booking-modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-title">ð ìì½ ì¶ê°</div>
+    <div class="modal-title" id="modal-title">Ã°ÂÂÂ Ã¬ÂÂÃ¬ÂÂ½ Ã¬Â¶ÂÃªÂ°Â</div>
 
     <div class="form-row">
       <div class="form-group" style="margin:0;">
-        <label class="form-label">ê³ ê°ëª *</label>
-        <input class="form-input" id="b-name" placeholder="ê¹OO"/>
+        <label class="form-label">ÃªÂ³Â ÃªÂ°ÂÃ«ÂªÂ *</label>
+        <input class="form-input" id="b-name" placeholder="ÃªÂ¹ÂOO"/>
       </div>
       <div class="form-group" style="margin:0;">
-        <label class="form-label">ì°ë½ì² *</label>
+        <label class="form-label">Ã¬ÂÂ°Ã«ÂÂ½Ã¬Â²Â *</label>
         <input class="form-input" id="b-phone" placeholder="010-0000-0000" type="tel"/>
       </div>
     </div>
@@ -216,79 +216,79 @@ textarea.form-input{resize:none;}
 
     <div class="form-row">
       <div class="form-group" style="margin:0;">
-        <label class="form-label">ë ì§ *</label>
+        <label class="form-label">Ã«ÂÂ Ã¬Â§Â *</label>
         <input class="form-input" id="b-date" type="date"/>
       </div>
       <div class="form-group" style="margin:0;">
-        <label class="form-label">ìê° *</label>
+        <label class="form-label">Ã¬ÂÂÃªÂ°Â *</label>
         <input class="form-input" id="b-time" type="time" value="10:00"/>
       </div>
     </div>
     <div style="height:14px;"></div>
 
     <div class="form-group">
-      <label class="form-label">ìê³µ ì£¼ì</label>
-      <input class="form-input" id="b-addr" placeholder="ìì¸ì ê°ë¨êµ¬ ..."/>
+      <label class="form-label">Ã¬ÂÂÃªÂ³Âµ Ã¬Â£Â¼Ã¬ÂÂ</label>
+      <input class="form-input" id="b-addr" placeholder="Ã¬ÂÂÃ¬ÂÂ¸Ã¬ÂÂ ÃªÂ°ÂÃ«ÂÂ¨ÃªÂµÂ¬ ..."/>
     </div>
 
     <div class="form-row">
       <div class="form-group" style="margin:0;">
-        <label class="form-label">ì²­ì ì í</label>
+        <label class="form-label">Ã¬Â²Â­Ã¬ÂÂ Ã¬ÂÂ Ã­ÂÂ</label>
         <select class="form-input" id="b-type">
-          <option>ìì£¼ ì  ì²­ì</option>
-          <option>ì´ì¬ í ì²­ì</option>
-          <option>ì ì¶ ì¤ê³µ ì²­ì</option>
-          <option>ìí ì²­ì</option>
+          <option>Ã¬ÂÂÃ¬Â£Â¼ Ã¬Â Â Ã¬Â²Â­Ã¬ÂÂ</option>
+          <option>Ã¬ÂÂ´Ã¬ÂÂ¬ Ã­ÂÂ Ã¬Â²Â­Ã¬ÂÂ</option>
+          <option>Ã¬ÂÂ Ã¬Â¶Â Ã¬Â¤ÂÃªÂ³Âµ Ã¬Â²Â­Ã¬ÂÂ</option>
+          <option>Ã¬ÂÂÃ­ÂÂ Ã¬Â²Â­Ã¬ÂÂ</option>
         </select>
       </div>
       <div class="form-group" style="margin:0;">
-        <label class="form-label">íì</label>
+        <label class="form-label">Ã­ÂÂÃ¬ÂÂ</label>
         <input class="form-input" id="b-size" type="number" placeholder="32"/>
       </div>
     </div>
     <div style="height:14px;"></div>
 
     <div class="form-group">
-      <label class="form-label">ê¸ì¡ (ì)</label>
+      <label class="form-label">ÃªÂ¸ÂÃ¬ÂÂ¡ (Ã¬ÂÂ)</label>
       <input class="form-input" id="b-price" type="number" placeholder="500000"/>
     </div>
 
     <div class="form-group" style="margin-bottom:6px;">
-      <label class="form-label">ìí</label>
+      <label class="form-label">Ã¬ÂÂÃ­ÂÂ</label>
       <div class="status-chips">
-        <button class="status-chip sel-confirmed" onclick="selectStatus('confirmed',this)">ìì½íì </button>
-        <button class="status-chip" onclick="selectStatus('inprogress',this)">ì§íì¤</button>
-        <button class="status-chip" onclick="selectStatus('done',this)">ìë£</button>
-        <button class="status-chip" onclick="selectStatus('cancelled',this)">ì·¨ì</button>
+        <button class="status-chip sel-confirmed" onclick="selectStatus('confirmed',this)">Ã¬ÂÂÃ¬ÂÂ½Ã­ÂÂÃ¬Â Â</button>
+        <button class="status-chip" onclick="selectStatus('inprogress',this)">Ã¬Â§ÂÃ­ÂÂÃ¬Â¤Â</button>
+        <button class="status-chip" onclick="selectStatus('done',this)">Ã¬ÂÂÃ«Â£Â</button>
+        <button class="status-chip" onclick="selectStatus('cancelled',this)">Ã¬Â·Â¨Ã¬ÂÂ</button>
       </div>
     </div>
 
     <div class="form-group">
-      <label class="form-label">ë©ëª¨</label>
-      <textarea class="form-input" id="b-memo" rows="3" placeholder="í¹ì´ì¬í­, ìì²­ì¬í­ ë±"></textarea>
+      <label class="form-label">Ã«Â©ÂÃ«ÂªÂ¨</label>
+      <textarea class="form-input" id="b-memo" rows="3" placeholder="Ã­ÂÂ¹Ã¬ÂÂ´Ã¬ÂÂ¬Ã­ÂÂ­, Ã¬ÂÂÃ¬Â²Â­Ã¬ÂÂ¬Ã­ÂÂ­ Ã«ÂÂ±"></textarea>
     </div>
 
-    <!-- ë¹ ë¥¸ SMS ë°ì¡ -->
+    <!-- Ã«Â¹Â Ã«Â¥Â¸ SMS Ã«Â°ÂÃ¬ÂÂ¡ -->
     <div class="sms-quick" id="sms-quick-panel" style="display:none;">
-      <div class="sms-quick-title">ð± ë¹ ë¥¸ ë¬¸ì ë°ì¡</div>
-      <button class="sms-tpl-btn" onclick="sendQuickSMS('confirm')">â ìì½íì¸</button>
-      <button class="sms-tpl-btn" onclick="sendQuickSMS('remind')">ð ë¹ì¼ë¦¬ë§ì¸ë</button>
-      <button class="sms-tpl-btn" onclick="sendQuickSMS('done')">ð ìë£ìë´</button>
+      <div class="sms-quick-title">Ã°ÂÂÂ± Ã«Â¹Â Ã«Â¥Â¸ Ã«Â¬Â¸Ã¬ÂÂ Ã«Â°ÂÃ¬ÂÂ¡</div>
+      <button class="sms-tpl-btn" onclick="sendQuickSMS('confirm')">Ã¢ÂÂ Ã¬ÂÂÃ¬ÂÂ½Ã­ÂÂÃ¬ÂÂ¸</button>
+      <button class="sms-tpl-btn" onclick="sendQuickSMS('remind')">Ã°ÂÂÂ Ã«ÂÂ¹Ã¬ÂÂ¼Ã«Â¦Â¬Ã«Â§ÂÃ¬ÂÂ¸Ã«ÂÂ</button>
+      <button class="sms-tpl-btn" onclick="sendQuickSMS('done')">Ã°ÂÂÂ Ã¬ÂÂÃ«Â£ÂÃ¬ÂÂÃ«ÂÂ´</button>
     </div>
 
     <div style="height:14px;"></div>
     <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeModal()">ì·¨ì</button>
-      <button class="btn-save" onclick="saveBooking()">ì ì¥</button>
+      <button class="btn-cancel" onclick="closeModal()">Ã¬Â·Â¨Ã¬ÂÂ</button>
+      <button class="btn-save" onclick="saveBooking()">Ã¬Â ÂÃ¬ÂÂ¥</button>
     </div>
-    <button class="btn-delete" id="btn-delete" style="display:none;" onclick="deleteBooking()">ð ì´ ìì½ ì­ì </button>
+    <button class="btn-delete" id="btn-delete" style="display:none;" onclick="deleteBooking()">Ã°ÂÂÂ Ã¬ÂÂ´ Ã¬ÂÂÃ¬ÂÂ½ Ã¬ÂÂ­Ã¬Â Â</button>
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-// ââ ë°ì´í° ââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ Ã«ÂÂ°Ã¬ÂÂ´Ã­ÂÂ° Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 let schedules = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
 let cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
 
@@ -296,7 +296,7 @@ function saveSchedules() {
   localStorage.setItem('ssak_schedules', JSON.stringify(schedules));
 }
 
-// ââ ë ì§ ì í¸ ââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ Ã«ÂÂ Ã¬Â§Â Ã¬ÂÂ Ã­ÂÂ¸ Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 let viewYear = new Date().getFullYear();
 let viewMonth = new Date().getMonth(); // 0-indexed
 let selectedDate = toDateStr(new Date());
@@ -309,20 +309,20 @@ function toDateStr(d) {
 
 function todayStr() { return toDateStr(new Date()); }
 
-// ââ ìºë¦°ë ë ëë§ ââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ Ã¬ÂºÂÃ«Â¦Â°Ã«ÂÂ Ã«Â ÂÃ«ÂÂÃ«Â§Â Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function renderCalendar() {
-  const MONTHS = ['1ì','2ì','3ì','4ì','5ì','6ì','7ì','8ì','9ì','10ì','11ì','12ì'];
-  document.getElementById('month-label').textContent = `${viewYear}ë ${MONTHS[viewMonth]}`;
+  const MONTHS = ['1Ã¬ÂÂ','2Ã¬ÂÂ','3Ã¬ÂÂ','4Ã¬ÂÂ','5Ã¬ÂÂ','6Ã¬ÂÂ','7Ã¬ÂÂ','8Ã¬ÂÂ','9Ã¬ÂÂ','10Ã¬ÂÂ','11Ã¬ÂÂ','12Ã¬ÂÂ'];
+  document.getElementById('month-label').textContent = `${viewYear}Ã«ÂÂ ${MONTHS[viewMonth]}`;
 
   const grid = document.getElementById('cal-grid');
   const today = todayStr();
 
-  // ì´ë¬ 1ì¼ ìì¼, ë§ì¼
+  // Ã¬ÂÂ´Ã«ÂÂ¬ 1Ã¬ÂÂ¼ Ã¬ÂÂÃ¬ÂÂ¼, Ã«Â§ÂÃ¬ÂÂ¼
   const firstDay = new Date(viewYear, viewMonth, 1).getDay();
   const lastDate = new Date(viewYear, viewMonth+1, 0).getDate();
   const prevLastDate = new Date(viewYear, viewMonth, 0).getDate();
 
-  // ìì½ ë ì§ë³ ì§ê³
+  // Ã¬ÂÂÃ¬ÂÂ½ Ã«ÂÂ Ã¬Â§ÂÃ«Â³Â Ã¬Â§ÂÃªÂ³Â
   const dotMap = {};
   schedules.forEach(s => {
     if (!dotMap[s.date]) dotMap[s.date] = [];
@@ -367,7 +367,7 @@ function renderCalendar() {
     if (isSun) cls += ' sunday';
     if (isSat) cls += ' saturday';
 
-    // ì  (ìµë 3ê°)
+    // Ã¬Â Â (Ã¬ÂµÂÃ«ÂÂ 3ÃªÂ°Â)
     const dots = (dotMap[dateStr] || []).slice(0, 3).map(st =>
       `<div class="cal-dot" style="background:${STATUS_COLOR[st]||'#ccc'}"></div>`
     ).join('');
@@ -394,7 +394,7 @@ function changeMonth(dir) {
   renderCalendar();
 }
 
-// ââ ëª©ë¡ ë ëë§ âââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ Ã«ÂªÂ©Ã«Â¡Â Ã«Â ÂÃ«ÂÂÃ«Â§Â Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function renderList() {
   const list = document.getElementById('booking-list');
   const label = document.getElementById('list-label');
@@ -406,22 +406,22 @@ function renderList() {
 
   const isToday = selectedDate === today;
   const d = new Date(selectedDate + 'T00:00:00');
-  const dayNames = ['ì¼','ì','í','ì','ëª©','ê¸','í '];
+  const dayNames = ['Ã¬ÂÂ¼','Ã¬ÂÂ','Ã­ÂÂ','Ã¬ÂÂ','Ã«ÂªÂ©','ÃªÂ¸Â','Ã­ÂÂ '];
   label.textContent = isToday
-    ? `ì¤ëì ìì½`
-    : `${d.getMonth()+1}ì ${d.getDate()}ì¼ (${dayNames[d.getDay()]}) ìì½`;
+    ? `Ã¬ÂÂ¤Ã«ÂÂÃ¬ÂÂ Ã¬ÂÂÃ¬ÂÂ½`
+    : `${d.getMonth()+1}Ã¬ÂÂ ${d.getDate()}Ã¬ÂÂ¼ (${dayNames[d.getDay()]}) Ã¬ÂÂÃ¬ÂÂ½`;
 
-  countBadge.textContent = `${items.length}ê±´`;
+  countBadge.textContent = `${items.length}ÃªÂ±Â´`;
 
   if (items.length === 0) {
     list.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">ð­</div>
-      <div class="empty-text">ì´ ë  ìì½ì´ ììµëë¤<br><span style="color:var(--primary);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ ìì½ ì¶ê°íê¸°</span></div>
+      <div class="empty-icon">Ã°ÂÂÂ­</div>
+      <div class="empty-text">Ã¬ÂÂ´ Ã«ÂÂ  Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ´ Ã¬ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤<br><span style="color:var(--primary);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ Ã¬ÂÂÃ¬ÂÂ½ Ã¬Â¶ÂÃªÂ°ÂÃ­ÂÂÃªÂ¸Â°</span></div>
     </div>`;
     return;
   }
 
-  const STATUS_LABEL = {confirmed:'ìì½íì ', inprogress:'ì§íì¤', done:'ìë£', cancelled:'ì·¨ì'};
+  const STATUS_LABEL = {confirmed:'Ã¬ÂÂÃ¬ÂÂ½Ã­ÂÂÃ¬Â Â', inprogress:'Ã¬Â§ÂÃ­ÂÂÃ¬Â¤Â', done:'Ã¬ÂÂÃ«Â£Â', cancelled:'Ã¬Â·Â¨Ã¬ÂÂ'};
   const STATUS_CLASS = {confirmed:'status-confirmed', inprogress:'status-inprogress', done:'status-done', cancelled:'status-cancelled'};
 
   list.innerHTML = items.map(s => `
@@ -430,36 +430,36 @@ function renderList() {
         <div>
           <div class="booking-name">${s.name}</div>
           <div class="booking-meta" style="margin-top:4px;">
-            ${s.time ? `<span class="booking-meta-item">ð ${s.time}</span>` : ''}
-            ${s.type ? `<span class="booking-meta-item">ð§¹ ${s.type}</span>` : ''}
-            ${s.size ? `<span class="booking-meta-item">ð ${s.size}í</span>` : ''}
+            ${s.time ? `<span class="booking-meta-item">Ã°ÂÂÂ ${s.time}</span>` : ''}
+            ${s.type ? `<span class="booking-meta-item">Ã°ÂÂ§Â¹ ${s.type}</span>` : ''}
+            ${s.size ? `<span class="booking-meta-item">Ã°ÂÂÂ ${s.size}Ã­ÂÂ</span>` : ''}
           </div>
         </div>
         <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||s.status}</span>
       </div>
-      ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">ð ${s.addr}</div>` : ''}
-      ${s.price ? `<div style="font-size:12.5px;font-weight:700;color:var(--gray-700);">ð° ${Number(s.price).toLocaleString()}ì</div>` : ''}
-      ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">ð¬ ${s.memo}</div>` : ''}
+      ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">Ã°ÂÂÂ ${s.addr}</div>` : ''}
+      ${s.price ? `<div style="font-size:12.5px;font-weight:700;color:var(--gray-700);">Ã°ÂÂÂ° ${Number(s.price).toLocaleString()}Ã¬ÂÂ</div>` : ''}
+      ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">Ã°ÂÂÂ¬ ${s.memo}</div>` : ''}
       <div class="booking-card-footer">
-        <button class="card-action-btn primary" onclick="event.stopPropagation();openEditModal('${s.id}')">âï¸ ìì </button>
-        <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${s.id}')">ð ìíë³ê²½</button>
-        <button class="card-action-btn" onclick="event.stopPropagation();quickSMSCard('${s.id}')">ð± ë¬¸ì</button>
+        <button class="card-action-btn primary" onclick="event.stopPropagation();openEditModal('${s.id}')">Ã¢ÂÂÃ¯Â¸Â Ã¬ÂÂÃ¬Â Â</button>
+        <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${s.id}')">Ã°ÂÂÂ Ã¬ÂÂÃ­ÂÂÃ«Â³ÂÃªÂ²Â½</button>
+        <button class="card-action-btn" onclick="event.stopPropagation();quickSMSCard('${s.id}')">Ã°ÂÂÂ± Ã«Â¬Â¸Ã¬ÂÂ</button>
       </div>
     </div>
   `).join('');
 }
 
-// ââ ëª¨ë¬ âââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ Ã«ÂªÂ¨Ã«ÂÂ¬ Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function openAddModal() {
   editingId = null;
   selectedStatus = 'confirmed';
-  document.getElementById('modal-title').textContent = 'ð ìì½ ì¶ê°';
+  document.getElementById('modal-title').textContent = 'Ã°ÂÂÂ Ã¬ÂÂÃ¬ÂÂ½ Ã¬Â¶ÂÃªÂ°Â';
   document.getElementById('b-name').value = '';
   document.getElementById('b-phone').value = '';
   document.getElementById('b-date').value = selectedDate;
   document.getElementById('b-time').value = '10:00';
   document.getElementById('b-addr').value = '';
-  document.getElementById('b-type').value = 'ìì£¼ ì  ì²­ì';
+  document.getElementById('b-type').value = 'Ã¬ÂÂÃ¬Â£Â¼ Ã¬Â Â Ã¬Â²Â­Ã¬ÂÂ';
   document.getElementById('b-size').value = '';
   document.getElementById('b-price').value = '';
   document.getElementById('b-memo').value = '';
@@ -474,13 +474,13 @@ function openEditModal(id) {
   if (!s) return;
   editingId = id;
   selectedStatus = s.status || 'confirmed';
-  document.getElementById('modal-title').textContent = 'âï¸ ìì½ ìì ';
+  document.getElementById('modal-title').textContent = 'Ã¢ÂÂÃ¯Â¸Â Ã¬ÂÂÃ¬ÂÂ½ Ã¬ÂÂÃ¬Â Â';
   document.getElementById('b-name').value = s.name || '';
   document.getElementById('b-phone').value = s.phone || '';
   document.getElementById('b-date').value = s.date || '';
   document.getElementById('b-time').value = s.time || '10:00';
   document.getElementById('b-addr').value = s.addr || '';
-  document.getElementById('b-type').value = s.type || 'ìì£¼ ì  ì²­ì';
+  document.getElementById('b-type').value = s.type || 'Ã¬ÂÂÃ¬Â£Â¼ Ã¬Â Â Ã¬Â²Â­Ã¬ÂÂ';
   document.getElementById('b-size').value = s.size || '';
   document.getElementById('b-price').value = s.price || '';
   document.getElementById('b-memo').value = s.memo || '';
@@ -511,7 +511,7 @@ function updateStatusChips() {
 function saveBooking() {
   const name = document.getElementById('b-name').value.trim();
   const date = document.getElementById('b-date').value;
-  if (!name || !date) { toast('ê³ ê°ëªê³¼ ë ì§ë íììëë¤'); return; }
+  if (!name || !date) { toast('ÃªÂ³Â ÃªÂ°ÂÃ«ÂªÂÃªÂ³Â¼ Ã«ÂÂ Ã¬Â§ÂÃ«ÂÂ Ã­ÂÂÃ¬ÂÂÃ¬ÂÂÃ«ÂÂÃ«ÂÂ¤'); return; }
 
   const data = {
     id: editingId || Date.now().toString(),
@@ -538,7 +538,7 @@ function saveBooking() {
   saveSchedules();
   selectedDate = date;
 
-  // ì/ì°ëë ë§ì¶ê¸°
+  // Ã¬ÂÂ/Ã¬ÂÂ°Ã«ÂÂÃ«ÂÂ Ã«Â§ÂÃ¬Â¶ÂÃªÂ¸Â°
   const d = new Date(date + 'T00:00:00');
   viewYear = d.getFullYear();
   viewMonth = d.getMonth();
@@ -546,24 +546,24 @@ function saveBooking() {
   closeModal();
   renderCalendar();
   renderList();
-  toast(editingId ? 'â ìì½ì´ ìì ëìµëë¤' : 'â ìì½ì´ ì¶ê°ëìµëë¤');
+  toast(editingId ? 'Ã¢ÂÂ Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ´ Ã¬ÂÂÃ¬Â ÂÃ«ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤' : 'Ã¢ÂÂ Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ´ Ã¬Â¶ÂÃªÂ°ÂÃ«ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤');
 }
 
 function deleteBooking() {
   if (!editingId) return;
-  if (!confirm('ì´ ìì½ì ì­ì íìê² ìµëê¹?')) return;
+  if (!confirm('Ã¬ÂÂ´ Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ Ã¬ÂÂ­Ã¬Â ÂÃ­ÂÂÃ¬ÂÂÃªÂ²Â Ã¬ÂÂµÃ«ÂÂÃªÂ¹Â?')) return;
   schedules = schedules.filter(s => s.id !== editingId);
   saveSchedules();
   closeModal();
   renderCalendar();
   renderList();
-  toast('ð ìì½ì´ ì­ì ëìµëë¤');
+  toast('Ã°ÂÂÂ Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ´ Ã¬ÂÂ­Ã¬Â ÂÃ«ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤');
 }
 
-// ââ ìí ë¹ ë¥¸ ë³ê²½ ââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ Ã¬ÂÂÃ­ÂÂ Ã«Â¹Â Ã«Â¥Â¸ Ã«Â³ÂÃªÂ²Â½ Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function changeStatus(id) {
   const ORDER = ['confirmed','inprogress','done','cancelled'];
-  const LABEL = {confirmed:'ìì½íì ', inprogress:'ì§íì¤', done:'ìë£', cancelled:'ì·¨ì'};
+  const LABEL = {confirmed:'Ã¬ÂÂÃ¬ÂÂ½Ã­ÂÂÃ¬Â Â', inprogress:'Ã¬Â§ÂÃ­ÂÂÃ¬Â¤Â', done:'Ã¬ÂÂÃ«Â£Â', cancelled:'Ã¬Â·Â¨Ã¬ÂÂ'};
   const s = schedules.find(x => x.id === id);
   if (!s) return;
   const cur = ORDER.indexOf(s.status);
@@ -572,31 +572,31 @@ function changeStatus(id) {
   saveSchedules();
   renderCalendar();
   renderList();
-  toast(`â ${LABEL[s.status]}ì¼ë¡ ë³ê²½ëìµëë¤`);
+  toast(`Ã¢ÂÂ ${LABEL[s.status]}Ã¬ÂÂ¼Ã«Â¡Â Ã«Â³ÂÃªÂ²Â½Ã«ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤`);
 }
 
-// ââ SMS ë¹ ë¥¸ ë°ì¡ âââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ SMS Ã«Â¹Â Ã«Â¥Â¸ Ã«Â°ÂÃ¬ÂÂ¡ Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function quickSMSCard(id) {
   openEditModal(id);
 }
 
 function sendQuickSMS(type) {
-  const name = document.getElementById('b-name').value.trim() || 'ê³ ê°';
+  const name = document.getElementById('b-name').value.trim() || 'ÃªÂ³Â ÃªÂ°Â';
   const date = document.getElementById('b-date').value;
   const time = document.getElementById('b-time').value;
   const addr = document.getElementById('b-addr').value.trim();
   const phone = document.getElementById('b-phone').value.trim();
-  const company = cfg.company || 'ì¹ì¹í´ë¦°';
+  const company = cfg.company || 'Ã¬ÂÂ¹Ã¬ÂÂ¹Ã­ÂÂ´Ã«Â¦Â°';
 
-  if (!phone) { toast('ì°ë½ì²ë¥¼ ìë ¥í´ì£¼ì¸ì'); return; }
+  if (!phone) { toast('Ã¬ÂÂ°Ã«ÂÂ½Ã¬Â²ÂÃ«Â¥Â¼ Ã¬ÂÂÃ«Â Â¥Ã­ÂÂ´Ã¬Â£Â¼Ã¬ÂÂ¸Ã¬ÂÂ'); return; }
 
   const d = date ? new Date(date+'T00:00:00') : new Date();
-  const dateLabel = `${d.getMonth()+1}ì ${d.getDate()}ì¼`;
+  const dateLabel = `${d.getMonth()+1}Ã¬ÂÂ ${d.getDate()}Ã¬ÂÂ¼`;
 
   const MSGS = {
-    confirm: `[${company}] ${name}ë, ${dateLabel} ${time} ìì£¼ì²­ì ìì½ì´ íì ëìµëë¤. ì£¼ì: ${addr||'íì'}. ë¬¸ì: ${cfg.phone||''} ê°ì¬í©ëë¤ ð`,
-    remind: `[${company}] ${name}ë, ì¤ë ${time} ìì£¼ì²­ì ì¼ì ì´ ììµëë¤. ìì§ ë§ì¸ì! ë¬¸ì: ${cfg.phone||''}`,
-    done: `[${company}] ${name}ë, ì¤ë ì²­ìê° ìë£ëìµëë¤. ì´ì©í´ ì£¼ìì ê°ì¬í©ëë¤ ð íê¸°: ${cfg.review||''}`
+    confirm: `[${company}] ${name}Ã«ÂÂ, ${dateLabel} ${time} Ã¬ÂÂÃ¬Â£Â¼Ã¬Â²Â­Ã¬ÂÂ Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ´ Ã­ÂÂÃ¬Â ÂÃ«ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤. Ã¬Â£Â¼Ã¬ÂÂ: ${addr||'Ã­ÂÂÃ¬ÂÂ'}. Ã«Â¬Â¸Ã¬ÂÂ: ${cfg.phone||''} ÃªÂ°ÂÃ¬ÂÂ¬Ã­ÂÂ©Ã«ÂÂÃ«ÂÂ¤ Ã°ÂÂÂ`,
+    remind: `[${company}] ${name}Ã«ÂÂ, Ã¬ÂÂ¤Ã«ÂÂ ${time} Ã¬ÂÂÃ¬Â£Â¼Ã¬Â²Â­Ã¬ÂÂ Ã¬ÂÂ¼Ã¬Â ÂÃ¬ÂÂ´ Ã¬ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤. Ã¬ÂÂÃ¬Â§Â Ã«Â§ÂÃ¬ÂÂ¸Ã¬ÂÂ! Ã«Â¬Â¸Ã¬ÂÂ: ${cfg.phone||''}`,
+    done: `[${company}] ${name}Ã«ÂÂ, Ã¬ÂÂ¤Ã«ÂÂ Ã¬Â²Â­Ã¬ÂÂÃªÂ°Â Ã¬ÂÂÃ«Â£ÂÃ«ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤. Ã¬ÂÂ´Ã¬ÂÂ©Ã­ÂÂ´ Ã¬Â£Â¼Ã¬ÂÂÃ¬ÂÂ ÃªÂ°ÂÃ¬ÂÂ¬Ã­ÂÂ©Ã«ÂÂÃ«ÂÂ¤ Ã°ÂÂÂ Ã­ÂÂÃªÂ¸Â°: ${cfg.review||''}`
   };
 
   const msg = MSGS[type];
@@ -605,23 +605,23 @@ function sendQuickSMS(type) {
   const fromPhone = cfg.fromPhone;
 
   if (!apiKey || !apiSecret || !fromPhone) {
-    toast('ì¤ì ìì CoolSMS APIë¥¼ ë¨¼ì  ì¤ì í´ì£¼ì¸ì');
+    toast('Ã¬ÂÂ¤Ã¬Â ÂÃ¬ÂÂÃ¬ÂÂ CoolSMS APIÃ«Â¥Â¼ Ã«Â¨Â¼Ã¬Â Â Ã¬ÂÂ¤Ã¬Â ÂÃ­ÂÂ´Ã¬Â£Â¼Ã¬ÂÂ¸Ã¬ÂÂ');
     return;
   }
 
-  toast('ð± ë¬¸ì ë°ì¡ ì¤...');
+  toast('Ã°ÂÂÂ± Ã«Â¬Â¸Ã¬ÂÂ Ã«Â°ÂÃ¬ÂÂ¡ Ã¬Â¤Â...');
 
   fetch('https://ssakssak-server-production.up.railway.app/send-sms', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({ to: phone, from: fromPhone, text: msg, apiKey, apiSecret })
   }).then(r => r.json()).then(data => {
-    if (data.success) toast('â ë¬¸ì ë°ì¡ ìë£!');
-    else toast('â ë°ì¡ ì¤í¨: ' + (data.error||'ì¤ë¥'));
-  }).catch(() => toast('â ìë² ì¤ë¥'));
+    if (data.success) toast('Ã¢ÂÂ Ã«Â¬Â¸Ã¬ÂÂ Ã«Â°ÂÃ¬ÂÂ¡ Ã¬ÂÂÃ«Â£Â!');
+    else toast('Ã¢ÂÂ Ã«Â°ÂÃ¬ÂÂ¡ Ã¬ÂÂ¤Ã­ÂÂ¨: ' + (data.error||'Ã¬ÂÂ¤Ã«Â¥Â'));
+  }).catch(() => toast('Ã¢ÂÂ Ã¬ÂÂÃ«Â²Â Ã¬ÂÂ¤Ã«Â¥Â'));
 }
 
-// ââ í ì¤í¸ ââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ Ã­ÂÂ Ã¬ÂÂ¤Ã­ÂÂ¸ Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg;
@@ -630,31 +630,33 @@ function toast(msg) {
   window.__toastTimer = setTimeout(() => { el.style.opacity = '0'; }, 2400);
 }
 
-// ââ ì´ê¸°í ââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ Ã¬Â´ÂÃªÂ¸Â°Ã­ÂÂ Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 const SERVER = 'https://ssakssak-server-production.up.railway.app';
 
-// ââ ì ê· ìì½ì ì²­ ë¡ë ââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ Ã¬ÂÂ ÃªÂ·Â Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ Ã¬Â²Â­ Ã«Â¡ÂÃ«ÂÂ Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 async function fetchPendingBookings() {
   try {
-    const r = await fetch(SERVER + '/api/bookings?status=pending');
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg')||'{}');
+  const adminKey = cfg.adminKey || '';
+  const r = await fetch(SERVER + '/api/bookings?status=pending&adminKey=' + encodeURIComponent(adminKey));
     const d = await r.json();
     if (!d.success || !d.data.length) return;
     const list = d.data;
     document.getElementById('pending-banner').style.display = 'block';
-    document.getElementById('pending-count').textContent = list.length + 'ê±´';
+    document.getElementById('pending-count').textContent = list.length + 'ÃªÂ±Â´';
     document.getElementById('pending-list').innerHTML = list.map(b => `
       <div class="pending-card" id="pc-${b.id}">
         <div class="pending-card-name">${b.name} <span style="font-size:12px;color:#6366F1;font-weight:400;">${b.phone}</span></div>
         <div class="pending-card-meta">
-          ð ${b.date} ${b.time}<br>
-          ð§¹ ${b.type} ${b.size ? b.size+'í' : ''}<br>
-          ð ${b.address || 'ì£¼ì ë¯¸ìë ¥'}
-          ${b.notes ? '<br>ð¬ '+b.notes : ''}
+          Ã°ÂÂÂ ${b.date} ${b.time}<br>
+          Ã°ÂÂ§Â¹ ${b.type} ${b.size ? b.size+'Ã­ÂÂ' : ''}<br>
+          Ã°ÂÂÂ ${b.address || 'Ã¬Â£Â¼Ã¬ÂÂ Ã«Â¯Â¸Ã¬ÂÂÃ«Â Â¥'}
+          ${b.notes ? '<br>Ã°ÂÂÂ¬ '+b.notes : ''}
         </div>
         <div class="pending-card-btns">
-          <button class="btn-approve" onclick="approveBooking('${b.id}',${JSON.stringify(b).replace(/"/g,'&quot;')})">â ì¤ì¼ì¤ì ì¶ê°</button>
-          <button class="btn-reject" onclick="rejectBooking('${b.id}')">â ê±°ì </button>
+          <button class="btn-approve" onclick="approveBooking('${b.id}',${JSON.stringify(b).replace(/"/g,'&quot;')})">Ã¢ÂÂ Ã¬ÂÂ¤Ã¬Â¼ÂÃ¬Â¤ÂÃ¬ÂÂ Ã¬Â¶ÂÃªÂ°Â</button>
+          <button class="btn-reject" onclick="rejectBooking('${b.id}')">Ã¢ÂÂ ÃªÂ±Â°Ã¬Â Â</button>
         </div>
       </div>
     `).join('');
@@ -668,7 +670,7 @@ function togglePendingSheet() {
 
 async function approveBooking(id, bookingData) {
   if (typeof bookingData === 'string') bookingData = JSON.parse(bookingData.replace(/&quot;/g,'"'));
-  // ì¤ì¼ì¤ì ì¶ê°
+  // Ã¬ÂÂ¤Ã¬Â¼ÂÃ¬Â¤ÂÃ¬ÂÂ Ã¬Â¶ÂÃªÂ°Â
   schedules.push({
     id: Date.now().toString(),
     name: bookingData.name,
@@ -683,38 +685,40 @@ async function approveBooking(id, bookingData) {
     updatedAt: Date.now()
   });
   saveSchedules();
-  // ìë²ìì ìí ìë°ì´í¸
+  // Ã¬ÂÂÃ«Â²ÂÃ¬ÂÂÃ¬ÂÂ Ã¬ÂÂÃ­ÂÂ Ã¬ÂÂÃ«ÂÂ°Ã¬ÂÂ´Ã­ÂÂ¸
   try {
-    await fetch(SERVER + '/api/bookings/' + id + '/status', {
+    const _ak = JSON.parse(localStorage.getItem('ssak_cfg')||'{}').adminKey||'';
+    await fetch(SERVER + '/api/bookings/' + id + '/status?adminKey=' + encodeURIComponent(_ak), {
       method: 'PUT',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({status:'confirmed'})
     });
   } catch(e) {}
-  // ì¹´ë ì ê±°
+  // Ã¬Â¹Â´Ã«ÂÂ Ã¬Â ÂÃªÂ±Â°
   const card = document.getElementById('pc-' + id);
   if (card) card.remove();
-  // ë¨ì ì¹´ë ì²´í¬
+  // Ã«ÂÂ¨Ã¬ÂÂ Ã¬Â¹Â´Ã«ÂÂ Ã¬Â²Â´Ã­ÂÂ¬
   if (!document.querySelector('.pending-card')) {
     document.getElementById('pending-banner').style.display = 'none';
     document.getElementById('pending-sheet').classList.remove('open');
   } else {
     const cnt = document.querySelectorAll('.pending-card').length;
-    document.getElementById('pending-count').textContent = cnt + 'ê±´';
+    document.getElementById('pending-count').textContent = cnt + 'ÃªÂ±Â´';
   }
-  // í´ë¹ ë ì§ë¡ ì´ë
+  // Ã­ÂÂ´Ã«ÂÂ¹ Ã«ÂÂ Ã¬Â§ÂÃ«Â¡Â Ã¬ÂÂ´Ã«ÂÂ
   if (bookingData.date) {
     const d = new Date(bookingData.date + 'T00:00:00');
     viewYear = d.getFullYear(); viewMonth = d.getMonth(); selectedDate = bookingData.date;
   }
   renderCalendar(); renderList();
-  toast('â ì¤ì¼ì¤ì ì¶ê°ëìµëë¤!');
+  toast('Ã¢ÂÂ Ã¬ÂÂ¤Ã¬Â¼ÂÃ¬Â¤ÂÃ¬ÂÂ Ã¬Â¶ÂÃªÂ°ÂÃ«ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤!');
 }
 
 async function rejectBooking(id) {
-  if (!confirm('ì´ ìì½ì ì²­ì ê±°ì íìê² ìµëê¹?')) return;
+  if (!confirm('Ã¬ÂÂ´ Ã¬ÂÂÃ¬ÂÂ½Ã¬ÂÂ Ã¬Â²Â­Ã¬ÂÂ ÃªÂ±Â°Ã¬Â ÂÃ­ÂÂÃ¬ÂÂÃªÂ²Â Ã¬ÂÂµÃ«ÂÂÃªÂ¹Â?')) return;
   try {
-    await fetch(SERVER + '/api/bookings/' + id + '/status', {
+    const _ak = JSON.parse(localStorage.getItem('ssak_cfg')||'{}').adminKey||'';
+    await fetch(SERVER + '/api/bookings/' + id + '/status?adminKey=' + encodeURIComponent(_ak), {
       method: 'PUT',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({status:'rejected'})
@@ -727,9 +731,9 @@ async function rejectBooking(id) {
     document.getElementById('pending-sheet').classList.remove('open');
   } else {
     const cnt = document.querySelectorAll('.pending-card').length;
-    document.getElementById('pending-count').textContent = cnt + 'ê±´';
+    document.getElementById('pending-count').textContent = cnt + 'ÃªÂ±Â´';
   }
-  toast('ê±°ì  ì²ë¦¬ëìµëë¤');
+  toast('ÃªÂ±Â°Ã¬Â Â Ã¬Â²ÂÃ«Â¦Â¬Ã«ÂÂÃ¬ÂÂµÃ«ÂÂÃ«ÂÂ¤');
 }
 
 renderCalendar();
