@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>싹싹 — 스케줄</title>
+<title>ì¹ì¹ â ì¤ì¼ì¤</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="싹싹">
+<meta name="apple-mobile-web-app-title" content="ì¹ì¹">
 <meta name="theme-color" content="#00C896">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -14,18 +14,18 @@
 html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:var(--gray-900);}
 .shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
 
-/* 헤더 */
+/* í¤ë */
 .header{background:#fff;border-bottom:1px solid var(--gray-200);padding:52px 20px 0;position:sticky;top:0;z-index:50;}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;}
 .header-title{font-size:18px;font-weight:900;}
 .add-btn-top{width:36px;height:36px;border-radius:50%;background:var(--primary);border:none;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;cursor:pointer;line-height:1;}
 
-/* 월 네비게이션 */
+/* ì ë¤ë¹ê²ì´ì */
 .month-nav{background:#fff;padding:0 20px 14px;display:flex;align-items:center;justify-content:space-between;}
 .month-nav-btn{width:34px;height:34px;border-radius:50%;background:var(--gray-100);border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .month-label{font-size:16px;font-weight:700;color:var(--gray-900);}
 
-/* 캘린더 */
+/* ìºë¦°ë */
 .calendar-wrap{background:#fff;padding:0 12px 12px;border-bottom:1px solid var(--gray-200);}
 .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px;}
 .cal-wd{text-align:center;font-size:11px;font-weight:600;color:var(--gray-400);padding:4px 0;}
@@ -46,13 +46,13 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 .cal-dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px;min-height:6px;}
 .cal-dot{width:5px;height:5px;border-radius:50%;}
 
-/* 콘텐츠 */
+/* ì½íì¸  */
 .content{padding:16px 20px;}
 .section-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .section-title span{flex:1;}
 .section-title .count-badge{background:var(--primary-light);color:var(--primary-dark);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
 
-/* 예약 카드 */
+/* ìì½ ì¹´ë */
 .booking-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.15s;}
 .booking-card:active{transform:scale(0.98);}
 .booking-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
@@ -69,18 +69,18 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 .card-action-btn.primary{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
 .card-action-btn.danger{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
 
-/* 빈 상태 */
+/* ë¹ ìí */
 .empty-state{text-align:center;padding:40px 20px;color:var(--gray-400);}
 .empty-icon{font-size:40px;margin-bottom:10px;}
 .empty-text{font-size:14px;line-height:1.6;}
 
-/* 하단 네비게이션 */
+/* íë¨ ë¤ë¹ê²ì´ì */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,0.95);border-top:1px solid var(--gray-200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--gray-400);cursor:pointer;}
 .nav-item.active{color:var(--primary);font-weight:700;}
 .nav-icon{font-size:20px;line-height:1;}
 
-/* 모달 */
+/* ëª¨ë¬ */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;overflow-y:auto;padding:20px;}
 .modal-overlay.open{display:flex;align-items:flex-end;}
 .modal-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:480px;margin:0 auto;padding:20px 20px env(safe-area-inset-bottom,20px);max-height:90vh;overflow-y:auto;}
@@ -98,7 +98,7 @@ textarea.form-input{resize:none;}
 .btn-save{flex:2;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
 .btn-delete{width:100%;padding:13px;background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;}
 
-/* 상태 선택 칩 */
+/* ìí ì í ì¹© */
 .status-chips{display:flex;gap:6px;flex-wrap:wrap;}
 .status-chip{padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);background:var(--gray-100);color:var(--gray-500);font-family:inherit;transition:all 0.15s;}
 .status-chip.sel-confirmed{background:#EEF2FF;border-color:#A5B4FC;color:#6366F1;}
@@ -106,15 +106,15 @@ textarea.form-input{resize:none;}
 .status-chip.sel-done{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
 .status-chip.sel-cancelled{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
 
-/* SMS 발송 패널 */
+/* SMS ë°ì¡ í¨ë */
 .sms-quick{background:var(--primary-light);border:1.5px solid var(--primary);border-radius:var(--radius-sm);padding:12px 14px;margin-top:12px;}
 .sms-quick-title{font-size:12px;font-weight:700;color:var(--primary-dark);margin-bottom:8px;}
 .sms-tpl-btn{padding:7px 12px;border-radius:8px;background:#fff;border:1px solid var(--primary);color:var(--primary-dark);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-right:6px;margin-bottom:6px;}
 
-/* 토스트 */
+/* í ì¤í¸ */
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,54,0.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
 
-/* 신규 예약신청 배너 */
+/* ì ê· ìì½ì ì²­ ë°°ë */
 .pending-banner{background:linear-gradient(135deg,#6366F1,#8B5CF6);padding:12px 20px;cursor:pointer;}
 .pending-banner-inner{display:flex;align-items:center;gap:10px;}
 .pending-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:pulse 1.5s infinite;}
@@ -134,81 +134,81 @@ textarea.form-input{resize:none;}
 <body>
 <div class="shell">
 
-  <!-- 헤더 -->
+  <!-- í¤ë -->
   <div class="header">
     <div class="header-inner">
-      <div class="header-title">📅 스케줄</div>
+      <div class="header-title">ð ì¤ì¼ì¤</div>
       <button class="add-btn-top" onclick="openAddModal()">+</button>
     </div>
   </div>
 
 
-  <!-- 신규 예약신청 배너 -->
+  <!-- ì ê· ìì½ì ì²­ ë°°ë -->
   <div id="pending-banner" class="pending-banner" style="display:none;" onclick="togglePendingSheet()">
     <div class="pending-banner-inner">
       <div class="pending-dot"></div>
-      <div class="pending-text">📬 신규 예약신청이 있습니다</div>
-      <div class="pending-count" id="pending-count">0건</div>
+      <div class="pending-text">ð¬ ì ê· ìì½ì ì²­ì´ ììµëë¤</div>
+      <div class="pending-count" id="pending-count">0ê±´</div>
     </div>
   </div>
   <div class="pending-sheet" id="pending-sheet">
     <div id="pending-list"></div>
   </div>
 
-  <!-- 월 네비게이션 -->
+  <!-- ì ë¤ë¹ê²ì´ì -->
   <div class="month-nav">
-    <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
+    <button class="month-nav-btn" onclick="changeMonth(-1)">â¹</button>
     <span class="month-label" id="month-label"></span>
-    <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
+    <button class="month-nav-btn" onclick="changeMonth(1)">âº</button>
   </div>
 
-  <!-- 캘린더 -->
+  <!-- ìºë¦°ë -->
   <div class="calendar-wrap">
     <div class="cal-weekdays">
-      <div class="cal-wd">일</div>
-      <div class="cal-wd">월</div>
-      <div class="cal-wd">화</div>
-      <div class="cal-wd">수</div>
-      <div class="cal-wd">목</div>
-      <div class="cal-wd">금</div>
-      <div class="cal-wd">토</div>
+      <div class="cal-wd">ì¼</div>
+      <div class="cal-wd">ì</div>
+      <div class="cal-wd">í</div>
+      <div class="cal-wd">ì</div>
+      <div class="cal-wd">ëª©</div>
+      <div class="cal-wd">ê¸</div>
+      <div class="cal-wd">í </div>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
   </div>
 
-  <!-- 예약 목록 -->
+  <!-- ìì½ ëª©ë¡ -->
   <div class="content">
     <div class="section-title">
-      <span id="list-label">오늘의 예약</span>
-      <span class="count-badge" id="list-count">0건</span>
+      <span id="list-label">ì¤ëì ìì½</span>
+      <span class="count-badge" id="list-count">0ê±´</span>
     </div>
     <div id="booking-list"></div>
   </div>
 
 </div>
 
-<!-- 하단 네비게이션 -->
+<!-- íë¨ ë¤ë¹ê²ì´ì -->
 <div class="bottom-nav">
-  <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">🏠</div><div>홈</div></button>
-  <button class="nav-item" onclick="location.href='ssak-quote.html'"><div class="nav-icon">⚡</div><div>견적</div></button>
-  <button class="nav-item active"><div class="nav-icon">📅</div><div>스케줄</div></button>
-  <button class="nav-item" onclick="toast('커뮤니티 준비 중')"><div class="nav-icon">👥</div><div>커뮤니티</div></button>
-  <button class="nav-item" onclick="toast('MY 준비 중')"><div class="nav-icon">👤</div><div>MY</div></button>
+  <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">ð </div><div>í</div></button>
+  <button class="nav-item" onclick="location.href='ssak-quote.html'"><div class="nav-icon">â¡</div><div>ê²¬ì </div></button>
+  <button class="nav-item active"><div class="nav-icon">ð</div><div>ì¤ì¼ì¤</div></button>
+  <button class="nav-item" onclick="toast('ì»¤ë®¤ëí° ì¤ë¹ ì¤')"><div class="nav-icon">ð¥</div><div>ì»¤ë®¤ëí°</div></button>
+  <button class="nav-item" onclick="toast('MY ì¤ë¹ ì¤')"><div class="nav-icon">ð¤</div><div>MY</div></button>
 </div>
 
-<!-- 예약 추가/수정 모달 -->
+<!-- ìì½ ì¶ê°/ìì  ëª¨ë¬ -->
 <div class="modal-overlay" id="booking-modal" onclick="if(event.target===this)closeModal()">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-title">📋 예약 추가</div>
+    <div class="modal-title" id="modal-title">ð ìì½ ì¶ê°</div>
 
     <div class="form-row">
       <div class="form-group" style="margin:0;">
-        <label class="form-label">고객명 *</label>
-        <input class="form-input" id="b-name" placeholder="김OO"/>
+        <label class="form-label">ê³ ê°ëª *</label>
+        <input class="form-input" id="b-name" placeholder="ê¹OO"/>
       </div>
       <div class="form-group" style="margin:0;">
-        <label class="form-label">연락처 *</label>
+        <label class="form-label">ì°ë½ì² *</label>
         <input class="form-input" id="b-phone" placeholder="010-0000-0000" type="tel"/>
       </div>
     </div>
@@ -216,79 +216,79 @@ textarea.form-input{resize:none;}
 
     <div class="form-row">
       <div class="form-group" style="margin:0;">
-        <label class="form-label">날짜 *</label>
+        <label class="form-label">ë ì§ *</label>
         <input class="form-input" id="b-date" type="date"/>
       </div>
       <div class="form-group" style="margin:0;">
-        <label class="form-label">시간 *</label>
+        <label class="form-label">ìê° *</label>
         <input class="form-input" id="b-time" type="time" value="10:00"/>
       </div>
     </div>
     <div style="height:14px;"></div>
 
     <div class="form-group">
-      <label class="form-label">시공 주소</label>
-      <input class="form-input" id="b-addr" placeholder="서울시 강남구 ..."/>
+      <label class="form-label">ìê³µ ì£¼ì</label>
+      <input class="form-input" id="b-addr" placeholder="ìì¸ì ê°ë¨êµ¬ ..."/>
     </div>
 
     <div class="form-row">
       <div class="form-group" style="margin:0;">
-        <label class="form-label">청소 유형</label>
+        <label class="form-label">ì²­ì ì í</label>
         <select class="form-input" id="b-type">
-          <option>입주 전 청소</option>
-          <option>이사 후 청소</option>
-          <option>신축 준공 청소</option>
-          <option>생활 청소</option>
+          <option>ìì£¼ ì  ì²­ì</option>
+          <option>ì´ì¬ í ì²­ì</option>
+          <option>ì ì¶ ì¤ê³µ ì²­ì</option>
+          <option>ìí ì²­ì</option>
         </select>
       </div>
       <div class="form-group" style="margin:0;">
-        <label class="form-label">평수</label>
+        <label class="form-label">íì</label>
         <input class="form-input" id="b-size" type="number" placeholder="32"/>
       </div>
     </div>
     <div style="height:14px;"></div>
 
     <div class="form-group">
-      <label class="form-label">금액 (원)</label>
+      <label class="form-label">ê¸ì¡ (ì)</label>
       <input class="form-input" id="b-price" type="number" placeholder="500000"/>
     </div>
 
     <div class="form-group" style="margin-bottom:6px;">
-      <label class="form-label">상태</label>
+      <label class="form-label">ìí</label>
       <div class="status-chips">
-        <button class="status-chip sel-confirmed" onclick="selectStatus('confirmed',this)">예약확정</button>
-        <button class="status-chip" onclick="selectStatus('inprogress',this)">진행중</button>
-        <button class="status-chip" onclick="selectStatus('done',this)">완료</button>
-        <button class="status-chip" onclick="selectStatus('cancelled',this)">취소</button>
+        <button class="status-chip sel-confirmed" onclick="selectStatus('confirmed',this)">ìì½íì </button>
+        <button class="status-chip" onclick="selectStatus('inprogress',this)">ì§íì¤</button>
+        <button class="status-chip" onclick="selectStatus('done',this)">ìë£</button>
+        <button class="status-chip" onclick="selectStatus('cancelled',this)">ì·¨ì</button>
       </div>
     </div>
 
     <div class="form-group">
-      <label class="form-label">메모</label>
-      <textarea class="form-input" id="b-memo" rows="3" placeholder="특이사항, 요청사항 등"></textarea>
+      <label class="form-label">ë©ëª¨</label>
+      <textarea class="form-input" id="b-memo" rows="3" placeholder="í¹ì´ì¬í­, ìì²­ì¬í­ ë±"></textarea>
     </div>
 
-    <!-- 빠른 SMS 발송 -->
+    <!-- ë¹ ë¥¸ SMS ë°ì¡ -->
     <div class="sms-quick" id="sms-quick-panel" style="display:none;">
-      <div class="sms-quick-title">📱 빠른 문자 발송</div>
-      <button class="sms-tpl-btn" onclick="sendQuickSMS('confirm')">✅ 예약확인</button>
-      <button class="sms-tpl-btn" onclick="sendQuickSMS('remind')">🔔 당일리마인드</button>
-      <button class="sms-tpl-btn" onclick="sendQuickSMS('done')">🎉 완료안내</button>
+      <div class="sms-quick-title">ð± ë¹ ë¥¸ ë¬¸ì ë°ì¡</div>
+      <button class="sms-tpl-btn" onclick="sendQuickSMS('confirm')">â ìì½íì¸</button>
+      <button class="sms-tpl-btn" onclick="sendQuickSMS('remind')">ð ë¹ì¼ë¦¬ë§ì¸ë</button>
+      <button class="sms-tpl-btn" onclick="sendQuickSMS('done')">ð ìë£ìë´</button>
     </div>
 
     <div style="height:14px;"></div>
     <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeModal()">취소</button>
-      <button class="btn-save" onclick="saveBooking()">저장</button>
+      <button class="btn-cancel" onclick="closeModal()">ì·¨ì</button>
+      <button class="btn-save" onclick="saveBooking()">ì ì¥</button>
     </div>
-    <button class="btn-delete" id="btn-delete" style="display:none;" onclick="deleteBooking()">🗑 이 예약 삭제</button>
+    <button class="btn-delete" id="btn-delete" style="display:none;" onclick="deleteBooking()">ð ì´ ìì½ ì­ì </button>
   </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-// ── 데이터 ──────────────────────────────────
+// ââ ë°ì´í° ââââââââââââââââââââââââââââââââââ
 let schedules = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
 let cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
 
@@ -296,7 +296,7 @@ function saveSchedules() {
   localStorage.setItem('ssak_schedules', JSON.stringify(schedules));
 }
 
-// ── 날짜 유틸 ──────────────────────────────
+// ââ ë ì§ ì í¸ ââââââââââââââââââââââââââââââ
 let viewYear = new Date().getFullYear();
 let viewMonth = new Date().getMonth(); // 0-indexed
 let selectedDate = toDateStr(new Date());
@@ -309,20 +309,20 @@ function toDateStr(d) {
 
 function todayStr() { return toDateStr(new Date()); }
 
-// ── 캘린더 렌더링 ────────────────────────────
+// ââ ìºë¦°ë ë ëë§ ââââââââââââââââââââââââââââ
 function renderCalendar() {
-  const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-  document.getElementById('month-label').textContent = `${viewYear}년 ${MONTHS[viewMonth]}`;
+  const MONTHS = ['1ì','2ì','3ì','4ì','5ì','6ì','7ì','8ì','9ì','10ì','11ì','12ì'];
+  document.getElementById('month-label').textContent = `${viewYear}ë ${MONTHS[viewMonth]}`;
 
   const grid = document.getElementById('cal-grid');
   const today = todayStr();
 
-  // 이달 1일 요일, 말일
+  // ì´ë¬ 1ì¼ ìì¼, ë§ì¼
   const firstDay = new Date(viewYear, viewMonth, 1).getDay();
   const lastDate = new Date(viewYear, viewMonth+1, 0).getDate();
   const prevLastDate = new Date(viewYear, viewMonth, 0).getDate();
 
-  // 예약 날짜별 집계
+  // ìì½ ë ì§ë³ ì§ê³
   const dotMap = {};
   schedules.forEach(s => {
     if (!dotMap[s.date]) dotMap[s.date] = [];
@@ -367,7 +367,7 @@ function renderCalendar() {
     if (isSun) cls += ' sunday';
     if (isSat) cls += ' saturday';
 
-    // 점 (최대 3개)
+    // ì  (ìµë 3ê°)
     const dots = (dotMap[dateStr] || []).slice(0, 3).map(st =>
       `<div class="cal-dot" style="background:${STATUS_COLOR[st]||'#ccc'}"></div>`
     ).join('');
@@ -394,7 +394,7 @@ function changeMonth(dir) {
   renderCalendar();
 }
 
-// ── 목록 렌더링 ───────────────────────────────
+// ââ ëª©ë¡ ë ëë§ âââââââââââââââââââââââââââââââ
 function renderList() {
   const list = document.getElementById('booking-list');
   const label = document.getElementById('list-label');
@@ -406,22 +406,22 @@ function renderList() {
 
   const isToday = selectedDate === today;
   const d = new Date(selectedDate + 'T00:00:00');
-  const dayNames = ['일','월','화','수','목','금','토'];
+  const dayNames = ['ì¼','ì','í','ì','ëª©','ê¸','í '];
   label.textContent = isToday
-    ? `오늘의 예약`
-    : `${d.getMonth()+1}월 ${d.getDate()}일 (${dayNames[d.getDay()]}) 예약`;
+    ? `ì¤ëì ìì½`
+    : `${d.getMonth()+1}ì ${d.getDate()}ì¼ (${dayNames[d.getDay()]}) ìì½`;
 
-  countBadge.textContent = `${items.length}건`;
+  countBadge.textContent = `${items.length}ê±´`;
 
   if (items.length === 0) {
     list.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">📭</div>
-      <div class="empty-text">이 날 예약이 없습니다<br><span style="color:var(--primary);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
+      <div class="empty-icon">ð­</div>
+      <div class="empty-text">ì´ ë  ìì½ì´ ììµëë¤<br><span style="color:var(--primary);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ ìì½ ì¶ê°íê¸°</span></div>
     </div>`;
     return;
   }
 
-  const STATUS_LABEL = {confirmed:'예약확정', inprogress:'진행중', done:'완료', cancelled:'취소'};
+  const STATUS_LABEL = {confirmed:'ìì½íì ', inprogress:'ì§íì¤', done:'ìë£', cancelled:'ì·¨ì'};
   const STATUS_CLASS = {confirmed:'status-confirmed', inprogress:'status-inprogress', done:'status-done', cancelled:'status-cancelled'};
 
   list.innerHTML = items.map(s => `
@@ -430,36 +430,36 @@ function renderList() {
         <div>
           <div class="booking-name">${s.name}</div>
           <div class="booking-meta" style="margin-top:4px;">
-            ${s.time ? `<span class="booking-meta-item">🕐 ${s.time}</span>` : ''}
-            ${s.type ? `<span class="booking-meta-item">🧹 ${s.type}</span>` : ''}
-            ${s.size ? `<span class="booking-meta-item">📐 ${s.size}평</span>` : ''}
+            ${s.time ? `<span class="booking-meta-item">ð ${s.time}</span>` : ''}
+            ${s.type ? `<span class="booking-meta-item">ð§¹ ${s.type}</span>` : ''}
+            ${s.size ? `<span class="booking-meta-item">ð ${s.size}í</span>` : ''}
           </div>
         </div>
         <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||s.status}</span>
       </div>
-      ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">📍 ${s.addr}</div>` : ''}
-      ${s.price ? `<div style="font-size:12.5px;font-weight:700;color:var(--gray-700);">💰 ${Number(s.price).toLocaleString()}원</div>` : ''}
-      ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">💬 ${s.memo}</div>` : ''}
+      ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">ð ${s.addr}</div>` : ''}
+      ${s.price ? `<div style="font-size:12.5px;font-weight:700;color:var(--gray-700);">ð° ${Number(s.price).toLocaleString()}ì</div>` : ''}
+      ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">ð¬ ${s.memo}</div>` : ''}
       <div class="booking-card-footer">
-        <button class="card-action-btn primary" onclick="event.stopPropagation();openEditModal('${s.id}')">✏️ 수정</button>
-        <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${s.id}')">🔄 상태변경</button>
-        <button class="card-action-btn" onclick="event.stopPropagation();quickSMSCard('${s.id}')">📱 문자</button>
+        <button class="card-action-btn primary" onclick="event.stopPropagation();openEditModal('${s.id}')">âï¸ ìì </button>
+        <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${s.id}')">ð ìíë³ê²½</button>
+        <button class="card-action-btn" onclick="event.stopPropagation();quickSMSCard('${s.id}')">ð± ë¬¸ì</button>
       </div>
     </div>
   `).join('');
 }
 
-// ── 모달 ─────────────────────────────────────
+// ââ ëª¨ë¬ âââââââââââââââââââââââââââââââââââââ
 function openAddModal() {
   editingId = null;
   selectedStatus = 'confirmed';
-  document.getElementById('modal-title').textContent = '📋 예약 추가';
+  document.getElementById('modal-title').textContent = 'ð ìì½ ì¶ê°';
   document.getElementById('b-name').value = '';
   document.getElementById('b-phone').value = '';
   document.getElementById('b-date').value = selectedDate;
   document.getElementById('b-time').value = '10:00';
   document.getElementById('b-addr').value = '';
-  document.getElementById('b-type').value = '입주 전 청소';
+  document.getElementById('b-type').value = 'ìì£¼ ì  ì²­ì';
   document.getElementById('b-size').value = '';
   document.getElementById('b-price').value = '';
   document.getElementById('b-memo').value = '';
@@ -474,13 +474,13 @@ function openEditModal(id) {
   if (!s) return;
   editingId = id;
   selectedStatus = s.status || 'confirmed';
-  document.getElementById('modal-title').textContent = '✏️ 예약 수정';
+  document.getElementById('modal-title').textContent = 'âï¸ ìì½ ìì ';
   document.getElementById('b-name').value = s.name || '';
   document.getElementById('b-phone').value = s.phone || '';
   document.getElementById('b-date').value = s.date || '';
   document.getElementById('b-time').value = s.time || '10:00';
   document.getElementById('b-addr').value = s.addr || '';
-  document.getElementById('b-type').value = s.type || '입주 전 청소';
+  document.getElementById('b-type').value = s.type || 'ìì£¼ ì  ì²­ì';
   document.getElementById('b-size').value = s.size || '';
   document.getElementById('b-price').value = s.price || '';
   document.getElementById('b-memo').value = s.memo || '';
@@ -511,7 +511,7 @@ function updateStatusChips() {
 function saveBooking() {
   const name = document.getElementById('b-name').value.trim();
   const date = document.getElementById('b-date').value;
-  if (!name || !date) { toast('고객명과 날짜는 필수입니다'); return; }
+  if (!name || !date) { toast('ê³ ê°ëªê³¼ ë ì§ë íììëë¤'); return; }
 
   const data = {
     id: editingId || Date.now().toString(),
@@ -538,7 +538,7 @@ function saveBooking() {
   saveSchedules();
   selectedDate = date;
 
-  // 월/연도도 맞추기
+  // ì/ì°ëë ë§ì¶ê¸°
   const d = new Date(date + 'T00:00:00');
   viewYear = d.getFullYear();
   viewMonth = d.getMonth();
@@ -546,24 +546,24 @@ function saveBooking() {
   closeModal();
   renderCalendar();
   renderList();
-  toast(editingId ? '✅ 예약이 수정됐습니다' : '✅ 예약이 추가됐습니다');
+  toast(editingId ? 'â ìì½ì´ ìì ëìµëë¤' : 'â ìì½ì´ ì¶ê°ëìµëë¤');
 }
 
 function deleteBooking() {
   if (!editingId) return;
-  if (!confirm('이 예약을 삭제하시겠습니까?')) return;
+  if (!confirm('ì´ ìì½ì ì­ì íìê² ìµëê¹?')) return;
   schedules = schedules.filter(s => s.id !== editingId);
   saveSchedules();
   closeModal();
   renderCalendar();
   renderList();
-  toast('🗑 예약이 삭제됐습니다');
+  toast('ð ìì½ì´ ì­ì ëìµëë¤');
 }
 
-// ── 상태 빠른 변경 ────────────────────────────
+// ââ ìí ë¹ ë¥¸ ë³ê²½ ââââââââââââââââââââââââââââ
 function changeStatus(id) {
   const ORDER = ['confirmed','inprogress','done','cancelled'];
-  const LABEL = {confirmed:'예약확정', inprogress:'진행중', done:'완료', cancelled:'취소'};
+  const LABEL = {confirmed:'ìì½íì ', inprogress:'ì§íì¤', done:'ìë£', cancelled:'ì·¨ì'};
   const s = schedules.find(x => x.id === id);
   if (!s) return;
   const cur = ORDER.indexOf(s.status);
@@ -572,31 +572,31 @@ function changeStatus(id) {
   saveSchedules();
   renderCalendar();
   renderList();
-  toast(`→ ${LABEL[s.status]}으로 변경됐습니다`);
+  toast(`â ${LABEL[s.status]}ì¼ë¡ ë³ê²½ëìµëë¤`);
 }
 
-// ── SMS 빠른 발송 ─────────────────────────────
+// ââ SMS ë¹ ë¥¸ ë°ì¡ âââââââââââââââââââââââââââââ
 function quickSMSCard(id) {
   openEditModal(id);
 }
 
 function sendQuickSMS(type) {
-  const name = document.getElementById('b-name').value.trim() || '고객';
+  const name = document.getElementById('b-name').value.trim() || 'ê³ ê°';
   const date = document.getElementById('b-date').value;
   const time = document.getElementById('b-time').value;
   const addr = document.getElementById('b-addr').value.trim();
   const phone = document.getElementById('b-phone').value.trim();
-  const company = cfg.company || '싹싹클린';
+  const company = cfg.company || 'ì¹ì¹í´ë¦°';
 
-  if (!phone) { toast('연락처를 입력해주세요'); return; }
+  if (!phone) { toast('ì°ë½ì²ë¥¼ ìë ¥í´ì£¼ì¸ì'); return; }
 
   const d = date ? new Date(date+'T00:00:00') : new Date();
-  const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일`;
+  const dateLabel = `${d.getMonth()+1}ì ${d.getDate()}ì¼`;
 
   const MSGS = {
-    confirm: `[${company}] ${name}님, ${dateLabel} ${time} 입주청소 예약이 확정됐습니다. 주소: ${addr||'협의'}. 문의: ${cfg.phone||''} 감사합니다 😊`,
-    remind: `[${company}] ${name}님, 오늘 ${time} 입주청소 일정이 있습니다. 잊지 마세요! 문의: ${cfg.phone||''}`,
-    done: `[${company}] ${name}님, 오늘 청소가 완료됐습니다. 이용해 주셔서 감사합니다 🙏 후기: ${cfg.review||''}`
+    confirm: `[${company}] ${name}ë, ${dateLabel} ${time} ìì£¼ì²­ì ìì½ì´ íì ëìµëë¤. ì£¼ì: ${addr||'íì'}. ë¬¸ì: ${cfg.phone||''} ê°ì¬í©ëë¤ ð`,
+    remind: `[${company}] ${name}ë, ì¤ë ${time} ìì£¼ì²­ì ì¼ì ì´ ììµëë¤. ìì§ ë§ì¸ì! ë¬¸ì: ${cfg.phone||''}`,
+    done: `[${company}] ${name}ë, ì¤ë ì²­ìê° ìë£ëìµëë¤. ì´ì©í´ ì£¼ìì ê°ì¬í©ëë¤ ð íê¸°: ${cfg.review||''}`
   };
 
   const msg = MSGS[type];
@@ -605,23 +605,23 @@ function sendQuickSMS(type) {
   const fromPhone = cfg.fromPhone;
 
   if (!apiKey || !apiSecret || !fromPhone) {
-    toast('설정에서 CoolSMS API를 먼저 설정해주세요');
+    toast('ì¤ì ìì CoolSMS APIë¥¼ ë¨¼ì  ì¤ì í´ì£¼ì¸ì');
     return;
   }
 
-  toast('📱 문자 발송 중...');
+  toast('ð± ë¬¸ì ë°ì¡ ì¤...');
 
   fetch('https://ssakssak-server-production.up.railway.app/send-sms', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({ to: phone, from: fromPhone, text: msg, apiKey, apiSecret })
   }).then(r => r.json()).then(data => {
-    if (data.success) toast('✅ 문자 발송 완료!');
-    else toast('❌ 발송 실패: ' + (data.error||'오류'));
-  }).catch(() => toast('❌ 서버 오류'));
+    if (data.success) toast('â ë¬¸ì ë°ì¡ ìë£!');
+    else toast('â ë°ì¡ ì¤í¨: ' + (data.error||'ì¤ë¥'));
+  }).catch(() => toast('â ìë² ì¤ë¥'));
 }
 
-// ── 토스트 ──────────────────────────────────
+// ââ í ì¤í¸ ââââââââââââââââââââââââââââââââââ
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg;
@@ -630,11 +630,11 @@ function toast(msg) {
   window.__toastTimer = setTimeout(() => { el.style.opacity = '0'; }, 2400);
 }
 
-// ── 초기화 ──────────────────────────────────
+// ââ ì´ê¸°í ââââââââââââââââââââââââââââââââââ
 
 const SERVER = 'https://ssakssak-server-production.up.railway.app';
 
-// ── 신규 예약신청 로드 ──────────────────────
+// ââ ì ê· ìì½ì ì²­ ë¡ë ââââââââââââââââââââââ
 async function fetchPendingBookings() {
   try {
     const r = await fetch(SERVER + '/api/bookings?status=pending');
@@ -642,19 +642,19 @@ async function fetchPendingBookings() {
     if (!d.success || !d.data.length) return;
     const list = d.data;
     document.getElementById('pending-banner').style.display = 'block';
-    document.getElementById('pending-count').textContent = list.length + '건';
+    document.getElementById('pending-count').textContent = list.length + 'ê±´';
     document.getElementById('pending-list').innerHTML = list.map(b => `
       <div class="pending-card" id="pc-${b.id}">
         <div class="pending-card-name">${b.name} <span style="font-size:12px;color:#6366F1;font-weight:400;">${b.phone}</span></div>
         <div class="pending-card-meta">
-          📅 ${b.date} ${b.time}<br>
-          🧹 ${b.type} ${b.size ? b.size+'평' : ''}<br>
-          📍 ${b.addr || '주소 미입력'}
-          ${b.notes ? '<br>💬 '+b.notes : ''}
+          ð ${b.date} ${b.time}<br>
+          ð§¹ ${b.type} ${b.size ? b.size+'í' : ''}<br>
+          ð ${b.address || 'ì£¼ì ë¯¸ìë ¥'}
+          ${b.notes ? '<br>ð¬ '+b.notes : ''}
         </div>
         <div class="pending-card-btns">
-          <button class="btn-approve" onclick="approveBooking('${b.id}',${JSON.stringify(b).replace(/"/g,'&quot;')})">✅ 스케줄에 추가</button>
-          <button class="btn-reject" onclick="rejectBooking('${b.id}')">✕ 거절</button>
+          <button class="btn-approve" onclick="approveBooking('${b.id}',${JSON.stringify(b).replace(/"/g,'&quot;')})">â ì¤ì¼ì¤ì ì¶ê°</button>
+          <button class="btn-reject" onclick="rejectBooking('${b.id}')">â ê±°ì </button>
         </div>
       </div>
     `).join('');
@@ -668,14 +668,14 @@ function togglePendingSheet() {
 
 async function approveBooking(id, bookingData) {
   if (typeof bookingData === 'string') bookingData = JSON.parse(bookingData.replace(/&quot;/g,'"'));
-  // 스케줄에 추가
+  // ì¤ì¼ì¤ì ì¶ê°
   schedules.push({
     id: Date.now().toString(),
     name: bookingData.name,
     phone: bookingData.phone,
     date: bookingData.date,
     time: bookingData.time,
-    addr: bookingData.addr,
+    addr: bookingData.address,
     type: bookingData.type,
     size: bookingData.size,
     memo: bookingData.notes,
@@ -683,39 +683,39 @@ async function approveBooking(id, bookingData) {
     updatedAt: Date.now()
   });
   saveSchedules();
-  // 서버에서 상태 업데이트
+  // ìë²ìì ìí ìë°ì´í¸
   try {
-    await fetch(SERVER + '/api/bookings/' + id, {
-      method: 'PATCH',
+    await fetch(SERVER + '/api/bookings/' + id + '/status', {
+      method: 'PUT',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({status:'confirmed'})
     });
   } catch(e) {}
-  // 카드 제거
+  // ì¹´ë ì ê±°
   const card = document.getElementById('pc-' + id);
   if (card) card.remove();
-  // 남은 카드 체크
+  // ë¨ì ì¹´ë ì²´í¬
   if (!document.querySelector('.pending-card')) {
     document.getElementById('pending-banner').style.display = 'none';
     document.getElementById('pending-sheet').classList.remove('open');
   } else {
     const cnt = document.querySelectorAll('.pending-card').length;
-    document.getElementById('pending-count').textContent = cnt + '건';
+    document.getElementById('pending-count').textContent = cnt + 'ê±´';
   }
-  // 해당 날짜로 이동
+  // í´ë¹ ë ì§ë¡ ì´ë
   if (bookingData.date) {
     const d = new Date(bookingData.date + 'T00:00:00');
     viewYear = d.getFullYear(); viewMonth = d.getMonth(); selectedDate = bookingData.date;
   }
   renderCalendar(); renderList();
-  toast('✅ 스케줄에 추가됐습니다!');
+  toast('â ì¤ì¼ì¤ì ì¶ê°ëìµëë¤!');
 }
 
 async function rejectBooking(id) {
-  if (!confirm('이 예약신청을 거절하시겠습니까?')) return;
+  if (!confirm('ì´ ìì½ì ì²­ì ê±°ì íìê² ìµëê¹?')) return;
   try {
-    await fetch(SERVER + '/api/bookings/' + id, {
-      method: 'PATCH',
+    await fetch(SERVER + '/api/bookings/' + id + '/status', {
+      method: 'PUT',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({status:'rejected'})
     });
@@ -727,9 +727,9 @@ async function rejectBooking(id) {
     document.getElementById('pending-sheet').classList.remove('open');
   } else {
     const cnt = document.querySelectorAll('.pending-card').length;
-    document.getElementById('pending-count').textContent = cnt + '건';
+    document.getElementById('pending-count').textContent = cnt + 'ê±´';
   }
-  toast('거절 처리됐습니다');
+  toast('ê±°ì  ì²ë¦¬ëìµëë¤');
 }
 
 renderCalendar();
