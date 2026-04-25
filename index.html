@@ -535,22 +535,25 @@ function loadUser() {
 }
 
 // ── 네비게이션 ───────────────────────────────
-function setNav(name) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('nav-' + name)?.classList.add('active');
-  goTo(name);
+function setNav(page) {
+  const map = {
+    'home': 'index.html',
+    'quote': 'ssak-quote.html',
+    'schedule': 'schedule.html',
+    'my': 'my.html'
+  };
+  if (map[page]) location.href = map[page];
 }
 
 function goTo(page) {
-  const pages = {
-    home: null,
-    quote: 'SMS 자동응답 & 견적 계산 화면은 개발 중입니다 🚀',
-    schedule: '스케줄 관리 화면은 개발 중입니다 🚀',
-    workforce: '인력 매칭 화면은 개발 중입니다 🚀',
-    inquiries: '문의 관리 화면은 개발 중입니다 🚀',
-    community: '커뮤니티 화면은 개발 중입니다 🚀',
-    my: 'MY 페이지는 개발 중입니다 🚀',
+  const map = {
+    'quote': 'ssak-quote.html',
+    'schedule': 'schedule.html',
+    'my': 'my.html',
+    'booking': 'booking.html'
   };
+  if (map[page]) location.href = map[page];
+};
   if (pages[page]) toast(pages[page]);
 }
 
