@@ -114,11 +114,10 @@ textarea.form-input{resize:none;}
 /* 토스트 */
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,54,0.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
 
-/* 신근 예약신청 배너 */
 .pending-banner{background:linear-gradient(135deg,#6366F1,#8B5CF6);padding:12px 20px;cursor:pointer;}
 .pending-banner-inner{display:flex;align-items:center;gap:10px;}
-.pending-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:pulse 1.5s infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(1.3);}}
+.pending-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:pulse2 1.5s infinite;}
+@keyframes pulse2{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(1.3);}}
 .pending-text{flex:1;font-size:13px;font-weight:700;color:#fff;}
 .pending-count{background:rgba(255,255,255,0.25);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;}
 .pending-sheet{background:#fff;border-top:1px solid var(--gray-200);padding:16px 20px;display:none;}
@@ -142,19 +141,18 @@ textarea.form-input{resize:none;}
     </div>
   </div>
 
-
-  <!-- 신근 예약신청 배너 -->
+  <!-- 월 네비게이션 -->
+  
   <div id="pending-banner" class="pending-banner" style="display:none;" onclick="togglePendingSheet()">
     <div class="pending-banner-inner">
       <div class="pending-dot"></div>
-      <div class="pending-text">📬 신근 예약신청이 있습니다</div>
+      <div class="pending-text">📬 신규 예약신청이 있습니다</div>
       <div class="pending-count" id="pending-count">0건</div>
     </div>
   </div>
   <div class="pending-sheet" id="pending-sheet"><div id="pending-list"></div></div>
 
-  <!-- 월 네비게이션 -->
-  <div class="month-nav">
+<div class="month-nav">
     <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
     <span class="month-label" id="month-label"></span>
     <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
@@ -634,64 +632,91 @@ const SERVER = 'https://ssakssak-server-production.up.railway.app';
 
 async function fetchPendingBookings() {
   try {
-    const cfg = JSON.parse(localStorage.getItem('ssak_cfg')||'{}');
-    const adminKey = cfg.adminKey || '';
-    const r = await fetch(SERVER + '/api/bookings?status=pending&adminKey=' + encodeURIComponent(adminKey));
-    const d = await r.json();
-    if (!d.success || !d.data || !d.data.length) return;
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+    const ak = cfg.adminKey || '';
+    if (!ak) return;
+    const res = await fetch(SERVER + '/api/bookings?status=pending&adminKey=' + encodeURIComponent(ak));
+    const data = await res.json();
+    if (!data.success || !data.data || !data.data.length) return;
     document.getElementById('pending-banner').style.display = 'block';
-    document.getElementById('pending-count').textContent = d.data.length + '건';
-    document.getElementById('pending-list').innerHTML = d.data.map(b => `
-      <div class="pending-card" id="pc-${b.id}">
-        <div class="pending-card-name">${b.name} <span style="font-size:12px;color:#6366F1;font-weight:400;">${b.phone}</span></div>
-        <div class="pending-card-meta">📅 ${b.preferred_date||b.date||''} ${b.preferred_time||b.time||''}<br>🧹 ${b.type||''} ${b.size ? b.size+'평' : ''}<br>📍 ${b.address||b.addr||'주소 미입력'}</div>
+    document.getElementById('pending-count').textContent = data.data.length + '건';
+    document.getElementById('pending-list').innerHTML = data.data.map(b => {
+      const date = b.preferred_date || b.date || '';
+      const time = b.preferred_time || b.time || '';
+      const size = b.size ? b.size + '평' : '';
+      const addr = b.address || b.addr || '주소 미입력';
+      const bEnc = encodeURIComponent(JSON.stringify(b));
+      return `<div class="pending-card" id="pc-${b.id}">
+        <div class="pending-card-name">${b.name} <span style="font-size:12px;color:#6366F1;">${b.phone}</span></div>
+        <div class="pending-card-meta">📅 ${date} ${time}<br>🧹 ${b.type||''} ${size}<br>📍 ${addr}</div>
         <div class="pending-card-btns">
-          <button class="btn-approve" onclick="approveBooking('${b.id}',${JSON.stringify(b).replace(/"/g,'&quot;')})">&#x2705; 스�π줄에 추가</button>
-          <button class="btn-reject" onclick="rejectBooking('${b.id}')">&#x2715; 거절</button>
-        </div>
-      </div>
-    `).join('');
-  } catch(e) { console.log('pending fetch error:', e); }
+          <button class="btn-approve" onclick="approveBooking('${b.id}', decodeURIComponent('${bEnc}'))">✅ 스케줄 추가</button>
+          <button class="btn-reject" onclick="rejectBooking('${b.id}')">✕ 거절</button>
+        </div></div>`;
+    }).join('');
+  } catch(e) { console.log('pending error:', e); }
 }
 
 function togglePendingSheet() {
   document.getElementById('pending-sheet').classList.toggle('open');
 }
 
-async function approveBooking(id, bookingData) {
-  if (typeof bookingData === 'string') bookingData = JSON.parse(bookingData.replace(/&quot;/g,'"'));
-  schedules.push({id: Date.now().toString(), name: bookingData.name, phone: bookingData.phone,
-    date: bookingData.preferred_date||bookingData.date, time: bookingData.preferred_time||bookingData.time,
-    addr: bookingData.address||bookingData.addr, type: bookingData.type, size: bookingData.size,
-    memo: bookingData.notes, status: 'confirmed', updatedAt: Date.now()});
+async function approveBooking(id, bStr) {
+  const b = JSON.parse(bStr);
+  schedules.push({
+    id: Date.now().toString(),
+    name: b.name, phone: b.phone,
+    date: b.preferred_date || b.date,
+    time: b.preferred_time || b.time,
+    addr: b.address || b.addr,
+    type: b.type, size: b.size,
+    memo: b.notes, status: 'confirmed',
+    updatedAt: Date.now()
+  });
   saveSchedules();
   try {
-    const ak = JSON.parse(localStorage.getItem('ssak_cfg')||'{}'}).adminKey||'';
-    await fetch(SERVER+'/api/bookings/'+id+'/status?adminKey='+encodeURIComponent(ak),
-      {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:'confirmed'})});
+    const ak2 = JSON.parse(localStorage.getItem('ssak_cfg') || '{}').adminKey || '';
+    await fetch(SERVER + '/api/bookings/' + id + '/status?adminKey=' + encodeURIComponent(ak2), {
+      method: 'PUT', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({status: 'confirmed'})
+    });
   } catch(e) {}
-  const card = document.getElementById('pc-'+id);
+  const card = document.getElementById('pc-' + id);
   if (card) card.remove();
-  if (!document.querySelector('.pending-card')) { document.getElementById('pending-banner').style.display='none'; document.getElementById('pending-sheet').classList.remove('open'); }
-  else document.getElementById('pending-count').textContent = document.querySelectorAll('.pending-card').length + '건';
-  if (bookingData.preferred_date||bookingData.date) {
-    const dd = new Date((bookingData.preferred_date||bookingData.date)+'T00:00:00');
-    viewYear=dd.getFullYear(); viewMonth=dd.getMonth(); selectedDate=bookingData.preferred_date||bookingData.date;
+  const rem = document.querySelectorAll('.pending-card').length;
+  if (!rem) {
+    document.getElementById('pending-banner').style.display = 'none';
+    document.getElementById('pending-sheet').classList.remove('open');
+  } else {
+    document.getElementById('pending-count').textContent = rem + '건';
   }
-  renderCalendar(); renderList(); toast('✅ 스�π줄에 추가됐습니다!');
+  const dd = b.preferred_date || b.date;
+  if (dd) {
+    const dt = new Date(dd + 'T00:00:00');
+    viewYear = dt.getFullYear(); viewMonth = dt.getMonth(); selectedDate = dd;
+  }
+  renderCalendar(); renderList();
+  toast('✅ 스케줄에 추가됐습니다!');
 }
 
 async function rejectBooking(id) {
-  if (!confirm('이 예약신청을 거절하심까요?')) return;
+  if (!confirm('이 예약신청을 거절하시겠습니까?')) return;
   try {
-    const ak = JSON.parse(localStorage.getItem('ssak_cfg')||'{}'}).adminKey||'';
-    await fetch(SERVER+'/api/bookings/'+id+'/status?adminKey='+encodeURIComponent(ak),
-      {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:'rejected'})});
+    const ak3 = JSON.parse(localStorage.getItem('ssak_cfg') || '{}').adminKey || '';
+    await fetch(SERVER + '/api/bookings/' + id + '/status?adminKey=' + encodeURIComponent(ak3), {
+      method: 'PUT', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({status: 'rejected'})
+    });
   } catch(e) {}
-  const card = document.getElementById('pc-'+id);
-  if (card) card.remove();
-  if (!document.querySelector('.pending-card')) { document.getElementById('pending-banner').style.display='none'; document.getElementById('pending-sheet').classList.remove('open'); }
-  else document.getElementById('pending-count').textContent = document.querySelectorAll('.pending-card').length + '건';
+  const card2 = document.getElementById('pc-' + id);
+  if (card2) card2.remove();
+  const rem2 = document.querySelectorAll('.pending-card').length;
+  if (!rem2) {
+    document.getElementById('pending-banner').style.display = 'none';
+    document.getElementById('pending-sheet').classList.remove('open');
+  } else {
+    document.getElementById('pending-count').textContent = rem2 + '건';
+  }
   toast('거절 처리됐습니다');
 }
 
