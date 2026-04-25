@@ -270,54 +270,52 @@ function checkReady() {
 });
 
 async function submitBooking() {
+  const name = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const addr = document.getElementById('f-addr').value.trim();
+  const size = document.getElementById('f-size').value.trim();
+  const type = document.getElementById('f-type').value;
+  const date = document.getElementById('f-date').value;
+  const time = document.getElementById('f-time').value;
+  const notes = document.getElementById('f-notes').value.trim();
+
+  if (!name || !phone) { showToast('이름과 연락처를 입력해주세요'); return; }
+  if (!date) { showToast('희망 날짜를 선택해주세요'); return; }
+
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
-  btn.textContent = '신청 중...';
+  btn.textContent = '⏳ 신청 중...';
 
-  const payload = {
-    name:      document.getElementById('f-name').value.trim(),
-    phone:     document.getElementById('f-phone').value.trim(),
-    address:   document.getElementById('f-addr').value.trim(),
-    size:      document.getElementById('f-size').value || urlSize || null,
-    type:      document.getElementById('f-type').value,
-    date:      document.getElementById('f-date').value || null,
-    time:      document.getElementById('f-time').value || null,
-    notes:     document.getElementById('f-notes').value.trim() || null,
-    price:     urlPrice || null,
-    companyName: urlCompany,
-  };
+  const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
 
-  try {
-    const res = await fetch(`${SERVER}/api/booking`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-
+  fetch('https://ssakssak-server-production.up.railway.app/api/booking', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name, phone, addr, size, type, date, time, notes,
+      ownerPhone: cfg.phone || '',
+      apiKey: cfg.apiKey || '',
+      apiSecret: cfg.apiSecret || '',
+      fromPhone: cfg.fromPhone || '',
+      company: cfg.company || '싹싹클린'
+    })
+  })
+  .then(r => r.json())
+  .then(data => {
     if (data.success) {
-      // 완료 화면
-      document.getElementById('screen-main').style.display = 'none';
-      document.getElementById('screen-done').style.display = 'flex';
-
-      const typeLabel = typeLabels[payload.type] || payload.type;
-      document.getElementById('done-detail').innerHTML = `
-        <div class="state-detail-row"><span>이름</span><span>${payload.name}</span></div>
-        <div class="state-detail-row"><span>연락처</span><span>${payload.phone}</span></div>
-        <div class="state-detail-row"><span>주소</span><span style="text-align:right;max-width:200px;">${payload.address}</span></div>
-        ${payload.size ? `<div class="state-detail-row"><span>평수/유형</span><span>${payload.size}평 ${typeLabel}</span></div>` : ''}
-        ${payload.date ? `<div class="state-detail-row"><span>희망 일시</span><span>${payload.date}${payload.time ? ' '+payload.time : ''}</span></div>` : ''}
-      `;
+      document.getElementById('booking-form').style.display = 'none';
+      document.getElementById('booking-success').style.display = 'flex';
     } else {
-      toast('❌ ' + (data.error || '오류가 발생했습니다'));
+      showToast('신청 실패: ' + (data.error || '오류가 발생했습니다'));
       btn.disabled = false;
       btn.textContent = '📅 예약 신청하기';
     }
-  } catch(e) {
-    toast('❌ 서버 연결 오류');
+  })
+  .catch(() => {
+    showToast('서버 연결 오류. 잠시 후 다시 시도해주세요.');
     btn.disabled = false;
     btn.textContent = '📅 예약 신청하기';
-  }
+  });
 }
 
 let toastTimer;
