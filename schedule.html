@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>싹싹 — 스케줄</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="싹싹">
+<meta name="theme-color" content="#00C896">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#00C896;--primary-dark:#00A87A;--primary-light:#E6FAF5;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--red:#EF4444;--amber:#F59E0B;--blue:#3B82F6;--purple:#8B5CF6;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:var(--gray-900);}
+.shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
+
+/* 헤더 */
+.header{background:#fff;border-bottom:1px solid var(--gray-200);padding:52px 20px 0;position:sticky;top:0;z-index:50;}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;}
+.header-title{font-size:18px;font-weight:900;}
+.add-btn-top{width:36px;height:36px;border-radius:50%;background:var(--primary);border:none;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;cursor:pointer;line-height:1;}
+
+/* 월 네비게이션 */
+.month-nav{background:#fff;padding:0 20px 14px;display:flex;align-items:center;justify-content:space-between;}
+.month-nav-btn{width:34px;height:34px;border-radius:50%;background:var(--gray-100);border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.month-label{font-size:16px;font-weight:700;color:var(--gray-900);}
+
+/* 캘린더 */
+.calendar-wrap{background:#fff;padding:0 12px 12px;border-bottom:1px solid var(--gray-200);}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px;}
+.cal-wd{text-align:center;font-size:11px;font-weight:600;color:var(--gray-400);padding:4px 0;}
+.cal-wd:first-child{color:#EF4444;}
+.cal-wd:last-child{color:var(--blue);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.cal-day{min-height:44px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:4px 2px;cursor:pointer;transition:background 0.15s;position:relative;}
+.cal-day:active{background:var(--gray-100);}
+.cal-day.other-month .cal-num{color:var(--gray-300);}
+.cal-day.today .cal-num{background:var(--primary);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+.cal-day.selected{background:var(--primary-light);}
+.cal-day.selected .cal-num{color:var(--primary-dark);font-weight:700;}
+.cal-num{font-size:13px;font-weight:500;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+.cal-day:first-child .cal-num,.cal-day.sunday .cal-num{color:#EF4444;}
+.cal-day.today:first-child .cal-num,.cal-day.today.sunday .cal-num{color:#fff;}
+.cal-day.saturday .cal-num{color:var(--blue);}
+.cal-day.today.saturday .cal-num{color:#fff;}
+.cal-dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px;min-height:6px;}
+.cal-dot{width:5px;height:5px;border-radius:50%;}
+
+/* 콘텐츠 */
+.content{padding:16px 20px;}
+.section-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.section-title span{flex:1;}
+.section-title .count-badge{background:var(--primary-light);color:var(--primary-dark);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
+
+/* 예약 카드 */
+.booking-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.15s;}
+.booking-card:active{transform:scale(0.98);}
+.booking-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.booking-name{font-size:15px;font-weight:700;}
+.booking-status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.status-confirmed{background:#EEF2FF;color:#6366F1;}
+.status-inprogress{background:#FFF7ED;color:#EA580C;}
+.status-done{background:var(--primary-light);color:var(--primary-dark);}
+.status-cancelled{background:#FEF2F2;color:#DC2626;}
+.booking-meta{display:flex;gap:10px;font-size:12px;color:var(--gray-500);flex-wrap:wrap;}
+.booking-meta-item{display:flex;align-items:center;gap:3px;}
+.booking-card-footer{margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-100);display:flex;gap:6px;}
+.card-action-btn{flex:1;padding:7px 0;border-radius:8px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.card-action-btn.primary{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
+.card-action-btn.danger{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
+
+/* 빈 상태 */
+.empty-state{text-align:center;padding:40px 20px;color:var(--gray-400);}
+.empty-icon{font-size:40px;margin-bottom:10px;}
+.empty-text{font-size:14px;line-height:1.6;}
+
+/* 하단 네비게이션 */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,0.95);border-top:1px solid var(--gray-200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--gray-400);cursor:pointer;}
+.nav-item.active{color:var(--primary);font-weight:700;}
+.nav-icon{font-size:20px;line-height:1;}
+
+/* 모달 */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;overflow-y:auto;padding:20px;}
+.modal-overlay.open{display:flex;align-items:flex-end;}
+.modal-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:480px;margin:0 auto;padding:20px 20px env(safe-area-inset-bottom,20px);max-height:90vh;overflow-y:auto;}
+.modal-handle{width:36px;height:4px;background:var(--gray-200);border-radius:2px;margin:0 auto 16px;}
+.modal-title{font-size:17px;font-weight:900;margin-bottom:18px;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:12px;font-weight:600;color:var(--gray-500);margin-bottom:6px;display:block;}
+.form-input{width:100%;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;color:var(--gray-900);outline:none;transition:border-color 0.2s;background:#fff;-webkit-appearance:none;}
+.form-input:focus{border-color:var(--primary);}
+select.form-input{cursor:pointer;}
+textarea.form-input{resize:none;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.modal-btns{display:flex;gap:8px;margin-top:4px;}
+.btn-cancel{flex:1;padding:14px;background:var(--gray-100);color:var(--gray-700);border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;}
+.btn-save{flex:2;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-delete{width:100%;padding:13px;background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;}
+
+/* 상태 선택 칩 */
+.status-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.status-chip{padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);background:var(--gray-100);color:var(--gray-500);font-family:inherit;transition:all 0.15s;}
+.status-chip.sel-confirmed{background:#EEF2FF;border-color:#A5B4FC;color:#6366F1;}
+.status-chip.sel-inprogress{background:#FFF7ED;border-color:#FDBA74;color:#EA580C;}
+.status-chip.sel-done{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
+.status-chip.sel-cancelled{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
+
+/* SMS 발송 패널 */
+.sms-quick{background:var(--primary-light);border:1.5px solid var(--primary);border-radius:var(--radius-sm);padding:12px 14px;margin-top:12px;}
+.sms-quick-title{font-size:12px;font-weight:700;color:var(--primary-dark);margin-bottom:8px;}
+.sms-tpl-btn{padding:7px 12px;border-radius:8px;background:#fff;border:1px solid var(--primary);color:var(--primary-dark);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-right:6px;margin-bottom:6px;}
+
+/* 토스트 */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,54,0.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- 헤더 -->
+  <div class="header">
+    <div class="header-inner">
+      <div class="header-title">📅 스케줄</div>
+      <button class="add-btn-top" onclick="openAddModal()">+</button>
+    </div>
+  </div>
+
+  <!-- 월 네비게이션 -->
+  <div class="month-nav">
+    <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
+    <span class="month-label" id="month-label"></span>
+    <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
+  </div>
+
+  <!-- 캘린더 -->
+  <div class="calendar-wrap">
+    <div class="cal-weekdays">
+      <div class="cal-wd">일</div>
+      <div class="cal-wd">월</div>
+      <div class="cal-wd">화</div>
+      <div class="cal-wd">수</div>
+      <div class="cal-wd">목</div>
+      <div class="cal-wd">금</div>
+      <div class="cal-wd">토</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <!-- 예약 목록 -->
+  <div class="content">
+    <div class="section-title">
+      <span id="list-label">오늘의 예약</span>
+      <span class="count-badge" id="list-count">0건</span>
+    </div>
+    <div id="booking-list"></div>
+  </div>
+
+</div>
+
+<!-- 하단 네비게이션 -->
+<div class="bottom-nav">
+  <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">🏠</div><div>홈</div></button>
+  <button class="nav-item" onclick="location.href='ssak-quote.html'"><div class="nav-icon">⚡</div><div>견적</div></button>
+  <button class="nav-item active"><div class="nav-icon">📅</div><div>스케줄</div></button>
+  <button class="nav-item" onclick="toast('커뮤니티 준비 중')"><div class="nav-icon">👥</div><div>커뮤니티</div></button>
+  <button class="nav-item" onclick="toast('MY 준비 중')"><div class="nav-icon">👤</div><div>MY</div></button>
+</div>
+
+<!-- 예약 추가/수정 모달 -->
+<div class="modal-overlay" id="booking-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title">📋 예약 추가</div>
+
+    <div class="form-row">
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">고객명 *</label>
+        <input class="form-input" id="b-name" placeholder="김OO"/>
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">연락처 *</label>
+        <input class="form-input" id="b-phone" placeholder="010-0000-0000" type="tel"/>
+      </div>
+    </div>
+    <div style="height:14px;"></div>
+
+    <div class="form-row">
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">날짜 *</label>
+        <input class="form-input" id="b-date" type="date"/>
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">시간 *</label>
+        <input class="form-input" id="b-time" type="time" value="10:00"/>
+      </div>
+    </div>
+    <div style="height:14px;"></div>
+
+    <div class="form-group">
+      <label class="form-label">시공 주소</label>
+      <input class="form-input" id="b-addr" placeholder="서울시 강남구 ..."/>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">청소 유형</label>
+        <select class="form-input" id="b-type">
+          <option>입주 전 청소</option>
+          <option>이사 후 청소</option>
+          <option>신축 준공 청소</option>
+          <option>생활 청소</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">평수</label>
+        <input class="form-input" id="b-size" type="number" placeholder="32"/>
+      </div>
+    </div>
+    <div style="height:14px;"></div>
+
+    <div class="form-group">
+      <label class="form-label">금액 (원)</label>
+      <input class="form-input" id="b-price" type="number" placeholder="500000"/>
+    </div>
+
+    <div class="form-group" style="margin-bottom:6px;">
+      <label class="form-label">상태</label>
+      <div class="status-chips">
+        <button class="status-chip sel-confirmed" onclick="selectStatus('confirmed',this)">예약확정</button>
+        <button class="status-chip" onclick="selectStatus('inprogress',this)">진행중</button>
+        <button class="status-chip" onclick="selectStatus('done',this)">완료</button>
+        <button class="status-chip" onclick="selectStatus('cancelled',this)">취소</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">메모</label>
+      <textarea class="form-input" id="b-memo" rows="3" placeholder="특이사항, 요청사항 등"></textarea>
+    </div>
+
+    <!-- 빠른 SMS 발송 -->
+    <div class="sms-quick" id="sms-quick-panel" style="display:none;">
+      <div class="sms-quick-title">📱 빠른 문자 발송</div>
+      <button class="sms-tpl-btn" onclick="sendQuickSMS('confirm')">✅ 예약확인</button>
+      <button class="sms-tpl-btn" onclick="sendQuickSMS('remind')">🔔 당일리마인드</button>
+      <button class="sms-tpl-btn" onclick="sendQuickSMS('done')">🎉 완료안내</button>
+    </div>
+
+    <div style="height:14px;"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-save" onclick="saveBooking()">저장</button>
+    </div>
+    <button class="btn-delete" id="btn-delete" style="display:none;" onclick="deleteBooking()">🗑 이 예약 삭제</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── 데이터 ──────────────────────────────────
+let schedules = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
+let cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+
+function saveSchedules() {
+  localStorage.setItem('ssak_schedules', JSON.stringify(schedules));
+}
+
+// ── 날짜 유틸 ──────────────────────────────
+let viewYear = new Date().getFullYear();
+let viewMonth = new Date().getMonth(); // 0-indexed
+let selectedDate = toDateStr(new Date());
+let editingId = null;
+let selectedStatus = 'confirmed';
+
+function toDateStr(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function todayStr() { return toDateStr(new Date()); }
+
+// ── 캘린더 렌더링 ────────────────────────────
+function renderCalendar() {
+  const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  document.getElementById('month-label').textContent = `${viewYear}년 ${MONTHS[viewMonth]}`;
+
+  const grid = document.getElementById('cal-grid');
+  const today = todayStr();
+
+  // 이달 1일 요일, 말일
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const lastDate = new Date(viewYear, viewMonth+1, 0).getDate();
+  const prevLastDate = new Date(viewYear, viewMonth, 0).getDate();
+
+  // 예약 날짜별 집계
+  const dotMap = {};
+  schedules.forEach(s => {
+    if (!dotMap[s.date]) dotMap[s.date] = [];
+    dotMap[s.date].push(s.status);
+  });
+
+  const STATUS_COLOR = {confirmed:'#6366F1', inprogress:'#EA580C', done:'#00C896', cancelled:'#DC2626'};
+
+  let html = '';
+  const totalCells = Math.ceil((firstDay + lastDate) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    let dateNum, dateStr, isOther = false;
+    const dayOfWeek = i % 7;
+
+    if (i < firstDay) {
+      dateNum = prevLastDate - firstDay + i + 1;
+      const m = viewMonth === 0 ? 12 : viewMonth;
+      const y = viewMonth === 0 ? viewYear - 1 : viewYear;
+      dateStr = `${y}-${String(m).padStart(2,'0')}-${String(dateNum).padStart(2,'0')}`;
+      isOther = true;
+    } else if (i >= firstDay + lastDate) {
+      dateNum = i - firstDay - lastDate + 1;
+      const m = viewMonth === 11 ? 1 : viewMonth + 2;
+      const y = viewMonth === 11 ? viewYear + 1 : viewYear;
+      dateStr = `${y}-${String(m).padStart(2,'0')}-${String(dateNum).padStart(2,'0')}`;
+      isOther = true;
+    } else {
+      dateNum = i - firstDay + 1;
+      dateStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(dateNum).padStart(2,'0')}`;
+    }
+
+    const isToday = dateStr === today;
+    const isSel = dateStr === selectedDate;
+    const isSun = dayOfWeek === 0;
+    const isSat = dayOfWeek === 6;
+
+    let cls = 'cal-day';
+    if (isOther) cls += ' other-month';
+    if (isToday) cls += ' today';
+    if (isSel) cls += ' selected';
+    if (isSun) cls += ' sunday';
+    if (isSat) cls += ' saturday';
+
+    // 점 (최대 3개)
+    const dots = (dotMap[dateStr] || []).slice(0, 3).map(st =>
+      `<div class="cal-dot" style="background:${STATUS_COLOR[st]||'#ccc'}"></div>`
+    ).join('');
+
+    html += `<div class="${cls}" onclick="selectDay('${dateStr}')">
+      <div class="cal-num">${dateNum}</div>
+      <div class="cal-dots">${dots}</div>
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function selectDay(dateStr) {
+  selectedDate = dateStr;
+  renderCalendar();
+  renderList();
+}
+
+function changeMonth(dir) {
+  viewMonth += dir;
+  if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+  if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+  renderCalendar();
+}
+
+// ── 목록 렌더링 ───────────────────────────────
+function renderList() {
+  const list = document.getElementById('booking-list');
+  const label = document.getElementById('list-label');
+  const countBadge = document.getElementById('list-count');
+
+  const today = todayStr();
+  let items = schedules.filter(s => s.date === selectedDate)
+    .sort((a,b) => (a.time||'').localeCompare(b.time||''));
+
+  const isToday = selectedDate === today;
+  const d = new Date(selectedDate + 'T00:00:00');
+  const dayNames = ['일','월','화','수','목','금','토'];
+  label.textContent = isToday
+    ? `오늘의 예약`
+    : `${d.getMonth()+1}월 ${d.getDate()}일 (${dayNames[d.getDay()]}) 예약`;
+
+  countBadge.textContent = `${items.length}건`;
+
+  if (items.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <div class="empty-text">이 날 예약이 없습니다<br><span style="color:var(--primary);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
+    </div>`;
+    return;
+  }
+
+  const STATUS_LABEL = {confirmed:'예약확정', inprogress:'진행중', done:'완료', cancelled:'취소'};
+  const STATUS_CLASS = {confirmed:'status-confirmed', inprogress:'status-inprogress', done:'status-done', cancelled:'status-cancelled'};
+
+  list.innerHTML = items.map(s => `
+    <div class="booking-card" onclick="openEditModal('${s.id}')">
+      <div class="booking-card-top">
+        <div>
+          <div class="booking-name">${s.name}</div>
+          <div class="booking-meta" style="margin-top:4px;">
+            ${s.time ? `<span class="booking-meta-item">🕐 ${s.time}</span>` : ''}
+            ${s.type ? `<span class="booking-meta-item">🧹 ${s.type}</span>` : ''}
+            ${s.size ? `<span class="booking-meta-item">📐 ${s.size}평</span>` : ''}
+          </div>
+        </div>
+        <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||s.status}</span>
+      </div>
+      ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">📍 ${s.addr}</div>` : ''}
+      ${s.price ? `<div style="font-size:12.5px;font-weight:700;color:var(--gray-700);">💰 ${Number(s.price).toLocaleString()}원</div>` : ''}
+      ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">💬 ${s.memo}</div>` : ''}
+      <div class="booking-card-footer">
+        <button class="card-action-btn primary" onclick="event.stopPropagation();openEditModal('${s.id}')">✏️ 수정</button>
+        <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${s.id}')">🔄 상태변경</button>
+        <button class="card-action-btn" onclick="event.stopPropagation();quickSMSCard('${s.id}')">📱 문자</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── 모달 ─────────────────────────────────────
+function openAddModal() {
+  editingId = null;
+  selectedStatus = 'confirmed';
+  document.getElementById('modal-title').textContent = '📋 예약 추가';
+  document.getElementById('b-name').value = '';
+  document.getElementById('b-phone').value = '';
+  document.getElementById('b-date').value = selectedDate;
+  document.getElementById('b-time').value = '10:00';
+  document.getElementById('b-addr').value = '';
+  document.getElementById('b-type').value = '입주 전 청소';
+  document.getElementById('b-size').value = '';
+  document.getElementById('b-price').value = '';
+  document.getElementById('b-memo').value = '';
+  document.getElementById('btn-delete').style.display = 'none';
+  document.getElementById('sms-quick-panel').style.display = 'none';
+  updateStatusChips();
+  document.getElementById('booking-modal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const s = schedules.find(x => x.id === id);
+  if (!s) return;
+  editingId = id;
+  selectedStatus = s.status || 'confirmed';
+  document.getElementById('modal-title').textContent = '✏️ 예약 수정';
+  document.getElementById('b-name').value = s.name || '';
+  document.getElementById('b-phone').value = s.phone || '';
+  document.getElementById('b-date').value = s.date || '';
+  document.getElementById('b-time').value = s.time || '10:00';
+  document.getElementById('b-addr').value = s.addr || '';
+  document.getElementById('b-type').value = s.type || '입주 전 청소';
+  document.getElementById('b-size').value = s.size || '';
+  document.getElementById('b-price').value = s.price || '';
+  document.getElementById('b-memo').value = s.memo || '';
+  document.getElementById('btn-delete').style.display = 'block';
+  document.getElementById('sms-quick-panel').style.display = 'block';
+  updateStatusChips();
+  document.getElementById('booking-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('booking-modal').classList.remove('open');
+}
+
+function selectStatus(st, btn) {
+  selectedStatus = st;
+  updateStatusChips();
+}
+
+function updateStatusChips() {
+  const MAP = {confirmed:'sel-confirmed', inprogress:'sel-inprogress', done:'sel-done', cancelled:'sel-cancelled'};
+  document.querySelectorAll('.status-chip').forEach(c => {
+    c.className = 'status-chip';
+    const st = c.onclick.toString().match(/'(\w+)'/)?.[1];
+    if (st === selectedStatus) c.className = 'status-chip ' + MAP[st];
+  });
+}
+
+function saveBooking() {
+  const name = document.getElementById('b-name').value.trim();
+  const date = document.getElementById('b-date').value;
+  if (!name || !date) { toast('고객명과 날짜는 필수입니다'); return; }
+
+  const data = {
+    id: editingId || Date.now().toString(),
+    name,
+    phone: document.getElementById('b-phone').value.trim(),
+    date,
+    time: document.getElementById('b-time').value,
+    addr: document.getElementById('b-addr').value.trim(),
+    type: document.getElementById('b-type').value,
+    size: document.getElementById('b-size').value,
+    price: document.getElementById('b-price').value,
+    memo: document.getElementById('b-memo').value.trim(),
+    status: selectedStatus,
+    updatedAt: Date.now()
+  };
+
+  if (editingId) {
+    const idx = schedules.findIndex(s => s.id === editingId);
+    if (idx >= 0) schedules[idx] = data;
+  } else {
+    schedules.push(data);
+  }
+
+  saveSchedules();
+  selectedDate = date;
+
+  // 월/연도도 맞추기
+  const d = new Date(date + 'T00:00:00');
+  viewYear = d.getFullYear();
+  viewMonth = d.getMonth();
+
+  closeModal();
+  renderCalendar();
+  renderList();
+  toast(editingId ? '✅ 예약이 수정됐습니다' : '✅ 예약이 추가됐습니다');
+}
+
+function deleteBooking() {
+  if (!editingId) return;
+  if (!confirm('이 예약을 삭제하시겠습니까?')) return;
+  schedules = schedules.filter(s => s.id !== editingId);
+  saveSchedules();
+  closeModal();
+  renderCalendar();
+  renderList();
+  toast('🗑 예약이 삭제됐습니다');
+}
+
+// ── 상태 빠른 변경 ────────────────────────────
+function changeStatus(id) {
+  const ORDER = ['confirmed','inprogress','done','cancelled'];
+  const LABEL = {confirmed:'예약확정', inprogress:'진행중', done:'완료', cancelled:'취소'};
+  const s = schedules.find(x => x.id === id);
+  if (!s) return;
+  const cur = ORDER.indexOf(s.status);
+  s.status = ORDER[(cur + 1) % ORDER.length];
+  s.updatedAt = Date.now();
+  saveSchedules();
+  renderCalendar();
+  renderList();
+  toast(`→ ${LABEL[s.status]}으로 변경됐습니다`);
+}
+
+// ── SMS 빠른 발송 ─────────────────────────────
+function quickSMSCard(id) {
+  openEditModal(id);
+}
+
+function sendQuickSMS(type) {
+  const name = document.getElementById('b-name').value.trim() || '고객';
+  const date = document.getElementById('b-date').value;
+  const time = document.getElementById('b-time').value;
+  const addr = document.getElementById('b-addr').value.trim();
+  const phone = document.getElementById('b-phone').value.trim();
+  const company = cfg.company || '싹싹클린';
+
+  if (!phone) { toast('연락처를 입력해주세요'); return; }
+
+  const d = date ? new Date(date+'T00:00:00') : new Date();
+  const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일`;
+
+  const MSGS = {
+    confirm: `[${company}] ${name}님, ${dateLabel} ${time} 입주청소 예약이 확정됐습니다. 주소: ${addr||'협의'}. 문의: ${cfg.phone||''} 감사합니다 😊`,
+    remind: `[${company}] ${name}님, 오늘 ${time} 입주청소 일정이 있습니다. 잊지 마세요! 문의: ${cfg.phone||''}`,
+    done: `[${company}] ${name}님, 오늘 청소가 완료됐습니다. 이용해 주셔서 감사합니다 🙏 후기: ${cfg.review||''}`
+  };
+
+  const msg = MSGS[type];
+  const apiKey = cfg.apiKey;
+  const apiSecret = cfg.apiSecret;
+  const fromPhone = cfg.fromPhone;
+
+  if (!apiKey || !apiSecret || !fromPhone) {
+    toast('설정에서 CoolSMS API를 먼저 설정해주세요');
+    return;
+  }
+
+  toast('📱 문자 발송 중...');
+
+  fetch('https://ssakssak-server-production.up.railway.app/send-sms', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ to: phone, from: fromPhone, text: msg, apiKey, apiSecret })
+  }).then(r => r.json()).then(data => {
+    if (data.success) toast('✅ 문자 발송 완료!');
+    else toast('❌ 발송 실패: ' + (data.error||'오류'));
+  }).catch(() => toast('❌ 서버 오류'));
+}
+
+// ── 토스트 ──────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.opacity = '1';
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => { el.style.opacity = '0'; }, 2400);
+}
+
+// ── 초기화 ──────────────────────────────────
+renderCalendar();
+renderList();
+</script>
+</body>
+</html>
