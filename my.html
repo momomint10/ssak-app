@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>싹싹 — MY</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="싹싹">
+<meta name="theme-color" content="#00C896">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#00C896;--primary-dark:#00A87A;--primary-light:#E6FAF5;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:var(--gray-900);}
+.shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
+
+/* 프로필 헤더 */
+.profile-header{background:linear-gradient(135deg,#00C896,#00A87A);padding:60px 24px 28px;position:relative;}
+.profile-header-inner{display:flex;align-items:center;gap:16px;}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border:3px solid rgba(255,255,255,0.5);}
+.profile-info{flex:1;}
+.profile-name{font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;}
+.profile-company{font-size:14px;color:rgba(255,255,255,0.85);margin-bottom:6px;}
+.profile-edit-btn{padding:6px 14px;background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.4);border-radius:20px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+/* 이달 통계 */
+.stats-bar{background:#fff;margin:0 0 12px;padding:20px 24px;box-shadow:var(--shadow);}
+.stats-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:14px;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.stat-item{text-align:center;background:var(--gray-50);border-radius:12px;padding:14px 8px;}
+.stat-value{font-size:22px;font-weight:900;color:var(--gray-900);line-height:1;}
+.stat-value.green{color:var(--primary);}
+.stat-value.amber{color:#F59E0B;}
+.stat-label{font-size:11px;color:var(--gray-400);margin-top:5px;font-weight:500;}
+
+/* 섹션 */
+.section{background:#fff;border-radius:var(--radius);margin:0 16px 12px;box-shadow:var(--shadow);overflow:hidden;}
+.section-header{padding:16px 20px 0;font-size:13px;font-weight:700;color:var(--gray-500);}
+.menu-item{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:background 0.15s;text-decoration:none;color:inherit;}
+.menu-item:last-child{border-bottom:none;}
+.menu-item:active{background:var(--gray-50);}
+.menu-icon{font-size:20px;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-right:14px;flex-shrink:0;}
+.menu-icon.green{background:var(--primary-light);}
+.menu-icon.blue{background:#EFF6FF;}
+.menu-icon.amber{background:#FFFBEB;}
+.menu-icon.purple{background:#F5F3FF;}
+.menu-icon.red{background:#FEF2F2;}
+.menu-text{flex:1;}
+.menu-title{font-size:15px;font-weight:600;}
+.menu-sub{font-size:12px;color:var(--gray-400);margin-top:2px;}
+.menu-arrow{font-size:16px;color:var(--gray-300);}
+.menu-badge{background:var(--primary-light);color:var(--primary-dark);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-right:8px;}
+
+/* 앱 버전 */
+.app-version{text-align:center;padding:20px;color:var(--gray-400);font-size:12px;}
+.app-version strong{display:block;font-size:15px;font-weight:900;color:var(--primary);margin-bottom:4px;}
+
+/* 하단 네비 */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,0.95);border-top:1px solid var(--gray-200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--gray-400);cursor:pointer;}
+.nav-item.active{color:var(--primary);font-weight:700;}
+.nav-icon{font-size:20px;line-height:1;}
+
+/* 토스트 */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,54,0.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- 프로필 헤더 -->
+  <div class="profile-header">
+    <div class="profile-header-inner">
+      <div class="profile-avatar">🧹</div>
+      <div class="profile-info">
+        <div class="profile-name" id="my-name">사장님</div>
+        <div class="profile-company" id="my-company">업체명 미설정</div>
+        <button class="profile-edit-btn" onclick="goSettings()">✏️ 프로필 수정</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 이달 통계 -->
+  <div class="stats-bar">
+    <div class="stats-title">📊 이달 현황</div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-value green" id="stat-bookings">0</div>
+        <div class="stat-label">예약 건수</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value amber" id="stat-pending">0</div>
+        <div class="stat-label">대기 문의</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="stat-done">0</div>
+        <div class="stat-label">완료 건수</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 메뉴 -->
+  <div class="section">
+    <div class="section-header">내 서비스</div>
+    <div class="menu-item" onclick="location.href='ssak-quote.html'">
+      <div class="menu-icon green">⚡</div>
+      <div class="menu-text"><div class="menu-title">견적 & 자동응답</div><div class="menu-sub">SMS 견적 발송, FAQ 자동응답</div></div>
+      <div class="menu-arrow">›</div>
+    </div>
+    <div class="menu-item" onclick="location.href='schedule.html'">
+      <div class="menu-icon blue">📅</div>
+      <div class="menu-text"><div class="menu-title">스케줄 관리</div><div class="menu-sub">예약 일정 확인 및 관리</div></div>
+      <div class="menu-arrow">›</div>
+    </div>
+    <div class="menu-item" onclick="location.href='booking.html'">
+      <div class="menu-icon amber">📋</div>
+      <div class="menu-text"><div class="menu-title">고객 예약 신청 링크</div><div class="menu-sub">booking.html 링크를 고객에게 공유</div></div>
+      <div class="menu-arrow">›</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">설정</div>
+    <div class="menu-item" onclick="goSettings()">
+      <div class="menu-icon purple">⚙️</div>
+      <div class="menu-text"><div class="menu-title">앱 설정</div><div class="menu-sub">API키, 업체정보, 단가 설정</div></div>
+      <div class="menu-arrow">›</div>
+    </div>
+    <div class="menu-item" onclick="copyBookingLink()">
+      <div class="menu-icon green">🔗</div>
+      <div class="menu-text"><div class="menu-title">예약 링크 복사</div><div class="menu-sub">고객에게 전달할 예약 URL</div></div>
+      <span class="menu-badge">복사</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">정보</div>
+    <div class="menu-item" onclick="toast('준비 중입니다 😊')">
+      <div class="menu-icon blue">❓</div>
+      <div class="menu-text"><div class="menu-title">이용 가이드</div><div class="menu-sub">앱 사용법 및 FAQ</div></div>
+      <div class="menu-arrow">›</div>
+    </div>
+    <div class="menu-item" onclick="toast('카카오톡: @싹싹클린')">
+      <div class="menu-icon amber">💬</div>
+      <div class="menu-text"><div class="menu-title">고객센터</div><div class="menu-sub">문의 및 피드백</div></div>
+      <div class="menu-arrow">›</div>
+    </div>
+  </div>
+
+  <div class="app-version">
+    <strong>싹싹 (Ssak-ssak)</strong>
+    청소업 사장님을 위한 스마트 관리 앱<br>v1.0.0 · Made with ❤️
+  </div>
+
+</div>
+
+<!-- 하단 네비 -->
+<div class="bottom-nav">
+  <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">🏠</div><div>홈</div></button>
+  <button class="nav-item" onclick="location.href='ssak-quote.html'"><div class="nav-icon">⚡</div><div>견적</div></button>
+  <button class="nav-item" onclick="location.href='schedule.html'"><div class="nav-icon">📅</div><div>스케줄</div></button>
+  <button class="nav-item" onclick="toast('커뮤니티 준비 중')"><div class="nav-icon">👥</div><div>커뮤니티</div></button>
+  <button class="nav-item active"><div class="nav-icon">👤</div><div>MY</div></button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── 초기화 ──────────────────────────────────────────────────
+function init() {
+  const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  const schedules = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
+
+  // 프로필
+  if (cfg.ownerName) document.getElementById('my-name').textContent = cfg.ownerName + ' 사장님';
+  if (cfg.company) document.getElementById('my-company').textContent = cfg.company;
+
+  // 이달 통계
+  const now = new Date();
+  const thisMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  const thisMonthSchedules = schedules.filter(s => (s.date||'').startsWith(thisMonth));
+  const pending = schedules.filter(s => s.status === 'confirmed' || s.status === 'inprogress').length;
+  const done = thisMonthSchedules.filter(s => s.status === 'done').length;
+
+  document.getElementById('stat-bookings').textContent = thisMonthSchedules.length;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-done').textContent = done;
+}
+
+function goSettings() {
+  location.href = 'ssak-quote.html';
+  setTimeout(() => {
+    if (typeof switchTab === 'function') switchTab('settings');
+  }, 500);
+}
+
+function copyBookingLink() {
+  const url = 'https://ssakapp.co.kr/booking.html';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => toast('✅ 예약 링크가 복사됐습니다!'));
+  } else {
+    const el = document.createElement('textarea');
+    el.value = url; document.body.appendChild(el);
+    el.select(); document.execCommand('copy');
+    document.body.removeChild(el);
+    toast('✅ 예약 링크가 복사됐습니다!');
+  }
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.opacity = '1';
+  clearTimeout(window.__tt);
+  window.__tt = setTimeout(() => { el.style.opacity = '0'; }, 2400);
+}
+
+init();
+</script>
+</body>
+</html>
