@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>예약 신청</title>
+<title>ìì½ ì ì²­</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
   :root{
@@ -18,7 +18,7 @@
   body{font-family:'Noto Sans KR',sans-serif;background:#e8f0e4;min-height:100vh;}
   .app{max-width:480px;margin:0 auto;background:var(--cream);min-height:100vh;}
 
-  /* 헤더 */
+  /* í¤ë */
   .header{background:var(--g-dark);padding:14px 20px;display:flex;align-items:center;gap:12px;}
   .header-logo{width:32px;height:32px;background:var(--g-lite);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--g-dark);font-size:14px;font-weight:700;flex-shrink:0;}
   .header-info{flex:1;}
@@ -27,7 +27,7 @@
 
   .content{padding:20px 16px 100px;}
 
-  /* 견적 요약 카드 */
+  /* ê²¬ì  ìì½ ì¹´ë */
   .quote-card{background:#fff;border:1px solid var(--g-border);border-radius:12px;overflow:hidden;margin-bottom:20px;}
   .quote-card-header{background:var(--g-dark);padding:12px 16px;}
   .quote-card-title{font-size:13px;font-weight:700;color:#f0f8ec;}
@@ -36,7 +36,7 @@
   .quote-row:last-child{border-bottom:none;font-weight:700;color:var(--g-dark);font-size:15px;padding-top:10px;}
   .quote-badge{display:inline-block;background:var(--g-lite);color:var(--g-dark);font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:10px;}
 
-  /* 폼 */
+  /* í¼ */
   .section-title{font-size:13px;font-weight:700;color:var(--g-dark);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
   .form-group{margin-bottom:14px;}
   .form-label{font-size:12px;font-weight:600;color:#4a6040;margin-bottom:6px;display:block;}
@@ -49,16 +49,16 @@
 
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-  /* 개인정보 동의 */
+  /* ê°ì¸ì ë³´ ëì */
   .agree-box{display:flex;align-items:flex-start;gap:10px;background:#f4faf0;border-radius:10px;padding:12px;margin-bottom:20px;border:1px solid var(--g-lite);}
   .agree-box input{width:18px;height:18px;margin-top:1px;flex-shrink:0;accent-color:var(--g-dark);}
   .agree-text{font-size:12px;color:#4a6040;line-height:1.6;}
 
-  /* 제출 버튼 */
+  /* ì ì¶ ë²í¼ */
   .btn-submit{width:100%;padding:16px;background:var(--g-dark);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:0.5px;}
   .btn-submit:disabled{background:#ccc;cursor:not-allowed;}
 
-  /* 상태 화면 */
+  /* ìí íë©´ */
   .state-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;text-align:center;}
   .state-icon{font-size:60px;margin-bottom:20px;}
   .state-title{font-size:20px;font-weight:700;color:var(--g-dark);margin-bottom:10px;}
@@ -67,10 +67,10 @@
   .state-detail-row{font-size:13px;color:#444;padding:5px 0;border-bottom:1px solid #f0f4ee;display:flex;justify-content:space-between;}
   .state-detail-row:last-child{border-bottom:none;}
 
-  /* 푸터 */
+  /* í¸í° */
   .footer-bar{background:var(--g-ftr);color:#f0f8ec;text-align:center;font-size:12px;padding:14px;margin-top:20px;}
 
-  /* 토스트 */
+  /* í ì¤í¸ */
   .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#1E2130;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
@@ -78,114 +78,114 @@
 <body>
 <div class="app">
 
-  <!-- 로딩 -->
+  <!-- ë¡ë© -->
   <div id="screen-loading" class="state-screen">
-    <div class="state-icon">🌿</div>
-    <div class="state-title">잠시만요...</div>
-    <div class="state-sub">예약 정보를 불러오고 있어요</div>
+    <div class="state-icon">ð¿</div>
+    <div class="state-title">ì ìë§ì...</div>
+    <div class="state-sub">ìì½ ì ë³´ë¥¼ ë¶ë¬ì¤ê³  ìì´ì</div>
   </div>
 
-  <!-- 완료 -->
+  <!-- ìë£ -->
   <div id="screen-done" class="state-screen" style="display:none;">
-    <div class="state-icon">✅</div>
-    <div class="state-title">예약 신청 완료!</div>
-    <div class="state-sub">담당자가 확인 후<br>빠르게 연락드리겠습니다 😊</div>
+    <div class="state-icon">â</div>
+    <div class="state-title">ìì½ ì ì²­ ìë£!</div>
+    <div class="state-sub">ë´ë¹ìê° íì¸ í<br>ë¹ ë¥´ê² ì°ë½ëë¦¬ê² ìµëë¤ ð</div>
     <div class="state-detail" id="done-detail"></div>
   </div>
 
-  <!-- 메인 폼 -->
+  <!-- ë©ì¸ í¼ -->
   <div id="screen-main" style="display:none;">
     <div class="header">
-      <div class="header-logo" id="hdr-logo">서</div>
+      <div class="header-logo" id="hdr-logo">ì</div>
       <div class="header-info">
-        <div class="header-title" id="hdr-company">서프로클린</div>
-        <div class="header-sub">입주청소 예약 신청</div>
+        <div class="header-title" id="hdr-company">ìíë¡í´ë¦°</div>
+        <div class="header-sub">ìì£¼ì²­ì ìì½ ì ì²­</div>
       </div>
     </div>
 
     <div class="content">
 
-      <!-- 견적 요약 (URL 파라미터로 넘어온 경우) -->
+      <!-- ê²¬ì  ìì½ (URL íë¼ë¯¸í°ë¡ ëì´ì¨ ê²½ì°) -->
       <div class="quote-card" id="quote-summary" style="display:none;">
         <div class="quote-card-header">
-          <div class="quote-card-title">📋 견적 요약</div>
+          <div class="quote-card-title">ð ê²¬ì  ìì½</div>
         </div>
         <div class="quote-card-body">
-          <div class="quote-badge" id="summary-type">입주 전 청소</div>
-          <div class="quote-row"><span>평수</span><span id="summary-size">—</span></div>
-          <div class="quote-row"><span>예상 금액</span><span id="summary-price">견적 문의</span></div>
+          <div class="quote-badge" id="summary-type">ìì£¼ ì  ì²­ì</div>
+          <div class="quote-row"><span>íì</span><span id="summary-size">â</span></div>
+          <div class="quote-row"><span>ìì ê¸ì¡</span><span id="summary-price">ê²¬ì  ë¬¸ì</span></div>
         </div>
       </div>
 
-      <!-- 고객 정보 -->
+      <!-- ê³ ê° ì ë³´ -->
       <div style="background:#fff;border:1px solid var(--g-border);border-radius:12px;padding:16px;margin-bottom:16px;">
-        <div class="section-title">👤 고객 정보</div>
+        <div class="section-title">ð¤ ê³ ê° ì ë³´</div>
         <div class="form-group">
-          <label class="form-label">이름 <span>*</span></label>
-          <input class="form-input" id="f-name" placeholder="홍길동" type="text">
+          <label class="form-label">ì´ë¦ <span>*</span></label>
+          <input class="form-input" id="f-name" placeholder="íê¸¸ë" type="text">
         </div>
         <div class="form-group">
-          <label class="form-label">연락처 <span>*</span></label>
+          <label class="form-label">ì°ë½ì² <span>*</span></label>
           <input class="form-input" id="f-phone" placeholder="010-0000-0000" type="tel">
         </div>
       </div>
 
-      <!-- 시공 정보 -->
+      <!-- ìê³µ ì ë³´ -->
       <div style="background:#fff;border:1px solid var(--g-border);border-radius:12px;padding:16px;margin-bottom:16px;">
-        <div class="section-title">🏠 시공 정보</div>
+        <div class="section-title">ð  ìê³µ ì ë³´</div>
         <div class="form-group">
-          <label class="form-label">시공 주소 <span>*</span></label>
-          <input class="form-input" id="f-addr" placeholder="서울시 강남구 ..." type="text">
+          <label class="form-label">ìê³µ ì£¼ì <span>*</span></label>
+          <input class="form-input" id="f-addr" placeholder="ìì¸ì ê°ë¨êµ¬ ..." type="text">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">평수</label>
+            <label class="form-label">íì</label>
             <input class="form-input" id="f-size" placeholder="32" type="number" min="10" max="200">
           </div>
           <div class="form-group">
-            <label class="form-label">청소 유형</label>
+            <label class="form-label">ì²­ì ì í</label>
             <select class="form-input" id="f-type">
-              <option value="move-in">입주 전</option>
-              <option value="move-out">이사 후</option>
-              <option value="new">신축 준공</option>
-              <option value="life">생활 청소</option>
+              <option value="move-in">ìì£¼ ì </option>
+              <option value="move-out">ì´ì¬ í</option>
+              <option value="new">ì ì¶ ì¤ê³µ</option>
+              <option value="life">ìí ì²­ì</option>
             </select>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">희망 날짜</label>
+            <label class="form-label">í¬ë§ ë ì§</label>
             <input class="form-input" id="f-date" type="date">
           </div>
           <div class="form-group">
-            <label class="form-label">희망 시간</label>
+            <label class="form-label">í¬ë§ ìê°</label>
             <select class="form-input" id="f-time">
-              <option value="">미정</option>
-              <option value="08:00">오전 8시</option>
-              <option value="09:00">오전 9시</option>
-              <option value="10:00">오전 10시</option>
-              <option value="11:00">오전 11시</option>
-              <option value="13:00">오후 1시</option>
-              <option value="14:00">오후 2시</option>
-              <option value="15:00">오후 3시</option>
+              <option value="">ë¯¸ì </option>
+              <option value="08:00">ì¤ì  8ì</option>
+              <option value="09:00">ì¤ì  9ì</option>
+              <option value="10:00">ì¤ì  10ì</option>
+              <option value="11:00">ì¤ì  11ì</option>
+              <option value="13:00">ì¤í 1ì</option>
+              <option value="14:00">ì¤í 2ì</option>
+              <option value="15:00">ì¤í 3ì</option>
             </select>
           </div>
         </div>
         <div class="form-group" style="margin-bottom:0;">
-          <label class="form-label">요청사항 (선택)</label>
-          <textarea class="form-input" id="f-notes" placeholder="주차 가능, 엘리베이터 이용 등 특이사항을 적어주세요"></textarea>
+          <label class="form-label">ìì²­ì¬í­ (ì í)</label>
+          <textarea class="form-input" id="f-notes" placeholder="ì£¼ì°¨ ê°ë¥, ìë¦¬ë² ì´í° ì´ì© ë± í¹ì´ì¬í­ì ì ì´ì£¼ì¸ì"></textarea>
         </div>
       </div>
 
-      <!-- 개인정보 동의 -->
+      <!-- ê°ì¸ì ë³´ ëì -->
       <div class="agree-box">
         <input type="checkbox" id="agree-check" onchange="checkReady()">
-        <div class="agree-text">개인정보(이름, 연락처, 주소)를 서비스 예약 목적으로 수집·이용하는 것에 동의합니다. (3년 보유 후 파기)</div>
+        <div class="agree-text">ê°ì¸ì ë³´(ì´ë¦, ì°ë½ì², ì£¼ì)ë¥¼ ìë¹ì¤ ìì½ ëª©ì ì¼ë¡ ìì§Â·ì´ì©íë ê²ì ëìí©ëë¤. (3ë ë³´ì  í íê¸°)</div>
       </div>
 
-      <button class="btn-submit" id="btn-submit" onclick="submitBooking()" disabled>📅 예약 신청하기</button>
+      <button class="btn-submit" id="btn-submit" onclick="submitBooking()" disabled>ð ìì½ ì ì²­íê¸°</button>
 
-      <div class="footer-bar" id="footer-company">서프로클린 입주청소</div>
+      <div class="footer-bar" id="footer-company">ìíë¡í´ë¦° ìì£¼ì²­ì</div>
 
     </div>
   </div>
@@ -198,22 +198,22 @@
 const SERVER = 'https://ssakssak-server-production.up.railway.app';
 const params = new URLSearchParams(location.search);
 
-// URL 파라미터 파싱
+// URL íë¼ë¯¸í° íì±
 const urlName   = params.get('name')  || '';
 const urlPhone  = params.get('phone') || '';
 const urlSize   = params.get('size')  || '';
 const urlType   = params.get('type')  || '';
 const urlPrice  = params.get('price') || '';
-const urlCompany= params.get('company') || '서프로클린';
+const urlCompany= params.get('company') || 'ìíë¡í´ë¦°';
 
-const typeLabels = {'move-in':'입주 전','move-out':'이사 후','new':'신축 준공','life':'생활 청소'};
+const typeLabels = {'move-in':'ìì£¼ ì ','move-out':'ì´ì¬ í','new':'ì ì¶ ì¤ê³µ','life':'ìí ì²­ì'};
 
 function applyQuoteData(d) {
-  const company = d.companyName || urlCompany || '서프로클린';
+  const company = d.companyName || urlCompany || 'ìíë¡í´ë¦°';
   document.getElementById('hdr-logo').textContent = company.charAt(0);
   document.getElementById('hdr-company').textContent = company;
-  document.getElementById('footer-company').textContent = company + ' 입주청소';
-  document.title = company + ' — 예약 신청';
+  document.getElementById('footer-company').textContent = company + ' ìì£¼ì²­ì';
+  document.title = company + ' â ìì½ ì ì²­';
 
   if (d.name)  { const el = document.getElementById('f-name');  el.value = d.name;  el.classList.add('prefilled'); }
   if (d.phone) { const el = document.getElementById('f-phone'); el.value = d.phone; el.classList.add('prefilled'); }
@@ -222,9 +222,9 @@ function applyQuoteData(d) {
 
   if (d.size || d.price) {
     document.getElementById('quote-summary').style.display = 'block';
-    document.getElementById('summary-type').textContent = typeLabels[d.type] || '입주 전 청소';
-    if (d.size)  document.getElementById('summary-size').textContent  = d.size + '평';
-    if (d.price) document.getElementById('summary-price').textContent = parseInt(d.price).toLocaleString() + '원';
+    document.getElementById('summary-type').textContent = typeLabels[d.type] || 'ìì£¼ ì  ì²­ì';
+    if (d.size)  document.getElementById('summary-size').textContent  = d.size + 'í';
+    if (d.price) document.getElementById('summary-price').textContent = parseInt(d.price).toLocaleString() + 'ì';
   }
 
   const today = new Date().toISOString().split('T')[0];
@@ -234,25 +234,25 @@ function applyQuoteData(d) {
 }
 
 window.onload = async () => {
-  const token = params.get('t'); // 단축 토큰
+  const token = params.get('t'); // ë¨ì¶ í í°
 
   if (token) {
-    // 토큰 방식: 서버에서 견적 데이터 가져오기
+    // í í° ë°©ì: ìë²ìì ê²¬ì  ë°ì´í° ê°ì ¸ì¤ê¸°
     try {
       const res = await fetch(`${SERVER}/api/booking/token/${token}`);
       const json = await res.json();
       if (!res.ok) {
         document.getElementById('screen-loading').innerHTML =
-          '<div class="state-icon">⚠️</div><div class="state-title">' + (json.error || '유효하지 않은 링크') + '</div><div class="state-sub">새 견적을 요청해 주세요</div>';
+          '<div class="state-icon">â ï¸</div><div class="state-title">' + (json.error || 'ì í¨íì§ ìì ë§í¬') + '</div><div class="state-sub">ì ê²¬ì ì ìì²­í´ ì£¼ì¸ì</div>';
         return;
       }
       applyQuoteData(json.data);
     } catch(e) {
       document.getElementById('screen-loading').innerHTML =
-        '<div class="state-icon">❌</div><div class="state-title">서버 연결 오류</div><div class="state-sub">잠시 후 다시 시도해주세요</div>';
+        '<div class="state-icon">â</div><div class="state-title">ìë² ì°ê²° ì¤ë¥</div><div class="state-sub">ì ì í ë¤ì ìëí´ì£¼ì¸ì</div>';
     }
   } else {
-    // URL 파라미터 방식 (fallback)
+    // URL íë¼ë¯¸í° ë°©ì (fallback)
     applyQuoteData({ name: urlName, phone: urlPhone, size: urlSize, type: urlType, price: urlPrice, companyName: urlCompany });
   }
 };
@@ -272,19 +272,19 @@ function checkReady() {
 async function submitBooking() {
   const name = document.getElementById('f-name').value.trim();
   const phone = document.getElementById('f-phone').value.trim();
-  const addr = document.getElementById('f-addr').value.trim();
+  const address = document.getElementById('f-addr').value.trim();
   const size = document.getElementById('f-size').value.trim();
   const type = document.getElementById('f-type').value;
   const date = document.getElementById('f-date').value;
   const time = document.getElementById('f-time').value;
   const notes = document.getElementById('f-notes').value.trim();
 
-  if (!name || !phone) { showToast('이름과 연락처를 입력해주세요'); return; }
-  if (!date) { showToast('희망 날짜를 선택해주세요'); return; }
+  if (!name || !phone) { showToast('ì´ë¦ê³¼ ì°ë½ì²ë¥¼ ìë ¥í´ì£¼ì¸ì'); return; }
+  if (!date) { showToast('í¬ë§ ë ì§ë¥¼ ì íí´ì£¼ì¸ì'); return; }
 
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
-  btn.textContent = '⏳ 신청 중...';
+  btn.textContent = 'â³ ì ì²­ ì¤...';
 
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
 
@@ -292,12 +292,12 @@ async function submitBooking() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      name, phone, addr, size, type, date, time, notes,
+      name, phone, address, size, type, date, time, notes,
       ownerPhone: cfg.phone || '',
       apiKey: cfg.apiKey || '',
       apiSecret: cfg.apiSecret || '',
       fromPhone: cfg.fromPhone || '',
-      company: cfg.company || '싹싹클린'
+      company: cfg.company || 'ì¹ì¹í´ë¦°'
     })
   })
   .then(r => r.json())
@@ -306,15 +306,15 @@ async function submitBooking() {
       document.getElementById('booking-form').style.display = 'none';
       document.getElementById('booking-success').style.display = 'flex';
     } else {
-      showToast('신청 실패: ' + (data.error || '오류가 발생했습니다'));
+      showToast('ì ì²­ ì¤í¨: ' + (data.error || 'ì¤ë¥ê° ë°ìíìµëë¤'));
       btn.disabled = false;
-      btn.textContent = '📅 예약 신청하기';
+      btn.textContent = 'ð ìì½ ì ì²­íê¸°';
     }
   })
   .catch(() => {
-    showToast('서버 연결 오류. 잠시 후 다시 시도해주세요.');
+    showToast('ìë² ì°ê²° ì¤ë¥. ì ì í ë¤ì ìëí´ì£¼ì¸ì.');
     btn.disabled = false;
-    btn.textContent = '📅 예약 신청하기';
+    btn.textContent = 'ð ìì½ ì ì²­íê¸°';
   });
 }
 
