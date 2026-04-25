@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>싹싹</title>
+<title>ì¹ì¹</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="싹싹">
+<meta name="apple-mobile-web-app-title" content="ì¹ì¹">
 <meta name="theme-color" content="#00C896">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -35,10 +35,10 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: var(--gray-50); color: var(--gray-900); }
 
-/* ── Shell ── */
+/* ââ Shell ââ */
 .shell { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 80px; }
 
-/* ── Header ── */
+/* ââ Header ââ */
 .header {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   padding: 52px 20px 28px;
@@ -80,7 +80,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
   background: #FF5A5A; border: 2px solid var(--primary);
 }
 
-/* ── Today stats ── */
+/* ââ Today stats ââ */
 .today-stats {
   display: flex; gap: 10px; position: relative; z-index: 1;
 }
@@ -93,10 +93,10 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 .ts-value { font-size: 22px; font-weight: 900; color: #fff; line-height: 1; }
 .ts-unit { font-size: 12px; font-weight: 400; }
 
-/* ── Content ── */
+/* ââ Content ââ */
 .content { padding: 20px; }
 
-/* ── Section ── */
+/* ââ Section ââ */
 .section-header {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 12px;
@@ -104,7 +104,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 .section-title { font-size: 15px; font-weight: 700; }
 .section-more { font-size: 12.5px; color: var(--primary); font-weight: 600; cursor: pointer; }
 
-/* ── Quick actions ── */
+/* ââ Quick actions ââ */
 .quick-btn {
   background: var(--primary);
   color: #fff; border: none;
@@ -125,7 +125,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 .quick-btn-desc { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 2px; }
 .quick-btn-arrow { margin-left: auto; font-size: 18px; color: rgba(255,255,255,0.7); }
 
-/* ── Menu grid ── */
+/* ââ Menu grid ââ */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -167,7 +167,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
   padding: 2px 6px; border-radius: 8px;
 }
 
-/* ── Inquiry cards ── */
+/* ââ Inquiry cards ââ */
 .inq-card {
   background: #fff;
   border: 1px solid var(--gray-200);
@@ -199,7 +199,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 .badge-new { background: #FEE2E2; color: #DC2626; }
 .badge-done { background: var(--primary-light); color: var(--primary-dark); }
 
-/* ── Schedule cards ── */
+/* ââ Schedule cards ââ */
 .schedule-card {
   background: #fff;
   border: 1px solid var(--gray-200);
@@ -228,7 +228,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 .ss-confirmed { background: var(--primary-light); color: var(--primary-dark); }
 .ss-pending { background: #FEF3C7; color: #D97706; }
 
-/* ── Performance card ── */
+/* ââ Performance card ââ */
 .perf-card {
   background: linear-gradient(135deg, var(--secondary) 0%, #2D3561 100%);
   border-radius: var(--radius);
@@ -247,7 +247,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
   font-weight: 600; margin-top: 2px;
 }
 
-/* ── Bottom nav ── */
+/* ââ Bottom nav ââ */
 .bottom-nav {
   position: fixed; bottom: 0; left: 50%;
   transform: translateX(-50%);
@@ -271,7 +271,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 .nav-item.active { color: var(--primary); }
 .nav-icon { font-size: 22px; line-height: 1; }
 
-/* ── Toast ── */
+/* ââ Toast ââ */
 #toast {
   position: fixed; bottom: 96px; left: 50%;
   transform: translateX(-50%) translateY(20px);
@@ -284,7 +284,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ── Fade in animation ── */
+/* ââ Fade in animation ââ */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
@@ -300,208 +300,208 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 <body>
 <div class="shell">
 
-  <!-- ── Header ── -->
+  <!-- ââ Header ââ -->
   <div class="header fade-in">
     <div class="header-top">
       <div>
-        <div class="header-greeting" id="greeting">안녕하세요 👋</div>
-        <div class="header-name" id="user-name">서프로클린 사장님</div>
+        <div class="header-greeting" id="greeting">ìëíì¸ì ð</div>
+        <div class="header-name" id="user-name">ìíë¡í´ë¦° ì¬ì¥ë</div>
       </div>
       <div class="header-right">
-        <button class="icon-btn" onclick="toast('알림 기능은 준비 중입니다')">
-          🔔
+        <button class="icon-btn" onclick="toast('ìë¦¼ ê¸°ë¥ì ì¤ë¹ ì¤ìëë¤')">
+          ð
           <div class="notif-dot"></div>
         </button>
-        <button class="icon-btn" onclick="toast('설정 기능은 준비 중입니다')">⚙️</button>
+        <button class="icon-btn" onclick="location.href='ssak-quote.html';setTimeout(()=>{if(typeof switchTab==='function')switchTab('settings')},300)">âï¸</button>
       </div>
     </div>
 
     <div class="today-stats">
       <div class="today-stat">
-        <div class="ts-label">오늘 작업</div>
-        <div class="ts-value">2<span class="ts-unit">건</span></div>
+        <div class="ts-label">ì¤ë ìì</div>
+        <div class="ts-value">2<span class="ts-unit">ê±´</span></div>
       </div>
       <div class="today-stat">
-        <div class="ts-label">미답변 문의</div>
-        <div class="ts-value" style="color:#FFD700;">3<span class="ts-unit">건</span></div>
+        <div class="ts-label">ë¯¸ëµë³ ë¬¸ì</div>
+        <div class="ts-value" style="color:#FFD700;">3<span class="ts-unit">ê±´</span></div>
       </div>
       <div class="today-stat">
-        <div class="ts-label">이번 달 매출</div>
-        <div class="ts-value">84<span class="ts-unit">만</span></div>
+        <div class="ts-label">ì´ë² ë¬ ë§¤ì¶</div>
+        <div class="ts-value">84<span class="ts-unit">ë§</span></div>
       </div>
     </div>
   </div>
 
-  <!-- ── Content ── -->
+  <!-- ââ Content ââ -->
   <div class="content">
 
-    <!-- 빠른 견적 -->
+    <!-- ë¹ ë¥¸ ê²¬ì  -->
     <button class="quick-btn fade-in fade-in-1" onclick="goTo('quote')">
-      <div class="quick-btn-icon">⚡</div>
+      <div class="quick-btn-icon">â¡</div>
       <div class="quick-btn-text">
-        <div class="quick-btn-label">빠른 견적 & 자동응답</div>
-        <div class="quick-btn-desc">평수 입력 → 견적 계산 → 문자 발송</div>
+        <div class="quick-btn-label">ë¹ ë¥¸ ê²¬ì  & ìëìëµ</div>
+        <div class="quick-btn-desc">íì ìë ¥ â ê²¬ì  ê³ì° â ë¬¸ì ë°ì¡</div>
       </div>
-      <div class="quick-btn-arrow">›</div>
+      <div class="quick-btn-arrow">âº</div>
     </button>
 
-    <!-- 메뉴 그리드 -->
+    <!-- ë©ë´ ê·¸ë¦¬ë -->
     <div class="section-header fade-in fade-in-2">
-      <div class="section-title">전체 메뉴</div>
+      <div class="section-title">ì ì²´ ë©ë´</div>
     </div>
     <div class="menu-grid fade-in fade-in-2">
       <div class="menu-item" onclick="goTo('quote')">
         <div class="menu-badge">3</div>
-        <div class="menu-icon">💬</div>
-        <div class="menu-label">SMS 자동응답</div>
+        <div class="menu-icon">ð¬</div>
+        <div class="menu-label">SMS ìëìëµ</div>
       </div>
       <div class="menu-item" onclick="goTo('schedule')">
-        <div class="menu-icon">📅</div>
-        <div class="menu-label">스케줄 관리</div>
+        <div class="menu-icon">ð</div>
+        <div class="menu-label">ì¤ì¼ì¤ ê´ë¦¬</div>
       </div>
       <div class="menu-item" onclick="goTo('workforce')">
-        <div class="menu-icon">👥</div>
-        <div class="menu-label">인력 매칭</div>
+        <div class="menu-icon">ð¥</div>
+        <div class="menu-label">ì¸ë ¥ ë§¤ì¹­</div>
       </div>
-      <div class="menu-item coming" onclick="toast('준비 중입니다 😊')">
-        <div class="coming-tag">준비중</div>
-        <div class="menu-icon">🛒</div>
-        <div class="menu-label">중고거래</div>
+      <div class="menu-item coming" onclick="toast('ì¤ë¹ ì¤ìëë¤ ð')">
+        <div class="coming-tag">ì¤ë¹ì¤</div>
+        <div class="menu-icon">ð</div>
+        <div class="menu-label">ì¤ê³ ê±°ë</div>
       </div>
-      <div class="menu-item coming" onclick="toast('준비 중입니다 😊')">
-        <div class="coming-tag">준비중</div>
-        <div class="menu-icon">📋</div>
-        <div class="menu-label">보고서</div>
+      <div class="menu-item coming" onclick="toast('ì¤ë¹ ì¤ìëë¤ ð')">
+        <div class="coming-tag">ì¤ë¹ì¤</div>
+        <div class="menu-icon">ð</div>
+        <div class="menu-label">ë³´ê³ ì</div>
       </div>
-      <div class="menu-item coming" onclick="toast('준비 중입니다 😊')">
-        <div class="coming-tag">준비중</div>
-        <div class="menu-icon">📝</div>
-        <div class="menu-label">계약서</div>
+      <div class="menu-item coming" onclick="toast('ì¤ë¹ ì¤ìëë¤ ð')">
+        <div class="coming-tag">ì¤ë¹ì¤</div>
+        <div class="menu-icon">ð</div>
+        <div class="menu-label">ê³ì½ì</div>
       </div>
     </div>
 
-    <!-- 이번 달 실적 -->
+    <!-- ì´ë² ë¬ ì¤ì  -->
     <div class="perf-card fade-in fade-in-3">
-      <div class="perf-title">📊 이번 달 실적</div>
+      <div class="perf-title">ð ì´ë² ë¬ ì¤ì </div>
       <div class="perf-grid">
         <div class="perf-item">
           <div class="perf-val">12</div>
-          <div class="perf-label">완료 작업</div>
-          <div class="perf-change">↑ 2건</div>
+          <div class="perf-label">ìë£ ìì</div>
+          <div class="perf-change">â 2ê±´</div>
         </div>
         <div class="perf-item">
           <div class="perf-val">840</div>
-          <div class="perf-label">매출 (만원)</div>
-          <div class="perf-change">↑ 12%</div>
+          <div class="perf-label">ë§¤ì¶ (ë§ì)</div>
+          <div class="perf-change">â 12%</div>
         </div>
         <div class="perf-item">
           <div class="perf-val">4.9</div>
-          <div class="perf-label">평균 평점</div>
-          <div class="perf-change">⭐ 최고</div>
+          <div class="perf-label">íê·  íì </div>
+          <div class="perf-change">â­ ìµê³ </div>
         </div>
       </div>
     </div>
 
-    <!-- 오늘 스케줄 -->
+    <!-- ì¤ë ì¤ì¼ì¤ -->
     <div class="section-header fade-in fade-in-3">
-      <div class="section-title">📅 오늘 스케줄</div>
-      <div class="section-more" onclick="goTo('schedule')">전체보기</div>
+      <div class="section-title">ð ì¤ë ì¤ì¼ì¤</div>
+      <div class="section-more" onclick="goTo('schedule')">ì ì²´ë³´ê¸°</div>
     </div>
 
     <div class="schedule-card fade-in fade-in-3">
       <div class="schedule-time">
         <div class="st-time">10:00</div>
-        <div class="st-ampm">오전</div>
+        <div class="st-ampm">ì¤ì </div>
       </div>
       <div class="schedule-divider"></div>
       <div class="schedule-info">
-        <div class="si-title">강남구 34평 입주 전 청소</div>
-        <div class="si-meta">서초동 · 2인 투입 · 약 4시간</div>
+        <div class="si-title">ê°ë¨êµ¬ 34í ìì£¼ ì  ì²­ì</div>
+        <div class="si-meta">ìì´ë Â· 2ì¸ í¬ì Â· ì½ 4ìê°</div>
       </div>
-      <div class="schedule-status ss-confirmed">확정</div>
+      <div class="schedule-status ss-confirmed">íì </div>
     </div>
 
     <div class="schedule-card fade-in fade-in-3">
       <div class="schedule-time">
         <div class="st-time">3:00</div>
-        <div class="st-ampm">오후</div>
+        <div class="st-ampm">ì¤í</div>
       </div>
       <div class="schedule-divider"></div>
       <div class="schedule-info">
-        <div class="si-title">송파구 28평 이사 후 청소</div>
-        <div class="si-meta">잠실동 · 2인 투입 · 약 3시간</div>
+        <div class="si-title">ì¡íêµ¬ 28í ì´ì¬ í ì²­ì</div>
+        <div class="si-meta">ì ì¤ë Â· 2ì¸ í¬ì Â· ì½ 3ìê°</div>
       </div>
-      <div class="schedule-status ss-pending">대기중</div>
+      <div class="schedule-status ss-pending">ëê¸°ì¤</div>
     </div>
 
-    <!-- 미답변 문의 -->
+    <!-- ë¯¸ëµë³ ë¬¸ì -->
     <div class="section-header fade-in fade-in-4">
-      <div class="section-title">📞 미답변 문의 <span style="color:var(--red);font-size:13px;">3건</span></div>
-      <div class="section-more" onclick="goTo('inquiries')">전체보기</div>
+      <div class="section-title">ð ë¯¸ëµë³ ë¬¸ì <span style="color:var(--red);font-size:13px;">3ê±´</span></div>
+      <div class="section-more" onclick="goTo('inquiries')">ì ì²´ë³´ê¸°</div>
     </div>
 
     <div class="inq-card fade-in fade-in-4" onclick="goTo('quote')">
-      <div class="inq-avatar" style="background:var(--primary);">김</div>
+      <div class="inq-avatar" style="background:var(--primary);">ê¹</div>
       <div style="flex:1;min-width:0;">
         <div style="display:flex;align-items:center;gap:6px;">
-          <div class="inq-name">김민지</div>
+          <div class="inq-name">ê¹ë¯¼ì§</div>
           <span class="badge badge-new">NEW</span>
         </div>
-        <div class="inq-meta">010-1234-5678 · 34평 아파트</div>
-        <div class="inq-msg">입주 전 청소 견적 문의드립니다</div>
+        <div class="inq-meta">010-1234-5678 Â· 34í ìíí¸</div>
+        <div class="inq-msg">ìì£¼ ì  ì²­ì ê²¬ì  ë¬¸ìëë¦½ëë¤</div>
       </div>
-      <div class="inq-time">방금</div>
+      <div class="inq-time">ë°©ê¸</div>
     </div>
 
     <div class="inq-card fade-in fade-in-4" onclick="goTo('quote')">
-      <div class="inq-avatar" style="background:var(--blue);">박</div>
+      <div class="inq-avatar" style="background:var(--blue);">ë°</div>
       <div style="flex:1;min-width:0;">
         <div style="display:flex;align-items:center;gap:6px;">
-          <div class="inq-name">박준호</div>
-          <span class="badge badge-wait">대기중</span>
+          <div class="inq-name">ë°ì¤í¸</div>
+          <span class="badge badge-wait">ëê¸°ì¤</span>
         </div>
-        <div class="inq-meta">010-9876-5432 · 25평 빌라</div>
-        <div class="inq-msg">이사 후 청소 가능한지요?</div>
+        <div class="inq-meta">010-9876-5432 Â· 25í ë¹ë¼</div>
+        <div class="inq-msg">ì´ì¬ í ì²­ì ê°ë¥íì§ì?</div>
       </div>
-      <div class="inq-time">1시간 전</div>
+      <div class="inq-time">1ìê° ì </div>
     </div>
 
     <div class="inq-card fade-in fade-in-4" onclick="goTo('quote')">
-      <div class="inq-avatar" style="background:var(--purple);">이</div>
+      <div class="inq-avatar" style="background:var(--purple);">ì´</div>
       <div style="flex:1;min-width:0;">
         <div style="display:flex;align-items:center;gap:6px;">
-          <div class="inq-name">이수연</div>
-          <span class="badge badge-wait">대기중</span>
+          <div class="inq-name">ì´ìì°</div>
+          <span class="badge badge-wait">ëê¸°ì¤</span>
         </div>
-        <div class="inq-meta">010-5555-7777 · 42평 아파트</div>
-        <div class="inq-msg">신축 입주청소 견적 부탁드려요</div>
+        <div class="inq-meta">010-5555-7777 Â· 42í ìíí¸</div>
+        <div class="inq-msg">ì ì¶ ìì£¼ì²­ì ê²¬ì  ë¶íëë ¤ì</div>
       </div>
-      <div class="inq-time">2시간 전</div>
+      <div class="inq-time">2ìê° ì </div>
     </div>
 
   </div>
 </div>
 
-<!-- ── Bottom Nav ── -->
+<!-- ââ Bottom Nav ââ -->
 <div class="bottom-nav">
   <button class="nav-item active" id="nav-home" onclick="setNav('home')">
-    <div class="nav-icon">🏠</div>
-    <div>홈</div>
+    <div class="nav-icon">ð </div>
+    <div>í</div>
   </button>
   <button class="nav-item" id="nav-quote" onclick="setNav('quote')">
-    <div class="nav-icon">⚡</div>
-    <div>견적</div>
+    <div class="nav-icon">â¡</div>
+    <div>ê²¬ì </div>
   </button>
   <button class="nav-item" id="nav-schedule" onclick="setNav('schedule')">
-    <div class="nav-icon">📅</div>
-    <div>스케줄</div>
+    <div class="nav-icon">ð</div>
+    <div>ì¤ì¼ì¤</div>
   </button>
   <button class="nav-item" id="nav-community" onclick="setNav('community')">
-    <div class="nav-icon">👥</div>
-    <div>커뮤니티</div>
+    <div class="nav-icon">ð¥</div>
+    <div>ì»¤ë®¤ëí°</div>
   </button>
   <button class="nav-item" id="nav-my" onclick="setNav('my')">
-    <div class="nav-icon">👤</div>
+    <div class="nav-icon">ð¤</div>
     <div>MY</div>
   </button>
 </div>
@@ -509,14 +509,14 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 <div id="toast"></div>
 
 <script>
-// ── 인사말 ──────────────────────────────────
+// ââ ì¸ì¬ë§ ââââââââââââââââââââââââââââââââââ
 function setGreeting() {
   const hour = new Date().getHours();
   const greetings = {
-    morning: '좋은 아침이에요 ☀️',
-    afternoon: '안녕하세요 👋',
-    evening: '수고하셨어요 🌙',
-    night: '늦은 시간까지 고생이에요 🌟'
+    morning: 'ì¢ì ìì¹¨ì´ìì âï¸',
+    afternoon: 'ìëíì¸ì ð',
+    evening: 'ìê³ íì¨ì´ì ð',
+    night: 'ë¦ì ìê°ê¹ì§ ê³ ìì´ìì ð'
   };
   let msg = hour < 12 ? greetings.morning
     : hour < 18 ? greetings.afternoon
@@ -525,16 +525,16 @@ function setGreeting() {
   document.getElementById('greeting').textContent = msg;
 }
 
-// ── 사용자 정보 로드 ─────────────────────────
+// ââ ì¬ì©ì ì ë³´ ë¡ë âââââââââââââââââââââââââ
 function loadUser() {
   const saved = localStorage.getItem('ssak_user');
   if (saved) {
     const user = JSON.parse(saved);
-    document.getElementById('user-name').textContent = `${user.name} 사장님`;
+    document.getElementById('user-name').textContent = `${user.name} ì¬ì¥ë`;
   }
 }
 
-// ── 네비게이션 ───────────────────────────────
+// ââ ë¤ë¹ê²ì´ì âââââââââââââââââââââââââââââââ
 function setNav(name) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('nav-' + name)?.classList.add('active');
@@ -544,17 +544,17 @@ function setNav(name) {
 function goTo(page) {
   const pages = {
     home: null,
-    quote: 'SMS 자동응답 & 견적 계산 화면은 개발 중입니다 🚀',
-    schedule: '스케줄 관리 화면은 개발 중입니다 🚀',
-    workforce: '인력 매칭 화면은 개발 중입니다 🚀',
-    inquiries: '문의 관리 화면은 개발 중입니다 🚀',
-    community: '커뮤니티 화면은 개발 중입니다 🚀',
-    my: 'MY 페이지는 개발 중입니다 🚀',
+    quote: 'SMS ìëìëµ & ê²¬ì  ê³ì° íë©´ì ê°ë° ì¤ìëë¤ ð',
+    schedule: 'ì¤ì¼ì¤ ê´ë¦¬ íë©´ì ê°ë° ì¤ìëë¤ ð',
+    workforce: 'ì¸ë ¥ ë§¤ì¹­ íë©´ì ê°ë° ì¤ìëë¤ ð',
+    inquiries: 'ë¬¸ì ê´ë¦¬ íë©´ì ê°ë° ì¤ìëë¤ ð',
+    community: 'ì»¤ë®¤ëí° íë©´ì ê°ë° ì¤ìëë¤ ð',
+    my: 'MY íì´ì§ë ê°ë° ì¤ìëë¤ ð',
   };
   if (pages[page]) toast(pages[page]);
 }
 
-// ── Toast ────────────────────────────────────
+// ââ Toast ââââââââââââââââââââââââââââââââââââ
 let toastTimer;
 function toast(msg) {
   const el = document.getElementById('toast');
@@ -564,7 +564,7 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-// ── Init ─────────────────────────────────────
+// ââ Init âââââââââââââââââââââââââââââââââââââ
 setGreeting();
 loadUser();
 </script>
