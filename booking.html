@@ -278,8 +278,8 @@ async function submitBooking() {
   const date = document.getElementById('f-date').value;
   const time = document.getElementById('f-time').value;
   const notes = document.getElementById('f-notes').value.trim();
-  if (!name || !phone) { showToast('�̸��� ����ó�� �Է��ϼ���'); return; }
-  if (!date) { showToast('���� ��§�� ��š�ϼ���'); return; }
+  if (!name || !phone) { showToast('이름과 연락처를 입력해주세요'); return; }
+  if (!date) { showToast('희망 날짜를 선택해주세요'); return; }
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
   btn.textContent = '⏳ 신청 중...';
@@ -290,7 +290,7 @@ async function submitBooking() {
     body: JSON.stringify({name, phone, address, size, type, date, time, notes,
       ownerPhone: cfg.phone||'', apiKey: cfg.apiKey||'',
       apiSecret: cfg.apiSecret||'', fromPhone: cfg.fromPhone||'',
-      company: cfg.company||'싸싸클린'
+      company: cfg.company||'싹싹클린'
     })
   })
   .then(r => r.json())
@@ -305,7 +305,7 @@ async function submitBooking() {
     }
   })
   .catch(() => {
-    showToast('서버 연결 오류. 잠시 후 다시 시도해주세요.');
+    showToast('서버 오류. 잠시 후 다시 시도해주세요.');
     btn.disabled = false;
     btn.textContent = '📅 예약 신청하기';
   });
