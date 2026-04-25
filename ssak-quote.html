@@ -2037,38 +2037,22 @@ renderExtraChips();renderTemplates();renderFaq();updateApiWarning();
 // 초기 로딩 후 칩 사이즈 조정
 setTimeout(autoFitAllChips, 100);
 window.addEventListener('resize', autoFitAllChips);
-</script>
-<!-- PDF 생성 라이브러리 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
-// ── index.html 보고서 카드 클릭 시 자동 탭 이동 ─────────────────
-(function() {
-  const gotoTab = sessionStorage.getItem('gotoTab');
-  if (gotoTab) {
-    sessionStorage.removeItem('gotoTab');
-    // 탭 맵
-    const tabMap = {
-      'report':   6,
-      'history':  5,
-      'settings': 6,
-      'booking':  1,
-      'template': 2,
-      'faq':      3,
-    };
-    // switchTab 함수가 로드될 때까지 대기
-    const waitAndSwitch = (tries) => {
-      if (typeof switchTab === 'function') {
-        const tabs = document.querySelectorAll('.tab');
-        const names = ['quote','booking','template','faq','report','history','settings'];
-        const idx = names.indexOf(gotoTab);
-        if (idx >= 0 && tabs[idx]) switchTab(gotoTab, tabs[idx]);
-      } else if (tries > 0) {
-        setTimeout(() => waitAndSwitch(tries - 1), 100);
-      }
-    };
-    setTimeout(() => waitAndSwitch(20), 200);
+
+// ── 보고서/계약서 카드 클릭 시 탭 자동 이동 ───────────────────────
+(function checkGotoTab() {
+  const target = sessionStorage.getItem('gotoTab');
+  if (!target) return;
+  sessionStorage.removeItem('gotoTab');
+  const names = ['quote','booking','template','faq','report','history','settings'];
+  const tabs = document.querySelectorAll('.tab');
+  const idx = names.indexOf(target);
+  if (idx >= 0 && tabs[idx]) {
+    switchTab(target, tabs[idx]);
   }
 })();
 </script>
+<!-- PDF 생성 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
