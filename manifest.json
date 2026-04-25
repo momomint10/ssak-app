@@ -31,6 +31,18 @@
       "name": "예약 확인",
       "url": "/ssak-quote.html#booking",
       "description": "접수된 예약 목록 확인"
+    },
+    {
+      "name": "MY",
+      "short_name": "MY",
+      "description": "내 프로필 및 설정",
+      "url": "/my.html",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
