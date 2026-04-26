@@ -140,11 +140,11 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">평수</label>
-            <input class="form-input" id="f-size" placeholder="32" type="number" min="10" max="200">
+            <input class="form-input" id="f-size" oninput="calcEstimate()" placeholder="32" type="number" min="10" max="200">
           </div>
           <div class="form-group">
             <label class="form-label">청소 유형</label>
-            <select class="form-input" id="f-type">
+            <select class="form-input" id="f-type" onchange="calcEstimate()">
               <option value="move-in">입주 전</option>
               <option value="move-out">이사 후</option>
               <option value="new">신축 준공</option>
@@ -269,7 +269,39 @@ function checkReady() {
   document.getElementById(id)?.addEventListener('input', checkReady);
 });
 
-async function submitBooking() {
+async // ── 평수/유형별 자동 견적 계산 ──────────────────────────────────
+const BASE_PRICE = {
+  '입주 전 청소':  { base: 100000, perPyeong: 8000 },
+  '이사 후 청소':  { base: 80000,  perPyeong: 7000 },
+  '신축 준공 청소':{ base: 150000, perPyeong: 10000 },
+  '생활 청소':     { base: 50000,  perPyeong: 5000 },
+};
+
+function calcEstimate() {
+  const sizeVal = parseInt(document.getElementById('f-size').value) || 0;
+  const typeVal = document.getElementById('f-type').value;
+  const summaryEl = document.getElementById('quote-summary');
+  const summaryType = document.getElementById('summary-type');
+  const summarySize = document.getElementById('summary-size');
+  const summaryPrice = document.getElementById('summary-price');
+
+  if (!sizeVal || !typeVal) {
+    if (summaryEl) summaryEl.style.display = 'none';
+    return;
+  }
+
+  const priceTable = BASE_PRICE[typeVal];
+  if (!priceTable) return;
+  const estimated = priceTable.base + (sizeVal * priceTable.perPyeong);
+  const formatted = Math.ceil(estimated / 10000) * 10000;
+
+  if (summaryEl) summaryEl.style.display = 'block';
+  if (summaryType) summaryType.textContent = typeVal;
+  if (summarySize) summarySize.textContent = sizeVal + '평';
+  if (summaryPrice) summaryPrice.textContent = formatted.toLocaleString() + '원~';
+}
+
+function submitBooking() {
   const name = document.getElementById('f-name').value.trim();
   const phone = document.getElementById('f-phone').value.trim();
   const address = document.getElementById('f-addr').value.trim();

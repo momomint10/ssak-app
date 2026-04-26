@@ -385,17 +385,17 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
       <div class="perf-title">📊 이번 달 실적</div>
       <div class="perf-grid">
         <div class="perf-item">
-          <div class="perf-val">12</div>
+          <div class="perf-val" id="perf-done">12</div>
           <div class="perf-label">완료 작업</div>
-          <div class="perf-change">↑ 2건</div>
+          <div class="perf-change" id="perf-done-change">↑ 0건</div>
         </div>
         <div class="perf-item">
-          <div class="perf-val">840</div>
+          <div class="perf-val" id="perf-revenue">840</div>
           <div class="perf-label">매출 (만원)</div>
-          <div class="perf-change">↑ 12%</div>
+          <div class="perf-change" id="perf-revenue-change">-</div>
         </div>
         <div class="perf-item">
-          <div class="perf-val">4.9</div>
+          <div class="perf-val" id="perf-rating">-</div>
           <div class="perf-label">평균 평점</div>
           <div class="perf-change">⭐ 최고</div>
         </div>
@@ -559,6 +559,27 @@ function loadUser() {
       })
       .catch(function() {});
   }
+
+  // 이달 실적 계산
+  var now = new Date();
+  var ym = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  var doneThisMonth = sch.filter(function(x) {
+    return (x.date||'').startsWith(ym) && x.status === 'done';
+  });
+  var totalRevenue = doneThisMonth.reduce(function(acc, x) {
+    return acc + (parseInt(x.price)||0);
+  }, 0);
+  var perfDoneEl = document.getElementById('perf-done');
+  var perfRevEl = document.getElementById('perf-revenue');
+  var perfRevChg = document.getElementById('perf-revenue-change');
+  if (perfDoneEl) perfDoneEl.textContent = doneThisMonth.length;
+  if (perfRevEl) {
+    var manwon = Math.round(totalRevenue / 10000);
+    perfRevEl.textContent = manwon > 0 ? manwon : '-';
+  }
+  if (perfRevChg && totalRevenue > 0) {
+    perfRevChg.textContent = (totalRevenue/10000).toFixed(0) + '만원';
+  }
 }
 
 // ── 네비게이션 ───────────────────────────────
@@ -596,5 +617,15 @@ function toast(msg) {
 setGreeting();
 loadUser();
 </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(function(reg) { console.log('SW registered:', reg.scope); })
+          .catch(function(err) { console.log('SW error:', err); });
+      });
+    }
+  </script>
 </body>
 </html>

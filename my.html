@@ -26,7 +26,7 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 /* 이달 통계 */
 .stats-bar{background:#fff;margin:0 0 12px;padding:20px 24px;box-shadow:var(--shadow);}
 .stats-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:14px;}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
 .stat-item{text-align:center;background:var(--gray-50);border-radius:12px;padding:14px 8px;}
 .stat-value{font-size:22px;font-weight:900;color:var(--gray-900);line-height:1;}
 .stat-value.green{color:var(--primary);}
@@ -95,6 +95,10 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
       <div class="stat-item">
         <div class="stat-value" id="stat-done">0</div>
         <div class="stat-label">완료 건수</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value green" id="stat-revenue" style="font-size:18px;">-</div>
+        <div class="stat-label">이달 매출</div>
       </div>
     </div>
   </div>
@@ -187,6 +191,16 @@ function init() {
   document.getElementById('stat-bookings').textContent = thisMonthSched.length;
   document.getElementById('stat-pending').textContent = confirmed;
   document.getElementById('stat-done').textContent = done;
+
+  // 이달 매출 계산
+  const revenue = thisMonthSched
+    .filter(s => s.status === 'done')
+    .reduce((acc, s) => acc + (parseInt(s.price) || 0), 0);
+  const revenueEl = document.getElementById('stat-revenue');
+  if (revenueEl) {
+    const manwon = Math.round(revenue / 10000);
+    revenueEl.textContent = manwon > 0 ? manwon + '만' : '-';
+  }
 
   // 예약 링크에 업체 정보 반영
   const footerEl = document.querySelector('.app-version strong');

@@ -369,7 +369,28 @@ window.onload = async () => {
         : '이미 서명이 완료된 계약서입니다.';
       return;
     }
-    contractData = json.data.contract_data;
+    const rawCd = json.data.contract_data || {};
+    // 키 정규화 (서버 저장 형식 → fillContract 기대 형식)
+    contractData = {
+      name:         rawCd.name        || rawCd.customerName  || '',
+      phone:        rawCd.phone       || rawCd.customerPhone || '',
+      addr:         rawCd.addr        || rawCd.address       || '',
+      type:         rawCd.type        || rawCd.serviceType   || '',
+      size:         rawCd.size        || '',
+      companyName:  rawCd.companyName || '',
+      companyPhone: rawCd.companyPhone|| rawCd.ownerPhone    || '',
+      workDateStr:  rawCd.workDateStr || rawCd.serviceDate   || rawCd.date || '',
+      owner:        rawCd.owner       || '',
+      base:         rawCd.base        || rawCd.price         || 0,
+      total:        rawCd.total       || rawCd.price         || 0,
+      deposit:      rawCd.deposit     || 0,
+      balance:      rawCd.balance     || rawCd.total || rawCd.price || 0,
+      vat:          rawCd.vat         || 0,
+      extra:        rawCd.extra       || '',
+      extraPrice:   rawCd.extraPrice  || 0,
+      isCash:       rawCd.isCash      || false,
+      dateStr:      rawCd.dateStr     || new Date().toLocaleDateString('ko-KR'),
+    };
     fillContract(contractData, json.data.owner_signature);
     show('main');
     initCanvas();
