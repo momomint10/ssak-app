@@ -646,7 +646,11 @@ select.form-input{cursor:pointer;}
   <div class="settings-section">
     <div class="settings-title">🏢 업체 기본 정보</div>
     <div class="card" style="margin-bottom:0;">
-      <div class="form-row"><div class="form-group"><label class="form-label">업체명</label><input class="form-input" id="s-company" placeholder="서프로클린"/></div><div class="form-group"><label class="form-label">대표 전화</label><input class="form-input" id="s-phone" placeholder="010-0000-0000" type="tel"/></div></div>
+      <div class="form-row"><div class="form-group">
+              <label class="form-label">대표자 이름</label>
+              <input class="form-input" id="s-owner-name" placeholder="홍길동" type="text">
+            </div>
+            <div class="form-group"><label class="form-label">업체명</label><input class="form-input" id="s-company" placeholder="서프로클린"/></div><div class="form-group"><label class="form-label">대표 전화</label><input class="form-input" id="s-phone" placeholder="010-0000-0000" type="tel"/></div></div>
       <div class="form-group"><label class="form-label">홍보영상 URL</label><input class="form-input" id="s-video" placeholder="https://youtu.be/..."/></div>
       <div class="form-group"><label class="form-label">카카오 채널</label><input class="form-input" id="s-kakao" placeholder="https://pf.kakao.com/..."/></div>
       <div class="form-group"><label class="form-label">후기 링크</label><input class="form-input" id="s-review" placeholder="https://..."/></div>
@@ -1141,6 +1145,7 @@ function loadSettingsForm(){
   document.getElementById('s-api-key').value=cfg.apiKey||'';
   document.getElementById('s-api-secret').value=cfg.apiSecret||'';
   document.getElementById('s-from-phone').value=cfg.fromPhone||'';
+  document.getElementById('s-owner-name').value=cfg.ownerName||'';
   document.getElementById('s-admin-key').value=cfg.adminKey||'';
   document.getElementById('s-company').value=cfg.company;
   document.getElementById('s-phone').value=cfg.phone;
@@ -1170,10 +1175,12 @@ function addExtraService(){cfg.extras.push({id:'e'+Date.now(),label:'새 서비�
 
 function saveSettings(){
   cfg.adminKey=document.getElementById('s-admin-key').value.trim();
+  cfg.ownerName=document.getElementById('s-owner-name').value.trim();
   cfg.apiKey=document.getElementById('s-api-key').value.trim();
   cfg.apiSecret=document.getElementById('s-api-secret').value.trim();
   cfg.fromPhone=document.getElementById('s-from-phone').value.trim();
   cfg.adminKey=document.getElementById('s-admin-key').value.trim();
+  cfg.ownerName=document.getElementById('s-owner-name').value.trim();
   cfg.company=document.getElementById('s-company').value.trim()||'서프로클린';
   cfg.phone=document.getElementById('s-phone').value.trim();
   cfg.video=document.getElementById('s-video').value.trim();
