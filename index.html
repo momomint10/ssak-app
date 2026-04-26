@@ -319,15 +319,15 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
     <div class="today-stats">
       <div class="today-stat">
         <div class="ts-label">오늘 작업</div>
-        <div class="ts-value">2<span class="ts-unit">건</span></div>
+        <div class="ts-value" id="stat-today">2<span class="ts-unit">건</span></div>
       </div>
       <div class="today-stat">
         <div class="ts-label">미답변 문의</div>
-        <div class="ts-value" style="color:#FFD700;">3<span class="ts-unit">건</span></div>
+        <div class="ts-value" style="color:#FFD700;"><span id="stat-pending">3</span><span class="ts-unit">건</span></div>
       </div>
       <div class="today-stat">
         <div class="ts-label">이번 달 매출</div>
-        <div class="ts-value">84<span class="ts-unit">만</span></div>
+        <div class="ts-value"><span id="stat-revenue">84</span><span class="ts-unit">만</span></div>
       </div>
     </div>
   </div>
@@ -527,10 +527,37 @@ function setGreeting() {
 
 // ── 사용자 정보 로드 ─────────────────────────
 function loadUser() {
-  const saved = localStorage.getItem('ssak_user');
-  if (saved) {
-    const user = JSON.parse(saved);
-    document.getElementById('user-name').textContent = `${user.name} 사장님`;
+  const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  const sch = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
+
+  // 업주명 표시
+  const nameEl = document.getElementById('user-name');
+  if (nameEl) {
+    if (cfg.ownerName) nameEl.textContent = cfg.ownerName + ' 사장님';
+    else if (cfg.company) nameEl.textContent = cfg.company + ' 사장님';
+  }
+
+  // 오늘 예약 건수 (로컬)
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' +
+    String(today.getMonth()+1).padStart(2,'0') + '-' +
+    String(today.getDate()).padStart(2,'0');
+  const todayCount = sch.filter(function(s) {
+    return (s.date || '').startsWith(todayStr);
+  }).length;
+  var todayEl = document.getElementById('stat-today');
+  if (todayEl) todayEl.innerHTML = todayCount + '<span class="ts-unit">건</span>';
+
+  // 미답변 문의 (서버 API)
+  if (cfg.adminKey) {
+    fetch('https://ssakssak-server-production.up.railway.app/api/bookings?status=pending&adminKey=' + encodeURIComponent(cfg.adminKey))
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var cnt = (d.data ? d.data.length : 0);
+        var pendEl = document.getElementById('stat-pending');
+        if (pendEl) pendEl.textContent = cnt;
+      })
+      .catch(function() {});
   }
 }
 
@@ -553,8 +580,6 @@ function goTo(page) {
     'booking': 'booking.html'
   };
   if (map[page]) location.href = map[page];
-};
-  if (pages[page]) toast(pages[page]);
 }
 
 // ── Toast ────────────────────────────────────
