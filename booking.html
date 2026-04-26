@@ -296,8 +296,8 @@ async function submitBooking() {
   .then(r => r.json())
   .then(data => {
     if (data.success) {
-      document.getElementById('booking-form').style.display = 'none';
-      document.getElementById('booking-success').style.display = 'flex';
+      document.getElementById('screen-main').style.display = 'none';
+      document.getElementById('screen-done').style.display = 'flex';
     } else {
       showToast('신청 실패: ' + (data.error || '오류'));
       btn.disabled = false;
