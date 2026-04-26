@@ -298,6 +298,17 @@ async function submitBooking() {
     if (data.success) {
       document.getElementById('screen-main').style.display = 'none';
       document.getElementById('screen-done').style.display = 'flex';
+      // 완료 화면에 예약 정보 표시
+      const detail = document.getElementById('done-detail');
+      if(detail) {
+        detail.innerHTML = `
+          <div style="background:#f8faf8;border:1px solid #d4e8d4;border-radius:12px;padding:16px;text-align:left;font-size:13px;line-height:2;">
+            <div>👤 <b>${name}</b> · ${phone}</div>
+            <div>📍 ${address || '주소 미입력'}</div>
+            <div>📅 ${date} · 🧹 ${type} ${size ? size+'평' : ''}</div>
+            ${notes ? '<div>📝 '+notes+'</div>' : ''}
+          </div>`;
+      }
     } else {
       showToast('신청 실패: ' + (data.error || '오류'));
       btn.disabled = false;
