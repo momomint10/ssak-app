@@ -352,7 +352,7 @@ const params = new URLSearchParams(location.search);
 token = params.get('token');
 
 window.onload = async () => {
-  if (!token) { showError('잘못된 링크', '서명 링크가 올바르지 않습니다.'); return; }
+  if (!token) { show('owner'); setTimeout(initOwnerCanvas, 100); return; }
   try {
     const res = await fetch(`${SERVER}/api/contract/${token}`);
     const json = await res.json();
@@ -377,8 +377,8 @@ window.onload = async () => {
 };
 
 function show(name) {
-  ['loading','error','done','already','main'].forEach(n => {
-    document.getElementById('screen-'+n).style.display = n===name ? (name==='main'?'block':'flex') : 'none';
+  ['loading','error','done','already','main','owner','owner-done'].forEach(n => {
+    document.getElementById('screen-'+n).style.display = n===name ? (name==='main'||name==='owner'||name==='owner-done'?'block':'flex') : 'none';
   });
 }
 function showError(t, s) {
