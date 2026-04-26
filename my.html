@@ -171,27 +171,31 @@ function init() {
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
   const schedules = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
 
-  // 프로필
-  if (cfg.ownerName) document.getElementById('my-name').textContent = cfg.ownerName + ' 사장님';
-  if (cfg.company) document.getElementById('my-company').textContent = cfg.company;
+  // 프로필 정보
+  const ownerName = cfg.ownerName || cfg.owner || '';
+  const company = cfg.company || '';
+  document.getElementById('my-name').textContent = ownerName ? ownerName + ' 사장님' : '사장님';
+  document.getElementById('my-company').textContent = company || '업체명 미설정';
 
-  // 이달 통계
+  // 이달 통계 (localStorage 스케줄 기반)
   const now = new Date();
   const thisMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-  const thisMonthSchedules = schedules.filter(s => (s.date||'').startsWith(thisMonth));
-  const pending = schedules.filter(s => s.status === 'confirmed' || s.status === 'inprogress').length;
-  const done = thisMonthSchedules.filter(s => s.status === 'done').length;
+  const thisMonthSched = schedules.filter(s => (s.date||'').startsWith(thisMonth));
+  const confirmed = schedules.filter(s => s.status === 'confirmed' || !s.status).length;
+  const done = thisMonthSched.filter(s => s.status === 'done').length;
 
-  document.getElementById('stat-bookings').textContent = thisMonthSchedules.length;
-  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-bookings').textContent = thisMonthSched.length;
+  document.getElementById('stat-pending').textContent = confirmed;
   document.getElementById('stat-done').textContent = done;
+
+  // 예약 링크에 업체 정보 반영
+  const footerEl = document.querySelector('.app-version strong');
+  if (footerEl && company) footerEl.textContent = company + ' 싹싹';
 }
 
 function goSettings() {
+  sessionStorage.setItem('gotoTab','settings');
   location.href = 'ssak-quote.html';
-  setTimeout(() => {
-    if (typeof switchTab === 'function') switchTab('settings');
-  }, 500);
 }
 
 function copyBookingLink() {
