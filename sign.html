@@ -104,6 +104,22 @@
     <div class="state-title">서명이 완료되었습니다!</div>
     <div class="state-sub">계약서 PDF가 양측에 문자로 발송되었습니다.<br><br>편안한 입주 되세요 😊</div>
   </div>
+  <!-- 업주 전송 완료 화면 -->
+  <div id="screen-owner-done" style="display:none;">
+    <div style="text-align:center;padding:60px 24px;">
+      <div style="font-size:56px;margin-bottom:16px;">✅</div>
+      <div style="font-size:20px;font-weight:800;color:#1a1f36;margin-bottom:8px;">서명 링크 전송 완료!</div>
+      <div style="font-size:14px;color:#6b7684;margin-bottom:24px;">
+        <span id="owner-done-customer"></span>님께<br>SMS가 발송되었습니다.
+      </div>
+      <div style="background:#f6f8fa;border-radius:10px;padding:14px;margin-bottom:24px;word-break:break-all;">
+        <div style="font-size:11px;color:#6b7684;margin-bottom:6px;">서명 링크</div>
+        <a id="owner-done-link" style="font-size:13px;color:#0969da;" href="#"></a>
+      </div>
+      <button onclick="location.href='index.html'" style="width:100%;padding:14px;background:#00C896;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;">🏠 홈으로</button>
+    </div>
+  </div>
+
 
   <div id="screen-already" class="state-screen" style="display:none;">
     <div class="state-icon">📋</div>
@@ -111,7 +127,80 @@
     <div class="state-sub" id="pdf-link-area"></div>
   </div>
 
-  <div id="screen-main" style="display:none;">
+  
+  <!-- ── 업주 모드: 계약서 작성 + 서명 ─────────────────────────────── -->
+  <div id="screen-owner" style="display:none;">
+    <div class="header">
+      <div class="logo">🧹 계약서 작성</div>
+      <div class="subtitle">고객 정보를 입력하고 업주 서명 후 전송하세요</div>
+    </div>
+    <div class="container">
+
+      <!-- 고객 정보 -->
+      <div class="section-card">
+        <div class="section-title">👤 고객 정보</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>고객명 *</label>
+            <input id="o-cust-name" class="form-input" placeholder="홍길동" type="text">
+          </div>
+          <div class="form-group">
+            <label>연락처 *</label>
+            <input id="o-cust-phone" class="form-input" placeholder="010-0000-0000" type="tel">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>청소 주소 *</label>
+          <input id="o-addr" class="form-input" placeholder="서울시 강남구..." type="text">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>서비스 유형</label>
+            <select id="o-type" class="form-input">
+              <option value="입주 전 청소">입주 전 청소</option>
+              <option value="입주 후 청소">입주 후 청소</option>
+              <option value="이사 청소">이사 청소</option>
+              <option value="정기 청소">정기 청소</option>
+              <option value="사무실 청소">사무실 청소</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>면적 (평)</label>
+            <input id="o-size" class="form-input" placeholder="32" type="number">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>서비스 날짜</label>
+            <input id="o-date" class="form-input" type="date">
+          </div>
+          <div class="form-group">
+            <label>금액 (원)</label>
+            <input id="o-price" class="form-input" placeholder="350000" type="number">
+          </div>
+        </div>
+      </div>
+
+      <!-- 업주 서명 -->
+      <div class="section-card">
+        <div class="section-title">✍️ 업주 서명</div>
+        <div class="sig-wrap">
+          <canvas id="owner-sig-canvas" width="320" height="100" style="border:1.5px solid #d0d7de;border-radius:8px;touch-action:none;background:#fff;display:block;max-width:100%;"></canvas>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button onclick="clearOwnerSig()" class="btn-outline" style="flex:1;padding:9px;border:1.5px solid #d0d7de;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;">지우기</button>
+          <button onclick="submitOwnerContract()" id="btn-owner-submit" class="btn-submit" style="flex:2;padding:9px 0;background:#00C896;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">📤 고객에게 서명 링크 전송</button>
+        </div>
+        <div style="font-size:11.5px;color:#6b7684;margin-top:10px;line-height:1.6;">
+          💡 전송 시 고객 연락처로 서명 링크 SMS가 발송됩니다.
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- ── 업주 모드 끝 ──────────────────────────────────────────────── -->
+
+<div id="screen-main" style="display:none;">
     <div class="header">
       <div class="header-logo" id="hdr-logo">S</div>
       <div class="header-info">
@@ -436,6 +525,97 @@ function toast(msg) {
   el.textContent=msg; el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+// ── 업주 모드 기능 ──────────────────────────────────────────────────────
+let ownerSigCanvas, ownerSigCtx, ownerDrawing = false;
+
+function initOwnerCanvas() {
+  ownerSigCanvas = document.getElementById('owner-sig-canvas');
+  if (!ownerSigCanvas) return;
+  ownerSigCtx = ownerSigCanvas.getContext('2d');
+  ownerSigCtx.strokeStyle = '#1a1f36';
+  ownerSigCtx.lineWidth = 2;
+  ownerSigCtx.lineCap = 'round';
+
+  const getPos = e => {
+    const rect = ownerSigCanvas.getBoundingClientRect();
+    const scaleX = ownerSigCanvas.width / rect.width;
+    const scaleY = ownerSigCanvas.height / rect.height;
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - rect.left) * scaleX, y: (src.clientY - rect.top) * scaleY };
+  };
+  ownerSigCanvas.addEventListener('mousedown', e => { ownerDrawing=true; ownerSigCtx.beginPath(); const p=getPos(e); ownerSigCtx.moveTo(p.x,p.y); });
+  ownerSigCanvas.addEventListener('mousemove', e => { if(!ownerDrawing) return; const p=getPos(e); ownerSigCtx.lineTo(p.x,p.y); ownerSigCtx.stroke(); });
+  ownerSigCanvas.addEventListener('mouseup', ()=>ownerDrawing=false);
+  ownerSigCanvas.addEventListener('touchstart', e => { e.preventDefault(); ownerDrawing=true; ownerSigCtx.beginPath(); const p=getPos(e); ownerSigCtx.moveTo(p.x,p.y); }, {passive:false});
+  ownerSigCanvas.addEventListener('touchmove', e => { e.preventDefault(); if(!ownerDrawing) return; const p=getPos(e); ownerSigCtx.lineTo(p.x,p.y); ownerSigCtx.stroke(); }, {passive:false});
+  ownerSigCanvas.addEventListener('touchend', ()=>ownerDrawing=false);
+}
+
+function clearOwnerSig() {
+  if (ownerSigCtx) ownerSigCtx.clearRect(0, 0, ownerSigCanvas.width, ownerSigCanvas.height);
+}
+
+function isOwnerSigEmpty() {
+  if (!ownerSigCanvas) return true;
+  const data = ownerSigCtx.getImageData(0,0,ownerSigCanvas.width,ownerSigCanvas.height).data;
+  for (let i=3; i<data.length; i+=4) if (data[i]>0) return false;
+  return true;
+}
+
+async function submitOwnerContract() {
+  const custName = document.getElementById('o-cust-name').value.trim();
+  const custPhone = document.getElementById('o-cust-phone').value.trim();
+  const addr = document.getElementById('o-addr').value.trim();
+  const type = document.getElementById('o-type').value;
+  const size = document.getElementById('o-size').value.trim();
+  const date = document.getElementById('o-date').value;
+  const price = document.getElementById('o-price').value.trim();
+
+  if (!custName || !custPhone) { toast('고객명과 연락처를 입력해주세요'); return; }
+  if (!addr) { toast('청소 주소를 입력해주세요'); return; }
+  if (isOwnerSigEmpty()) { toast('업주 서명을 해주세요'); return; }
+
+  const btn = document.getElementById('btn-owner-submit');
+  btn.disabled = true; btn.textContent = '⏳ 전송 중...';
+
+  const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  const ownerSigData = ownerSigCanvas.toDataURL('image/png');
+
+  try {
+    const res = await fetch('https://ssakssak-server-production.up.railway.app/api/contract/create', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        customer_name: custName,
+        customer_phone: custPhone.replace(/-/g,''),
+        address: addr,
+        service_type: type,
+        size: size ? parseInt(size) : null,
+        service_date: date || null,
+        price: price ? parseInt(price) : null,
+        company_name: cfg.company || '싹싹클린',
+        owner_phone: cfg.fromPhone || cfg.phone || '',
+        admin_key: cfg.adminKey || '',
+        owner_signature: ownerSigData
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      show('screen-owner-done');
+      const tokenUrl = 'https://ssakapp.co.kr/sign.html?token=' + data.token;
+      document.getElementById('owner-done-link').textContent = tokenUrl;
+      document.getElementById('owner-done-link').href = tokenUrl;
+      document.getElementById('owner-done-customer').textContent = custName + ' (' + custPhone + ')';
+    } else {
+      toast('전송 실패: ' + (data.error || '오류'));
+      btn.disabled=false; btn.textContent='📤 고객에게 서명 링크 전송';
+    }
+  } catch(e) {
+    toast('서버 오류. 잠시 후 다시 시도해주세요.');
+    btn.disabled=false; btn.textContent='📤 고객에게 서명 링크 전송';
+  }
 }
 </script>
 </body>
