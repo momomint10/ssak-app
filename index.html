@@ -496,7 +496,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
     <div class="nav-icon">📅</div>
     <div>스케줄</div>
   </button>
-  <button class="nav-item" id="nav-community" onclick="setNav('community')">
+  <button class="nav-item" id="nav-community" onclick="location.href='community.html'">
     <div class="nav-icon">👥</div>
     <div>커뮤니티</div>
   </button>
@@ -588,7 +588,8 @@ function setNav(page) {
     'home': 'index.html',
     'quote': 'ssak-quote.html',
     'schedule': 'schedule.html',
-    'my': 'my.html'
+    'my': 'my.html',
+    'community': 'community.html'
   };
   if (map[page]) location.href = map[page];
 }
@@ -598,6 +599,7 @@ function goTo(page) {
     'quote': 'ssak-quote.html',
     'schedule': 'schedule.html',
     'my': 'my.html',
+    'community': 'community.html',
     'booking': 'booking.html'
   };
   if (map[page]) location.href = map[page];
