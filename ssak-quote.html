@@ -2006,7 +2006,7 @@ async function generateReport(){
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
 
     txtEl.textContent = '업로드 중...';
-    const ownerPhone = cfg.phone;
+    const ownerPhone = cfg.fromPhone || cfg.phone;
     const res = await fetch(`${SERVER}/api/contract/upload`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -2016,7 +2016,7 @@ async function generateReport(){
         ownerPhone: ownerPhone?.replace(/-/g,''),
         customerName: name,
         companyName: cfg.company || '서프로클린',
-        companyPhone: cfg.phone || ''
+        companyPhone: cfg.fromPhone || cfg.phone || ''
       })
     });
     const data = await res.json();

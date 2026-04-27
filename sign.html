@@ -103,6 +103,16 @@
     <div class="state-icon">✅</div>
     <div class="state-title">서명이 완료되었습니다!</div>
     <div class="state-sub">계약서 PDF가 양측에 문자로 발송되었습니다.<br><br>편안한 입주 되세요 😊</div>
+    <div id="done-pdf-area" style="display:none;margin-top:16px;width:100%;">
+      <a id="done-pdf-link" href="#" target="_blank"
+        style="display:block;width:100%;padding:13px;background:#2e1f0e;color:#fff;text-align:center;border-radius:12px;text-decoration:none;font-weight:700;font-size:15px;font-family:inherit;">
+        📄 계약서 PDF 보기
+      </a>
+      <button id="done-pdf-download" onclick="downloadSignedPDF()"
+        style="display:block;width:100%;padding:12px;margin-top:8px;background:#fff;color:#2e1f0e;border:1.5px solid #2e1f0e;border-radius:12px;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;">
+        ⬇️ 기기에 저장
+      </button>
+    </div>
   </div>
   <!-- 업주 전송 완료 화면 -->
   <div id="screen-owner-done" style="display:none;">
@@ -518,6 +528,7 @@ async function submitSign() {
 
     pdf.addImage(canvas.toDataURL('image/jpeg', 0.88), 'JPEG', offsetX, offsetY, pW, pH);
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
+    window._lastSignedPdfB64 = pdfBase64; // 다운로드용 임시 저장
 
     btn.textContent = '서버 전송 중...';
     const res = await fetch(`${SERVER}/api/contract/${token}/sign`, {
@@ -528,6 +539,23 @@ async function submitSign() {
     const data = await res.json();
     if (data.success) {
       show('done');
+      // PDF 링크 표시
+      if (data.pdfUrl) {
+        const linkEl = document.getElementById('done-pdf-link');
+        const areaEl = document.getElementById('done-pdf-area');
+        if (linkEl) { linkEl.href = data.pdfUrl; }
+        if (areaEl) { areaEl.style.display = 'block'; }
+      }
+      // 기기에 바로 저장
+      try {
+        const { jsPDF: jsPDF2 } = window.jspdf;
+        if (pdfBase64) {
+          const dlLink = document.createElement('a');
+          dlLink.href = 'data:application/pdf;base64,' + pdfBase64;
+          dlLink.download = '계약서_' + (contractData?.name || '') + '_' + new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','') + '.pdf';
+          dlLink.click();
+        }
+      } catch(dlErr) { console.log('자동저장 실패:', dlErr.message); }
     } else {
       toast('❌ 오류: ' + (data.error||'알 수 없는 오류'));
       btn.disabled=false; btn.textContent='✅ 서명 완료 · 발송';
@@ -637,6 +665,20 @@ async function submitOwnerContract() {
     toast('서버 오류. 잠시 후 다시 시도해주세요.');
     btn.disabled=false; btn.textContent='📤 고객에게 서명 링크 전송';
   }
+}
+
+// 서명 완료 PDF 다운로드
+function downloadSignedPDF() {
+  const b64 = window._lastSignedPdfB64;
+  if (!b64) {
+    const linkEl = document.getElementById('done-pdf-link');
+    if (linkEl && linkEl.href !== '#') { window.open(linkEl.href); }
+    return;
+  }
+  const a = document.createElement('a');
+  a.href = 'data:application/pdf;base64,' + b64;
+  a.download = '서비스계약서_' + new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','') + '.pdf';
+  a.click();
 }
 </script>
 </body>

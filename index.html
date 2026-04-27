@@ -558,6 +558,29 @@ function loadUser() {
         if (pendEl) pendEl.textContent = cnt;
       })
       .catch(function() {});
+
+    // 이달 실적 서버에서 가져오기
+    fetch('https://ssakssak-server-production.up.railway.app/api/stats/monthly?adminKey=' + encodeURIComponent(cfg.adminKey))
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (!d.success) return;
+        var perfDoneEl    = document.getElementById('perf-done');
+        var perfRevEl     = document.getElementById('perf-revenue');
+        var perfRevChgEl  = document.getElementById('perf-revenue-change');
+        var statTodayEl   = document.getElementById('stat-today');
+        if (perfDoneEl)   perfDoneEl.textContent = d.done;
+        if (perfRevEl) {
+          var man = Math.round((d.revenue || 0) / 10000);
+          perfRevEl.textContent = man > 0 ? man : '-';
+        }
+        if (perfRevChgEl && d.revenue > 0) {
+          perfRevChgEl.textContent = Math.round(d.revenue/10000) + '만원';
+        }
+        if (statTodayEl && d.confirmed > 0) {
+          statTodayEl.innerHTML = d.confirmed + '<span class="ts-unit">건</span>';
+        }
+      })
+      .catch(function() {});
   }
 
   // 이달 실적 계산
