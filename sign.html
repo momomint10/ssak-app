@@ -82,6 +82,96 @@
 
   .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#1E2130;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ══ 업주 모드 폼 레이아웃 ══════════════════════════════════════ */
+  .owner-wrap{ padding:16px 16px 48px; }
+  .ow-card{
+    background:#fff;
+    border:1px solid #dde8d8;
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .ow-card-title{
+    font-size:13px; font-weight:700;
+    color:var(--g-dark); margin-bottom:14px;
+    display:flex; align-items:center; gap:6px;
+  }
+  .ow-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .ow-row:last-child{ margin-bottom:0; }
+  .ow-col{ margin-bottom:10px; }
+  .ow-col:last-child{ margin-bottom:0; }
+  .ow-label{
+    display:block;
+    font-size:11.5px; font-weight:600;
+    color:#5B7A4F;
+    margin-bottom:5px;
+  }
+  .ow-input{
+    display:block; width:100%;
+    padding:11px 12px;
+    border:1.5px solid #d0dccb;
+    border-radius:9px;
+    font-size:14px; font-family:inherit;
+    color:#1a2010; background:#fafdf8;
+    transition:border-color .15s;
+    -webkit-appearance:none; appearance:none;
+  }
+  .ow-input:focus{
+    outline:none;
+    border-color:var(--primary);
+    background:#fff;
+  }
+  .ow-input::placeholder{ color:#aabaa4; }
+  select.ow-input{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='none' stroke='%235B7A4F' stroke-width='1.5' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 12px center;
+    padding-right:32px;
+    cursor:pointer;
+  }
+  .ow-sig-canvas{
+    display:block; width:100%;
+    height:110px;
+    border:1.5px dashed #b0ccaa;
+    border-radius:10px;
+    background:#f8fdf6;
+    touch-action:none; cursor:crosshair;
+  }
+  .ow-sig-btns{
+    display:grid; grid-template-columns:1fr 2fr;
+    gap:8px; margin-top:10px;
+  }
+  .ow-btn-clear{
+    padding:11px; border-radius:9px;
+    border:1.5px solid #c8d8c4;
+    background:#fff; color:#6a8060;
+    font-size:13px; font-family:inherit;
+    cursor:pointer; font-weight:600;
+  }
+  .ow-btn-clear:active{ background:#f0f4ee; }
+  .ow-btn-send{
+    padding:11px; border-radius:9px;
+    border:none;
+    background:var(--g-dark); color:#fff;
+    font-size:14px; font-weight:700;
+    font-family:inherit; cursor:pointer;
+    display:flex; align-items:center;
+    justify-content:center; gap:6px;
+  }
+  .ow-btn-send:disabled{
+    background:#b8c8b4; cursor:not-allowed;
+  }
+  .ow-hint{
+    font-size:11.5px; color:#8aaa80;
+    margin-top:10px; line-height:1.65;
+    display:flex; align-items:flex-start; gap:5px;
+  }
 </style>
 </head>
 <body>
@@ -116,6 +206,111 @@
   </div>
   <!-- 업주 전송 완료 화면 -->
   <div id="screen-owner-done" style="display:none;">
+    <div style="text-align:center;padding:60px 24px;">
+      <div style="font-size:56px;margin-bottom:16px;">✅</div>
+      <div style="font-size:20px;font-weight:800;color:#1a1f36;margin-bottom:8px;">서명 링크 전송 완료!</div>
+      <div style="font-size:14px;color:#6b7684;margin-bottom:24px;">
+        <span id="owner-done-customer"></span>님께<br>SMS가 발송되었습니다.
+      </div>
+      <div style="background:#f6f8fa;border-radius:10px;padding:14px;margin-bottom:24px;word-break:break-all;">
+        <div style="font-size:11px;color:#6b7684;margin-bottom:6px;">서명 링크</div>
+        <a id="owner-done-link" style="font-size:13px;color:#0969da;" href="#"></a>
+      </div>
+      <button onclick="location.href='index.html'" style="width:100%;padding:14px;background:#00C896;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;">🏠 홈으로</button>
+    </div>
+  </div>
+
+
+  <div id="screen-already" class="state-screen" style="display:none;">
+    <div class="state-icon">📋</div>
+    <div class="state-title">이미 서명된 계약서입니다</div>
+    <div class="state-sub" id="pdf-link-area"></div>
+  </div>
+
+  
+  <!-- ── 업주 모드: 계약서 작성 + 서명 ─────────────────────────────── -->
+  <div id="screen-owner" style="display:none;">
+    <div class="header">
+      <div class="header-logo">&#9997;&#65039;</div>
+      <div class="header-info">
+        <div class="header-title">계약서 작성</div>
+        <div class="header-sub">고객 정보 입력 &rarr; 업주 서명 &rarr; 고객 전송</div>
+      </div>
+    </div>
+
+    <div class="owner-wrap">
+
+      <div class="ow-card">
+        <div class="ow-card-title">&#128100; 고객 정보</div>
+
+        <div class="ow-row">
+          <div>
+            <label class="ow-label">고객명 <span style="color:#e05050;">*</span></label>
+            <input id="o-cust-name" class="ow-input" placeholder="홍길동" type="text" autocomplete="off">
+          </div>
+          <div>
+            <label class="ow-label">연락처 <span style="color:#e05050;">*</span></label>
+            <input id="o-cust-phone" class="ow-input" placeholder="010-0000-0000" type="tel" inputmode="tel">
+          </div>
+        </div>
+
+        <div class="ow-col">
+          <label class="ow-label">청소 주소 <span style="color:#e05050;">*</span></label>
+          <input id="o-addr" class="ow-input" placeholder="서울시 강남구 역삼동..." type="text" autocomplete="off">
+        </div>
+
+        <div class="ow-row">
+          <div>
+            <label class="ow-label">서비스 유형</label>
+            <select id="o-type" class="ow-input">
+              <option value="입주 전 청소">입주 전 청소</option>
+              <option value="입주 후 청소">입주 후 청소</option>
+              <option value="이사 청소">이사 청소</option>
+              <option value="정기 청소">정기 청소</option>
+              <option value="사무실 청소">사무실 청소</option>
+            </select>
+          </div>
+          <div>
+            <label class="ow-label">면적 (평)</label>
+            <input id="o-size" class="ow-input" placeholder="32" type="number" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="ow-row">
+          <div>
+            <label class="ow-label">서비스 날짜</label>
+            <input id="o-date" class="ow-input" type="date">
+          </div>
+          <div>
+            <label class="ow-label">금액 (원)</label>
+            <input id="o-price" class="ow-input" placeholder="350000" type="number" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+
+      <div class="ow-card">
+        <div class="ow-card-title" style="justify-content:space-between;">
+          <span>&#9997;&#65039; 업주 서명</span>
+          <span style="font-size:11px;font-weight:400;color:#8aaa80;">손가락으로 서명하세요</span>
+        </div>
+        <canvas id="owner-sig-canvas" class="ow-sig-canvas"></canvas>
+        <div class="ow-sig-btns">
+          <button class="ow-btn-clear" onclick="clearOwnerSig()">다시 쓰기</button>
+          <button class="ow-btn-send" id="btn-owner-submit" onclick="submitOwnerContract()">
+            &#128228; 고객에게 서명 링크 전송
+          </button>
+        </div>
+        <div class="ow-hint">
+          <span>&#128161;</span>
+          <span>전송 시 고객 연락처로 서명 링크 SMS가 자동 발송됩니다.</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- owner end -->
+
+id="screen-owner-done" style="display:none;">
     <div style="text-align:center;padding:60px 24px;">
       <div style="font-size:56px;margin-bottom:16px;">✅</div>
       <div style="font-size:20px;font-weight:800;color:#1a1f36;margin-bottom:8px;">서명 링크 전송 완료!</div>
