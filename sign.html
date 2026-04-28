@@ -847,7 +847,7 @@ async function submitOwnerContract() {
     });
     const data = await res.json();
     if (data.success) {
-      show('screen-owner-done');
+      show('owner-done');
       const tokenUrl = 'https://ssakapp.co.kr/sign.html?token=' + data.token;
       document.getElementById('owner-done-link').textContent = tokenUrl;
       document.getElementById('owner-done-link').href = tokenUrl;
