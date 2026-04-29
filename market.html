@@ -449,26 +449,28 @@ async function openDet(id){
   document.getElementById('det-ov').classList.add('on');
   document.getElementById('det-body').scrollTop=0;
   document.getElementById('det-title').textContent='불러오는 중...';
-  document.getElementById('contact-box').style.display='none';
+  document.getElementById('det-acts').innerHTML='';
   try{
-    const d = await fetch(SERVER+'/api/market/listings/'+id).then(r=>r.json());
-    if(!d.success) throw new Error(d.error);
+    const resp = await fetch(SERVER+'/api/market/listings/'+id);
+    const d = await resp.json();
+    if(!d.success) throw new Error(d.error||'서버 오류');
     const p=curListing=d.data;
     const isMine = p.anon_id === getAnon();
     // 헤더
-    document.getElementById('det-avatar').textContent = p.nickname?.slice(0,2)||'?';
-    document.getElementById('det-nick').textContent = p.nickname;
+    document.getElementById('det-avatar').textContent = (p.nickname||'?').slice(0,2);
+    document.getElementById('det-nick').textContent = p.nickname||'익명';
     document.getElementById('det-ago').textContent = ago(p.created_at);
     // 이미지
     const imgEl = document.getElementById('det-img');
-    if(p.image_url){ imgEl.src=p.image_url; imgEl.style.display='block'; } else imgEl.style.display='none';
-    // 정보
-    document.getElementById('det-cat').textContent = p.category;
+    if(p.image_url){ imgEl.src=p.image_url; imgEl.style.display='block'; }
+    else imgEl.style.display='none';
+    // 내용
+    document.getElementById('det-cat').textContent = p.category||'';
     document.getElementById('det-title').textContent = p.title;
     document.getElementById('det-price').textContent = fmtPrice(p.price);
     document.getElementById('det-desc').textContent = p.description||'(설명 없음)';
-    document.getElementById('det-views').textContent = p.views||0;
-    document.getElementById('det-cat2').textContent = p.category;
+    document.getElementById('det-views').textContent = (p.views||0);
+    document.getElementById('det-cat2').textContent = p.category||'';
     document.getElementById('det-status-txt').textContent = STATUS_TXT[p.status]||p.status;
     // 액션 버튼
     const acts = document.getElementById('det-acts');
@@ -479,9 +481,13 @@ async function openDet(id){
     } else if(p.status==='available'||p.status==='reserved'){
       acts.innerHTML=`<button class="act-btn act-buy" onclick="openChat()" style="width:100%;">💬 안심채팅으로 문의하기</button>`;
     } else {
-      acts.innerHTML=`<button class="act-btn act-del" disabled style="width:100%;opacity:.4;">판매 완료된 물품입니다</button>`;
+      acts.innerHTML=`<button class="act-btn act-del" disabled style="width:100%;opacity:.4;cursor:not-allowed;">판매 완료된 물품입니다</button>`;
     }
-  }catch(e){ document.getElementById('det-title').textContent='오류: '+e.message; }
+  }catch(e){
+    document.getElementById('det-title').textContent='오류: '+e.message;
+    document.getElementById('det-acts').innerHTML=`<button class="act-btn act-del" onclick="closeDet()" style="width:100%;">닫기</button>`;
+    console.error('openDet error:', e);
+  }
 }
 function closeDet(){ document.getElementById('det-ov').classList.remove('on'); curId=null; }
 
