@@ -317,13 +317,13 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
     </div>
 
     <div class="today-stats">
-      <div class="today-stat">
+      <div class="today-stat" onclick="location.href='schedule.html'" style="cursor:pointer;">
         <div class="ts-label">오늘 작업</div>
-        <div class="ts-value" id="stat-today">2<span class="ts-unit">건</span></div>
+        <div class="ts-value" id="stat-today">-<span class="ts-unit">건</span></div>
       </div>
-      <div class="today-stat">
+      <div class="today-stat" onclick="location.href='schedule.html'" style="cursor:pointer;">
         <div class="ts-label">미답변 문의</div>
-        <div class="ts-value" style="color:#FFD700;"><span id="stat-pending">3</span><span class="ts-unit">건</span></div>
+        <div class="ts-value" style="color:#FFD700;"><span id="stat-pending">-</span><span class="ts-unit">건</span></div>
       </div>
       <div class="today-stat">
         <div class="ts-label">이번 달 매출</div>
