@@ -311,6 +311,7 @@ function submitBooking() {
   const time = document.getElementById('f-time').value;
   const notes = document.getElementById('f-notes').value.trim();
   if (!name || !phone) { showToast('이름과 연락처를 입력해주세요'); return; }
+  if (!address) { showToast('청소 주소를 입력해주세요'); return; }
   if (!date) { showToast('희망 날짜를 선택해주세요'); return; }
   const btn = document.getElementById('btn-submit');
   btn.disabled = true;
@@ -320,9 +321,12 @@ function submitBooking() {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({name, phone, address, size, type, date, time, notes,
-      ownerPhone: cfg.phone||'', apiKey: cfg.apiKey||'',
-      apiSecret: cfg.apiSecret||'', fromPhone: cfg.fromPhone||'',
-      company: cfg.company||'싹싹클린'
+      ownerPhone: cfg.fromPhone || cfg.phone || '',
+      apiKey: cfg.apiKey || '',
+      apiSecret: cfg.apiSecret || '',
+      fromPhone: cfg.fromPhone || '',
+      company: cfg.company || '싹싹클린',
+      companyName: cfg.company || '싹싹클린'
     })
   })
   .then(r => r.json())

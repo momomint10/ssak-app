@@ -144,6 +144,11 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
       <div class="menu-text"><div class="menu-title">이용 가이드</div><div class="menu-sub">앱 사용법 및 FAQ</div></div>
       <div class="menu-arrow">›</div>
     </div>
+    <div class="menu-item" onclick="confirmLogout()">
+      <div class="menu-icon" style="background:#FFF0F0;font-size:18px;">🚪</div>
+      <div class="menu-text"><div class="menu-title" style="color:#e05050;">앱 초기화</div><div class="menu-sub">모든 데이터 및 설정 초기화</div></div>
+      <div class="menu-arrow" style="color:#e05050;">›</div>
+    </div>
     <div class="menu-item" onclick="toast('카카오톡: @싹싹클린')">
       <div class="menu-icon amber">💬</div>
       <div class="menu-text"><div class="menu-title">고객센터</div><div class="menu-sub">문의 및 피드백</div></div>
@@ -233,6 +238,15 @@ function toast(msg) {
 }
 
 init();
+
+// 초기화 (로그아웃)
+function confirmLogout() {
+  if (!confirm('앱 데이터와 설정을 모두 초기화할까요?\n(스케줄, 설정, 이력이 모두 삭제됩니다)')) return;
+  const keys = ['ssak_cfg','ssak_schedules','ssak_history','ssak_templates','ssak_faqs','ssak_anon_id'];
+  keys.forEach(k => localStorage.removeItem(k));
+  toast('✅ 초기화 완료! 홈으로 이동합니다...');
+  setTimeout(() => location.href = 'index.html', 1500);
+}
 </script>
 </body>
 </html>

@@ -590,8 +590,8 @@ function sendQuickSMS(type) {
   const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일`;
 
   const MSGS = {
-    confirm: `[${company}] ${name}님, ${dateLabel} ${time} 입주청소 예약이 확정됐습니다. 주소: ${addr||'협의'}. 문의: ${cfg.phone||''} 감사합니다 😊`,
-    remind: `[${company}] ${name}님, 오늘 ${time} 입주청소 일정이 있습니다. 잊지 마세요! 문의: ${cfg.phone||''}`,
+    confirm: `[${company}] ${name}님, ${dateLabel} ${time} 입주청소 예약이 확정됐습니다. 주소: ${addr||'협의'}. 문의: ${cfg.fromPhone||cfg.phone||''} 감사합니다 😊`,
+    remind: `[${company}] ${name}님, 오늘 ${time} 입주청소 일정이 있습니다. 잊지 마세요! 문의: ${cfg.fromPhone||cfg.phone||''}`,
     done: `[${company}] ${name}님, 오늘 청소가 완료됐습니다. 이용해 주셔서 감사합니다 🙏 후기: ${cfg.review||''}`
   };
 
