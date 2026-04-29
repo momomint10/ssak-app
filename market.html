@@ -92,7 +92,7 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(
 .act-del{background:var(--g100);color:var(--g500);}
 .act-status{background:var(--g900);color:#fff;}
 .act-status:active{opacity:.8;}
-.fee-note{font-size:11px;color:var(--g400);text-align:center;padding:8px 0;background:var(--g50);border-radius:8px;margin-bottom:10px;}
+
 .contact-box{background:var(--pr-l);border:1px solid #FED7AA;border-radius:10px;padding:14px;margin-top:10px;display:none;}
 .contact-box-title{font-size:12px;font-weight:700;color:var(--pr-d);margin-bottom:6px;}
 .contact-box-val{font-size:15px;font-weight:900;color:var(--g900);}
@@ -115,7 +115,7 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
 .w-price-wrap{position:relative;}
 .w-price-wrap .w-inp{padding-right:28px;}
 .w-price-unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--g400);pointer-events:none;}
-.w-fee-preview{margin-top:5px;font-size:11.5px;color:var(--pr);font-weight:600;}
+
 .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
 .cat-cell{padding:8px 4px;border:1.5px solid var(--g200);border-radius:9px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--g500);background:#fff;font-family:inherit;}
 .cat-cell.on{background:var(--g900);border-color:var(--g900);color:#fff;}
@@ -192,13 +192,11 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
         <div class="det-meta-item">상태 <span id="det-status-txt"></span></div>
       </div>
       <div class="det-actions" id="det-acts"></div>
-      <div class="fee-note" id="fee-note"></div>
       <!-- 판매자 연락처 (구매의사 확인 후) -->
       <div class="contact-box" id="contact-box">
         <div class="contact-box-title">📞 판매자 연락처</div>
         <div class="contact-box-val" id="contact-val"></div>
-        <div style="font-size:11px;color:#92400E;margin-top:6px;">거래 완료 후 아래 버튼을 눌러주세요 (수수료 0.1% 기록)</div>
-        <button onclick="completeTransaction()" style="width:100%;margin-top:10px;padding:10px;background:#F97316;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">✅ 거래 완료 처리</button>
+
       </div>
     </div>
   </div>
@@ -243,10 +241,9 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
       <div class="w-sec">
         <label class="w-lbl">판매가격 *</label>
         <div class="w-price-wrap">
-          <input class="w-inp" id="w-price" placeholder="50000" type="number" inputmode="numeric" oninput="updateFeePreview()">
+          <input class="w-inp" id="w-price" placeholder="50000" type="number" inputmode="numeric">
           <span class="w-price-unit">원</span>
         </div>
-        <div class="w-fee-preview" id="fee-preview"></div>
       </div>
 
       <!-- 설명 -->
@@ -315,7 +312,6 @@ function ago(ts){
 }
 function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function fmtPrice(n){ return Number(n).toLocaleString()+'원'; }
-function feeOf(price){ return Math.ceil(Number(price)*0.001); }
 
 // ── 상태 ─────────────────────────────────────────────────────
 let page=0, hasMore=true, loading=false, searchKw='', curCat='전체', searchTimer=null;
@@ -414,9 +410,6 @@ async function openDet(id){
     document.getElementById('det-views').textContent = p.views||0;
     document.getElementById('det-cat2').textContent = p.category;
     document.getElementById('det-status-txt').textContent = STATUS_TXT[p.status]||p.status;
-    // 수수료 안내
-    const fee = feeOf(p.price);
-    document.getElementById('fee-note').textContent = `💰 거래 수수료: ${fee.toLocaleString()}원 (거래금액의 0.1%)`;
     // 액션 버튼
     const acts = document.getElementById('det-acts');
     if(isMine){
@@ -441,20 +434,7 @@ function showContact(){
   document.getElementById('det-body').scrollTop = document.getElementById('det-body').scrollHeight;
 }
 
-// 거래 완료 처리
-async function completeTransaction(){
-  if(!curListing) return;
-  if(!confirm(`${fmtPrice(curListing.price)} 거래 완료 처리할까요?\n수수료 ${feeOf(curListing.price).toLocaleString()}원이 기록됩니다.`)) return;
-  try{
-    const d = await fetch(SERVER+'/api/market/transactions',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ listing_id:curId, buyer_anon_id:getAnon(), seller_anon_id:curListing.anon_id, price:curListing.price })
-    }).then(r=>r.json());
-    if(!d.success) throw new Error(d.error);
-    toast('🎉 거래 완료! 수수료 '+feeOf(curListing.price).toLocaleString()+'원 기록됨');
-    closeDet(); loadFeed(true);
-  }catch(e){ toast('오류: '+e.message); }
-}
+
 
 // ── 상태 변경 ─────────────────────────────────────────────────
 function openStatusModal(){ document.getElementById('status-modal').classList.add('on'); }
@@ -497,12 +477,7 @@ function openWrite(){
 }
 function closeWrite(){ document.getElementById('write-ov').classList.remove('on'); }
 
-function updateFeePreview(){
-  const p = Number(document.getElementById('w-price').value);
-  const el = document.getElementById('fee-preview');
-  if(p>0){ el.textContent='거래 완료 시 수수료: '+feeOf(p).toLocaleString()+'원 (0.1%)'; }
-  else el.textContent='';
-}
+
 
 function onFileSelect(inp){
   const file=inp.files[0]; if(!file) return;
