@@ -1,5 +1,5 @@
 // 싹싹 앱 Service Worker v1.0
-const CACHE_NAME = 'ssak-v3';
+const CACHE_NAME = 'ssak-v4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -9,6 +9,7 @@ const STATIC_ASSETS = [
   '/my.html',
   '/sign.html',
   '/community.html',
+  '/market.html',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',

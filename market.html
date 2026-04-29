@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>싹싹 — 중고거래</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F97316">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pr:#F97316;--pr-d:#EA580C;--pr-l:#FFF7ED;
+  --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;
+  --g300:#CBD5E1;--g400:#94A3B8;--g500:#64748B;
+  --g700:#334155;--g900:#0F172A;
+  --radius:14px;--shadow:0 1px 8px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:'Noto Sans KR',sans-serif;background:var(--g50);color:var(--g900);}
+.shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
+
+/* ── 헤더 ──────────────────────────────── */
+.hd{background:#fff;padding:14px 16px 0;border-bottom:1px solid var(--g200);position:sticky;top:0;z-index:50;}
+.hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.hd-title{font-size:18px;font-weight:900;}
+.btn-write{background:var(--g900);color:#fff;border:none;border-radius:20px;padding:7px 15px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+
+/* 검색 */
+.srch{position:relative;margin-bottom:10px;}
+.srch-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--g400);pointer-events:none;}
+.srch-inp{width:100%;padding:10px 36px;border:1.5px solid var(--g200);border-radius:22px;font-size:14px;font-family:inherit;background:var(--g50);outline:none;transition:.15s;}
+.srch-inp:focus{border-color:var(--pr);background:#fff;}
+.srch-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:17px;color:var(--g300);cursor:pointer;display:none;}
+
+/* 카테고리 탭 */
+.cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;}
+.cats::-webkit-scrollbar{display:none;}
+.cat-btn{flex-shrink:0;padding:6px 13px;border-radius:20px;border:1.5px solid var(--g200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--g500);white-space:nowrap;transition:.12s;}
+.cat-btn.on{background:var(--g900);border-color:var(--g900);color:#fff;}
+
+/* ── 카드 ──────────────────────────────── */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 12px 0;}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;cursor:pointer;transition:transform .1s;}
+.card:active{transform:scale(.97);}
+.card-img{width:100%;aspect-ratio:1;object-fit:cover;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--g300);}
+.card-img img{width:100%;height:100%;object-fit:cover;}
+.card-body{padding:10px;}
+.card-cat{font-size:10px;font-weight:700;color:var(--pr);margin-bottom:3px;}
+.card-title{font-size:13px;font-weight:700;line-height:1.3;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-price{font-size:14px;font-weight:900;color:var(--g900);}
+.card-sub{display:flex;align-items:center;justify-content:space-between;margin-top:5px;}
+.card-nick{font-size:11px;color:var(--g400);}
+.card-ago{font-size:10px;color:var(--g300);}
+.status-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.sb-available{background:#DCFCE7;color:#16A34A;}
+.sb-reserved{background:#FEF9C3;color:#CA8A04;}
+.sb-sold{background:var(--g100);color:var(--g400);text-decoration:line-through;}
+
+/* 빈/로딩 */
+.empty{text-align:center;padding:60px 20px;}
+.empty-ico{font-size:44px;margin-bottom:10px;}
+.empty-ttl{font-size:15px;font-weight:700;color:var(--g700);margin-bottom:4px;}
+.empty-sub{font-size:13px;color:var(--g400);}
+.loading{display:flex;justify-content:center;padding:40px;}
+.sp{width:24px;height:24px;border:2.5px solid var(--g200);border-top-color:var(--pr);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── 상세 시트 ──────────────────────────── */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;}
+.ov.on{display:block;}
+.sh{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;z-index:201;max-height:92vh;display:flex;flex-direction:column;}
+.sh-drag{width:32px;height:3px;background:var(--g200);border-radius:2px;margin:10px auto;}
+.sh-head{padding:0 16px 12px;border-bottom:1px solid var(--g100);}
+.sh-seller{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.sh-avatar{width:36px;height:36px;border-radius:50%;background:var(--pr-l);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--pr-d);flex-shrink:0;}
+.sh-nick{font-size:13px;font-weight:700;color:var(--g700);}
+.sh-ago{font-size:11px;color:var(--g400);}
+.sh-close{margin-left:auto;background:none;border:none;font-size:22px;color:var(--g300);cursor:pointer;line-height:1;}
+.sh-body{overflow-y:auto;flex:1;padding:16px;}
+.det-img{width:100%;border-radius:12px;margin-bottom:12px;display:none;}
+.det-cat{font-size:11px;font-weight:700;color:var(--pr);margin-bottom:5px;}
+.det-title{font-size:18px;font-weight:900;margin-bottom:6px;line-height:1.3;}
+.det-price{font-size:22px;font-weight:900;margin-bottom:12px;}
+.det-desc{font-size:14px;line-height:1.8;color:var(--g500);white-space:pre-wrap;word-break:break-word;padding-bottom:14px;border-bottom:1px solid var(--g100);}
+.det-meta{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--g100);}
+.det-meta-item{font-size:12px;color:var(--g400);}
+.det-meta-item span{font-weight:700;color:var(--g700);}
+.det-actions{display:flex;gap:8px;padding:12px 0;}
+.act-btn{flex:1;padding:12px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;transition:.12s;}
+.act-buy{background:var(--pr);color:#fff;}
+.act-buy:active{background:var(--pr-d);}
+.act-del{background:var(--g100);color:var(--g500);}
+.act-status{background:var(--g900);color:#fff;}
+.act-status:active{opacity:.8;}
+.fee-note{font-size:11px;color:var(--g400);text-align:center;padding:8px 0;background:var(--g50);border-radius:8px;margin-bottom:10px;}
+.contact-box{background:var(--pr-l);border:1px solid #FED7AA;border-radius:10px;padding:14px;margin-top:10px;display:none;}
+.contact-box-title{font-size:12px;font-weight:700;color:var(--pr-d);margin-bottom:6px;}
+.contact-box-val{font-size:15px;font-weight:900;color:var(--g900);}
+
+/* ── 글쓰기 시트 ──────────────────────────── */
+.wo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;}
+.wo.on{display:block;}
+.ws{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;z-index:301;max-height:93vh;display:flex;flex-direction:column;}
+.ws-drag{width:32px;height:3px;background:var(--g200);border-radius:2px;margin:10px auto;}
+.ws-bar{padding:4px 16px 12px;border-bottom:1px solid var(--g100);display:flex;align-items:center;}
+.ws-title{font-size:16px;font-weight:900;}
+.ws-cancel{margin-left:auto;background:none;border:none;font-size:14px;color:var(--g400);cursor:pointer;font-family:inherit;}
+.ws-body{overflow-y:auto;flex:1;padding:16px;}
+.w-sec{margin-bottom:14px;}
+.w-lbl{font-size:11.5px;font-weight:700;color:var(--g500);margin-bottom:5px;display:block;}
+.w-inp{width:100%;padding:11px 12px;border:1.5px solid var(--g200);border-radius:9px;font-size:14px;font-family:inherit;outline:none;background:var(--g50);}
+.w-inp:focus{border-color:var(--pr);background:#fff;}
+.w-inp::placeholder{color:var(--g300);}
+textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
+.w-price-wrap{position:relative;}
+.w-price-wrap .w-inp{padding-right:28px;}
+.w-price-unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--g400);pointer-events:none;}
+.w-fee-preview{margin-top:5px;font-size:11.5px;color:var(--pr);font-weight:600;}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.cat-cell{padding:8px 4px;border:1.5px solid var(--g200);border-radius:9px;text-align:center;cursor:pointer;font-size:12px;font-weight:600;color:var(--g500);background:#fff;font-family:inherit;}
+.cat-cell.on{background:var(--g900);border-color:var(--g900);color:#fff;}
+.w-photo-wrap{position:relative;display:none;margin-bottom:10px;}
+.w-photo-wrap img{width:100%;max-height:200px;object-fit:cover;border-radius:10px;}
+.w-photo-rm{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.btn-photo{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--g200);border-radius:20px;background:#fff;font-size:13px;color:var(--g500);font-weight:600;cursor:pointer;font-family:inherit;}
+.ws-foot{padding:10px 16px;border-top:1px solid var(--g100);}
+.btn-submit{width:100%;padding:13px;background:var(--g900);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-submit:disabled{background:var(--g300);cursor:not-allowed;}
+
+/* ── 네비 ──────────────────────────────── */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,.96);border-top:1px solid var(--g200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--g400);cursor:pointer;}
+.ni.on{color:var(--pr);font-weight:700;}
+.ni-ico{font-size:20px;line-height:1;}
+
+/* 토스트 */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.92);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;}
+
+/* 상태 변경 드롭다운 */
+.status-modal{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.4);}
+.status-modal.on{display:block;}
+.status-sheet{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 16px 40px;}
+.status-ttl{font-size:15px;font-weight:900;margin-bottom:16px;text-align:center;}
+.status-opts{display:flex;flex-direction:column;gap:8px;}
+.status-opt{padding:14px;border:1.5px solid var(--g200);border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;background:#fff;text-align:center;}
+.status-opt.sel{border-color:var(--g900);background:var(--g900);color:#fff;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- 헤더 -->
+  <div class="hd">
+    <div class="hd-top">
+      <div class="hd-title">🛒 중고거래</div>
+      <button class="btn-write" onclick="openWrite()">✏️ 팔기</button>
+    </div>
+    <div class="srch">
+      <svg class="srch-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="srch-inp" id="srch-inp" placeholder="물품 검색" oninput="onSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()">
+      <button class="srch-x" id="srch-x" onclick="clearSearch()">×</button>
+    </div>
+    <div class="cats" id="cats"></div>
+  </div>
+
+  <div id="feed"></div>
+</div>
+
+<!-- ── 상세 시트 ────────────────────────────── -->
+<div class="ov" id="det-ov" onclick="if(event.target===this)closeDet()">
+  <div class="sh">
+    <div class="sh-drag"></div>
+    <div class="sh-head">
+      <div class="sh-seller">
+        <div class="sh-avatar" id="det-avatar">?</div>
+        <div>
+          <div class="sh-nick" id="det-nick"></div>
+          <div class="sh-ago" id="det-ago"></div>
+        </div>
+        <button class="sh-close" onclick="closeDet()">×</button>
+      </div>
+    </div>
+    <div class="sh-body" id="det-body">
+      <img class="det-img" id="det-img" alt="">
+      <div class="det-cat" id="det-cat"></div>
+      <div class="det-title" id="det-title"></div>
+      <div class="det-price" id="det-price"></div>
+      <div class="det-desc" id="det-desc"></div>
+      <div class="det-meta">
+        <div class="det-meta-item">조회 <span id="det-views">0</span></div>
+        <div class="det-meta-item">카테고리 <span id="det-cat2"></span></div>
+        <div class="det-meta-item">상태 <span id="det-status-txt"></span></div>
+      </div>
+      <div class="det-actions" id="det-acts"></div>
+      <div class="fee-note" id="fee-note"></div>
+      <!-- 판매자 연락처 (구매의사 확인 후) -->
+      <div class="contact-box" id="contact-box">
+        <div class="contact-box-title">📞 판매자 연락처</div>
+        <div class="contact-box-val" id="contact-val"></div>
+        <div style="font-size:11px;color:#92400E;margin-top:6px;">거래 완료 후 아래 버튼을 눌러주세요 (수수료 0.1% 기록)</div>
+        <button onclick="completeTransaction()" style="width:100%;margin-top:10px;padding:10px;background:#F97316;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">✅ 거래 완료 처리</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 글쓰기 시트 ────────────────────────────── -->
+<div class="wo" id="write-ov" onclick="if(event.target===this)closeWrite()">
+  <div class="ws">
+    <div class="ws-drag"></div>
+    <div class="ws-bar">
+      <div class="ws-title">판매 등록</div>
+      <button class="ws-cancel" onclick="closeWrite()">취소</button>
+    </div>
+    <div class="ws-body">
+      <!-- 사진 -->
+      <div class="w-sec">
+        <label class="w-lbl">📷 사진 (선택)</label>
+        <div class="w-photo-wrap" id="w-preview">
+          <img id="w-prev-img" alt="">
+          <button class="w-photo-rm" onclick="removePhoto()">×</button>
+        </div>
+        <button class="btn-photo" onclick="document.getElementById('w-file').click()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          사진 첨부
+        </button>
+        <input type="file" id="w-file" accept="image/*" style="display:none" onchange="onFileSelect(this)">
+      </div>
+
+      <!-- 카테고리 -->
+      <div class="w-sec">
+        <label class="w-lbl">📂 카테고리</label>
+        <div class="cat-grid" id="cat-select"></div>
+      </div>
+
+      <!-- 제목 -->
+      <div class="w-sec">
+        <label class="w-lbl">제목 *</label>
+        <input class="w-inp" id="w-title" placeholder="판매할 물품 이름 (예: 업소용 청소기)" maxlength="50" type="text">
+      </div>
+
+      <!-- 가격 -->
+      <div class="w-sec">
+        <label class="w-lbl">판매가격 *</label>
+        <div class="w-price-wrap">
+          <input class="w-inp" id="w-price" placeholder="50000" type="number" inputmode="numeric" oninput="updateFeePreview()">
+          <span class="w-price-unit">원</span>
+        </div>
+        <div class="w-fee-preview" id="fee-preview"></div>
+      </div>
+
+      <!-- 설명 -->
+      <div class="w-sec">
+        <label class="w-lbl">설명</label>
+        <textarea class="w-inp" id="w-desc" placeholder="물품 상태, 구매시기, 특이사항 등"></textarea>
+      </div>
+
+      <!-- 연락처 -->
+      <div class="w-sec">
+        <label class="w-lbl">연락처 (구매자에게 표시)</label>
+        <input class="w-inp" id="w-contact" placeholder="010-0000-0000 또는 오픈채팅 링크" type="text">
+      </div>
+    </div>
+
+    <div class="ws-foot">
+      <button class="btn-submit" id="btn-submit" onclick="submitListing()">등록하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 상태 변경 모달 -->
+<div class="status-modal" id="status-modal" onclick="if(event.target===this)closeStatusModal()">
+  <div class="status-sheet">
+    <div class="status-ttl">판매 상태 변경</div>
+    <div class="status-opts">
+      <button class="status-opt" onclick="setStatus('available')">🟢 판매중</button>
+      <button class="status-opt" onclick="setStatus('reserved')">🟡 예약중</button>
+      <button class="status-opt" onclick="setStatus('sold')">⚫ 판매완료</button>
+    </div>
+    <button onclick="closeStatusModal()" style="width:100%;margin-top:12px;padding:12px;background:var(--g100);border:none;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit;">닫기</button>
+  </div>
+</div>
+
+<!-- 네비 -->
+<div class="nav">
+  <button class="ni" onclick="location.href='index.html'"><div class="ni-ico">🏠</div><div>홈</div></button>
+  <button class="ni" onclick="location.href='ssak-quote.html'"><div class="ni-ico">⚡</div><div>견적</div></button>
+  <button class="ni" onclick="location.href='schedule.html'"><div class="ni-ico">📅</div><div>스케줄</div></button>
+  <button class="ni on"><div class="ni-ico">🛒</div><div>중고</div></button>
+  <button class="ni" onclick="location.href='community.html'"><div class="ni-ico">👥</div><div>커뮤니티</div></button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const SERVER = 'https://ssakssak-server-production.up.railway.app';
+const CATEGORIES = ['전체','청소기','걸레/대걸레','세제/약품','사다리','카트','보호장비','공구','기타'];
+const CAT_EMOJI  = {'전체':'🔍','청소기':'🧹','걸레/대걸레':'🫧','세제/약품':'🧴','사다리':'🪜','카트':'🛒','보호장비':'🧤','공구':'🔧','기타':'📦'};
+const STATUS_TXT = { available:'판매중', reserved:'예약중', sold:'판매완료', deleted:'삭제' };
+
+// ── 익명 ID ─────────────────────────────────────────────────
+function getAnon(){
+  let id = localStorage.getItem('ssak_anon_id');
+  if(!id){ id='a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); localStorage.setItem('ssak_anon_id',id); }
+  return id;
+}
+
+// ── 유틸 ─────────────────────────────────────────────────────
+function ago(ts){
+  const s=Math.floor((Date.now()-new Date(ts))/1000);
+  if(s<60) return '방금'; if(s<3600) return Math.floor(s/60)+'분 전';
+  if(s<86400) return Math.floor(s/3600)+'시간 전';
+  if(s<604800) return Math.floor(s/86400)+'일 전';
+  return new Date(ts).toLocaleDateString('ko-KR',{month:'short',day:'numeric'});
+}
+function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtPrice(n){ return Number(n).toLocaleString()+'원'; }
+function feeOf(price){ return Math.ceil(Number(price)*0.001); }
+
+// ── 상태 ─────────────────────────────────────────────────────
+let page=0, hasMore=true, loading=false, searchKw='', curCat='전체', searchTimer=null;
+let curId=null, curListing=null;
+let picBase64=null, picMime=null, selCat='청소기';
+
+// ── 카테고리 렌더 ─────────────────────────────────────────────
+function renderCats(){
+  const cats = document.getElementById('cats');
+  cats.innerHTML = CATEGORIES.map(c=>`<button class="cat-btn${c===curCat?' on':''}" onclick="setCat('${c}')">${CAT_EMOJI[c]||''} ${c}</button>`).join('');
+  // 글쓰기 카테고리
+  const catSel = document.getElementById('cat-select');
+  if(catSel) catSel.innerHTML = CATEGORIES.slice(1).map(c=>`<button class="cat-cell${c===selCat?' on':''}" onclick="pickCat('${c}')">${CAT_EMOJI[c]||''}<br>${c}</button>`).join('');
+}
+function setCat(c){ curCat=c; renderCats(); loadFeed(true); }
+function pickCat(c){ selCat=c; document.getElementById('cat-select').querySelectorAll('.cat-cell').forEach(el=>{ el.classList.toggle('on', el.textContent.trim().includes(c)); }); }
+
+// ── 피드 ─────────────────────────────────────────────────────
+async function loadFeed(reset=false){
+  if(loading) return;
+  if(reset){ page=0; hasMore=true; document.getElementById('feed').innerHTML=''; }
+  if(!hasMore) return;
+  loading=true;
+  const feed = document.getElementById('feed');
+  if(page===0) feed.innerHTML='<div class="loading"><div class="sp"></div></div>';
+  try{
+    let url = SERVER+'/api/market/listings?page='+page+'&limit=20';
+    if(searchKw) url+='&search='+encodeURIComponent(searchKw);
+    if(curCat!=='전체') url+='&category='+encodeURIComponent(curCat);
+    const d = await fetch(url).then(r=>r.json());
+    if(!d.success) throw new Error(d.error||'서버 오류');
+    if(page===0) feed.innerHTML='';
+    if(!d.data.length && page===0){
+      feed.innerHTML=`<div class="empty"><div class="empty-ico">🛒</div><div class="empty-ttl">${searchKw?'"'+esc(searchKw)+'" 결과 없음':'등록된 물품이 없어요'}</div><div class="empty-sub">첫 물품을 팔아보세요!</div></div>`;
+    } else {
+      const grid = document.createElement('div'); grid.className='grid';
+      d.data.forEach(item => {
+        const el = document.createElement('div'); el.className='card';
+        el.onclick = ()=>openDet(item.id);
+        const imgHtml = item.image_url
+          ? `<div class="card-img"><img src="${esc(item.image_url)}" alt="" loading="lazy"></div>`
+          : `<div class="card-img">${CAT_EMOJI[item.category]||'📦'}</div>`;
+        const statusEl = item.status!=='available'
+          ? `<span class="status-badge sb-${item.status}">${STATUS_TXT[item.status]}</span>` : '';
+        el.innerHTML = imgHtml+`<div class="card-body">
+          <div class="card-cat">${esc(item.category)}</div>
+          <div class="card-title">${esc(item.title)} ${statusEl}</div>
+          <div class="card-price">${fmtPrice(item.price)}</div>
+          <div class="card-sub"><span class="card-nick">${esc(item.nickname)}</span><span class="card-ago">${ago(item.created_at)}</span></div>
+        </div>`;
+        grid.appendChild(el);
+      });
+      feed.appendChild(grid);
+      if(d.data.length===20){
+        const btn=document.createElement('button'); btn.className='btn-more';
+        btn.style.cssText='display:block;width:calc(100% - 24px);margin:10px 12px;padding:11px;background:#fff;border:1px solid var(--g200);border-radius:var(--radius);font-size:13px;color:var(--g500);font-weight:600;cursor:pointer;font-family:inherit;';
+        btn.textContent='더보기'; btn.onclick=()=>loadFeed(); feed.appendChild(btn); page++;
+      } else { hasMore=false; page++; }
+    }
+  }catch(e){ feed.innerHTML=`<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">불러오기 실패</div><div class="empty-sub">${esc(e.message)}</div></div>`; }
+  loading=false;
+}
+
+// ── 검색 ─────────────────────────────────────────────────────
+function onSearch(v){
+  document.getElementById('srch-x').style.display = v?'block':'none';
+  clearTimeout(searchTimer); searchTimer=setTimeout(()=>doSearch(v), 400);
+}
+function doSearch(v){ searchKw=(v!==undefined?v:document.getElementById('srch-inp').value).trim(); loadFeed(true); }
+function clearSearch(){ document.getElementById('srch-inp').value=''; document.getElementById('srch-x').style.display='none'; searchKw=''; loadFeed(true); }
+
+// ── 상세 ─────────────────────────────────────────────────────
+async function openDet(id){
+  curId=id; curListing=null;
+  document.getElementById('det-ov').classList.add('on');
+  document.getElementById('det-body').scrollTop=0;
+  document.getElementById('det-title').textContent='불러오는 중...';
+  document.getElementById('contact-box').style.display='none';
+  try{
+    const d = await fetch(SERVER+'/api/market/listings/'+id).then(r=>r.json());
+    if(!d.success) throw new Error(d.error);
+    const p=curListing=d.data;
+    const isMine = p.anon_id === getAnon();
+    // 헤더
+    document.getElementById('det-avatar').textContent = p.nickname?.slice(0,2)||'?';
+    document.getElementById('det-nick').textContent = p.nickname;
+    document.getElementById('det-ago').textContent = ago(p.created_at);
+    // 이미지
+    const imgEl = document.getElementById('det-img');
+    if(p.image_url){ imgEl.src=p.image_url; imgEl.style.display='block'; } else imgEl.style.display='none';
+    // 정보
+    document.getElementById('det-cat').textContent = p.category;
+    document.getElementById('det-title').textContent = p.title;
+    document.getElementById('det-price').textContent = fmtPrice(p.price);
+    document.getElementById('det-desc').textContent = p.description||'(설명 없음)';
+    document.getElementById('det-views').textContent = p.views||0;
+    document.getElementById('det-cat2').textContent = p.category;
+    document.getElementById('det-status-txt').textContent = STATUS_TXT[p.status]||p.status;
+    // 수수료 안내
+    const fee = feeOf(p.price);
+    document.getElementById('fee-note').textContent = `💰 거래 수수료: ${fee.toLocaleString()}원 (거래금액의 0.1%)`;
+    // 액션 버튼
+    const acts = document.getElementById('det-acts');
+    if(isMine){
+      acts.innerHTML=`
+        <button class="act-btn act-status" onclick="openStatusModal()">📋 상태 변경</button>
+        <button class="act-btn act-del" onclick="deleteListing()">삭제</button>`;
+    } else if(p.status==='available'||p.status==='reserved'){
+      acts.innerHTML=`<button class="act-btn act-buy" onclick="showContact()" style="width:100%;">📞 연락처 보기 · 구매 문의</button>`;
+    } else {
+      acts.innerHTML=`<button class="act-btn act-del" disabled style="width:100%;opacity:.4;">판매 완료된 물품입니다</button>`;
+    }
+  }catch(e){ document.getElementById('det-title').textContent='오류: '+e.message; }
+}
+function closeDet(){ document.getElementById('det-ov').classList.remove('on'); curId=null; }
+
+// 연락처 표시
+function showContact(){
+  if(!curListing) return;
+  const box = document.getElementById('contact-box');
+  document.getElementById('contact-val').textContent = curListing.contact || '판매자에게 직접 문의 (커뮤니티 또는 앱 내 메시지)';
+  box.style.display='block';
+  document.getElementById('det-body').scrollTop = document.getElementById('det-body').scrollHeight;
+}
+
+// 거래 완료 처리
+async function completeTransaction(){
+  if(!curListing) return;
+  if(!confirm(`${fmtPrice(curListing.price)} 거래 완료 처리할까요?\n수수료 ${feeOf(curListing.price).toLocaleString()}원이 기록됩니다.`)) return;
+  try{
+    const d = await fetch(SERVER+'/api/market/transactions',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ listing_id:curId, buyer_anon_id:getAnon(), seller_anon_id:curListing.anon_id, price:curListing.price })
+    }).then(r=>r.json());
+    if(!d.success) throw new Error(d.error);
+    toast('🎉 거래 완료! 수수료 '+feeOf(curListing.price).toLocaleString()+'원 기록됨');
+    closeDet(); loadFeed(true);
+  }catch(e){ toast('오류: '+e.message); }
+}
+
+// ── 상태 변경 ─────────────────────────────────────────────────
+function openStatusModal(){ document.getElementById('status-modal').classList.add('on'); }
+function closeStatusModal(){ document.getElementById('status-modal').classList.remove('on'); }
+async function setStatus(st){
+  if(!curId) return; closeStatusModal();
+  try{
+    const d = await fetch(SERVER+'/api/market/listings/'+curId+'/status',{
+      method:'PATCH', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ anon_id:getAnon(), status:st })
+    }).then(r=>r.json());
+    if(!d.success) throw new Error(d.error);
+    toast('✅ 상태 변경됨: '+STATUS_TXT[st]); closeDet(); loadFeed(true);
+  }catch(e){ toast('오류: '+e.message); }
+}
+
+// 삭제
+async function deleteListing(){
+  if(!confirm('이 물품을 삭제할까요?')) return;
+  try{
+    const d = await fetch(SERVER+'/api/market/listings/'+curId,{
+      method:'DELETE', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ anon_id:getAnon() })
+    }).then(r=>r.json());
+    if(!d.success) throw new Error(d.error);
+    toast('삭제됐습니다'); closeDet(); loadFeed(true);
+  }catch(e){ toast('오류: '+e.message); }
+}
+
+// ── 글쓰기 ────────────────────────────────────────────────────
+function openWrite(){
+  document.getElementById('write-ov').classList.add('on');
+  document.getElementById('w-title').value='';
+  document.getElementById('w-price').value='';
+  document.getElementById('w-desc').value='';
+  document.getElementById('w-contact').value='';
+  document.getElementById('fee-preview').textContent='';
+  removePhoto(); selCat='청소기'; renderCats();
+  setTimeout(()=>document.getElementById('w-title').focus(), 300);
+}
+function closeWrite(){ document.getElementById('write-ov').classList.remove('on'); }
+
+function updateFeePreview(){
+  const p = Number(document.getElementById('w-price').value);
+  const el = document.getElementById('fee-preview');
+  if(p>0){ el.textContent='거래 완료 시 수수료: '+feeOf(p).toLocaleString()+'원 (0.1%)'; }
+  else el.textContent='';
+}
+
+function onFileSelect(inp){
+  const file=inp.files[0]; if(!file) return;
+  if(file.size>5*1024*1024){ toast('5MB 이하 이미지만 가능'); return; }
+  picMime=file.type;
+  const r=new FileReader(); r.onload=e=>{
+    picBase64=e.target.result.split(',')[1];
+    document.getElementById('w-prev-img').src=e.target.result;
+    document.getElementById('w-preview').style.display='block';
+  }; r.readAsDataURL(file); inp.value='';
+}
+function removePhoto(){ picBase64=null; picMime=null; document.getElementById('w-preview').style.display='none'; document.getElementById('w-prev-img').src=''; }
+
+async function submitListing(){
+  const title   = document.getElementById('w-title').value.trim();
+  const price   = Number(document.getElementById('w-price').value);
+  const desc    = document.getElementById('w-desc').value.trim();
+  const contact = document.getElementById('w-contact').value.trim();
+  if(!title){ toast('제목을 입력해주세요'); return; }
+  if(!price||price<100){ toast('판매 가격을 입력해주세요 (최소 100원)'); return; }
+  const btn = document.getElementById('btn-submit');
+  btn.disabled=true; btn.textContent='등록 중...';
+  try{
+    const body={ anon_id:getAnon(), title, description:desc, price, category:selCat, contact };
+    if(picBase64){ body.imageBase64=picBase64; body.imageMime=picMime||'image/jpeg'; }
+    const d=await fetch(SERVER+'/api/market/listings',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    }).then(r=>r.json());
+    if(!d.success) throw new Error(d.error||'서버 오류');
+    closeWrite(); toast('✅ 등록됐습니다!'); loadFeed(true);
+  }catch(e){ toast('오류: '+e.message); }
+  finally{ btn.disabled=false; btn.textContent='등록하기'; }
+}
+
+// ── Toast ─────────────────────────────────────────────────────
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.style.opacity='1'; clearTimeout(window._tt); window._tt=setTimeout(()=>el.style.opacity='0',2500); }
+
+// ── Init ──────────────────────────────────────────────────────
+renderCats();
+loadFeed(true);
+</script>
+</body>
+</html>
