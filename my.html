@@ -176,9 +176,8 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 
 <script>
 // ── 초기화 ──────────────────────────────────────────────────
-function init() {
+async function init() {
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
-  const schedules = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
 
   // 프로필 정보
   const ownerName = cfg.ownerName || cfg.owner || '';
@@ -186,30 +185,59 @@ function init() {
   document.getElementById('my-name').textContent = ownerName ? ownerName + ' 사장님' : '사장님';
   document.getElementById('my-company').textContent = company || '업체명 미설정';
 
-  // 이달 통계 (localStorage 스케줄 기반)
-  const now = new Date();
-  const thisMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-  const thisMonthSched = schedules.filter(s => (s.date||'').startsWith(thisMonth));
-  const confirmed = schedules.filter(s => s.status === 'confirmed' || !s.status).length;
-  const done = thisMonthSched.filter(s => s.status === 'done').length;
-
-  document.getElementById('stat-bookings').textContent = thisMonthSched.length;
-  document.getElementById('stat-pending').textContent = confirmed;
-  document.getElementById('stat-done').textContent = done;
-
-  // 이달 매출 계산
-  const revenue = thisMonthSched
-    .filter(s => s.status === 'done')
-    .reduce((acc, s) => acc + (parseInt(s.price) || 0), 0);
-  const revenueEl = document.getElementById('stat-revenue');
-  if (revenueEl) {
-    const manwon = Math.round(revenue / 10000);
-    revenueEl.textContent = manwon > 0 ? manwon + '만' : '-';
-  }
-
-  // 예약 링크에 업체 정보 반영
+  // 앱 버전 업체명
   const footerEl = document.querySelector('.app-version strong');
   if (footerEl && company) footerEl.textContent = company + ' 싹싹';
+
+  // 카드 로딩 표시
+  ['stat-bookings','stat-pending','stat-done','stat-revenue'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '…';
+  });
+
+  const SERVER = 'https://ssakssak-server-production.up.railway.app';
+  const adminKey = cfg.adminKey || '';
+
+  try {
+    // ── 이달 통계 (서버 연동) ────────────────────────────────
+    const r = await fetch(SERVER + '/api/stats/monthly?adminKey=' + encodeURIComponent(adminKey));
+    const d = await r.json();
+
+    if (d.success) {
+      document.getElementById('stat-bookings').textContent = d.total ?? 0;
+      document.getElementById('stat-pending').textContent  = d.pending ?? 0;
+      document.getElementById('stat-done').textContent     = d.done ?? 0;
+      const revenueEl = document.getElementById('stat-revenue');
+      if (revenueEl) {
+        const manwon = Math.round((d.revenue || 0) / 10000);
+        revenueEl.textContent = manwon > 0 ? manwon + '만' : '-';
+      }
+    } else {
+      throw new Error(d.error || '통계 조회 실패');
+    }
+  } catch(e) {
+    console.warn('서버 통계 조회 실패, 로컬 데이터 사용:', e.message);
+
+    // ── fallback: localStorage 스케줄 기반 ───────────────────
+    const schedules = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
+    const now = new Date();
+    const thisMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+    const thisMonthSched = schedules.filter(s => (s.date||'').startsWith(thisMonth));
+    const pending = schedules.filter(s => s.status === 'confirmed' || !s.status).length;
+    const done    = thisMonthSched.filter(s => s.status === 'done').length;
+    const revenue = thisMonthSched
+      .filter(s => s.status === 'done')
+      .reduce((acc, s) => acc + (parseInt(s.price) || 0), 0);
+
+    document.getElementById('stat-bookings').textContent = thisMonthSched.length;
+    document.getElementById('stat-pending').textContent  = pending;
+    document.getElementById('stat-done').textContent     = done;
+    const revenueEl = document.getElementById('stat-revenue');
+    if (revenueEl) {
+      const manwon = Math.round(revenue / 10000);
+      revenueEl.textContent = manwon > 0 ? manwon + '만' : '-';
+    }
+  }
 }
 
 function goSettings() {
