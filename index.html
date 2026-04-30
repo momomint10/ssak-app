@@ -308,7 +308,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
         <div class="header-name" id="user-name">서프로클린 사장님</div>
       </div>
       <div class="header-right">
-        <button class="icon-btn" onclick="toast('알림 기능은 준비 중입니다')">
+        <button class="icon-btn" onclick="togglePushNotification()">
           🔔
           <div class="notif-dot"></div>
         </button>
@@ -648,6 +648,105 @@ loadUser();
           .catch(function(err) { console.log('SW error:', err); });
       });
     }
-  </script>
+  
+// ── 푸시 알림 ───────────────────────────────────────────────
+const SERVER = 'https://ssakssak-server-production.up.railway.app';
+
+async function togglePushNotification() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    toast('이 브라우저는 푸시 알림을 지원하지 않습니다');
+    return;
+  }
+
+  const perm = Notification.permission;
+
+  // 이미 거부된 경우
+  if (perm === 'denied') {
+    toast('브라우저 설정에서 알림을 허용해 주세요 🔔');
+    return;
+  }
+
+  const reg = await navigator.serviceWorker.ready;
+  const existing = await reg.pushManager.getSubscription();
+
+  if (existing) {
+    // 이미 구독 중 → 해제 확인
+    if (!confirm('푸시 알림을 해제할까요?')) return;
+    await existing.unsubscribe();
+    await fetch(SERVER + '/api/push/subscribe', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: existing.endpoint })
+    }).catch(() => {});
+    updateBellState(false);
+    toast('🔕 알림이 해제됐습니다');
+    return;
+  }
+
+  // 권한 요청
+  const permission = await Notification.requestPermission();
+  if (permission !== 'granted') {
+    toast('알림 권한이 거부됐습니다');
+    return;
+  }
+
+  // VAPID 공개키 가져오기
+  try {
+    const keyRes = await fetch(SERVER + '/api/push/vapid-key').then(r => r.json());
+    const vapidKey = urlBase64ToUint8Array(keyRes.publicKey);
+
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: vapidKey
+    });
+
+    const { endpoint } = sub;
+    const keys = sub.toJSON().keys;
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+
+    await fetch(SERVER + '/api/push/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        endpoint, p256dh: keys.p256dh, auth: keys.auth,
+        deviceId: cfg.company || 'unknown'
+      })
+    });
+
+    updateBellState(true);
+    toast('🔔 알림이 설정됐습니다! 신규 예약·계약 완료 시 알림을 받습니다');
+  } catch(e) {
+    console.error('Push 구독 오류:', e);
+    toast('알림 설정 중 오류가 발생했습니다: ' + e.message);
+  }
+}
+
+// 벨 상태 업데이트 (구독 여부 표시)
+async function updateBellState(subscribed) {
+  const btn = document.querySelector('[onclick="togglePushNotification()"]');
+  if (!btn) return;
+  const dot = btn.querySelector('.notif-dot');
+  if (dot) dot.style.background = subscribed ? '#00C896' : '';
+  btn.title = subscribed ? '알림 ON (클릭하면 해제)' : '알림 OFF (클릭하면 설정)';
+}
+
+// 페이지 로드 시 구독 상태 확인
+(async () => {
+  if ('serviceWorker' in navigator && 'PushManager' in window) {
+    const reg = await navigator.serviceWorker.ready.catch(() => null);
+    if (!reg) return;
+    const sub = await reg.pushManager.getSubscription().catch(() => null);
+    updateBellState(!!sub);
+  }
+})();
+
+// VAPID 키 변환 유틸
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = atob(base64);
+  return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
+}
+</script>
 </body>
 </html>
