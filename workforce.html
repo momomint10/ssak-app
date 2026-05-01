@@ -179,7 +179,6 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
   <!-- 인력 찾기 탭 -->
   <div id="sec-find">
     <div class="filter-bar" id="region-filter"></div>
-    <div class="filter-bar" id="skill-filter" style="padding-top:0;"></div>
     <div class="list" id="worker-list"></div>
   </div>
 
@@ -317,7 +316,7 @@ const DAYS    = ['월','화','수','목','금','토','일'];
 const EMOJIS  = ['🧹','🪣','✨','💪','🌟','🏆','🛠','🪴','😊','👷','🧽','🌈'];
 
 let curTab = 'find';
-let curRegion = '전체', curSkill = '전체';
+let curRegion = '전체';
 let curWorker = null, curChatId = null, pollTimer = null, lastMsgTime = null;
 let selRegions = [], selSkills = [], selDays = [], selEmoji = '🧹';
 let myProfile = null;
@@ -353,11 +352,9 @@ function switchTab(tab) {
 function renderFilters() {
   const rb = document.getElementById('region-filter');
   rb.innerHTML = REGIONS.map(r=>`<button class="fbtn${r===curRegion?' on':''}" onclick="setRegion('${r}')">${r}</button>`).join('');
-  const sb = document.getElementById('skill-filter');
-  sb.innerHTML = SKILLS.map(s=>`<button class="fbtn${s===curSkill?' on':''}" onclick="setSkill('${s}')">${s==='전체'?'전체':s.replace('청소','')}</button>`).join('');
+
 }
 function setRegion(r){ curRegion=r; renderFilters(); loadWorkers(); }
-function setSkill(s){ curSkill=s; renderFilters(); loadWorkers(); }
 
 // ── 인력 목록 ─────────────────────────────────────────────────
 async function loadWorkers() {
@@ -366,7 +363,6 @@ async function loadWorkers() {
   try {
     let url = SERVER+'/api/workers?';
     if(curRegion!=='전체') url+='region='+encodeURIComponent(curRegion)+'&';
-    if(curSkill !=='전체') url+='skill=' +encodeURIComponent(curSkill)+'&';
     const d = await fetch(url).then(r=>r.json());
     if(!d.success) throw new Error(d.error);
     if(!d.data.length){
