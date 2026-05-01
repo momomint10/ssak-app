@@ -173,6 +173,7 @@
     display:flex; align-items:flex-start; gap:5px;
   }
 </style>
+<script src="utils.js"></script>
 </head>
 <body>
 <div class="app">
@@ -545,7 +546,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-const SERVER = 'https://ssakssak-server-production.up.railway.app';
 let token = null, contractData = null, drawing = false, hasSig = false;
 
 const params = new URLSearchParams(location.search);
@@ -759,13 +759,6 @@ async function submitSign() {
 }
 
 let toastTimer;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent=msg; el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>el.classList.remove('show'), 3000);
-}
-
 // ── 업주 모드 기능 ──────────────────────────────────────────────────────
 let ownerSigCanvas, ownerSigCtx, ownerDrawing = false;
 

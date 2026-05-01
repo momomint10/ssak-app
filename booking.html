@@ -74,6 +74,7 @@
   .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#1E2130;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
+<script src="utils.js"></script>
 </head>
 <body>
 <div class="app">
@@ -195,7 +196,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const SERVER = 'https://ssakssak-server-production.up.railway.app';
 const params = new URLSearchParams(location.search);
 
 // URL 파라미터 파싱
@@ -359,13 +359,6 @@ function submitBooking() {
 }
 
 let toastTimer;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
-}
 </script>
 </body>
 </html>

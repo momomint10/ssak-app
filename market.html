@@ -180,6 +180,7 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
   .ch-send{background:var(--g900);color:#fff;border:none;border-radius:50%;width:36px;height:36px;flex-shrink:0;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
   .ch-send:disabled{background:var(--g300);}
 </style>
+<script src="utils.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -350,27 +351,12 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
 <div id="toast"></div>
 
 <script>
-const SERVER = 'https://ssakssak-server-production.up.railway.app';
 const CATEGORIES = ['전체','청소기','걸레/대걸레','세제/약품','사다리','카트','보호장비','공구','기타'];
 const CAT_EMOJI  = {'전체':'🔍','청소기':'🧹','걸레/대걸레':'🫧','세제/약품':'🧴','사다리':'🪜','카트':'🛒','보호장비':'🧤','공구':'🔧','기타':'📦'};
 const STATUS_TXT = { available:'판매중', reserved:'예약중', sold:'판매완료', deleted:'삭제' };
 
 // ── 익명 ID ─────────────────────────────────────────────────
-function getAnon(){
-  let id = localStorage.getItem('ssak_anon_id');
-  if(!id){ id='a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); localStorage.setItem('ssak_anon_id',id); }
-  return id;
-}
-
 // ── 유틸 ─────────────────────────────────────────────────────
-function ago(ts){
-  const s=Math.floor((Date.now()-new Date(ts))/1000);
-  if(s<60) return '방금'; if(s<3600) return Math.floor(s/60)+'분 전';
-  if(s<86400) return Math.floor(s/3600)+'시간 전';
-  if(s<604800) return Math.floor(s/86400)+'일 전';
-  return new Date(ts).toLocaleDateString('ko-KR',{month:'short',day:'numeric'});
-}
-function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function fmtPrice(n){ return Number(n).toLocaleString()+'원'; }
 
 // ── 상태 ─────────────────────────────────────────────────────
@@ -574,8 +560,6 @@ async function submitListing(){
 }
 
 // ── Toast ─────────────────────────────────────────────────────
-function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.style.opacity='1'; clearTimeout(window._tt); window._tt=setTimeout(()=>el.style.opacity='0',2500); }
-
 // ── Init ──────────────────────────────────────────────────────
 renderCats();
 loadFeed(true);

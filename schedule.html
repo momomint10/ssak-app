@@ -129,6 +129,7 @@ textarea.form-input{resize:none;}
 .btn-approve{flex:2;padding:9px;background:#6366F1;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
 .btn-reject{flex:1;padding:9px;background:var(--gray-100);color:var(--gray-500);border:1.5px solid var(--gray-200);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
 </style>
+<script src="utils.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -618,17 +619,7 @@ function sendQuickSMS(type) {
 }
 
 // ── 토스트 ──────────────────────────────────
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.style.opacity = '1';
-  clearTimeout(window.__toastTimer);
-  window.__toastTimer = setTimeout(() => { el.style.opacity = '0'; }, 2400);
-}
-
 // ── 초기화 ──────────────────────────────────
-
-const SERVER = 'https://ssakssak-server-production.up.railway.app';
 
 async function fetchPendingBookings() {
   try {

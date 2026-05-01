@@ -296,6 +296,7 @@ html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: 
 .fade-in-4 { animation-delay: 0.2s; }
 .fade-in-5 { animation-delay: 0.25s; }
 </style>
+<script src="utils.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -547,7 +548,7 @@ function loadUser() {
 
   // 미답변 문의 (서버 API)
   if (cfg.adminKey) {
-    fetch('https://ssakssak-server-production.up.railway.app/api/bookings?status=pending&adminKey=' + encodeURIComponent(cfg.adminKey))
+    fetch(SERVER+'/api/bookings?status=pending&adminKey=' + encodeURIComponent(cfg.adminKey))
       .then(function(r) { return r.json(); })
       .then(function(d) {
         var cnt = (d.data ? d.data.length : 0);
@@ -557,7 +558,7 @@ function loadUser() {
       .catch(function() {});
 
     // 이달 실적 서버에서 가져오기
-    fetch('https://ssakssak-server-production.up.railway.app/api/stats/monthly?adminKey=' + encodeURIComponent(cfg.adminKey))
+    fetch(SERVER+'/api/stats/monthly?adminKey=' + encodeURIComponent(cfg.adminKey))
       .then(function(r) { return r.json(); })
       .then(function(d) {
         if (!d.success) return;
@@ -628,14 +629,6 @@ function goTo(page) {
 
 // ── Toast ────────────────────────────────────
 let toastTimer;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
-}
-
 // ── Init ─────────────────────────────────────
 setGreeting();
 loadUser();
@@ -651,8 +644,6 @@ loadUser();
     }
   
 // ── 푸시 알림 ───────────────────────────────────────────────
-const SERVER = 'https://ssakssak-server-production.up.railway.app';
-
 async function togglePushNotification() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     toast('이 브라우저는 푸시 알림을 지원하지 않습니다');
@@ -742,12 +733,6 @@ async function updateBellState(subscribed) {
 })();
 
 // VAPID 키 변환 유틸
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const rawData = atob(base64);
-  return new Uint8Array([...rawData].map(c => c.charCodeAt(0)));
-}
 </script>
 </body>
 </html>

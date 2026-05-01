@@ -64,6 +64,7 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 /* 토스트 */
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,54,0.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
 </style>
+<script src="utils.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -195,7 +196,6 @@ async function init() {
     if (el) el.textContent = '…';
   });
 
-  const SERVER = 'https://ssakssak-server-production.up.railway.app';
   const adminKey = cfg.adminKey || '';
 
   try {
@@ -256,13 +256,6 @@ function copyBookingLink() {
     document.body.removeChild(el);
     toast('✅ 예약 링크가 복사됐습니다!');
   }
-}
-
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.style.opacity = '1';
-  clearTimeout(window.__tt);
-  window.__tt = setTimeout(() => { el.style.opacity = '0'; }, 2400);
 }
 
 init();

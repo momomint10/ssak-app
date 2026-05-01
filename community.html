@@ -135,6 +135,7 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 /* 토스트 */
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,54,0.92);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;}
 </style>
+<script src="utils.js"></script>
 </head>
 <body>
 <div class="shell">
@@ -243,24 +244,8 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 <div id="toast"></div>
 
 <script>
-const SERVER = 'https://ssakssak-server-production.up.railway.app';
-
 // ── 익명 ID ──────────────────────────────────────────────────────
-function getAnon() {
-  let id = localStorage.getItem('ssak_anon_id');
-  if (!id) { id = 'a'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); localStorage.setItem('ssak_anon_id',id); }
-  return id;
-}
-
 // ── 유틸 ─────────────────────────────────────────────────────────
-function ago(ts) {
-  const s=Math.floor((Date.now()-new Date(ts))/1000);
-  if(s<60) return '방금'; if(s<3600) return Math.floor(s/60)+'분 전';
-  if(s<86400) return Math.floor(s/3600)+'시간 전';
-  if(s<604800) return Math.floor(s/86400)+'일 전';
-  return new Date(ts).toLocaleDateString('ko-KR',{month:'short',day:'numeric'});
-}
-function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function hl(t, kw) {
   if(!kw) return esc(t);
   const e=esc(t), k=esc(kw).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
@@ -506,13 +491,6 @@ async function submitPost(){
 }
 
 // ── Toast ─────────────────────────────────────────────────────────
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.style.opacity='1';
-  clearTimeout(window._tt);
-  window._tt=setTimeout(()=>{el.style.opacity='0';},2500);
-}
-
 loadFeed(true);
 </script>
 </body>
