@@ -149,9 +149,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 .chip-grid{display:flex;flex-wrap:wrap;gap:6px;}
 .chip{padding:6px 12px;border-radius:20px;border:1.5px solid var(--g200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--g500);}
 .chip.on{background:var(--pr);border-color:var(--pr);color:#fff;}
-.emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}
-.emoji-cell{padding:8px;border-radius:10px;border:1.5px solid var(--g200);background:#fff;font-size:22px;cursor:pointer;text-align:center;}
-.emoji-cell.on{border-color:var(--pr);background:var(--pr-l);}
+
 .fs-foot{padding:10px 16px;border-top:1px solid var(--g100);}
 
 /* ── 네비 ──────────────────────────────────────────────── */
@@ -246,10 +244,19 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
       <button class="fs-cancel" onclick="closeForm()">취소</button>
     </div>
     <div class="fs-body">
-      <!-- 이모지 -->
+
+      <!-- 프로필 사진 -->
       <div class="f-sec">
-        <label class="f-lbl">😊 프로필 아이콘</label>
-        <div class="emoji-grid" id="emoji-grid"></div>
+        <label class="f-lbl">📷 프로필 사진 (상반신)</label>
+        <div id="f-photo-preview" style="display:none;position:relative;margin-bottom:10px;">
+          <img id="f-photo-img" alt="프로필 사진" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--pr);display:block;margin:0 auto;">
+          <button onclick="removePhoto()" style="position:absolute;top:0;right:calc(50% - 62px);background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>
+        <div style="text-align:center;">
+          <button class="chip" onclick="document.getElementById('f-photo-file').click()" style="background:var(--pr-l);border-color:var(--pr);color:var(--pr-d);">📷 사진 선택</button>
+          <input type="file" id="f-photo-file" accept="image/*" style="display:none" onchange="onPhotoSelect(this)">
+        </div>
+        <div style="font-size:11px;color:var(--g400);text-align:center;margin-top:6px;">상반신이 잘 보이는 사진을 등록해주세요</div>
       </div>
       <!-- 닉네임 -->
       <div class="f-sec">
@@ -311,16 +318,16 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 const SERVER = 'https://ssakssak-server-production.up.railway.app';
 
 const REGIONS = ['전체','서울','경기','인천','부산','대구','광주','대전','울산','제주','기타'];
-const SKILLS  = ['전체','입주청소','이사청소','사무실청소','상가청소','특수청소','공사후청소','정기청소','소독방역'];
+const SKILLS  = ['전체','입주청소','이사청소','사무실청소','상가청소','특수청소','공사후청소','정기청소','소독방역','에어컨청소'];
 const DAYS    = ['월','화','수','목','금','토','일'];
-const EMOJIS  = ['🧹','🪣','✨','💪','🌟','🏆','🛠','🪴','😊','👷','🧽','🌈'];
 
 let curTab = 'find';
 let curRegion = '전체';
 let curWorker = null, curChatId = null, pollTimer = null, lastMsgTime = null;
-let selRegions = [], selSkills = [], selDays = [], selEmoji = '🧹';
+let selRegions = [], selSkills = [], selDays = [];
 let myProfile = null;
 let editMode = false;
+let picBase64 = null, picMime = null;
 
 // ── 유틸 ───────────────────────────────────────────────────────
 function getAnon(){
@@ -371,7 +378,10 @@ async function loadWorkers() {
     }
     list.innerHTML = d.data.map(w => `
       <div class="wcard" onclick="openDet('${w.id}')">
-        <div class="avatar">${esc(w.avatar_emoji||'🧹')}</div>
+        <div class="avatar">${w.photo_url
+          ? `<img src="${esc(w.photo_url)}" alt="" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">`
+          : `<span style="font-size:22px;">👤</span>`
+        }</div>
         <div class="wcard-body">
           <div class="wcard-top">
             <span class="wcard-name"><span class="status-active"></span>${esc(w.nickname)}</span>
@@ -398,7 +408,13 @@ async function openDet(id) {
     if(!d.success) throw new Error(d.error);
     const w = curWorker = d.data;
     const isMine = w.anon_id === getAnon();
-    document.getElementById('det-emoji').textContent = w.avatar_emoji||'🧹';
+    const detEmoji = document.getElementById('det-emoji');
+    if(w.photo_url){
+      detEmoji.innerHTML = `<img src="${w.photo_url}" alt="" style="width:72px;height:72px;border-radius:50%;object-fit:cover;">`;
+      detEmoji.style.background = 'transparent';
+    } else {
+      detEmoji.innerHTML = '<span style="font-size:34px;">👤</span>';
+    }
     document.getElementById('det-name').textContent  = w.nickname;
     document.getElementById('det-rate').textContent  = fmtRate(w.daily_rate);
     document.getElementById('det-region').textContent = (w.regions||[]).join(', ')||'-';
@@ -499,7 +515,10 @@ async function loadMyProfile() {
     area.innerHTML=`
       <div class="my-profile-card">
         <div class="my-profile-head">
-          <div class="my-avatar">${esc(myProfile.avatar_emoji||'🧹')}</div>
+          <div class="my-avatar">${myProfile.photo_url
+          ? `<img src="${esc(myProfile.photo_url)}" alt="" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">`
+          : '<span style="font-size:28px;">👤</span>'
+        }</div>
           <div>
             <div class="my-name">${esc(myProfile.nickname)}</div>
             <div class="my-status"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${isActive?'#10B981':'#94A3B8'};margin-right:4px;vertical-align:middle;"></span>${isActive?'활동 중':'대기 중'}</div>
@@ -539,10 +558,6 @@ async function toggleStatus(){
 
 // ── 프로필 등록/수정 시트 ─────────────────────────────────────
 function renderFormChips(){
-  // 이모지
-  document.getElementById('emoji-grid').innerHTML = EMOJIS.map(e=>
-    `<button class="emoji-cell${e===selEmoji?' on':''}" onclick="selEmoji='${e}';renderFormChips()">${e}</button>`
-  ).join('');
   // 지역
   document.getElementById('region-chips').innerHTML = REGIONS.slice(1).map(r=>
     `<button class="chip${selRegions.includes(r)?' on':''}" onclick="toggleChip('region','${r}')">${r}</button>`
@@ -564,11 +579,30 @@ function toggleChip(type, val){
   renderFormChips();
 }
 
+
+// ── 프로필 사진 ───────────────────────────────────────────────
+function onPhotoSelect(inp) {
+  const file = inp.files[0]; if(!file) return;
+  if(file.size > 5*1024*1024){ toast('5MB 이하 사진만 가능합니다'); return; }
+  picMime = file.type;
+  const r = new FileReader();
+  r.onload = e => {
+    picBase64 = e.target.result.split(',')[1];
+    document.getElementById('f-photo-img').src = e.target.result;
+    document.getElementById('f-photo-preview').style.display = 'block';
+  };
+  r.readAsDataURL(file);
+  inp.value = '';
+}
+function removePhoto(){
+  picBase64 = null; picMime = null;
+  document.getElementById('f-photo-preview').style.display = 'none';
+  document.getElementById('f-photo-img').src = '';
+}
 function openForm(isEdit=false){
   editMode = isEdit;
   document.getElementById('form-title').textContent = isEdit?'프로필 수정':'프로필 등록';
   if(isEdit && myProfile){
-    selEmoji   = myProfile.avatar_emoji||'🧹';
     selRegions = [...(myProfile.regions||[])];
     selSkills  = [...(myProfile.skills||[])];
     selDays    = [...(myProfile.available_days||[])];
@@ -576,8 +610,13 @@ function openForm(isEdit=false){
     document.getElementById('f-exp').value  = myProfile.experience||'';
     document.getElementById('f-rate').value = myProfile.daily_rate||'';
     document.getElementById('f-bio').value  = myProfile.bio||'';
+    // 기존 사진 복원
+    if(myProfile.photo_url){
+      document.getElementById('f-photo-img').src = myProfile.photo_url;
+      document.getElementById('f-photo-preview').style.display = 'block';
+    } else { removePhoto(); }
   } else {
-    selEmoji='🧹'; selRegions=[]; selSkills=[]; selDays=[];
+    selRegions=[]; selSkills=[]; selDays=[]; removePhoto();
     document.getElementById('f-nick').value='';
     document.getElementById('f-exp').value='';
     document.getElementById('f-rate').value='';
@@ -603,7 +642,8 @@ async function saveProfile(){
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ anon_id:getAnon(), nickname:nick, regions:selRegions, skills:selSkills,
         available_days:selDays, experience:Number(exp)||0, daily_rate:Number(rate)||0,
-        bio, avatar_emoji:selEmoji })
+        bio, avatar_emoji:'👤',
+        ...(picBase64 ? { photoBase64: picBase64, photoMime: picMime||'image/jpeg' } : {}) })
     }).then(r=>r.json());
     if(!d.success) throw new Error(d.error||'서버 오류');
     closeForm(); toast('✅ 프로필이 저장됐습니다!');
