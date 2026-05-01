@@ -34,7 +34,7 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 .tab{flex:1;padding:11px 0;text-align:center;font-size:13px;font-weight:600;color:var(--gray-400);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;}
 .tab.active{color:var(--primary);border-bottom-color:var(--primary);}
 .content{padding:20px;}
-.page{display:none;}
+.page{display:none;padding:14px 16px 24px;}
 .page.active{display:block;}
 .card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);}
 .card-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:14px;}
@@ -64,12 +64,12 @@ select.form-input{cursor:pointer;}
 .send-btn{padding:12px 18px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;flex-shrink:0;}
 .send-btn:disabled{background:var(--gray-300);cursor:not-allowed;}
 .api-warning{font-size:11.5px;color:var(--amber);background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:8px 12px;}
-.btn-primary{width:100%;padding:16px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,200,150,0.3);display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
+.btn-primary{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,200,150,0.3);display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
 .btn-primary:active{transform:scale(0.98);}
 .btn-secondary{width:100%;padding:14px;background:#fff;color:var(--gray-700);border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
-.tpl-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);}
-.tpl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.tpl-title{font-size:14px;font-weight:700;}
+.tpl-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px 18px;margin-bottom:10px;box-shadow:var(--shadow);}
+.tpl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;}
+.tpl-title{font-size:14px;font-weight:800;color:var(--gray-900);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .tpl-edit-btn{padding:5px 12px;border-radius:8px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
 .faq-item{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow);}
 .faq-header{display:flex;align-items:center;padding:13px 16px;}
@@ -86,7 +86,14 @@ select.form-input{cursor:pointer;}
 .faq-match-a{font-size:12.5px;color:var(--gray-600);line-height:1.6;white-space:pre-wrap;}
 .faq-match-btn{margin-top:10px;width:100%;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
 .faq-no-match{text-align:center;padding:16px;color:var(--gray-400);font-size:13px;}
-.keyword-chip:hover{background:var(--primary);color:#fff;}
+.keyword-chip{
+  padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;
+  background:var(--gray-100);border:1.5px solid var(--gray-200);
+  color:var(--gray-500);cursor:pointer;transition:all .18s;
+  font-family:inherit;white-space:nowrap;
+}
+.keyword-chip.on{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);font-weight:700;}
+.keyword-chip:hover{background:var(--primary);color:#fff;border-color:var(--primary);}
 .history-item{background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;}
 .history-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
 .history-phone{font-size:13px;font-weight:700;color:var(--primary-dark);}
@@ -222,18 +229,18 @@ select.form-input{cursor:pointer;}
 
 <!-- 템플릿 -->
 <div id="page-template" class="page">
-  <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">🔍 키워드 빠른 검색</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
-      <button onclick="setKeyword('견적')" class="keyword-chip">💰 견적</button>
-      <button onclick="setKeyword('예약')" class="keyword-chip">📅 예약</button>
-      <button onclick="setKeyword('완료')" class="keyword-chip">✅ 완료</button>
-      <button onclick="setKeyword('가격')" class="keyword-chip">💵 가격</button>
-      <button onclick="setKeyword('')" class="keyword-chip" style="background:var(--gray-100);color:var(--gray-400);">전체</button>
+  <div class="card" style="margin-bottom:10px;">
+    <div class="card-title" style="margin-bottom:12px;">🔍 키워드 빠른 검색</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+      <button onclick="setKeyword('')"    class="keyword-chip on" id="kw-all">전체</button>
+      <button onclick="setKeyword('견적')" class="keyword-chip"    id="kw-quote">💰 견적</button>
+      <button onclick="setKeyword('예약')" class="keyword-chip"    id="kw-book">📅 예약</button>
+      <button onclick="setKeyword('완료')" class="keyword-chip"    id="kw-done">✅ 완료</button>
+      <button onclick="setKeyword('가격')" class="keyword-chip"    id="kw-price">💵 가격</button>
     </div>
     <input class="form-input" id="t-keyword" placeholder="키워드 직접 검색..." oninput="renderTemplates()" style="margin-bottom:0;"/>
   </div>
-  <div class="card" style="margin-bottom:14px;"><div class="card-title">👤 개인화</div><div class="form-row"><div class="form-group" style="margin:0;"><label class="form-label">고객 이름</label><input class="form-input" id="t-name" placeholder="김OO" oninput="renderTemplates()"/></div><div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="t-size" type="number" placeholder="32" oninput="renderTemplates()"/></div></div></div>
+  <div class="card" style="margin-bottom:10px;"><div class="card-title" style="margin-bottom:10px;">👤 개인화</div><div class="form-row" style="gap:12px;"><div class="form-group" style="margin:0;"><label class="form-label">고객 이름</label><input class="form-input" id="t-name" placeholder="김OO" oninput="renderTemplates()"/></div><div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="t-size" type="number" placeholder="32" oninput="renderTemplates()"/></div></div></div>
   <div id="template-list"></div>
 </div>
 
@@ -659,15 +666,47 @@ let customTpls=JSON.parse(localStorage.getItem('ssak_tpls')||'null');
 if(!customTpls)customTpls=DEFAULT_TPLS.map(t=>({...t}));
 
 function applyVars(c,name,size){return c.replace(/\{이름\}/g,name?(name+'님'):'고객님').replace(/\{평수\}/g,size||'평수').replace(/\{업체명\}/g,cfg.company).replace(/\{전화번호\}/g,cfg.phone);}
-function setKeyword(kw){document.getElementById('t-keyword').value=kw;renderTemplates();}
+function setKeyword(kw) {
+  const el = document.getElementById('t-keyword');
+  if (el) el.value = kw;
+  // 칩 active state 업데이트
+  const kwMap = { '': 'kw-all', '견적': 'kw-quote', '예약': 'kw-book', '완료': 'kw-done', '가격': 'kw-price' };
+  Object.values(kwMap).forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.remove('on');
+  });
+  const activeId = kwMap[kw];
+  if (activeId) {
+    const btn = document.getElementById(activeId);
+    if (btn) btn.classList.add('on');
+  }
+  renderTemplates();
+}
 
 function renderTemplates(){
-  const name=document.getElementById('t-name').value.trim();
-  const size=document.getElementById('t-size').value;
-  const kw=(document.getElementById('t-keyword')?document.getElementById('t-keyword').value.trim().toLowerCase():'');
-  const filtered=kw?customTpls.filter(t=>t.title.toLowerCase().includes(kw)||t.content.toLowerCase().includes(kw)):customTpls;
-  if(filtered.length===0){document.getElementById('template-list').innerHTML='<div style="text-align:center;padding:30px;color:var(--gray-400);font-size:13px;">검색 결과가 없습니다</div>';return;}
-  document.getElementById('template-list').innerHTML=filtered.map((t,i)=>{const origIdx=customTpls.indexOf(t);return`<div class="tpl-card"><div class="tpl-header"><div class="tpl-title">${t.icon} ${t.title}</div><button class="tpl-edit-btn" onclick="openTplModal(${origIdx})">✏️ 수정</button></div><div class="msg-preview" style="font-size:13px;min-height:80px;">${applyVars(t.content,name,size)}</div><button class="btn-primary" style="margin-top:10px;margin-bottom:0;padding:12px;" onclick="copyTpl(${origIdx})">📋 복사</button></div>`;}).join('');
+  const name = document.getElementById('t-name').value.trim();
+  const size = document.getElementById('t-size').value;
+  const kwEl = document.getElementById('t-keyword');
+  const kw   = kwEl ? kwEl.value.trim().toLowerCase() : '';
+  const filtered = kw
+    ? customTpls.filter(t => t.title.toLowerCase().includes(kw) || t.content.toLowerCase().includes(kw))
+    : customTpls;
+  const listEl = document.getElementById('template-list');
+  if (!filtered.length) {
+    listEl.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--gray-400);font-size:13px;">검색 결과가 없습니다</div>';
+    return;
+  }
+  listEl.innerHTML = filtered.map((t, i) => {
+    const origIdx = customTpls.indexOf(t);
+    return `<div class="tpl-card">
+      <div class="tpl-header">
+        <div class="tpl-title">${t.icon} ${t.title}</div>
+        <button class="tpl-edit-btn" onclick="openTplModal(${origIdx})">✏️ 수정</button>
+      </div>
+      <div class="msg-preview">${applyVars(t.content, name, size)}</div>
+      <button class="btn-primary" style="margin-top:12px;margin-bottom:0;" onclick="copyTpl(${origIdx})">📋 복사</button>
+    </div>`;
+  }).join('');
 }
 
 // 야간 시간 체크
