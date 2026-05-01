@@ -213,8 +213,8 @@
         <div class="perf-change" id="perf-revenue-change"></div>
       </div>
       <div class="perf-stat">
-        <div class="perf-val" id="perf-rating">-</div>
-        <div class="perf-lbl">평균 평점</div>
+        <div class="perf-val" id="perf-booked">-</div>
+        <div class="perf-lbl">확정 예약</div><div class="perf-change" id="perf-booked-change"></div>
       </div>
     </div>
   </div>
@@ -302,7 +302,7 @@ function loadUser() {
         var perfDoneEl    = document.getElementById('perf-done');
         var perfRevEl     = document.getElementById('perf-revenue');
         var perfRevChgEl  = document.getElementById('perf-revenue-change');
-        var statTodayEl   = document.getElementById('stat-today');
+        var perfBookedEl = document.getElementById('perf-booked'); var perfBookedChgEl = document.getElementById('perf-booked-change');
         if (perfDoneEl)   perfDoneEl.textContent = d.done;
         if (perfRevEl) {
           var man = Math.round((d.revenue || 0) / 10000);
@@ -311,8 +311,8 @@ function loadUser() {
         if (perfRevChgEl && d.revenue > 0) {
           perfRevChgEl.textContent = Math.round(d.revenue/10000) + '만원';
         }
-        if (statTodayEl && d.confirmed > 0) {
-          statTodayEl.innerHTML = d.confirmed + '<span class="ts-unit">건</span>';
+        if (perfBookedEl) {
+          perfBookedEl.textContent = (d.confirmed > 0 ? d.confirmed : '-'); if (perfBookedChgEl && d.confirmed > 0) perfBookedChgEl.textContent = d.confirmed + '건';
         }
       })
       .catch(function() {});
@@ -507,7 +507,7 @@ async function loadHomeStats() {
       const perfDone    = document.getElementById('perf-done');
       const perfRevenue = document.getElementById('perf-revenue');
       if (perfDone)    perfDone.textContent    = d2.done ?? 0;
-      if (perfRevenue) perfRevenue.textContent = d2.revenue ? Math.round(d2.revenue/10000) : '-';
+      if (perfRevenue) perfRevenue.textContent = d2.revenue ? Math.round(d2.revenue/10000) : '-'; const perfBooked = document.getElementById('perf-booked'); if (perfBooked) perfBooked.textContent = (d2.confirmed > 0 ? d2.confirmed : '-');
     }
   } catch(e) {}
 
