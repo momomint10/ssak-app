@@ -302,7 +302,7 @@ function loadUser() {
         var perfDoneEl    = document.getElementById('perf-done');
         var perfRevEl     = document.getElementById('perf-revenue');
         var perfRevChgEl  = document.getElementById('perf-revenue-change');
-        var perfBookedEl = document.getElementById('perf-booked'); var perfBookedChgEl = document.getElementById('perf-booked-change');
+        var perfBookedEl = document.getElementById('perf-booked'); var perfBookedChgEl = document.getElementById('perf-booked-change'); var bookedStat = perfBookedEl && perfBookedEl.closest('.perf-stat'); if (bookedStat && !bookedStat.dataset.clickBound) { bookedStat.dataset.clickBound='1'; bookedStat.style.cursor='pointer'; bookedStat.onclick = function(){ location.href='schedule.html'; }; }
         if (perfDoneEl)   perfDoneEl.textContent = d.done;
         if (perfRevEl) {
           var man = Math.round((d.revenue || 0) / 10000);
@@ -324,7 +324,7 @@ function loadUser() {
   var doneThisMonth = sch.filter(function(x) {
     return (x.date||'').startsWith(ym) && x.status === 'done';
   });
-  var totalRevenue = doneThisMonth.reduce(function(acc, x) {
+  var confirmedThisMonth = sch.filter(function(x) { return (x.date||'').startsWith(ym) && x.status === 'confirmed'; }); var confirmedRevenue = confirmedThisMonth.reduce(function(acc, x) { return acc + (parseInt(x.price)||0); }, 0); var pBE = document.getElementById('perf-booked'); var pBC = document.getElementById('perf-booked-change'); if (pBE && confirmedThisMonth.length > 0) pBE.textContent = confirmedThisMonth.length; if (pBC && confirmedRevenue > 0) pBC.textContent = '예정 ' + Math.round(confirmedRevenue/10000) + '만'; var totalRevenue = doneThisMonth.reduce(function(acc, x) {
     return acc + (parseInt(x.price)||0);
   }, 0);
   var perfDoneEl = document.getElementById('perf-done');
