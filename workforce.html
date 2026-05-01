@@ -193,7 +193,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
     <div class="tabs">
       <button class="tab on" id="tab-find" onclick="switchTab('find')">🔍 인력 찾기</button>
       <button class="tab" id="tab-job"  onclick="switchTab('job')">💼 채용정보</button>
-      <button class="tab" id="tab-my"   onclick="switchTab('my')">📋 내 프로필</button>
+      <button class="tab" id="tab-my"   onclick="switchTab('my')">📋 내 현황</button>
     </div>
   </div>
 
@@ -205,7 +205,10 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 
   <!-- 채용정보 -->
   <div id="sec-job" style="display:none;">
-    <div class="filter-bar" id="job-region-filter"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px 0;">
+      <div class="filter-bar" id="job-region-filter" style="padding:0;flex:1;overflow-x:auto;"></div>
+      <button class="btn-register" onclick="openJobForm()" style="flex-shrink:0;margin-left:8px;">➕ 공고 등록</button>
+    </div>
     <div class="list" id="job-list"></div>
   </div>
 
@@ -249,7 +252,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
       <div class="sh-title" id="job-det-title">공고 상세</div>
       <button class="sh-close" onclick="closeJobDet()">×</button>
     </div>
-    <div class="sh-body" id="job-det-body"></div>
+    <div class="sh-body" id="job-det-body" style="padding-top:0;"></div>
     <div class="sh-foot" id="job-det-foot"></div>
   </div>
 </div>
@@ -391,7 +394,7 @@ function switchTab(tab){
   });
   updateHdBtn();
   if(tab==='my') loadMyProfile();
-  if(tab==='job') loadJobs();
+  if(tab==='job'){ renderJobFilters(); loadJobs(); }
 }
 
 // ── 필터 ─────────────────────────────────────────────────────
@@ -400,7 +403,12 @@ function renderFilters(){
   document.getElementById('job-region-filter').innerHTML=REGIONS.map(r=>`<button class="fbtn${r===curJobRegion?' on':''}" onclick="setJobRegion('${r}')">${r}</button>`).join('');
 }
 function setRegion(r){curRegion=r;renderFilters();loadWorkers();}
-function setJobRegion(r){curJobRegion=r;renderFilters();loadJobs();}
+function renderJobFilters(){
+  const rb=document.getElementById('job-region-filter');
+  if(!rb) return;
+  rb.innerHTML=REGIONS.map(r=>`<button class="fbtn${r===curJobRegion?' on':''}" onclick="setJobRegion('${r}')">${r}</button>`).join('');
+}
+function setJobRegion(r){curJobRegion=r;renderJobFilters();loadJobs();}
 
 // ── 인력 목록 ────────────────────────────────────────────────
 async function loadWorkers(){
@@ -436,26 +444,37 @@ async function loadJobs(){
   list.innerHTML='<div style="text-align:center;padding:30px;"><div class="sp"></div></div>';
   try{
     let url=SERVER+'/api/jobs?status=open';
-    if(curJobRegion!=='전체') url+='&region='+encodeURIComponent(curJobRegion);
+    if(curJobRegion&&curJobRegion!=='전체') url+='&region='+encodeURIComponent(curJobRegion);
     const d=await fetch(url).then(r=>r.json());
-    if(!d.data.length){
+    if(!d.data||!d.data.length){
       list.innerHTML='<div class="empty"><div class="empty-ico">💼</div><div class="empty-ttl">등록된 채용공고가 없어요</div><div class="empty-sub">첫 공고를 등록해보세요!</div></div>';
       return;
     }
-    list.innerHTML=d.data.map(j=>`
-      <div class="jcard" onclick="openJobDet('${j.id}')">
-        <div class="jcard-head">
+    // 내 프로필 기준 자동매칭 표시
+    const myAnon=getAnon();
+    list.innerHTML=d.data.map(j=>{
+      const isMine=j.anon_id===myAnon;
+      const isMatch=myProfile&&
+        (j.region==='전체'||(myProfile.regions||[]).includes(j.region))&&
+        (!j.skills||!j.skills.length||(j.skills||[]).some(sk=>(myProfile.skills||[]).includes(sk)));
+      return `<div class="jcard" onclick="openJobDet('${j.id}')">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
           <div class="jcard-title">${esc(j.title)}</div>
-          <div class="jcard-rate">${j.daily_rate?Number(j.daily_rate).toLocaleString()+'원':'협의'}</div>
+          <div style="display:flex;gap:4px;flex-shrink:0;margin-left:6px;">
+            ${isMatch&&!isMine?'<span style="font-size:10px;background:#EEF2FF;color:#6366F1;padding:2px 7px;border-radius:10px;font-weight:700;">✨ 매칭</span>':''}
+            ${isMine?'<span style="font-size:10px;background:#FEF3C7;color:#D97706;padding:2px 7px;border-radius:10px;font-weight:700;">내 공고</span>':''}
+          </div>
         </div>
-        <div class="jcard-meta">📍 <span>${esc(j.region)}</span> · 📅 <span>${fmtDate(j.work_date)}</span> · 👥 <span>${j.headcount||1}명</span></div>
-        <div class="jcard-skills">${(j.skills||[]).map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('')}</div>
-        <div class="jcard-foot">
-          <span class="jcard-count">🙋 지원자 ${j.applicant_count||0}명</span>
-          <span class="${j.status==='open'?'badge-open':'badge-closed'}">${j.status==='open'?'모집중':'마감'}</span>
+        <div class="jcard-meta">
+          📍 ${esc(j.region)} · 📅 ${j.work_date||'날짜 미정'} · 👥 ${j.headcount||1}명
         </div>
-      </div>`).join('');
-  }catch(e){list.innerHTML=`<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">오류 발생</div></div>`;}
+        <div class="jcard-meta">${j.daily_rate?'💰 '+Number(j.daily_rate).toLocaleString()+'원/일':'💰 협의'}</div>
+        ${j.skills&&j.skills.length?`<div class="skill-tags" style="margin-top:6px;">${j.skills.map(sk=>`<span class="skill-tag">${esc(sk)}</span>`).join('')}</div>`:''}
+      </div>`;
+    }).join('');
+  }catch(e){
+    list.innerHTML='<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">오류 발생</div></div>';
+  }
 }
 
 // ── 인력 상세 ────────────────────────────────────────────────
@@ -497,41 +516,86 @@ async function openJobDet(id){
     if(!d.success) throw new Error(d.error);
     const j=curJob=d.data;
     const isMine=j.anon_id===getAnon();
-    document.getElementById('job-det-title').textContent='공고 상세';
+    document.getElementById('job-det-title').textContent='채용공고 상세';
 
+    // 공고 정보
     let bodyHtml=`
-      <div class="job-detail-head">
-        <div class="job-detail-title">${esc(j.title)}</div>
-        <div class="job-detail-rate">${j.daily_rate?Number(j.daily_rate).toLocaleString()+'원/일':'일당 협의'}</div>
-        <div class="job-meta-row">
-          <span class="job-meta-chip">📍 ${esc(j.region)}</span>
-          <span class="job-meta-chip">📅 ${fmtDate(j.work_date)}</span>
-          <span class="job-meta-chip">👥 ${j.headcount||1}명</span>
+      <div style="padding:16px 0 8px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;">
+          <div style="font-size:18px;font-weight:900;flex:1;">${esc(j.title)}</div>
+          <span style="font-size:12px;padding:3px 10px;border-radius:10px;background:${j.status==='open'?'#DCFCE7':'#F3F4F6'};color:${j.status==='open'?'#16A34A':'#6B7280'};flex-shrink:0;margin-left:8px;">${j.status==='open'?'모집중':'마감'}</span>
         </div>
-      </div>`;
-
-    if(j.skills&&j.skills.length) bodyHtml+=`<div class="skill-tags" style="margin-bottom:14px;">${j.skills.map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('')}</div>`;
-    if(j.description) bodyHtml+=`<div style="font-size:11px;font-weight:700;color:var(--g500);margin-bottom:6px;">상세 내용</div><div class="job-desc">${esc(j.description)}</div>`;
-
-    if(isMine){
-      // 채용자: 지원자 목록 표시
-      bodyHtml+=`<div class="section-title">🙋 지원자 현황 (${j.applicant_count||0}명)</div><div id="applicant-list"></div>`;
-      document.getElementById('job-det-body').innerHTML=bodyHtml;
-      loadApplicants(id);
-      document.getElementById('job-det-foot').innerHTML=`
-        <div style="display:flex;gap:8px;">
-          <button class="btn-full btn-gray" style="margin:0;" onclick="toggleJobStatus('${id}','${j.status}')">${j.status==='open'?'⏹ 마감처리':'▶ 재오픈'}</button>
+        <div class="info-grid">
+          <div class="info-cell"><div class="info-cell-lbl">📍 지역</div><div class="info-cell-val">${esc(j.region)}</div></div>
+          <div class="info-cell"><div class="info-cell-lbl">📅 작업일</div><div class="info-cell-val">${j.work_date||'-'}</div></div>
+          <div class="info-cell"><div class="info-cell-lbl">👥 모집 인원</div><div class="info-cell-val">${j.headcount||1}명</div></div>
+          <div class="info-cell"><div class="info-cell-lbl">💰 일당</div><div class="info-cell-val">${j.daily_rate?Number(j.daily_rate).toLocaleString()+'원':'협의'}</div></div>
         </div>`;
-    }else{
-      document.getElementById('job-det-body').innerHTML=bodyHtml;
-      const already=await checkAlreadyApplied(id);
-      document.getElementById('job-det-foot').innerHTML=j.status==='open'&&!already
-        ?`<button class="btn-chat" onclick="openApplyForm('${id}')">🙋 지원하기</button>`
-        :already
-          ?`<button class="btn-chat" disabled style="opacity:.5;">이미 지원했습니다</button>`
-          :`<button class="btn-chat" disabled style="opacity:.5;">마감된 공고입니다</button>`;
+    if(j.skills&&j.skills.length){
+      bodyHtml+=`<div style="margin:10px 0;"><div style="font-size:11px;font-weight:700;color:var(--g400);margin-bottom:5px;">요구 기술</div>
+        <div class="skill-tags">${j.skills.map(sk=>`<span class="skill-tag">${esc(sk)}</span>`).join('')}</div></div>`;
     }
-  }catch(e){document.getElementById('job-det-body').innerHTML=`<div class="empty"><div class="empty-ttl">오류: ${esc(e.message)}</div></div>`;}
+    if(j.description){
+      bodyHtml+=`<div class="det-bio">${esc(j.description)}</div>`;
+    }
+    bodyHtml+=`</div>`;
+
+    // 채용자 본인: 지원자 목록
+    if(isMine){
+      bodyHtml+=`<div style="margin-top:4px;"><div style="font-size:14px;font-weight:800;margin-bottom:10px;">📬 지원자 목록</div>
+        <div id="ap-list">`;
+      try{
+        const ad=await fetch(SERVER+'/api/jobs/'+id+'/applications?anon_id='+encodeURIComponent(getAnon())).then(r=>r.json());
+        const apps=ad.data||[];
+        if(!apps.length){
+          bodyHtml+=`<div style="text-align:center;padding:20px;color:var(--g400);font-size:13px;">아직 지원자가 없어요 🙁</div>`;
+        } else {
+          bodyHtml+=apps.map(ap=>`
+            <div id="ap-${esc(ap.id)}" style="border:1px solid ${ap.status==='matched'?'#A7F3D0':'var(--g200)'};border-radius:10px;padding:12px;margin-bottom:8px;background:${ap.status==='matched'?'#F0FDF4':'#fff'};">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <div style="font-size:14px;font-weight:700;">${esc(ap.worker_nickname||'지원자')}</div>
+                ${ap.status==='matched'?'<span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#DCFCE7;color:#16A34A;">✅ 매칭됨</span>':''}
+              </div>
+              <div style="font-size:12px;color:var(--g700);margin-bottom:4px;">📞 ${esc(ap.applicant_contact)}</div>
+              ${ap.message?`<div style="font-size:12px;color:var(--g500);">"${esc(ap.message)}"</div>`:''}
+              ${ap.status!=='matched'?`<button class="btn-match" onclick="confirmMatch('${ap.id}','${esc(ap.worker_nickname||'지원자')}')"
+                style="width:100%;margin-top:8px;padding:9px;background:var(--pr);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
+                🤝 매칭 확정
+              </button>`:'<div style="margin-top:6px;font-size:12px;color:#16A34A;">📞 구직자 연락처: <strong>'+esc(ap.applicant_contact)+'</strong></div>'}
+            </div>`).join('');
+        }
+      }catch(e2){ bodyHtml+=`<div style="color:var(--g400);font-size:13px;padding:12px;">지원자 목록 오류</div>`; }
+      bodyHtml+=`</div></div>`;
+
+      document.getElementById('job-det-body').innerHTML=bodyHtml;
+      document.getElementById('job-det-foot').innerHTML=`
+        <button onclick="toggleJobStatus('${j.id}','${j.status}')" style="width:100%;padding:12px;border:1.5px solid var(--g200);border-radius:12px;background:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+          ${j.status==='open'?'⏹ 공고 마감하기':'▶ 공고 재개하기'}
+        </button>`;
+    } else {
+      // 구직자: 지원하기
+      document.getElementById('job-det-body').innerHTML=bodyHtml;
+      const alreadyApplied=await checkAlreadyApplied(id);
+      if(alreadyApplied){
+        document.getElementById('job-det-foot').innerHTML=`
+          <button disabled style="width:100%;padding:12px;background:var(--g200);color:var(--g400);border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:not-allowed;font-family:inherit;">
+            ✅ 지원 완료
+          </button>`;
+      } else if(j.status==='open'){
+        document.getElementById('job-det-foot').innerHTML=`
+          <button onclick="openApplyForm('${j.id}')" class="btn-chat" style="width:100%;padding:13px;font-size:15px;">
+            📝 지원하기
+          </button>`;
+      } else {
+        document.getElementById('job-det-foot').innerHTML=`
+          <button disabled style="width:100%;padding:12px;background:var(--g200);color:var(--g400);border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:not-allowed;font-family:inherit;">
+            마감된 공고입니다
+          </button>`;
+      }
+    }
+  }catch(e){
+    document.getElementById('job-det-body').innerHTML=`<div style="padding:20px;color:var(--g400);">오류: ${esc(e.message)}</div>`;
+  }
 }
 function closeJobDet(){document.getElementById('job-det-ov').classList.remove('on');curJob=null;}
 
@@ -687,79 +751,103 @@ async function loadMyProfile(){
   const area=document.getElementById('my-profile-area');
   area.innerHTML='<div style="text-align:center;padding:40px 0;"><div class="sp"></div></div>';
   try{
-    // 구직 프로필
-    const d=await fetch(SERVER+'/api/workers/my/'+encodeURIComponent(getAnon())).then(r=>r.json());
-    myProfile=d.data;
-    // 내가 등록한 공고
-    const jd=await fetch(SERVER+'/api/jobs/my/posted?anon_id='+encodeURIComponent(getAnon())).then(r=>r.json());
+    const anon=getAnon();
+    // 병렬로 데이터 가져오기
+    const [wd,jd,ad]=await Promise.all([
+      fetch(SERVER+'/api/workers/my/'+encodeURIComponent(anon)).then(r=>r.json()),
+      fetch(SERVER+'/api/jobs/my/posted?anon_id='+encodeURIComponent(anon)).then(r=>r.json()),
+      fetch(SERVER+'/api/jobs/my/applied?anon_id='+encodeURIComponent(anon)).then(r=>r.json())
+    ]);
+    myProfile=wd.data;
     const myJobs=jd.data||[];
-    // 내가 지원한 공고
-    const ad=await fetch(SERVER+'/api/jobs/my/applied?anon_id='+encodeURIComponent(getAnon())).then(r=>r.json());
     const myApplied=ad.data||[];
-
     let html='';
+
+    // ── 구직 프로필 카드 ───────────────────────────────────────
     if(myProfile){
       const isActive=myProfile.status==='active';
-      html+=`<div class="my-card">
+      html+=`<div class="my-card" style="margin-bottom:12px;">
         <div class="my-profile-head">
-          <div class="my-avatar">${myProfile.photo_url?`<img src="${esc(myProfile.photo_url)}" alt="">`:' <span style="font-size:28px;">👤</span>'}</div>
-          <div><div class="my-name">${esc(myProfile.nickname)}</div>
-            <div class="my-status"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${isActive?'#10B981':'#94A3B8'};margin-right:4px;vertical-align:middle;"></span>${isActive?'활동 중':'대기 중'}</div>
+          <div class="my-avatar">${myProfile.photo_url
+            ?`<img src="${esc(myProfile.photo_url)}" alt="">`
+            :'<span style="font-size:28px;">👤</span>'}</div>
+          <div>
+            <div class="my-name">${esc(myProfile.nickname)}</div>
+            <div class="my-status">
+              <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${isActive?'#10B981':'#94A3B8'};margin-right:4px;vertical-align:middle;"></span>
+              ${isActive?'구직 활동 중':'구직 일시 중단'}
+            </div>
           </div>
         </div>
         <div class="my-stat-row">
           <div class="my-stat"><div class="my-stat-val">${myProfile.experience||0}년</div><div class="my-stat-lbl">경력</div></div>
-          <div class="my-stat"><div class="my-stat-val">${myProfile.daily_rate?Math.round(Number(myProfile.daily_rate)/10000)+'만':'협의'}</div><div class="my-stat-lbl">희망 일당</div></div>
+          <div class="my-stat"><div class="my-stat-val">${myProfile.daily_rate?Math.round(myProfile.daily_rate/10000)+'만':'협의'}</div><div class="my-stat-lbl">희망 일당</div></div>
           <div class="my-stat"><div class="my-stat-val">${(myProfile.regions||[]).length}</div><div class="my-stat-lbl">활동 지역</div></div>
         </div>
-        <div style="margin-bottom:10px;"><div style="font-size:11px;font-weight:700;color:var(--g400);margin-bottom:6px;">보유 기술</div>
-          <div class="skill-tags">${(myProfile.skills||[]).map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('')}</div>
+        <div style="display:flex;gap:8px;margin-top:2px;">
+          <button class="btn-full btn-primary" onclick="openForm(true)" style="flex:1;padding:10px;font-size:13px;">✏️ 수정</button>
+          <button class="btn-full btn-outline" onclick="toggleStatus()" style="flex:1;padding:10px;font-size:13px;">${isActive?'⏸ 중단':'▶ 재시작'}</button>
         </div>
-        <div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:700;color:var(--g400);margin-bottom:6px;">가능 요일 · 시간</div>
-          <div class="day-tags">${(myProfile.available_days||[]).map(d=>`<span class="day-tag">${esc(d)}</span>`).join('')}${(myProfile.available_times||[]).map(t=>`<span class="day-tag time-tag">${esc(t)}</span>`).join('')}</div>
-        </div>
-        <button class="btn-full btn-pr" onclick="openProfileForm(true)">✏️ 프로필 수정</button>
-        <button class="btn-full btn-outline" style="border:1.5px solid var(--pr);" onclick="toggleStatus()">${isActive?'⏸ 구직 일시 중단':'▶ 구직 재시작'}</button>
       </div>`;
-    }else{
-      html+=`<div class="my-card" style="text-align:center;padding:24px;">
-        <div style="font-size:44px;margin-bottom:10px;">👤</div>
-        <div style="font-size:15px;font-weight:800;margin-bottom:6px;">프로필이 없어요</div>
-        <div style="font-size:13px;color:var(--g400);margin-bottom:16px;line-height:1.6;">프로필을 등록하면 채용자들이<br>나를 찾아 연락할 수 있어요</div>
-        <button class="btn-full btn-pr" onclick="openProfileForm(false)">프로필 등록하기</button>
+    } else {
+      html+=`<div class="no-profile" style="margin-bottom:12px;">
+        <div class="no-profile-ico">👤</div>
+        <div class="no-profile-ttl">구직 프로필 없음</div>
+        <div class="no-profile-sub">등록하면 채용자가 먼저 연락할 수 있어요</div>
+        <button class="btn-full btn-primary" onclick="openForm(false)">구직 프로필 등록</button>
       </div>`;
     }
 
-    // 내 지원 현황
-    if(myApplied.length){
-      html+=`<div class="my-card"><div class="section-title">🙋 내 지원 현황 (${myApplied.length}건)</div>`;
-      html+=myApplied.map(a=>{
-        const jp=a.job_posts||{};
-        const statusLabel=a.status==='matched'?'<span class="badge-matched">✅ 매칭 완료</span>':a.status==='rejected'?'<span class="badge-closed">❌ 거절</span>':'<span class="badge-open">검토 중</span>';
-        return `<div style="border-bottom:1px solid var(--g100);padding:10px 0;display:flex;justify-content:space-between;align-items:center;">
-          <div><div style="font-size:13px;font-weight:700;">${esc(jp.title||'-')}</div>
-            <div style="font-size:11px;color:var(--g400);">${esc(jp.region||'')} · ${fmtDate(jp.work_date)}</div>
-            ${a.status==='matched'&&a.employer_contact?`<div style="font-size:12px;color:var(--green);font-weight:700;margin-top:3px;">📞 채용자: ${esc(a.employer_contact)}</div>`:''}
-          </div>${statusLabel}</div>`;
-      }).join('');
-      html+=`</div>`;
-    }
-
-    // 내 채용공고
-    if(myJobs.length){
-      html+=`<div class="my-card"><div class="section-title">💼 내 채용공고 (${myJobs.length}건)</div>`;
+    // ── 내 채용공고 ────────────────────────────────────────────
+    html+=`<div class="my-card" style="margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:14px;font-weight:800;">📋 내 채용공고</div>
+        <button class="btn-register" onclick="openJobForm()" style="padding:5px 12px;font-size:12px;">+ 공고 등록</button>
+      </div>`;
+    if(!myJobs.length){
+      html+=`<div style="text-align:center;padding:16px;color:var(--g400);font-size:13px;">등록한 공고가 없어요</div>`;
+    } else {
       html+=myJobs.map(j=>`
-        <div style="border-bottom:1px solid var(--g100);padding:10px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="openJobDet('${j.id}')">
-          <div><div style="font-size:13px;font-weight:700;">${esc(j.title)}</div>
-            <div style="font-size:11px;color:var(--g400);">${esc(j.region)} · ${fmtDate(j.work_date)} · 🙋 ${j.applicant_count||0}명</div>
+        <div style="border:1px solid var(--g200);border-radius:10px;padding:12px;margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+            <div style="font-size:13px;font-weight:700;">${esc(j.title)}</div>
+            <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:${j.status==='open'?'#DCFCE7':'#F3F4F6'};color:${j.status==='open'?'#16A34A':'#6B7280'};">${j.status==='open'?'모집중':'마감'}</span>
           </div>
-          <span class="${j.status==='open'?'badge-open':'badge-closed'}">${j.status==='open'?'모집중':'마감'}</span>
+          <div style="font-size:12px;color:var(--g500);">📍${esc(j.region)} · 📅${j.work_date||'-'} · 💰${j.daily_rate?Number(j.daily_rate).toLocaleString()+'원':'협의'}</div>
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <button onclick="openJobDet('${j.id}')" style="flex:1;padding:7px;border:1px solid var(--g200);border-radius:8px;background:#fff;font-size:12px;font-weight:600;cursor:pointer;">지원자 확인</button>
+            <button onclick="toggleJobStatus('${j.id}','${j.status}')" style="padding:7px 12px;border:1px solid var(--g200);border-radius:8px;background:#fff;font-size:12px;cursor:pointer;">${j.status==='open'?'마감':'재개'}</button>
+          </div>
         </div>`).join('');
-      html+=`</div>`;
     }
+    html+=`</div>`;
+
+    // ── 내 지원 현황 ───────────────────────────────────────────
+    html+=`<div class="my-card">
+      <div style="font-size:14px;font-weight:800;margin-bottom:10px;">📬 내 지원 현황</div>`;
+    if(!myApplied.length){
+      html+=`<div style="text-align:center;padding:16px;color:var(--g400);font-size:13px;">지원한 공고가 없어요</div>`;
+    } else {
+      html+=myApplied.map(a=>{
+        const isMatched=a.status==='matched';
+        return `<div style="border:1px solid ${isMatched?'#A7F3D0':'var(--g200)'};border-radius:10px;padding:12px;margin-bottom:8px;background:${isMatched?'#F0FDF4':'#fff'};">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+            <div style="font-size:13px;font-weight:700;">${esc(a.job_title||'공고')}</div>
+            <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:${isMatched?'#DCFCE7':'#FEF3C7'};color:${isMatched?'#16A34A':'#D97706'};">${isMatched?'✅ 매칭됨':'⏳ 검토중'}</span>
+          </div>
+          <div style="font-size:12px;color:var(--g500);">📍${esc(a.job_region||'-')} · 📅${a.job_work_date||'-'}</div>
+          ${isMatched?`<div style="margin-top:8px;padding:8px;background:#DCFCE7;border-radius:8px;font-size:12px;">
+            📞 채용자 연락처: <strong>${esc(a.employer_contact||'-')}</strong>
+          </div>`:''}
+        </div>`;
+      }).join('');
+    }
+    html+=`</div>`;
 
     area.innerHTML=html;
-  }catch(e){area.innerHTML=`<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">오류 발생</div><div class="empty-sub">${esc(e.message)}</div></div>`;}
+  }catch(e){
+    area.innerHTML=`<div style="text-align:center;padding:40px;color:var(--g400);">오류: ${esc(e.message)}</div>`;
+  }
 }
 
 async function toggleStatus(){
@@ -891,7 +979,10 @@ function closeChat(){stopPoll();document.getElementById('ch-ov').classList.remov
 
 // ── 초기화 ───────────────────────────────────────────────────
 renderFilters();
+renderJobFilters();
 loadWorkers();
+// URL 파라미터 탭 전환
+(()=>{ const p=new URLSearchParams(location.search); const t=p.get('tab'); if(t&&['find','job','my'].includes(t)) switchTab(t); })();
 </script>
 </body>
 </html>
