@@ -200,6 +200,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
         <div class="info-cell"><div class="info-cell-lbl">📍 활동 지역</div><div class="info-cell-val" id="det-region"></div></div>
         <div class="info-cell"><div class="info-cell-lbl">🏆 경력</div><div class="info-cell-val" id="det-exp"></div></div>
         <div class="info-cell"><div class="info-cell-lbl">📅 가능 요일</div><div class="info-cell-val" id="det-days"></div></div>
+        <div class="info-cell"><div class="info-cell-lbl">🕐 가능 시간</div><div class="info-cell-val" id="det-times"></div></div>
         <div class="info-cell"><div class="info-cell-lbl">🛠 보유 기술</div><div class="info-cell-val" id="det-skills"></div></div>
       </div>
       <div class="det-sec-title">자기소개</div>
@@ -278,6 +279,11 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
         <label class="f-lbl">📅 가능 요일</label>
         <div class="chip-grid" id="day-chips"></div>
       </div>
+      <!-- 가능 시간 -->
+      <div class="f-sec">
+        <label class="f-lbl">🕐 가능 시간</label>
+        <div class="chip-grid" id="time-chips"></div>
+      </div>
       <!-- 경력 -->
       <div class="f-sec">
         <label class="f-lbl">🏆 경력 (년)</label>
@@ -320,11 +326,12 @@ const SERVER = 'https://ssakssak-server-production.up.railway.app';
 const REGIONS = ['전체','서울','경기','인천','부산','대구','광주','대전','울산','제주','기타'];
 const SKILLS  = ['전체','입주청소','이사청소','사무실청소','상가청소','특수청소','공사후청소','정기청소','소독방역','에어컨청소'];
 const DAYS    = ['월','화','수','목','금','토','일'];
+const TIMES   = ['오전','오후'];
 
 let curTab = 'find';
 let curRegion = '전체';
 let curWorker = null, curChatId = null, pollTimer = null, lastMsgTime = null;
-let selRegions = [], selSkills = [], selDays = [];
+let selRegions = [], selSkills = [], selDays = [], selTimes = [], selTimes = [];
 let myProfile = null;
 let editMode = false;
 let picBase64 = null, picMime = null;
@@ -389,7 +396,7 @@ async function loadWorkers() {
           </div>
           <div class="wcard-meta">📍 ${(w.regions||[]).slice(0,2).join(', ')}${(w.regions||[]).length>2?` 외 ${(w.regions||[]).length-2}`:''} · 경력 ${w.experience||0}년</div>
           <div class="skill-tags">${(w.skills||[]).map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('')}</div>
-          <div class="day-tags">${(w.available_days||[]).map(d=>`<span class="day-tag">${esc(d)}</span>`).join('')}</div>
+          <div class="day-tags">${(w.available_days||[]).map(d=>`<span class="day-tag">${esc(d)}</span>`).join('')}${(w.available_times||[]).map(t=>`<span class="day-tag" style="background:#EEF2FF;color:#4F46E5;margin-left:2px;">${esc(t)}</span>`).join('')}</div>
         </div>
       </div>`).join('');
   } catch(e) {
@@ -420,6 +427,7 @@ async function openDet(id) {
     document.getElementById('det-region').textContent = (w.regions||[]).join(', ')||'-';
     document.getElementById('det-exp').textContent    = (w.experience||0)+'년';
     document.getElementById('det-days').textContent   = (w.available_days||[]).join(', ')||'-';
+    document.getElementById('det-times').textContent  = (w.available_times||[]).join(', ')||'-';
     document.getElementById('det-skills').textContent = (w.skills||[]).join(', ')||'-';
     document.getElementById('det-bio').textContent    = w.bio||'(자기소개 없음)';
     const chatBtn = document.getElementById('det-chat-btn');
@@ -533,9 +541,13 @@ async function loadMyProfile() {
           <div style="font-size:11px;font-weight:700;color:var(--g400);margin-bottom:6px;">보유 기술</div>
           <div class="skill-tags">${(myProfile.skills||[]).map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('')}</div>
         </div>
-        <div style="margin-bottom:14px;">
+        <div style="margin-bottom:10px;">
           <div style="font-size:11px;font-weight:700;color:var(--g400);margin-bottom:6px;">가능 요일</div>
           <div class="day-tags">${(myProfile.available_days||[]).map(d=>`<span class="day-tag">${esc(d)}</span>`).join('')||'<span style="font-size:12px;color:var(--g400);">미설정</span>'}</div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:11px;font-weight:700;color:var(--g400);margin-bottom:6px;">가능 시간</div>
+          <div class="day-tags">${(myProfile.available_times||[]).map(t=>`<span class="day-tag" style="background:#EEF2FF;color:#4F46E5;">${esc(t)}</span>`).join('')||'<span style="font-size:12px;color:var(--g400);">미설정</span>'}</div>
         </div>
         <button class="btn-full btn-primary" onclick="openForm(true)">✏️ 프로필 수정</button>
         <button class="btn-full btn-outline btn-gap" style="border:1.5px solid var(--pr);" onclick="toggleStatus()">
@@ -570,12 +582,17 @@ function renderFormChips(){
   document.getElementById('day-chips').innerHTML = DAYS.map(d=>
     `<button class="chip${selDays.includes(d)?' on':''}" onclick="toggleChip('day','${d}')">${d}</button>`
   ).join('');
+  // 시간
+  document.getElementById('time-chips').innerHTML = TIMES.map(t=>
+    `<button class="chip${selTimes.includes(t)?' on':''}" onclick="toggleChip('time','${t}')">${t}</button>`
+  ).join('');
 }
 
 function toggleChip(type, val){
   if(type==='region'){ selRegions=selRegions.includes(val)?selRegions.filter(x=>x!==val):[...selRegions,val]; }
   if(type==='skill'){  selSkills =selSkills.includes(val) ?selSkills.filter(x=>x!==val) :[...selSkills,val];  }
   if(type==='day'){    selDays   =selDays.includes(val)   ?selDays.filter(x=>x!==val)   :[...selDays,val];    }
+  if(type==='time'){   selTimes  =selTimes.includes(val)  ?selTimes.filter(x=>x!==val)  :[...selTimes,val];   }
   renderFormChips();
 }
 
@@ -606,6 +623,7 @@ function openForm(isEdit=false){
     selRegions = [...(myProfile.regions||[])];
     selSkills  = [...(myProfile.skills||[])];
     selDays    = [...(myProfile.available_days||[])];
+    selTimes   = [...(myProfile.available_times||[])];
     document.getElementById('f-nick').value = myProfile.nickname||'';
     document.getElementById('f-exp').value  = myProfile.experience||'';
     document.getElementById('f-rate').value = myProfile.daily_rate||'';
@@ -616,7 +634,7 @@ function openForm(isEdit=false){
       document.getElementById('f-photo-preview').style.display = 'block';
     } else { removePhoto(); }
   } else {
-    selRegions=[]; selSkills=[]; selDays=[]; removePhoto();
+    selRegions=[]; selSkills=[]; selDays=[]; selTimes=[]; removePhoto();
     document.getElementById('f-nick').value='';
     document.getElementById('f-exp').value='';
     document.getElementById('f-rate').value='';
@@ -641,7 +659,7 @@ async function saveProfile(){
     const d=await fetch(SERVER+'/api/workers',{
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ anon_id:getAnon(), nickname:nick, regions:selRegions, skills:selSkills,
-        available_days:selDays, experience:Number(exp)||0, daily_rate:Number(rate)||0,
+        available_days:selDays, available_times:selTimes, experience:Number(exp)||0, daily_rate:Number(rate)||0,
         bio, avatar_emoji:'👤',
         ...(picBase64 ? { photoBase64: picBase64, photoMime: picMime||'image/jpeg' } : {}) })
     }).then(r=>r.json());
