@@ -17,6 +17,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#00C896">
+<link rel="stylesheet" href="design.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--primary:#00C896;--primary-dark:#00A87A;--primary-light:#E6FAF5;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--red:#EF4444;--blue:#3B82F6;--amber:#F59E0B;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
@@ -163,13 +164,19 @@ select.form-input{cursor:pointer;}
     <button class="settings-btn" onclick="switchTab('settings',document.querySelectorAll('.tab')[6])">⚙️</button>
   </div>
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('quote',this)">견적</button>
-    <button class="tab" onclick="switchTab('booking',this)">📅예약</button>
-    <button class="tab" onclick="switchTab('template',this)">템플릿</button>
-    <button class="tab" onclick="switchTab('faq',this)">FAQ</button>
-    <button class="tab" onclick="switchTab('report',this)">📸보고서</button>
-    <button class="tab" onclick="switchTab('history',this)">📋이력</button>
-    <button class="tab" onclick="switchTab('settings',this)">⚙️설정</button>
+    <button class="tab active" id="tab-quote"   onclick="switchTab('quote',this)">⚡ 견적발송</button>
+    <button class="tab"        id="tab-report"  onclick="switchTab('report',this)">📸 완료보고서</button>
+    <button class="tab"        id="tab-more"    onclick="toggleMoreMenu(this)">··· 더보기</button>
+  </div>
+  <!-- 더보기 드롭다운 -->
+  <div id="more-menu" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border-bottom:1px solid var(--gray-100);z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.08);">
+    <div style="display:flex;overflow-x:auto;padding:8px 12px;gap:6px;scrollbar-width:none;">
+      <button onclick="switchTab('booking',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">📅 예약</button>
+      <button onclick="switchTab('template',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">📝 템플릿</button>
+      <button onclick="switchTab('faq',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">💡 FAQ</button>
+      <button onclick="switchTab('history',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">📋 이력</button>
+      <button onclick="switchTab('settings',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">⚙️ 설정</button>
+    </div>
   </div>
 </div>
 <div class="content">
@@ -486,6 +493,25 @@ function switchTab(name,btn){
   if(name==='report')initReportTab();
   if(name==='booking')loadBookings();
 }
+
+function toggleMoreMenu(btn) {
+  const menu = document.getElementById('more-menu');
+  if (!menu) return;
+  const open = menu.style.display === 'block';
+  menu.style.display = open ? 'none' : 'block';
+  if (!open) {
+    // 메뉴 외부 클릭 시 닫기
+    setTimeout(() => {
+      document.addEventListener('click', function closeMenu(e) {
+        if (!menu.contains(e.target) && e.target !== btn) {
+          menu.style.display = 'none';
+          document.removeEventListener('click', closeMenu);
+        }
+      });
+    }, 10);
+  }
+}
+
 
 function renderExtraChips(){
   document.getElementById('extra-chips').innerHTML=cfg.extras.map((e,i)=>

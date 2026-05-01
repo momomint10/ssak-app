@@ -9,504 +9,241 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#00C896">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="design.css">
 <style>
-:root {
-  --primary: #00C896;
-  --primary-dark: #00A87A;
-  --primary-light: #E6FAF5;
-  --secondary: #1A1F36;
-  --gray-50: #F8FAFB;
-  --gray-100: #F1F4F6;
-  --gray-200: #E4E9EE;
-  --gray-300: #C8D0DA;
-  --gray-400: #9AA5B4;
-  --gray-500: #6B7684;
-  --gray-700: #3D4A5C;
-  --gray-900: #1A1F36;
-  --amber: #F59E0B;
-  --red: #EF4444;
-  --blue: #3B82F6;
-  --purple: #8B5CF6;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --shadow: 0 2px 12px rgba(0,0,0,0.07);
-  --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: var(--gray-50); color: var(--gray-900); }
-
-/* ── Shell ── */
-.shell { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 80px; }
-
-/* ── Header ── */
-.header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  padding: 52px 20px 28px;
+/* ── 홈 전용 스타일 ────────────────────────────────────────── */
+.home-header {
+  background: linear-gradient(135deg, var(--c-pr) 0%, var(--c-pr-d) 100%);
+  padding: 52px 20px 24px;
   position: relative; overflow: hidden;
 }
-.header::before {
-  content: '';
-  position: absolute; top: -40px; right: -40px;
-  width: 160px; height: 160px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 50%;
+.home-header::before {
+  content:''; position:absolute; top:-50px; right:-50px;
+  width:180px; height:180px; background:rgba(255,255,255,.08); border-radius:50%;
 }
-.header::after {
-  content: '';
-  position: absolute; bottom: -20px; right: 40px;
-  width: 80px; height: 80px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 50%;
+.hd-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.hd-greeting { font-size:13px; color:rgba(255,255,255,.8); margin-bottom:3px; }
+.hd-name { font-size:22px; font-weight:900; color:#fff; }
+.hd-actions { display:flex; gap:8px; }
+.hd-icon-btn {
+  width:40px; height:40px; border-radius:50%;
+  background:rgba(255,255,255,.18); border:none;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; cursor:pointer; position:relative; color:#fff;
 }
-.header-top {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 20px; position: relative; z-index: 1;
-}
-.header-greeting { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 3px; }
-.header-name { font-size: 20px; font-weight: 900; color: #fff; }
-.header-right { display: flex; gap: 10px; }
-.icon-btn {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; cursor: pointer; border: none;
-  transition: background 0.2s;
-  position: relative;
-}
-.icon-btn:active { background: rgba(255,255,255,0.3); }
-.notif-dot {
-  position: absolute; top: 6px; right: 6px;
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #FF5A5A; border: 2px solid var(--primary);
+.hd-notif-dot {
+  position:absolute; top:7px; right:7px;
+  width:8px; height:8px; border-radius:50%;
+  background:#FFD600; border:1.5px solid rgba(0,200,150,.6);
 }
 
-/* ── Today stats ── */
-.today-stats {
-  display: flex; gap: 10px; position: relative; z-index: 1;
+/* ── 오늘 할 일 카드 ──────────────────────────────────────── */
+.today-card {
+  background:#fff; border-radius:18px; padding:16px 18px;
+  margin:0 20px; margin-top:-24px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.12);
+  display:flex; align-items:center; gap:14px;
+  cursor:pointer;
+  transition: transform .1s;
 }
-.today-stat {
-  flex: 1; background: rgba(255,255,255,0.15);
-  border-radius: var(--radius-sm); padding: 12px;
-  backdrop-filter: blur(10px);
+.today-card:active { transform:scale(.98); }
+.today-card-ico {
+  width:48px; height:48px; border-radius:14px;
+  background:var(--c-pr-l); display:flex; align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
 }
-.ts-label { font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
-.ts-value { font-size: 22px; font-weight: 900; color: #fff; line-height: 1; }
-.ts-unit { font-size: 12px; font-weight: 400; }
+.today-card-body { flex:1; }
+.today-card-label { font-size:11px; font-weight:700; color:var(--c-g400); margin-bottom:3px; }
+.today-card-text { font-size:16px; font-weight:800; color:var(--c-g900); }
+.today-card-sub { font-size:12px; color:var(--c-g500); margin-top:2px; }
+.today-card-arrow { font-size:18px; color:var(--c-g300); flex-shrink:0; }
 
-/* ── Content ── */
-.content { padding: 20px; }
-
-/* ── Section ── */
-.section-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 12px;
+/* ── 빠른 실행 4버튼 ──────────────────────────────────────── */
+.quick-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:8px;
+  padding:0 20px; margin-top:12px;
 }
-.section-title { font-size: 15px; font-weight: 700; }
-.section-more { font-size: 12.5px; color: var(--primary); font-weight: 600; cursor: pointer; }
-
-/* ── Quick actions ── */
 .quick-btn {
-  background: var(--primary);
-  color: #fff; border: none;
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  width: 100%;
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,200,150,0.3);
-  transition: all 0.2s;
-  font-family: inherit;
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  padding:14px 6px; border-radius:14px;
+  background:#fff; border:none; cursor:pointer;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+  font-family:inherit; transition:transform .1s;
 }
-.quick-btn:active { transform: scale(0.98); }
-.quick-btn-icon { font-size: 24px; flex-shrink: 0; }
-.quick-btn-text { text-align: left; }
-.quick-btn-label { font-size: 15px; font-weight: 700; color: #fff; }
-.quick-btn-desc { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 2px; }
-.quick-btn-arrow { margin-left: auto; font-size: 18px; color: rgba(255,255,255,0.7); }
+.quick-btn:active { transform:scale(.96); }
+.quick-ico {
+  width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+}
+.quick-lbl { font-size:11px; font-weight:700; color:var(--c-g700); }
 
-/* ── Menu grid ── */
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.menu-item {
-  background: #fff;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
-  padding: 16px 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: var(--shadow);
-  position: relative;
-  overflow: hidden;
-}
-.menu-item:active { transform: scale(0.96); }
-.menu-item:hover { border-color: var(--primary); box-shadow: 0 4px 16px rgba(0,200,150,0.15); }
-.menu-icon { font-size: 28px; margin-bottom: 7px; }
-.menu-label { font-size: 12.5px; font-weight: 700; color: var(--gray-700); }
-.menu-badge {
-  position: absolute; top: 8px; right: 8px;
-  background: var(--red); color: #fff;
-  font-size: 10px; font-weight: 700;
-  padding: 2px 6px; border-radius: 10px;
-  min-width: 18px; text-align: center;
-}
-.menu-item.coming {
-  background: var(--gray-50);
-  border-style: dashed;
-}
-.menu-item.coming .menu-label { color: var(--gray-400); }
-.coming-tag {
-  position: absolute; top: 6px; right: 6px;
-  background: var(--gray-200); color: var(--gray-500);
-  font-size: 9px; font-weight: 700;
-  padding: 2px 6px; border-radius: 8px;
-}
-
-/* ── Inquiry cards ── */
-.inq-card {
-  background: #fff;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  display: flex; gap: 12px; align-items: flex-start;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.inq-card:active { transform: scale(0.98); }
-.inq-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 15px; color: #fff;
-  flex-shrink: 0;
-}
-.inq-name { font-size: 14px; font-weight: 700; }
-.inq-meta { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
-.inq-msg { font-size: 13px; color: var(--gray-600, #4B5563); margin-top: 5px; line-height: 1.5; }
-.inq-time { font-size: 11px; color: var(--gray-300); margin-left: auto; flex-shrink: 0; }
-.badge {
-  display: inline-flex; align-items: center;
-  padding: 2px 9px; border-radius: 20px;
-  font-size: 11px; font-weight: 600;
-}
-.badge-wait { background: #FEF3C7; color: #D97706; }
-.badge-new { background: #FEE2E2; color: #DC2626; }
-.badge-done { background: var(--primary-light); color: var(--primary-dark); }
-
-/* ── Schedule cards ── */
-.schedule-card {
-  background: #fff;
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  display: flex; align-items: center; gap: 14px;
-  box-shadow: var(--shadow);
-}
-.schedule-time {
-  text-align: center; flex-shrink: 0; width: 48px;
-}
-.st-time { font-size: 14px; font-weight: 900; color: var(--primary); }
-.st-ampm { font-size: 11px; color: var(--gray-400); }
-.schedule-divider {
-  width: 1px; height: 40px; background: var(--gray-200); flex-shrink: 0;
-}
-.schedule-info { flex: 1; min-width: 0; }
-.si-title { font-size: 14px; font-weight: 700; }
-.si-meta { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
-.schedule-status {
-  flex-shrink: 0;
-  padding: 4px 10px; border-radius: 20px;
-  font-size: 11.5px; font-weight: 600;
-}
-.ss-confirmed { background: var(--primary-light); color: var(--primary-dark); }
-.ss-pending { background: #FEF3C7; color: #D97706; }
-
-/* ── Performance card ── */
+/* ── 이번 달 실적 ─────────────────────────────────────────── */
 .perf-card {
-  background: linear-gradient(135deg, var(--secondary) 0%, #2D3561 100%);
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 20px;
-  color: #fff;
+  margin:0 20px; margin-top:12px;
+  background:#fff; border-radius:18px; padding:18px 20px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
 }
-.perf-title { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 14px; }
-.perf-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; }
-.perf-item { text-align: center; }
-.perf-item + .perf-item { border-left: 1px solid rgba(255,255,255,0.1); }
-.perf-val { font-size: 22px; font-weight: 900; color: #fff; }
-.perf-label { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; }
-.perf-change {
-  font-size: 11px; color: var(--primary);
-  font-weight: 600; margin-top: 2px;
-}
+.perf-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.perf-title { font-size:13px; font-weight:800; color:var(--c-g500); }
+.perf-period { font-size:11px; color:var(--c-g400); }
+.perf-stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+.perf-stat { text-align:center; }
+.perf-val { font-size:22px; font-weight:900; color:var(--c-g900); line-height:1.2; }
+.perf-val.green { color:var(--c-pr); }
+.perf-lbl { font-size:11px; color:var(--c-g400); margin-top:3px; }
+.perf-change { font-size:10px; margin-top:2px; }
+.perf-change.up { color:var(--c-pr); }
+.perf-change.dn { color:var(--c-red); }
 
-/* ── Bottom nav ── */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 100%; max-width: 480px;
-  background: rgba(255,255,255,0.95);
-  border-top: 1px solid var(--gray-200);
-  backdrop-filter: blur(20px);
-  display: flex;
-  padding: 8px 0 env(safe-area-inset-bottom, 8px);
-  z-index: 100;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+/* ── 최근 알림 섹션 ───────────────────────────────────────── */
+.section-wrap { padding:0 20px; margin-top:14px; }
+.recent-card { background:#fff; border-radius:18px; overflow:hidden; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
+.recent-row {
+  display:flex; align-items:center; gap:12px;
+  padding:14px 16px; border-bottom:1px solid var(--c-g100);
+  cursor:pointer;
 }
-.nav-item {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 3px;
-  padding: 4px 0; cursor: pointer;
-  color: var(--gray-400); font-size: 10px;
-  transition: color 0.15s;
-  font-family: inherit; background: none; border: none;
+.recent-row:last-child { border-bottom:none; }
+.recent-ico {
+  width:40px; height:40px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
 }
-.nav-item.active { color: var(--primary); }
-.nav-icon { font-size: 22px; line-height: 1; }
-
-/* ── Toast ── */
-#toast {
-  position: fixed; bottom: 96px; left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--gray-900); color: #fff;
-  padding: 11px 20px; border-radius: 24px;
-  font-size: 13.5px; font-weight: 500;
-  opacity: 0; transition: all 0.3s;
-  pointer-events: none; z-index: 999;
-  white-space: nowrap;
-}
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ── Fade in animation ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.fade-in { animation: fadeUp 0.5s ease both; }
-.fade-in-1 { animation-delay: 0.05s; }
-.fade-in-2 { animation-delay: 0.1s; }
-.fade-in-3 { animation-delay: 0.15s; }
-.fade-in-4 { animation-delay: 0.2s; }
-.fade-in-5 { animation-delay: 0.25s; }
+.recent-body { flex:1; min-width:0; }
+.recent-title { font-size:14px; font-weight:700; color:var(--c-g900); }
+.recent-sub { font-size:12px; color:var(--c-g400); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.recent-right { font-size:11px; color:var(--c-g300); flex-shrink:0; }
 </style>
-<script src="utils.js"></script>
 </head>
 <body>
 <div class="shell">
 
-  <!-- ── Header ── -->
-  <div class="header fade-in">
-    <div class="header-top">
+  <!-- 헤더 -->
+  <div class="home-header">
+    <div class="hd-top">
       <div>
-        <div class="header-greeting" id="greeting">안녕하세요 👋</div>
-        <div class="header-name" id="user-name">서프로클린 사장님</div>
+        <div class="hd-greeting" id="greeting">좋은 아침이에요 ☀️</div>
+        <div class="hd-name"><span id="user-name">사장님</span></div>
       </div>
-      <div class="header-right">
-        <button class="icon-btn" onclick="togglePushNotification()">
+      <div class="hd-actions">
+        <button class="hd-icon-btn" onclick="togglePushNotification()" title="알림 설정">
           🔔
-          <div class="notif-dot"></div>
+          <div class="hd-notif-dot" id="notif-dot" style="display:none;"></div>
         </button>
-        <button class="icon-btn" onclick="location.href='ssak-quote.html'">⚙️</button>
-      </div>
-    </div>
-
-    <div class="today-stats">
-      <div class="today-stat" onclick="location.href='schedule.html'" style="cursor:pointer;">
-        <div class="ts-label">오늘 작업</div>
-        <div class="ts-value" id="stat-today">-<span class="ts-unit">건</span></div>
-      </div>
-      <div class="today-stat" onclick="location.href='schedule.html'" style="cursor:pointer;">
-        <div class="ts-label">미답변 문의</div>
-        <div class="ts-value" style="color:#FFD700;"><span id="stat-pending">-</span><span class="ts-unit">건</span></div>
-      </div>
-      <div class="today-stat">
-        <div class="ts-label">이번 달 매출</div>
-        <div class="ts-value"><span id="stat-revenue">-</span><span class="ts-unit">만</span></div>
+        <button class="hd-icon-btn" onclick="goTo('settings')">⚙️</button>
       </div>
     </div>
   </div>
 
-  <!-- ── Content ── -->
-  <div class="content">
+  <!-- 오늘 할 일 카드 -->
+  <div class="today-card" onclick="goTo('schedule')" id="today-card">
+    <div class="today-card-ico">📋</div>
+    <div class="today-card-body">
+      <div class="today-card-label">오늘 할 일</div>
+      <div class="today-card-text" id="today-text">불러오는 중...</div>
+      <div class="today-card-sub" id="today-sub"></div>
+    </div>
+    <div class="today-card-arrow">›</div>
+  </div>
 
-    <!-- 빠른 견적 -->
-    <button class="quick-btn fade-in fade-in-1" onclick="goTo('quote')">
-      <div class="quick-btn-icon">⚡</div>
-      <div class="quick-btn-text">
-        <div class="quick-btn-label">빠른 견적 & 자동응답</div>
-        <div class="quick-btn-desc">평수 입력 → 견적 계산 → 문자 발송</div>
-      </div>
-      <div class="quick-btn-arrow">›</div>
+  <!-- 빠른 실행 -->
+  <div class="quick-grid" style="margin-top:16px;">
+    <button class="quick-btn" onclick="goTo('quote')">
+      <div class="quick-ico" style="background:#E6FAF5;">⚡</div>
+      <div class="quick-lbl">견적발송</div>
     </button>
-
-    <!-- 메뉴 그리드 -->
-    <div class="section-header fade-in fade-in-2">
-      <div class="section-title">전체 메뉴</div>
-    </div>
-    <div class="menu-grid fade-in fade-in-2">
-      <div class="menu-item" onclick="goTo('quote')">
-        <div class="menu-badge">3</div>
-        <div class="menu-icon">💬</div>
-        <div class="menu-label">SMS 자동응답</div>
-      </div>
-      <div class="menu-item" onclick="location.href='schedule.html'">
-        <div class="menu-icon">📅</div>
-        <div class="menu-label">스케줄 관리</div>
-      </div>
-      <div class="menu-item" onclick="goTo('workforce')">
-        <div class="menu-icon">👥</div>
-        <div class="menu-label">인력 매칭</div>
-      </div>
-      <div class="menu-item" onclick="location.href='market.html'">
-        <div class="menu-icon">🛒</div>
-        <div class="menu-label">중고거래</div>
-      </div>
-      <div class="menu-item" onclick="sessionStorage.setItem('gotoTab','report');location.href='ssak-quote.html'">
-        <div class="menu-icon">📸</div>
-        <div class="menu-label">완료 보고서</div>
-      </div>
-      <div class="menu-item" onclick="location.href='sign.html'">
-        <div class="menu-icon">📝</div>
-        <div class="menu-label">계약서</div>
-      </div>
-    </div>
-
-    <!-- 이번 달 실적 -->
-    <div class="perf-card fade-in fade-in-3">
-      <div class="perf-title">📊 이번 달 실적</div>
-      <div class="perf-grid">
-        <div class="perf-item">
-          <div class="perf-val" id="perf-done">12</div>
-          <div class="perf-label">완료 작업</div>
-          <div class="perf-change" id="perf-done-change">↑ 0건</div>
-        </div>
-        <div class="perf-item">
-          <div class="perf-val" id="perf-revenue">840</div>
-          <div class="perf-label">매출 (만원)</div>
-          <div class="perf-change" id="perf-revenue-change">-</div>
-        </div>
-        <div class="perf-item">
-          <div class="perf-val" id="perf-rating">-</div>
-          <div class="perf-label">평균 평점</div>
-          <div class="perf-change">⭐ 최고</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 오늘 스케줄 -->
-    <div class="section-header fade-in fade-in-3">
-      <div class="section-title">📅 오늘 스케줄</div>
-      <div class="section-more" onclick="location.href='schedule.html'">전체보기</div>
-    </div>
-
-    <div class="schedule-card fade-in fade-in-3">
-      <div class="schedule-time">
-        <div class="st-time">10:00</div>
-        <div class="st-ampm">오전</div>
-      </div>
-      <div class="schedule-divider"></div>
-      <div class="schedule-info">
-        <div class="si-title">강남구 34평 입주 전 청소</div>
-        <div class="si-meta">서초동 · 2인 투입 · 약 4시간</div>
-      </div>
-      <div class="schedule-status ss-confirmed">확정</div>
-    </div>
-
-    <div class="schedule-card fade-in fade-in-3">
-      <div class="schedule-time">
-        <div class="st-time">3:00</div>
-        <div class="st-ampm">오후</div>
-      </div>
-      <div class="schedule-divider"></div>
-      <div class="schedule-info">
-        <div class="si-title">송파구 28평 이사 후 청소</div>
-        <div class="si-meta">잠실동 · 2인 투입 · 약 3시간</div>
-      </div>
-      <div class="schedule-status ss-pending">대기중</div>
-    </div>
-
-    <!-- 미답변 문의 -->
-    <div class="section-header fade-in fade-in-4">
-      <div class="section-title">📞 미답변 문의 <span style="color:var(--red);font-size:13px;">3건</span></div>
-      <div class="section-more" onclick="goTo('inquiries')">전체보기</div>
-    </div>
-
-    <div class="inq-card fade-in fade-in-4" onclick="goTo('quote')">
-      <div class="inq-avatar" style="background:var(--primary);">김</div>
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;gap:6px;">
-          <div class="inq-name">김민지</div>
-          <span class="badge badge-new">NEW</span>
-        </div>
-        <div class="inq-meta">010-1234-5678 · 34평 아파트</div>
-        <div class="inq-msg">입주 전 청소 견적 문의드립니다</div>
-      </div>
-      <div class="inq-time">방금</div>
-    </div>
-
-    <div class="inq-card fade-in fade-in-4" onclick="goTo('quote')">
-      <div class="inq-avatar" style="background:var(--blue);">박</div>
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;gap:6px;">
-          <div class="inq-name">박준호</div>
-          <span class="badge badge-wait">대기중</span>
-        </div>
-        <div class="inq-meta">010-9876-5432 · 25평 빌라</div>
-        <div class="inq-msg">이사 후 청소 가능한지요?</div>
-      </div>
-      <div class="inq-time">1시간 전</div>
-    </div>
-
-    <div class="inq-card fade-in fade-in-4" onclick="goTo('quote')">
-      <div class="inq-avatar" style="background:var(--purple);">이</div>
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;gap:6px;">
-          <div class="inq-name">이수연</div>
-          <span class="badge badge-wait">대기중</span>
-        </div>
-        <div class="inq-meta">010-5555-7777 · 42평 아파트</div>
-        <div class="inq-msg">신축 입주청소 견적 부탁드려요</div>
-      </div>
-      <div class="inq-time">2시간 전</div>
-    </div>
-
+    <button class="quick-btn" onclick="goTo('report')">
+      <div class="quick-ico" style="background:#F0FDF4;">📸</div>
+      <div class="quick-lbl">완료보고서</div>
+    </button>
+    <button class="quick-btn" onclick="goTo('sign')">
+      <div class="quick-ico" style="background:#F5F3FF;">✍️</div>
+      <div class="quick-lbl">계약서</div>
+    </button>
+    <button class="quick-btn" onclick="goTo('workforce')">
+      <div class="quick-ico" style="background:#FFF7ED;">👥</div>
+      <div class="quick-lbl">인력매칭</div>
+    </button>
   </div>
-</div>
 
-<!-- ── Bottom Nav ── -->
-<div class="bottom-nav">
-  <button class="nav-item active" id="nav-home" onclick="setNav('home')">
-    <div class="nav-icon">🏠</div>
-    <div>홈</div>
+  <!-- 더보기 메뉴 (접이식) -->
+  <div class="section-wrap" style="margin-top:12px;">
+    <div class="recent-card">
+      <div class="recent-row" onclick="goTo('schedule')">
+        <div class="recent-ico" style="background:#EFF6FF;">📅</div>
+        <div class="recent-body">
+          <div class="recent-title">스케줄 관리</div>
+          <div class="recent-sub">예약 일정 확인 및 관리</div>
+        </div>
+        <div class="recent-right">›</div>
+      </div>
+      <div class="recent-row" onclick="goTo('community')">
+        <div class="recent-ico" style="background:#F0FDF4;">💬</div>
+        <div class="recent-body">
+          <div class="recent-title">커뮤니티</div>
+          <div class="recent-sub">청소업 정보 · 팁 · 질문</div>
+        </div>
+        <div class="recent-right">›</div>
+      </div>
+      <div class="recent-row" onclick="goTo('market')">
+        <div class="recent-ico" style="background:#FFF7ED;">🛒</div>
+        <div class="recent-body">
+          <div class="recent-title">중고거래</div>
+          <div class="recent-sub">청소 장비 · 소모품 거래</div>
+        </div>
+        <div class="recent-right">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 이번 달 실적 -->
+  <div class="perf-card">
+    <div class="perf-head">
+      <div class="perf-title">📊 이번 달 실적</div>
+      <div class="perf-period" id="perf-period"></div>
+    </div>
+    <div class="perf-stats">
+      <div class="perf-stat">
+        <div class="perf-val green" id="perf-done">-</div>
+        <div class="perf-lbl">완료 건수</div>
+        <div class="perf-change" id="perf-done-change"></div>
+      </div>
+      <div class="perf-stat">
+        <div class="perf-val" id="perf-revenue">-</div>
+        <div class="perf-lbl">매출(만원)</div>
+        <div class="perf-change" id="perf-revenue-change"></div>
+      </div>
+      <div class="perf-stat">
+        <div class="perf-val" id="perf-rating">-</div>
+        <div class="perf-lbl">평균 평점</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+
+<!-- 하단 네비 -->
+<nav class="ds-nav">
+  <button class="ds-nav-item on" id="nav-home" onclick="location.href='index.html'">
+    <div class="ds-nav-ico">🏠</div><div>홈</div>
   </button>
-  <button class="nav-item" id="nav-quote" onclick="setNav('quote')">
-    <div class="nav-icon">⚡</div>
-    <div>견적</div>
+  <button class="ds-nav-item" id="nav-quote" onclick="goTo('quote')">
+    <div class="ds-nav-ico">⚡</div><div>견적</div>
   </button>
-  <button class="nav-item" id="nav-schedule" onclick="setNav('schedule')">
-    <div class="nav-icon">📅</div>
-    <div>스케줄</div>
+  <button class="ds-nav-item" id="nav-schedule" onclick="location.href='schedule.html'">
+    <div class="ds-nav-ico">📅</div><div>스케줄</div>
   </button>
-  <button class="nav-item" id="nav-community" onclick="location.href='community.html'">
-    <div class="nav-icon">👥</div>
-    <div>커뮤니티</div>
+  <button class="ds-nav-item" id="nav-community" onclick="location.href='community.html'">
+    <div class="ds-nav-ico">💬</div><div>커뮤니티</div>
   </button>
-  <button class="nav-item" id="nav-my" onclick="location.href='my.html'">
-    <div class="nav-icon">👤</div>
-    <div>MY</div>
+  <button class="ds-nav-item" id="nav-my" onclick="location.href='my.html'">
+    <div class="ds-nav-ico">👤</div><div>MY</div>
   </button>
-</div>
+</nav>
 
 <div id="toast"></div>
-
+<script src="utils.js"></script>
 <script>
+
 // ── 인사말 ──────────────────────────────────
 function setGreeting() {
   const hour = new Date().getHours();
@@ -632,9 +369,8 @@ let toastTimer;
 // ── Init ─────────────────────────────────────
 setGreeting();
 loadUser();
-</script>
 
-  <script>
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js')
@@ -733,6 +469,73 @@ async function updateBellState(subscribed) {
 })();
 
 // VAPID 키 변환 유틸
+
+
+// ── 홈 리디자인 보완 ───────────────────────────────────────────
+async function loadHomeStats() {
+  const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  const adminKey = cfg.adminKey || '';
+
+  // 오늘 예약 수 (기존 fetchPendingBookings 대체)
+  try {
+    const r = await fetch(SERVER + '/api/bookings?status=pending&adminKey=' + encodeURIComponent(adminKey));
+    const d = await r.json();
+    const pending = d.data || [];
+    const todayText = document.getElementById('today-text');
+    const todaySub  = document.getElementById('today-sub');
+    const todayCard = document.getElementById('today-card');
+    if (todayText) {
+      if (pending.length > 0) {
+        todayText.textContent = `대기 예약 ${pending.length}건 확인하기`;
+        todaySub && (todaySub.textContent = '탭하면 스케줄로 이동합니다');
+        todayCard && (todayCard.style.outline = '2px solid var(--c-pr)');
+      } else {
+        todayText.textContent = '오늘 대기 예약 없음';
+        todaySub && (todaySub.textContent = '여유로운 하루입니다 ☀️');
+      }
+    }
+  } catch(e) {
+    const todayText = document.getElementById('today-text');
+    if (todayText) todayText.textContent = '스케줄 확인하기';
+  }
+
+  // 이달 실적
+  try {
+    const r2 = await fetch(SERVER + '/api/stats/monthly?adminKey=' + encodeURIComponent(adminKey));
+    const d2 = await r2.json();
+    if (d2.success) {
+      const perfDone    = document.getElementById('perf-done');
+      const perfRevenue = document.getElementById('perf-revenue');
+      if (perfDone)    perfDone.textContent    = d2.done ?? 0;
+      if (perfRevenue) perfRevenue.textContent = d2.revenue ? Math.round(d2.revenue/10000) : '-';
+    }
+  } catch(e) {}
+
+  // 기간 표시
+  const now = new Date();
+  const period = document.getElementById('perf-period');
+  if (period) period.textContent = `${now.getMonth()+1}월`;
+}
+
+// 벨 아이콘 상태 (redesign에 맞게)
+function updateBellState(subscribed) {
+  const dot = document.getElementById('notif-dot');
+  if (dot) dot.style.display = subscribed ? 'block' : 'none';
+}
+
+// DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  setGreeting();
+  loadUser();
+  loadHomeStats();
+  // SW 구독 상태
+  if ('serviceWorker' in navigator && 'PushManager' in window) {
+    navigator.serviceWorker.ready.then(reg =>
+      reg.pushManager.getSubscription()
+    ).then(sub => updateBellState(!!sub)).catch(() => {});
+  }
+});
+
 </script>
 </body>
 </html>
