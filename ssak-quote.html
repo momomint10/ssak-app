@@ -257,6 +257,21 @@ select.form-input{cursor:pointer;}
 <!-- 완료보고서 -->
 <div id="page-report" class="page">
 
+  <!-- 임시저장 배너 -->
+  <div id="rp-draft-banner" style="display:none;margin-bottom:12px;">
+    <div class="card" style="border:2px solid var(--primary);background:var(--primary-light);padding:14px 16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:13px;font-weight:800;color:var(--primary-dark);">💾 임시저장된 작업이 있습니다</div>
+        <button onclick="rpDeleteDraft()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--gray-400);line-height:1;">×</button>
+      </div>
+      <div id="rp-draft-info" style="margin-bottom:10px;"></div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="rpLoadDraft()" style="flex:1;padding:9px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">▶ 이어서 작업하기</button>
+        <button onclick="rpStartFresh()" style="padding:9px 14px;background:#fff;color:var(--gray-500);border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">새로 시작</button>
+      </div>
+    </div>
+  </div>
+
   <!-- STEP 1: 고객 정보 -->
   <div class="card" style="margin-bottom:12px;">
     <div class="card-title">👤 고객 정보</div>
@@ -333,11 +348,18 @@ select.form-input{cursor:pointer;}
     </div>
   </div>
 
-  <!-- 발송 버튼 -->
-  <button class="btn-primary" onclick="generateReport()" id="rp-send-btn">
-    <span id="rp-btn-text">📄 보고서 생성 → PDF 발송</span>
-    <div class="send-loading" id="rp-loading" style="display:none;"></div>
-  </button>
+  <!-- 버튼 영역 -->
+  <div style="display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-bottom:8px;">
+    <button onclick="rpSaveDraft()" id="rp-draft-btn"
+      style="padding:13px;background:#fff;color:var(--gray-700);border:1.5px solid var(--gray-300);border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+      💾 임시저장
+    </button>
+    <button class="btn-primary" onclick="generateReport()" id="rp-send-btn">
+      <span id="rp-btn-text">📄 보고서 생성 → PDF 발송</span>
+      <div class="send-loading" id="rp-loading" style="display:none;"></div>
+    </button>
+  </div>
+  <div id="rp-phase-hint" style="text-align:center;font-size:11px;color:var(--gray-400);padding-bottom:4px;"></div>
 </div>
 
 <div id="page-history" class="page">
@@ -870,6 +892,194 @@ const RP_ITEMS = [
 
 let rpInitialized = false;
 
+// ── IndexedDB 임시저장 ──────────────────────────────────────────
+const RP_DB_NAME = 'ssak-report-draft';
+const RP_STORE   = 'drafts';
+
+function rpOpenDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(RP_DB_NAME, 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(RP_STORE)) db.createObjectStore(RP_STORE);
+    };
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+async function rpSaveDraftToDB(data) {
+  const db = await rpOpenDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(RP_STORE, 'readwrite');
+    tx.objectStore(RP_STORE).put(data, 'current');
+    tx.oncomplete = () => resolve(true);
+    tx.onerror    = () => reject(tx.error);
+  });
+}
+
+async function rpLoadDraftFromDB() {
+  const db = await rpOpenDB();
+  return new Promise(resolve => {
+    const tx  = db.transaction(RP_STORE, 'readonly');
+    const req = tx.objectStore(RP_STORE).get('current');
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror   = () => resolve(null);
+  });
+}
+
+async function rpDeleteDraftFromDB() {
+  const db = await rpOpenDB();
+  return new Promise(resolve => {
+    const tx = db.transaction(RP_STORE, 'readwrite');
+    tx.objectStore(RP_STORE).delete('current');
+    tx.oncomplete = () => resolve(true);
+    tx.onerror    = () => resolve(false);
+  });
+}
+
+// 임시저장 실행
+async function rpSaveDraft() {
+  const btn = document.getElementById('rp-draft-btn');
+  if (btn) { btn.textContent = '저장 중...'; btn.disabled = true; }
+  try {
+    // 폼 데이터
+    const info = {
+      name:  document.getElementById('rp-name')?.value  || '',
+      phone: document.getElementById('rp-phone')?.value || '',
+      type:  document.getElementById('rp-type')?.value  || '',
+      size:  document.getElementById('rp-size')?.value  || '',
+      addr:  document.getElementById('rp-addr')?.value  || '',
+      crew:  document.getElementById('rp-crew')?.value  || '',
+    };
+    // 선택 항목
+    const selectedItems = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b => b.dataset.key);
+    // 사진 (압축 저장)
+    const photos = {};
+    for (const input of document.querySelectorAll('[data-key][data-type]')) {
+      const key  = input.dataset.key;
+      const type = input.dataset.type;
+      const img  = input.parentElement.querySelector('.rp-photo-img');
+      if (img && img.src && img.style.display !== 'none' && img.src.startsWith('data:')) {
+        if (!photos[key]) photos[key] = {};
+        photos[key][type] = await rpCompressImage(img.src, 600, 0.65);
+      }
+    }
+    // 메모
+    const notes = document.getElementById('rp-notes')?.value || '';
+    await rpSaveDraftToDB({ savedAt: new Date().toISOString(), info, selectedItems, photos, notes });
+    toast('💾 임시저장 완료!', 2000);
+    rpCheckDraft();
+  } catch(e) {
+    toast('❌ 저장 실패: ' + e.message);
+  } finally {
+    if (btn) { btn.innerHTML = '💾 임시저장'; btn.disabled = false; }
+  }
+}
+
+// 임시저장 불러오기
+async function rpLoadDraft() {
+  const draft = await rpLoadDraftFromDB();
+  if (!draft) { toast('저장된 작업이 없습니다'); return; }
+  // 폼 복원
+  const info = draft.info || {};
+  ['name','phone','type','size','addr','crew'].forEach(k => {
+    const el = document.getElementById('rp-' + k);
+    if (el) el.value = info[k] || '';
+  });
+  // 항목 복원
+  if (draft.selectedItems?.length) {
+    document.querySelectorAll('#rp-item-grid .rp-item-btn').forEach(b => {
+      b.classList.remove('on');
+      const chk = b.querySelector('.rp-item-check');
+      if (chk) chk.textContent = '';
+    });
+    draft.selectedItems.forEach(key => {
+      const btn = document.querySelector(`#rp-item-grid [data-key="${key}"]`);
+      if (btn) {
+        btn.classList.add('on');
+        const chk = btn.querySelector('.rp-item-check');
+        if (chk) chk.textContent = '✓';
+      }
+    });
+  }
+  // 사진 포함해서 렌더
+  rpRenderPhotos(draft.photos || {});
+  // 메모 복원
+  if (draft.notes) {
+    const el = document.getElementById('rp-notes');
+    if (el) el.value = draft.notes;
+  }
+  // 배너 숨기기
+  const banner = document.getElementById('rp-draft-banner');
+  if (banner) banner.style.display = 'none';
+  // 단계 힌트 업데이트
+  rpUpdatePhaseHint(draft.photos || {});
+  toast('✅ 임시저장 불러오기 완료');
+}
+
+// 새로 시작 (임시저장 초기화하지 않고 폼만 비움)
+function rpStartFresh() {
+  const banner = document.getElementById('rp-draft-banner');
+  if (banner) banner.style.display = 'none';
+  // 폼 초기화
+  ['rp-name','rp-phone','rp-size','rp-addr','rp-crew'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  rpSelectAll();
+  rpAutoNotes();
+}
+
+// 임시저장 삭제
+async function rpDeleteDraft() {
+  if (!confirm('임시저장된 작업을 삭제할까요?')) return;
+  await rpDeleteDraftFromDB();
+  const banner = document.getElementById('rp-draft-banner');
+  if (banner) banner.style.display = 'none';
+  toast('🗑️ 임시저장 삭제됨');
+}
+
+// 임시저장 확인 → 배너 표시
+async function rpCheckDraft() {
+  const draft = await rpLoadDraftFromDB();
+  const banner = document.getElementById('rp-draft-banner');
+  if (!banner) return;
+  if (!draft) { banner.style.display = 'none'; return; }
+  const info  = draft.info || {};
+  const dt    = new Date(draft.savedAt);
+  const dtStr = `${dt.getMonth()+1}/${dt.getDate()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`;
+  const photos = draft.photos || {};
+  const keys   = Object.keys(photos);
+  const beforeN = keys.filter(k => photos[k]?.before).length;
+  const afterN  = keys.filter(k => photos[k]?.after).length;
+  const infoEl = document.getElementById('rp-draft-info');
+  if (infoEl) infoEl.innerHTML =
+    `<div style="font-size:13px;font-weight:700;color:var(--gray-900);margin-bottom:3px;">` +
+    `${info.name||'?'} · ${info.size||'?'}평 · ${info.type||''}</div>` +
+    `<div style="font-size:11px;color:var(--gray-500);">${dtStr} 저장 · 시공전 ${beforeN}장 · 시공후 ${afterN}장</div>`;
+  banner.style.display = 'block';
+}
+
+// 단계 힌트 업데이트
+function rpUpdatePhaseHint(photos) {
+  const hint = document.getElementById('rp-phase-hint');
+  if (!hint) return;
+  const keys    = Object.keys(photos);
+  const beforeN = keys.filter(k => photos[k]?.before).length;
+  const afterN  = keys.filter(k => photos[k]?.after).length;
+  if (beforeN > 0 && afterN === 0) {
+    hint.innerHTML = `📷 시공 전 ${beforeN}장 저장됨 — 청소 완료 후 <b>시공 후 사진</b>을 추가하세요`;
+    hint.style.color = 'var(--primary-dark)';
+  } else if (beforeN > 0 && afterN > 0) {
+    hint.innerHTML = `✅ 시공 전 ${beforeN}장 · 시공 후 ${afterN}장 준비됨 — 보고서를 발송하세요`;
+    hint.style.color = 'var(--primary-dark)';
+  } else {
+    hint.innerHTML = '';
+  }
+}
+
+
 function initReportTab(){
   if(rpInitialized) return;
   rpInitialized = true;
@@ -884,6 +1094,8 @@ function initReportTab(){
 
   rpRenderPhotos();
   rpAutoNotes();
+  // 임시저장 확인 (비동기)
+  rpCheckDraft();
 }
 
 function rpToggleItem(el){
@@ -906,34 +1118,45 @@ function rpClearAll(){
   rpRenderPhotos();
 }
 
-function rpRenderPhotos(){
+function rpRenderPhotos(draftPhotos){
+  draftPhotos = draftPhotos || {};
   const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b=>b.dataset.key);
   const area = document.getElementById('rp-photo-area');
-  if(!selected.length){area.innerHTML='<div style="text-align:center;padding:20px;font-size:12px;color:var(--gray-400);">항목을 선택해주세요</div>';return;}
-
-  const label = k => RP_ITEMS.find(i=>i.key===k)?.label || k;
-  area.innerHTML = selected.map(key=>`
-    <div style="margin-bottom:14px;">
-      <div class="rp-section-head">${label(key)}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <div>
-          <div style="font-size:10px;color:var(--gray-400);text-align:center;background:#FCEBEB;border-radius:4px;padding:2px 0;margin-bottom:4px;font-weight:500;">시공 전</div>
-          <label class="rp-photo-label" style="aspect-ratio:4/3;">
-            <input type="file" accept="image/*" style="display:none;" onchange="rpPreview(this)">
-            <img class="rp-photo-img" src="">
-            <div class="rp-photo-placeholder"><span style="font-size:18px;">+</span><span>사진 추가</span></div>
-          </label>
-        </div>
-        <div>
-          <div style="font-size:10px;color:var(--gray-400);text-align:center;background:#E1F5EE;border-radius:4px;padding:2px 0;margin-bottom:4px;font-weight:500;">시공 후</div>
-          <label class="rp-photo-label" style="aspect-ratio:4/3;">
-            <input type="file" accept="image/*" style="display:none;" onchange="rpPreview(this)">
-            <img class="rp-photo-img" src="">
-            <div class="rp-photo-placeholder"><span style="font-size:18px;">+</span><span>사진 추가</span></div>
-          </label>
-        </div>
-      </div>
-    </div>`).join('');
+  if(!selected.length){
+    area.innerHTML='<div style="text-align:center;padding:20px;font-size:12px;color:var(--gray-400);">항목을 선택해주세요</div>';
+    return;
+  }
+  area.innerHTML = selected.map(key => {
+    const item = RP_ITEMS.find(i=>i.key===key) || {key, label:key};
+    const dp   = draftPhotos[key] || {};
+    function photoCell(type) {
+      const label   = type==='before' ? '시공 전' : '시공 후';
+      const saved   = dp[type];
+      const imgSrc  = saved || '';
+      const imgShow = saved ? 'display:block;width:100%;height:100%;object-fit:cover;' : 'display:none;width:100%;height:100%;object-fit:cover;';
+      const phShow  = saved ? 'display:none;' : '';
+      const border  = saved ? 'var(--primary)' : 'var(--gray-200)';
+      const badge   = saved
+        ? `<div style="position:absolute;top:4px;left:4px;background:var(--primary);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;z-index:1;">✓ 저장됨</div>`
+        : '';
+      return `<div>
+        <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px;text-align:center;">${label}</div>
+        <label style="display:block;aspect-ratio:4/3;background:var(--gray-100);border:1.5px dashed ${border};border-radius:8px;cursor:pointer;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;">
+          <input type="file" data-key="${key}" data-type="${type}" accept="image/*" capture="environment" style="display:none;" onchange="rpPreview(this)">
+          <img class="rp-photo-img" src="${imgSrc}" style="${imgShow}">
+          ${badge}
+          <div class="rp-photo-placeholder" style="${phShow}text-align:center;">
+            <span style="font-size:18px;">+</span><span>사진 추가</span>
+          </div>
+        </label>
+      </div>`;
+    }
+    return `<div style="margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px;color:var(--gray-700);">${item.label}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">${photoCell('before')}${photoCell('after')}</div>
+    </div>`;
+  }).join('');
+  rpUpdatePhaseHint(draftPhotos);
 }
 
 function rpPreview(input){
