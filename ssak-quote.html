@@ -260,20 +260,6 @@ select.form-input{cursor:pointer;}
 <!-- 완료보고서 -->
 <div id="page-report" class="page">
 
-  <!-- 발송 완료 모달 -->
-  <div id="rp-complete-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:24px;">
-    <div style="background:#fff;border-radius:20px;padding:28px 24px;text-align:center;max-width:320px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.18);">
-      <div style="font-size:48px;margin-bottom:12px;">✅</div>
-      <div style="font-size:18px;font-weight:800;color:var(--gray-900);margin-bottom:8px;">보고서 발송 완료!</div>
-      <div id="rp-complete-info" style="font-size:13px;color:var(--gray-500);margin-bottom:24px;line-height:1.6;"></div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <button onclick="rpResetAll()" style="padding:13px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새 보고서 작성하기</button>
-        <button onclick="document.getElementById('rp-complete-modal').style.display='none'" style="padding:11px;background:var(--gray-100);color:var(--gray-600);border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">이력 확인 후 닫기</button>
-      </div>
-    </div>
-  </div>
-
-
   <!-- 임시저장 배너 -->
   <div id="rp-draft-banner" style="display:none;margin-bottom:12px;">
     <div class="card" style="border:2px solid var(--primary);background:var(--primary-light);padding:14px 16px;">
@@ -460,6 +446,20 @@ select.form-input{cursor:pointer;}
 </div>
 
 </div>
+</div>
+
+
+<!-- 완료보고서 발송 완료 모달 (page 외부, position:fixed) -->
+<div id="rp-complete-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:20px;padding:32px 24px;text-align:center;max-width:320px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.22);">
+    <div style="font-size:52px;margin-bottom:14px;">✅</div>
+    <div style="font-size:18px;font-weight:800;color:var(--gray-900);margin-bottom:8px;">보고서 발송 완료!</div>
+    <div id="rp-complete-info" style="font-size:13px;color:var(--gray-500);margin-bottom:24px;line-height:1.7;"></div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <button onclick="rpResetAll()" style="padding:14px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새 보고서 작성하기</button>
+      <button onclick="document.getElementById('rp-complete-modal').style.display='none';switchTab('history',document.getElementById('tab-history'))" style="padding:12px;background:var(--gray-100);color:var(--gray-600);border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">📋 이력 확인하기</button>
+    </div>
+  </div>
 </div>
 
 <div class="bottom-nav">
