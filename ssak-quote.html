@@ -182,7 +182,10 @@ select.form-input{cursor:pointer;}
 <!-- 견적 -->
 <div id="page-quote" class="page active">
   <div class="card">
-    <div class="card-title">👤 고객 정보</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:0;">👤 고객 정보</div>
+      <button onclick="rpResetAll()" style="padding:5px 12px;border-radius:8px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;">🔄 초기화</button>
+    </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">고객 이름</label><input class="form-input" id="q-name" placeholder="김OO" oninput="buildMsg()"/></div>
       <div class="form-group"><label class="form-label">연락처</label><input class="form-input" id="q-phone" placeholder="010-0000-0000" type="tel"/></div>
@@ -257,6 +260,20 @@ select.form-input{cursor:pointer;}
 <!-- 완료보고서 -->
 <div id="page-report" class="page">
 
+  <!-- 발송 완료 모달 -->
+  <div id="rp-complete-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:24px;">
+    <div style="background:#fff;border-radius:20px;padding:28px 24px;text-align:center;max-width:320px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.18);">
+      <div style="font-size:48px;margin-bottom:12px;">✅</div>
+      <div style="font-size:18px;font-weight:800;color:var(--gray-900);margin-bottom:8px;">보고서 발송 완료!</div>
+      <div id="rp-complete-info" style="font-size:13px;color:var(--gray-500);margin-bottom:24px;line-height:1.6;"></div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button onclick="rpResetAll()" style="padding:13px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새 보고서 작성하기</button>
+        <button onclick="document.getElementById('rp-complete-modal').style.display='none'" style="padding:11px;background:var(--gray-100);color:var(--gray-600);border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">이력 확인 후 닫기</button>
+      </div>
+    </div>
+  </div>
+
+
   <!-- 임시저장 배너 -->
   <div id="rp-draft-banner" style="display:none;margin-bottom:12px;">
     <div class="card" style="border:2px solid var(--primary);background:var(--primary-light);padding:14px 16px;">
@@ -274,7 +291,10 @@ select.form-input{cursor:pointer;}
 
   <!-- STEP 1: 고객 정보 -->
   <div class="card" style="margin-bottom:12px;">
-    <div class="card-title">👤 고객 정보</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:0;">👤 고객 정보</div>
+      <button onclick="rpResetAll()" style="padding:5px 12px;border-radius:8px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;">🔄 초기화</button>
+    </div>
     <div class="form-row">
       <div class="form-group" style="margin:0;"><label class="form-label">고객명</label><input class="form-input" id="rp-name" placeholder="김OO"/></div>
       <div class="form-group" style="margin:0;"><label class="form-label">연락처</label><input class="form-input" id="rp-phone" placeholder="010-0000-0000" type="tel"/></div>
@@ -1064,6 +1084,62 @@ async function rpCheckDraft() {
 // 단계 힌트 업데이트
 
 // 사진 삭제
+
+// ── 전체 초기화 ────────────────────────────────────────────────
+async function rpResetAll() {
+  if (!confirm('완료보고서를 전체 초기화할까요?\n고객 정보·사진·임시저장이 모두 삭제됩니다.')) return;
+
+  // 1) 폼 초기화
+  ['rp-name','rp-phone','rp-size','rp-addr','rp-crew'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const typeEl = document.getElementById('rp-type');
+  if (typeEl) typeEl.selectedIndex = 0;
+
+  // 2) 항목 전체 선택(기본값)으로 복원
+  document.querySelectorAll('#rp-item-grid .rp-item-btn').forEach(b => {
+    b.classList.add('on');
+    const chk = b.querySelector('.rp-item-check');
+    if (chk) chk.textContent = '✓';
+  });
+
+  // 3) 사진 영역 재렌더 (빈 상태)
+  rpRenderPhotos({});
+
+  // 4) 완료 문구 기본값으로 초기화
+  rpAutoNotes();
+
+  // 5) 특이사항 초기화
+  const issueToggle = document.getElementById('rp-issue-toggle');
+  if (issueToggle) { issueToggle.checked = false; }
+  const issueBody = document.getElementById('rp-issue-body');
+  if (issueBody) issueBody.style.display = 'none';
+  const issueText = document.getElementById('rp-issue-text');
+  if (issueText) issueText.value = '';
+
+  // 6) IndexedDB 임시저장 삭제
+  await rpDeleteDraftFromDB();
+
+  // 7) 임시저장 배너 숨기기
+  const banner = document.getElementById('rp-draft-banner');
+  if (banner) banner.style.display = 'none';
+
+  // 8) 단계 힌트 초기화
+  const hint = document.getElementById('rp-phase-hint');
+  if (hint) hint.innerHTML = '';
+
+  // 9) 새 보고서 완료 모달 숨기기
+  const modal = document.getElementById('rp-complete-modal');
+  if (modal) modal.style.display = 'none';
+
+  // 10) rpInitialized 리셋 (재초기화 허용)
+  rpInitialized = false;
+  initReportTab();
+
+  toast('🔄 전체 초기화 완료');
+}
+
 function rpDeletePhoto(key, type, btn) {
   const wrap  = btn.parentElement;
   const label = wrap.querySelector('label');
@@ -1467,7 +1543,11 @@ async function generateReport(){
 
     if(data.success){
       saveHistory(phone, `청소완료 보고서 발송\n${data.pdfUrl}`, false);
-      toast('✅ 완료 보고서가 발송되었습니다!');
+      // 완료 모달 표시
+      const modal = document.getElementById('rp-complete-modal');
+      const info  = document.getElementById('rp-complete-info');
+      if(info) info.innerHTML = `<b>${name}</b> 고객님께<br>완료 보고서가 발송되었습니다`;
+      if(modal){ modal.style.display='flex'; }
     } else {
       toast('❌ 발송 실패: '+(data.error||'오류'));
     }
@@ -1477,7 +1557,7 @@ async function generateReport(){
   } finally {
     btn.disabled = false;
     loadEl.style.display = 'none';
-    txtEl.textContent = '📄 보고서 생성 → PDF 발송';
+    txtEl.textContent = '📄 보고서 발송';
   }
 }
 
