@@ -1299,14 +1299,66 @@ function rpPreviewIssue(input, imgId){
 }
 
 function rpAutoNotes(){
-  const name = document.getElementById('rp-name')?.value.trim() || '고객님';
-  const type = document.getElementById('rp-type')?.value || '입주 전 청소';
-  const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b=>{
-    const label = b.querySelector('.rp-item-name').textContent;
-    return `· ${label} 바닥·벽면 청소`;
-  });
-  const nameStr = name === '고객님' ? '고객님' : name + '님';
-  const notes = `안녕하세요, ${nameStr}.\n새로운 보금자리의 시작을 진심으로 축하드립니다.\n\n${selected.join('\n')}\n\n행복한 새 출발을 응원합니다.`;
+  const name    = document.getElementById('rp-name')?.value.trim() || '';
+  const type    = document.getElementById('rp-type')?.value || '입주 전 청소';
+  const size    = document.getElementById('rp-size')?.value || '';
+  const cfg     = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  const company = cfg.company  || '서프로클린';
+  const phone   = cfg.phone    || cfg.fromPhone || '';
+
+  const nameStr = name ? name + '님' : '고객님';
+
+  // 항목별 세부 설명
+  const itemDesc = {
+    '거실'  : '거실 바닥·벽면·창틀 청소',
+    '주방'  : '주방 바닥·벽면·후드·싱크대 주변 청소',
+    '화장실': '화장실 바닥·벽면·변기·세면대·거울 청소',
+    '방 1'  : '방 1 바닥·벽면·창틀 청소',
+    '방 2'  : '방 2 바닥·벽면·창틀 청소',
+    '방 3'  : '방 3 바닥·벽면·창틀 청소',
+    '방 4'  : '방 4 바닥·벽면·창틀 청소',
+    '발코니': '발코니 바닥·벽면·창문 청소',
+    '현관'  : '현관 바닥·벽면 청소',
+    '기타'  : '기타 구역 청소',
+  };
+
+  const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')]
+    .map(b => b.querySelector('.rp-item-name').textContent);
+
+  const itemList = selected
+    .map(label => `✅ ${itemDesc[label] || label + ' 청소'}`)
+    .join('\n');
+
+  // 청소 유형별 맞춤 문구
+  const typeMsg = {
+    '입주 전 청소': {
+      opening: '새 집 입주 전 청소를 꼼꼼하게 완료했습니다! 🏡✨',
+      closing : '새 보금자리에서 행복하고 설레는 시간 보내시길 바랍니다 😊\n혹시 미흡한 부분이 있으시면 편하게 연락 주세요!',
+    },
+    '이사 후 청소': {
+      opening: '이사 후 청소를 깔끔하게 완료했습니다! 🚚✨',
+      closing : '새 집에서의 첫날을 상쾌하게 시작하세요 😊\n혹시 미흡한 부분이 있으시면 편하게 연락 주세요!',
+    },
+    '신축 준공 청소': {
+      opening: '신축 준공 청소를 깔끔하게 완료했습니다! 🏗️✨',
+      closing : '깨끗하게 준비된 공간, 잘 활용하시길 바랍니다 😊\n혹시 미흡한 부분이 있으시면 편하게 연락 주세요!',
+    },
+    '생활 청소': {
+      opening: '오늘도 깨끗하게 청소해 드렸습니다! 🧹✨',
+      closing : '깔끔한 공간에서 편안한 시간 보내세요 😊\n다음에도 찾아주시면 더 열심히 하겠습니다 🙏',
+    },
+  };
+
+  const msg      = typeMsg[type] || typeMsg['생활 청소'];
+  const sizeText = size ? ` (${size}평)` : '';
+  const phoneText= phone ? `\n📞 ${phone}` : '';
+
+  const notes =
+    `안녕하세요, ${nameStr}! 😊\n${company}입니다.\n\n` +
+    `${msg.opening}\n\n` +
+    `📋 완료 항목${sizeText}\n${itemList}\n\n` +
+    `${msg.closing}${phoneText}`;
+
   const el = document.getElementById('rp-notes');
   if(el) el.value = notes;
 }
