@@ -609,7 +609,7 @@ function sendQuickSMS(type) {
 
   toast('📱 문자 발송 중...');
 
-  fetch('https://ssakssak-server-production.up.railway.app/send-sms', {
+  fetch(SERVER + '/send-sms', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({ to: phone, from: fromPhone, text: msg, apiKey, apiSecret })

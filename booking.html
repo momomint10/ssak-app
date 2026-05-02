@@ -7,15 +7,15 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
   :root{
-    --g-dark:#3D5C33;
-    --g-mid:#5B7A4F;
-    --g-lite:#D6E8CF;
-    --g-ftr:#4A6840;
-    --g-border:#B8D4AF;
+    --g-dark:#00A87A;
+    --g-mid:#00C896;
+    --g-lite:#E6FAF5;
+    --g-ftr:#00A87A;
+    --g-border:#E6FAF5;
     --cream:#fdfff9;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Noto Sans KR',sans-serif;background:#e8f0e4;min-height:100vh;}
+  body{font-family:'Noto Sans KR',sans-serif;background:#F8FAFB;min-height:100vh;}
   .app{max-width:480px;margin:0 auto;background:var(--cream);min-height:100vh;}
 
   /* 헤더 */
@@ -44,13 +44,13 @@
   .form-input{width:100%;padding:12px 14px;border:1.5px solid var(--g-border);border-radius:10px;font-size:14px;font-family:inherit;color:#222;background:#fff;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
   .form-input:focus{border-color:var(--g-mid);}
   select.form-input{cursor:pointer;}
-  .form-input.prefilled{background:#f4faf0;color:var(--g-dark);font-weight:500;}
+  .form-input.prefilled{background:#F8FAFB;color:var(--g-dark);font-weight:500;}
   textarea.form-input{resize:none;height:80px;line-height:1.6;}
 
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
   /* 개인정보 동의 */
-  .agree-box{display:flex;align-items:flex-start;gap:10px;background:#f4faf0;border-radius:10px;padding:12px;margin-bottom:20px;border:1px solid var(--g-lite);}
+  .agree-box{display:flex;align-items:flex-start;gap:10px;background:#F8FAFB;border-radius:10px;padding:12px;margin-bottom:20px;border:1px solid var(--g-lite);}
   .agree-box input{width:18px;height:18px;margin-top:1px;flex-shrink:0;accent-color:var(--g-dark);}
   .agree-text{font-size:12px;color:#4a6040;line-height:1.6;}
 
@@ -91,6 +91,7 @@
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 <script src="utils.js"></script>
+<link rel="stylesheet" href="design.css">
 </head>
 <body>
 <div class="app">
@@ -333,7 +334,7 @@ function submitBooking() {
   btn.disabled = true;
   btn.textContent = '⏳ 신청 중...';
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
-  fetch('https://ssakssak-server-production.up.railway.app/api/booking', {
+  fetch(SERVER + '/api/booking', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({name, phone, address, size, type, date, time, notes,
