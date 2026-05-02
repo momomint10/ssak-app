@@ -367,10 +367,45 @@ app.post('/api/contract/upload', async (req, res) => {
 
 // ── 비대면 계약서: 저장 & 서명링크 발송 ──────────────
 app.post('/api/contract/create', async (req, res) => {
-  const { contractData, ownerSignature, ownerPhone, customerPhone, customerName, companyName, companyPhone } = req.body;
-  if (!contractData || !customerPhone) {
-    return res.status(400).json({ error: '필수 데이터가 없습니다' });
+  // sign.html 개별 필드 방식 + 구버전 contractData 방식 모두 지원
+  const body = req.body;
+
+  // 개별 필드 방식 (새 sign.html)
+  const customerPhone  = body.customer_phone || body.customerPhone || '';
+  const customerName   = body.customer_name  || body.customerName  || '';
+  const companyName    = body.company_name   || body.companyName   || '서프로클린';
+  const companyPhone   = body.owner_phone    || body.companyPhone  || '';
+  const ownerSignature = body.owner_signature|| body.ownerSignature|| null;
+  const adminKey       = body.admin_key      || '';
+
+  if (!customerPhone) {
+    return res.status(400).json({ error: '고객 연락처가 없습니다' });
   }
+
+  // contract_data 구성 (개별 필드 → 통합 객체)
+  const contractData = body.contractData || {
+    name:         customerName,
+    phone:        customerPhone,
+    addr:         body.address       || '',
+    type:         body.service_type  || '',
+    size:         body.size          || '',
+    companyName:  companyName,
+    companyPhone: companyPhone,
+    owner:        body.owner         || '',
+    workDateStr:  body.service_date  || '',
+    base:         body.base          || 0,
+    vat:          body.vat           || 0,
+    total:        body.total         || body.price || 0,
+    deposit:      body.deposit       || 0,
+    balance:      body.balance       || 0,
+    extra:        body.extra         || '',
+    extraTotal:   body.extra_total   || 0,
+    memo:         body.memo          || '',
+    isCash:       body.is_cash       || false,
+    contractNum:  body.contract_num  || '',
+    dateStr:      new Date().toLocaleDateString('ko-KR'),
+  };
+
   try {
     const crypto = require('crypto');
     const token = crypto.randomBytes(20).toString('hex');
@@ -378,17 +413,18 @@ app.post('/api/contract/create', async (req, res) => {
     const { error } = await supabase.from('pending_contracts').insert([{
       token,
       contract_data: contractData,
-      owner_signature: ownerSignature || null,
+      owner_signature: ownerSignature,
       status: 'pending'
     }]);
     if (error) throw error;
 
-    const signUrl = `https://momomint10.github.io/ssak-app/sign.html?token=${token}`;
-    const msg = `[${companyName||'서프로클린'}] 계약서 서명 요청\n\n${customerName||'고객'}님, 아래 링크에서 계약서 내용을 확인하고 서명해 주세요.\n\n${signUrl}\n\n링크는 7일간 유효합니다.\n\n문의: ${companyPhone||''}`;
+    // 서명 URL: ssakapp.co.kr 기준
+    const signUrl = `https://ssakapp.co.kr/sign.html?token=${token}`;
+    const msg = `[${companyName}] 계약서 서명 요청\n\n${customerName||'고객'}님, 아래 링크에서 계약서 내용을 확인하고 서명해 주세요.\n\n${signUrl}\n\n링크는 7일간 유효합니다.\n\n문의: ${companyPhone}`;
 
-    await sendSMSUtil(customerPhone.replace(/-/g,''), msg, `[${companyName||'서프로클린'}] 계약서`);
+    await sendSMSUtil(customerPhone.replace(/-/g,''), msg, `[${companyName}] 계약서 서명요청`);
 
-    console.log(`계약서 생성: ${token}`);
+    console.log(`계약서 생성: ${token} / ${customerName} (${customerPhone})`);
     res.json({ success: true, token, signUrl });
   } catch (err) {
     console.error('계약서 생성 오류:', err);
