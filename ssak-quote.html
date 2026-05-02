@@ -1065,20 +1065,17 @@ async function rpCheckDraft() {
 
 // 사진 삭제
 function rpDeletePhoto(key, type, btn) {
-  // btn이 × 버튼 자체
-  const wrap  = btn.parentElement;                    // position:relative div
+  const wrap  = btn.parentElement;
   const label = wrap.querySelector('label');
-  const img   = label.querySelector('.rp-photo-img');
-  const ph    = label.querySelector('.rp-photo-placeholder');
-  const badge = label.querySelector('[style*="저장됨"]');
+  const img   = label ? label.querySelector('.rp-photo-img') : null;
+  const ph    = label ? label.querySelector('.rp-photo-placeholder') : null;
+  const badge = label ? label.querySelector('.rp-saved-badge') : null;
 
-  // 이미지 초기화
-  if(img) { img.src = ''; img.style.display = 'none'; }
-  if(ph)  { ph.style.display = ''; }
-  if(badge) badge.remove();
-  label.style.borderColor = 'var(--gray-200)';
+  if(img)   { img.src = ''; img.style.display = 'none'; }
+  if(ph)    { ph.style.removeProperty('display'); }
+  if(badge) { badge.remove(); }
+  if(label) { label.style.borderColor = ''; label.style.border = '1.5px dashed var(--gray-200)'; }
 
-  // × 버튼 제거
   btn.remove();
 }
 
@@ -1157,7 +1154,7 @@ function rpRenderPhotos(draftPhotos){
       const phShow  = saved ? 'display:none;' : '';
       const border  = saved ? 'var(--primary)' : 'var(--gray-200)';
       const badge   = saved
-        ? `<div style="position:absolute;top:4px;left:4px;background:var(--primary);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;z-index:1;">✓ 저장됨</div>`
+        ? `<div class="rp-saved-badge" style="position:absolute;top:4px;left:4px;background:var(--primary);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;z-index:1;">✓ 저장됨</div>`
         : '';
       const delBtn  = saved
         ? `<button onclick="rpDeletePhoto('${key}','${type}',this)" style="position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;font-size:13px;line-height:1;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;">×</button>`
