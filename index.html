@@ -312,7 +312,7 @@ function loadUser() {
           perfRevChgEl.textContent = Math.round(d.revenue/10000) + '만원';
         }
         if (perfBookedEl) {
-          perfBookedEl.textContent = (d.confirmed > 0 ? d.confirmed : '-'); if (perfBookedChgEl && d.confirmed > 0) fetch(SERVER+'/api/bookings?status=confirmed&adminKey='+encodeURIComponent(cfg.adminKey)).then(function(r){return r.json();}).then(function(b){if(!b.data)return;var s=b.data.reduce(function(a,x){return a+(parseInt(x.price)||0);},0);if(s>0)perfBookedChgEl.textContent='예정 '+Math.round(s/10000)+'만';}).catch(function(){});
+          perfBookedEl.textContent = (d.confirmed > 0 ? d.confirmed : '-'); if (perfBookedChgEl && d.confirmed > 0) fetch(SERVER+'/api/bookings?status=confirmed&adminKey='+encodeURIComponent(cfg.adminKey)).then(function(r){return r.json();}).then(function(b){if(!b.data)return;var s=b.data.reduce(function(a,x){return a+(parseInt(x.price)||0);},0);if(s>0)perfBookedChgEl.textContent='예정 '+Math.round(s/10000)+'만';else if(b.data.length>0)perfBookedChgEl.textContent=b.data.length+'건 대기';}).catch(function(){});
         }
       })
       .catch(function() {});
