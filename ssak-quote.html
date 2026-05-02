@@ -157,7 +157,18 @@ select.form-input{cursor:pointer;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .send-loading{display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-</style>
+
+    /* ── 항목 선택 UI ────────────────────────── */
+    .rp-preset-btn{padding:7px 15px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-600);transition:all .15s;}
+    .rp-preset-btn.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
+    .rp-single-btn{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);transition:all .15s;}
+    .rp-single-btn.on{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
+    .rp-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 8px 5px 12px;border-radius:20px;font-size:12px;font-weight:700;background:var(--primary-light);border:1.5px solid var(--primary);color:var(--primary-dark);}
+    .rp-tag-x{width:17px;height:17px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:12px;cursor:pointer;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;font-family:inherit;}
+    .rp-add-btn{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px dashed var(--gray-300);background:#fff;color:var(--gray-400);}
+    .rp-row-label{font-size:13px;font-weight:700;color:var(--gray-700);min-width:42px;}
+    /* ─────────────────────────────────────────── */
+  </style>
 <script src="utils.js"></script>
 </head>
 <body>
@@ -301,12 +312,35 @@ select.form-input{cursor:pointer;}
 
   <!-- STEP 2: 항목 선택 -->
   <div class="card" style="margin-bottom:12px;">
-    <div class="card-title">📋 공통항목 선택</div>
-    <div id="rp-item-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;"></div>
-    <div style="display:flex;gap:6px;">
-      <button onclick="rpSelectAll()" style="flex:1;padding:7px;background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">전체 선택</button>
-      <button onclick="rpClearAll()" style="flex:1;padding:7px;background:var(--gray-100);color:var(--gray-500);border:1px solid var(--gray-200);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">전체 해제</button>
+    <div class="card-title">📋 항목 구성</div>
+
+    <!-- 빠른 설정 프리셋 -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:7px;">⚡ 빠른 설정</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;" id="rp-preset-row">
+        <button onclick="rpPreset('studio')" data-preset="studio" class="rp-preset-btn">원룸</button>
+        <button onclick="rpPreset('two')"    data-preset="two"    class="rp-preset-btn">투룸</button>
+        <button onclick="rpPreset('three')"  data-preset="three"  class="rp-preset-btn">3룸</button>
+        <button onclick="rpPreset('four')"   data-preset="four"   class="rp-preset-btn">4룸+</button>
+      </div>
     </div>
+
+    <!-- 단일 토글 항목 -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px;color:var(--gray-400);font-weight:600;margin-bottom:7px;">기본 항목</div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;" id="rp-single-row">
+        <button onclick="rpToggleSingle('living')"  data-key="living"   class="rp-single-btn on">✓ 거실</button>
+        <button onclick="rpToggleSingle('kitchen')" data-key="kitchen"  class="rp-single-btn on">✓ 주방</button>
+        <button onclick="rpToggleSingle('entrance')" data-key="entrance" class="rp-single-btn">현관</button>
+        <button onclick="rpToggleSingle('etc')"     data-key="etc"      class="rp-single-btn">기타</button>
+      </div>
+    </div>
+
+    <!-- 동적 항목 (방/화장실/베란다) -->
+    <div id="rp-multi-rows" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+    <!-- 히든 그리드 (rpRenderPhotos/rpAutoNotes 호환용) -->
+    <div id="rp-item-grid" style="display:none;"></div>
   </div>
 
   <!-- STEP 3: 전/후 사진 -->
@@ -902,13 +936,111 @@ function autoFitAllChips() {
 }
 
 // ── 완료보고서 기능 ──────────────────────────────
-const RP_ITEMS = [
-  {key:'living',label:'거실'},{key:'kitchen',label:'주방'},
-  {key:'bathroom',label:'화장실'},{key:'room1',label:'방 1'},
-  {key:'room2',label:'방 2'},{key:'room3',label:'방 3'},
-  {key:'room4',label:'방 4'},{key:'balcony',label:'발코니'},
-  {key:'entrance',label:'현관'},{key:'etc',label:'기타'}
-];
+// ── 항목 상태 (프리셋+조정 방식) ──────────────────────────────
+let rpState = {
+  singles: { living:true, kitchen:true, entrance:false, etc:false },
+  rooms: 2, bathrooms: 1, balconies: 1
+};
+
+const RP_PRESETS = {
+  studio: { singles:{living:true,kitchen:true,entrance:false,etc:false}, rooms:0, bathrooms:1, balconies:0 },
+  two:    { singles:{living:true,kitchen:true,entrance:false,etc:false}, rooms:1, bathrooms:1, balconies:0 },
+  three:  { singles:{living:true,kitchen:true,entrance:false,etc:false}, rooms:2, bathrooms:1, balconies:1 },
+  four:   { singles:{living:true,kitchen:true,entrance:false,etc:false}, rooms:3, bathrooms:2, balconies:1 },
+};
+
+// rpState → rp-item-grid 동기화 (rpRenderPhotos / rpAutoNotes 호환)
+function rpSyncGrid() {
+  const items = [];
+  if (rpState.singles.living)   items.push({key:'living',   label:'거실'});
+  if (rpState.singles.kitchen)  items.push({key:'kitchen',  label:'주방'});
+  for (let i=1; i<=rpState.rooms; i++)
+    items.push({key:`room${i}`, label:`방 ${i}`});
+  for (let i=1; i<=rpState.bathrooms; i++) {
+    const label = rpState.bathrooms>1 ? `화장실 ${i}` : '화장실';
+    items.push({key:`bath${i}`, label});
+  }
+  for (let i=1; i<=rpState.balconies; i++) {
+    const label = rpState.balconies>1 ? `베란다 ${i}` : '베란다';
+    items.push({key:`balc${i}`, label});
+  }
+  if (rpState.singles.entrance) items.push({key:'entrance', label:'현관'});
+  if (rpState.singles.etc)      items.push({key:'etc',      label:'기타'});
+  const grid = document.getElementById('rp-item-grid');
+  if (grid) grid.innerHTML = items.map(({key,label})=>
+    `<div class="rp-item-btn on" data-key="${key}"><div class="rp-item-check">✓</div><div class="rp-item-name">${label}</div></div>`
+  ).join('');
+}
+
+// 프리셋 + 조정 UI 렌더링
+function rpRenderItemUI() {
+  // 단일 버튼 상태 반영
+  document.querySelectorAll('#rp-single-row .rp-single-btn').forEach(btn => {
+    const key = btn.dataset.key;
+    const on  = rpState.singles[key];
+    btn.classList.toggle('on', !!on);
+    btn.textContent = on ? '✓ ' + {living:'거실',kitchen:'주방',entrance:'현관',etc:'기타'}[key] : {living:'거실',kitchen:'주방',entrance:'현관',etc:'기타'}[key];
+  });
+  // 프리셋 활성 상태
+  const activePreset = Object.keys(RP_PRESETS).find(k=>{
+    const p=RP_PRESETS[k];
+    return p.rooms===rpState.rooms && p.bathrooms===rpState.bathrooms && p.balconies===rpState.balconies;
+  });
+  document.querySelectorAll('#rp-preset-row .rp-preset-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.preset===activePreset);
+  });
+  // 동적 행 렌더
+  const multi = document.getElementById('rp-multi-rows');
+  if (!multi) return;
+  function makeRow(emoji, rowLabel, count, minCount, maxCount, keyPrefix, labelFn) {
+    const tags = [];
+    for (let i=1; i<=count; i++) {
+      const lbl = labelFn(i, count);
+      const showX = count > minCount;
+      tags.push(`<span class="rp-tag">${lbl}${showX?`<button class="rp-tag-x" onclick="rpRemoveItem('${keyPrefix}')">×</button>`:''}</span>`);
+    }
+    if (count < maxCount) tags.push(`<button class="rp-add-btn" onclick="rpAddItem('${keyPrefix}')">+ 추가</button>`);
+    return `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span class="rp-row-label">${emoji} ${rowLabel}</span>${tags.join('')}</div>`;
+  }
+  multi.innerHTML = [
+    makeRow('🛏','방',      rpState.rooms,     0, 5, 'room',     (i)=>`방 ${i}`),
+    makeRow('🚿','화장실',  rpState.bathrooms, 1, 3, 'bathroom', (i,c)=>c>1?`화장실 ${i}`:'화장실'),
+    makeRow('🌿','베란다',  rpState.balconies, 0, 2, 'balcony',  (i,c)=>c>1?`베란다 ${i}`:'베란다'),
+  ].join('');
+}
+
+// 상태 변경 → 동기화 + 렌더링
+function rpApply(rePhoto=true) {
+  rpSyncGrid();
+  rpRenderItemUI();
+  if (rePhoto) rpRenderPhotos();
+}
+
+function rpPreset(type) {
+  const p = RP_PRESETS[type];
+  if (!p) return;
+  rpState = JSON.parse(JSON.stringify(p));
+  rpApply();
+}
+
+function rpToggleSingle(key) {
+  rpState.singles[key] = !rpState.singles[key];
+  rpApply();
+}
+
+function rpAddItem(type) {
+  if (type==='room'     && rpState.rooms     < 5) rpState.rooms++;
+  if (type==='bathroom' && rpState.bathrooms < 3) rpState.bathrooms++;
+  if (type==='balcony'  && rpState.balconies < 2) rpState.balconies++;
+  rpApply();
+}
+
+function rpRemoveItem(type) {
+  if (type==='room'     && rpState.rooms     > 0) rpState.rooms--;
+  if (type==='bathroom' && rpState.bathrooms > 1) rpState.bathrooms--;
+  if (type==='balcony'  && rpState.balconies > 0) rpState.balconies--;
+  rpApply();
+}
 
 let rpInitialized = false;
 
@@ -987,7 +1119,7 @@ async function rpSaveDraft() {
     }
     // 메모
     const notes = document.getElementById('rp-notes')?.value || '';
-    await rpSaveDraftToDB({ savedAt: new Date().toISOString(), info, selectedItems, photos, notes });
+    await rpSaveDraftToDB({ savedAt: new Date().toISOString(), info, selectedItems, photos, notes, rpState: JSON.parse(JSON.stringify(rpState)) });
     toast('💾 임시저장 완료!', 2000);
     rpCheckDraft();
   } catch(e) {
@@ -1007,21 +1139,10 @@ async function rpLoadDraft() {
     const el = document.getElementById('rp-' + k);
     if (el) el.value = info[k] || '';
   });
-  // 항목 복원
-  if (draft.selectedItems?.length) {
-    document.querySelectorAll('#rp-item-grid .rp-item-btn').forEach(b => {
-      b.classList.remove('on');
-      const chk = b.querySelector('.rp-item-check');
-      if (chk) chk.textContent = '';
-    });
-    draft.selectedItems.forEach(key => {
-      const btn = document.querySelector(`#rp-item-grid [data-key="${key}"]`);
-      if (btn) {
-        btn.classList.add('on');
-        const chk = btn.querySelector('.rp-item-check');
-        if (chk) chk.textContent = '✓';
-      }
-    });
+  // 항목 복원 (rpState 우선, 없으면 selectedItems 기반 복원)
+  if (draft.rpState) {
+    rpState = draft.rpState;
+    rpApply(false);
   }
   // 사진 포함해서 렌더
   rpRenderPhotos(draft.photos || {});
@@ -1097,12 +1218,9 @@ async function rpResetAll() {
   const typeEl = document.getElementById('rp-type');
   if (typeEl) typeEl.selectedIndex = 0;
 
-  // 2) 항목 전체 선택(기본값)으로 복원
-  document.querySelectorAll('#rp-item-grid .rp-item-btn').forEach(b => {
-    b.classList.add('on');
-    const chk = b.querySelector('.rp-item-check');
-    if (chk) chk.textContent = '✓';
-  });
+  // 2) 항목 기본값으로 복원
+  rpState = { singles:{living:true,kitchen:true,entrance:false,etc:false}, rooms:2, bathrooms:1, balconies:1 };
+  rpApply(false);
 
   // 3) 사진 영역 재렌더 (빈 상태)
   rpRenderPhotos({});
@@ -1176,39 +1294,23 @@ function rpUpdatePhaseHint(photos) {
 function initReportTab(){
   if(rpInitialized) return;
   rpInitialized = true;
-
-  // 항목 선택 그리드 렌더링
-  const grid = document.getElementById('rp-item-grid');
-  grid.innerHTML = RP_ITEMS.map(item=>`
-    <div class="rp-item-btn on" data-key="${item.key}" onclick="rpToggleItem(this)">
-      <div class="rp-item-check">✓</div>
-      <div class="rp-item-name">${item.label}</div>
-    </div>`).join('');
-
-  rpRenderPhotos();
-  rpAutoNotes();
-  // 임시저장 확인 (비동기)
-  rpCheckDraft();
+  rpApply(false);       // 그리드 + UI 동기화 (사진 렌더 제외)
+  rpRenderPhotos();     // 사진 영역
+  rpAutoNotes();        // 기본 문구
+  rpCheckDraft();       // 임시저장 확인
 }
 
-function rpToggleItem(el){
-  el.classList.toggle('on');
-  el.querySelector('.rp-item-check').textContent = el.classList.contains('on') ? '✓' : '';
-  rpRenderPhotos();
-}
+function rpToggleItem(el){} // 프리셋+조정 방식으로 대체됨
 
 function rpSelectAll(){
-  document.querySelectorAll('#rp-item-grid .rp-item-btn').forEach(b=>{
-    b.classList.add('on'); b.querySelector('.rp-item-check').textContent='✓';
-  });
-  rpRenderPhotos();
+  rpState.singles = { living:true, kitchen:true, entrance:true, etc:true };
+  rpApply();
 }
 
 function rpClearAll(){
-  document.querySelectorAll('#rp-item-grid .rp-item-btn').forEach(b=>{
-    b.classList.remove('on'); b.querySelector('.rp-item-check').textContent='';
-  });
-  rpRenderPhotos();
+  rpState.singles = { living:false, kitchen:false, entrance:false, etc:false };
+  rpState.rooms = 0; rpState.bathrooms = 1; rpState.balconies = 0;
+  rpApply();
 }
 
 function rpRenderPhotos(draftPhotos){
@@ -1308,28 +1410,22 @@ function rpAutoNotes(){
 
   const nameStr = name ? name + '님' : '고객님';
 
-  // 항목별 세부 설명
-  const itemDesc = {
-    '거실'  : '거실 바닥·벽면·창틀 청소',
-    '주방'  : '주방 바닥·벽면·후드·싱크대 주변 청소',
-    '화장실': '화장실 바닥·벽면·변기·세면대·거울 청소',
-    '방 1'  : '방 1 바닥·벽면·창틀 청소',
-    '방 2'  : '방 2 바닥·벽면·창틀 청소',
-    '방 3'  : '방 3 바닥·벽면·창틀 청소',
-    '방 4'  : '방 4 바닥·벽면·창틀 청소',
-    '발코니': '발코니 바닥·벽면·창문 청소',
-    '현관'  : '현관 바닥·벽면 청소',
-    '기타'  : '기타 구역 청소',
-  };
+  // 패턴 기반 설명 (동적 항목 대응)
+  function getDesc(label) {
+    if (/^거실/.test(label))   return label + ' 바닥·벽면·창틀 청소';
+    if (/^주방/.test(label))   return label + ' 바닥·벽면·후드·싱크대 주변 청소';
+    if (/^화장실/.test(label)) return label + ' 바닥·벽면·변기·세면대·거울 청소';
+    if (/^방/.test(label))     return label + ' 바닥·벽면·창틀 청소';
+    if (/^베란다/.test(label)) return label + ' 바닥·벽면·창문 청소';
+    if (/^현관/.test(label))   return label + ' 바닥·벽면 청소';
+    return label + ' 청소';
+  }
 
   const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')]
     .map(b => b.querySelector('.rp-item-name').textContent);
 
-  const itemList = selected
-    .map(label => `✅ ${itemDesc[label] || label + ' 청소'}`)
-    .join('\n');
+  const itemList = selected.map(label => `✅ ${getDesc(label)}`).join('\n');
 
-  // 청소 유형별 맞춤 문구
   const typeMsg = {
     '입주 전 청소': {
       opening: '새 집 입주 전 청소를 꼼꼼하게 완료했습니다! 🏡✨',
