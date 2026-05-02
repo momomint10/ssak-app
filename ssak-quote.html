@@ -1322,7 +1322,7 @@ function rpRenderPhotos(draftPhotos){
     return;
   }
   area.innerHTML = selected.map(key => {
-    const item = RP_ITEMS.find(i=>i.key===key) || {key, label:key};
+    const labelEl = document.querySelector(`#rp-item-grid [data-key="${key}"] .rp-item-name`); const item = {key, label: labelEl?.textContent || key};
     const dp   = draftPhotos[key] || {};
     function photoCell(type) {
       const label   = type==='before' ? '시공 전' : '시공 후';
@@ -1493,7 +1493,7 @@ async function buildReportHTML(){
 
   // 선택된 항목 + 사진 수집
   const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')].map(b=>b.dataset.key);
-  const labelOf = k => RP_ITEMS.find(i=>i.key===k)?.label || k;
+  const labelOf = k => document.querySelector(`#rp-item-grid [data-key="${k}"] .rp-item-name`)?.textContent || k;
 
   // 사진 수집 및 압축
   const photoSections = await Promise.all(
