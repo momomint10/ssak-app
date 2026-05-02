@@ -125,50 +125,54 @@
         <div class="hd-name"><span id="user-name">사장님</span></div>
       </div>
       <div class="hd-actions">
-        <button class="hd-icon-btn" onclick="togglePushNotification()" title="알림 설정">
+        <button class="hd-icon-btn ds-tap" onclick="togglePushNotification()" title="알림 설정">
           🔔
           <div class="hd-notif-dot" id="notif-dot" style="display:none;"></div>
         </button>
-        <button class="hd-icon-btn" onclick="goTo('settings')">⚙️</button>
+        <button class="hd-icon-btn ds-tap" onclick="goTo('settings')">⚙️</button>
       </div>
     </div>
   </div>
 
   <!-- 오늘 할 일 카드 -->
-  <div class="today-card" onclick="goTo('schedule')" id="today-card">
+  <div class="today-card ds-tap-card ds-fade-in" onclick="goTo('schedule')" id="today-card">
     <div class="today-card-ico">📋</div>
     <div class="today-card-body">
-      <div class="today-card-label">오늘 할 일</div>
-      <div class="today-card-text" id="today-text">불러오는 중...</div>
+      <div class="today-card-label">
+        <span class="ds-pulse-dot" style="margin-right:5px;"></span>오늘 할 일
+      </div>
+      <div class="today-card-text" id="today-text">
+        <span class="ds-skel ds-skel-line" style="width:60%;height:18px;"></span>
+      </div>
       <div class="today-card-sub" id="today-sub"></div>
     </div>
     <div class="today-card-arrow">›</div>
   </div>
 
   <!-- 빠른 실행 -->
-  <div class="quick-grid" style="margin-top:16px;">
-    <button class="quick-btn" onclick="goTo('quote')">
+  <div class="quick-grid ds-fade-in ds-fade-in-1" style="margin-top:16px;">
+    <button class="quick-btn ds-tap-card" onclick="goTo('quote')">
       <div class="quick-ico" style="background:#E6FAF5;">⚡</div>
       <div class="quick-lbl">견적발송</div>
     </button>
-    <button class="quick-btn" onclick="goTo('report')">
+    <button class="quick-btn ds-tap-card" onclick="goTo('report')">
       <div class="quick-ico" style="background:#F0FDF4;">📸</div>
       <div class="quick-lbl">완료보고서</div>
     </button>
-    <button class="quick-btn" onclick="goTo('sign')">
+    <button class="quick-btn ds-tap-card" onclick="goTo('sign')">
       <div class="quick-ico" style="background:#F5F3FF;">✍️</div>
       <div class="quick-lbl">계약서</div>
     </button>
-    <button class="quick-btn" onclick="goTo('workforce')">
+    <button class="quick-btn ds-tap-card" onclick="goTo('workforce')">
       <div class="quick-ico" style="background:#FFF7ED;">👥</div>
       <div class="quick-lbl">인력매칭</div>
     </button>
   </div>
 
   <!-- 더보기 메뉴 (접이식) -->
-  <div class="section-wrap" style="margin-top:12px;">
+  <div class="section-wrap ds-fade-in ds-fade-in-2" style="margin-top:12px;">
     <div class="recent-card">
-      <div class="recent-row" onclick="goTo('schedule')">
+      <div class="recent-row ds-tap" onclick="goTo('schedule')">
         <div class="recent-ico" style="background:#EFF6FF;">📅</div>
         <div class="recent-body">
           <div class="recent-title">스케줄 관리</div>
@@ -176,7 +180,7 @@
         </div>
         <div class="recent-right">›</div>
       </div>
-      <div class="recent-row" onclick="goTo('community')">
+      <div class="recent-row ds-tap" onclick="goTo('community')">
         <div class="recent-ico" style="background:#F0FDF4;">💬</div>
         <div class="recent-body">
           <div class="recent-title">커뮤니티</div>
@@ -184,7 +188,7 @@
         </div>
         <div class="recent-right">›</div>
       </div>
-      <div class="recent-row" onclick="goTo('market')">
+      <div class="recent-row ds-tap" onclick="goTo('market')">
         <div class="recent-ico" style="background:#FFF7ED;">🛒</div>
         <div class="recent-body">
           <div class="recent-title">중고거래</div>
@@ -195,26 +199,36 @@
     </div>
   </div>
 
-  <!-- 이번 달 실적 -->
-  <div class="perf-card">
+  <!-- 이번 달 실적 (토스 시그니처: 큰 숫자 + 작은 단위) -->
+  <div class="perf-card ds-fade-in ds-fade-in-3">
     <div class="perf-head">
       <div class="perf-title">📊 이번 달 실적</div>
       <div class="perf-period" id="perf-period"></div>
     </div>
     <div class="perf-stats">
       <div class="perf-stat">
-        <div class="perf-val green" id="perf-done">-</div>
-        <div class="perf-lbl">완료 건수</div>
+        <div class="ds-num-display sm pr">
+          <span class="num" id="perf-done">-</span>
+          <span class="unit">건</span>
+        </div>
+        <div class="perf-lbl">완료</div>
         <div class="perf-change" id="perf-done-change"></div>
       </div>
       <div class="perf-stat">
-        <div class="perf-val" id="perf-revenue">-</div>
-        <div class="perf-lbl">매출(만원)</div>
+        <div class="ds-num-display sm">
+          <span class="num" id="perf-revenue">-</span>
+          <span class="unit">만</span>
+        </div>
+        <div class="perf-lbl">매출</div>
         <div class="perf-change" id="perf-revenue-change"></div>
       </div>
-      <div class="perf-stat">
-        <div class="perf-val" id="perf-booked" onclick="location.href='schedule.html?filter=confirmed'" style="cursor:pointer;">-</div>
-        <div class="perf-lbl">확정 예약</div><div class="perf-change" id="perf-booked-change"></div>
+      <div class="perf-stat ds-tap" onclick="location.href='schedule.html?filter=confirmed'" style="cursor:pointer;">
+        <div class="ds-num-display sm">
+          <span class="num" id="perf-booked">-</span>
+          <span class="unit">건</span>
+        </div>
+        <div class="perf-lbl">확정 예약</div>
+        <div class="perf-change" id="perf-booked-change"></div>
       </div>
     </div>
   </div>
@@ -272,71 +286,44 @@ function loadUser() {
     else if (cfg.company) nameEl.textContent = cfg.company + ' 사장님';
   }
 
-  // 오늘 예약 건수 (로컬)
-  const today = new Date();
-  const todayStr = today.getFullYear() + '-' +
-    String(today.getMonth()+1).padStart(2,'0') + '-' +
-    String(today.getDate()).padStart(2,'0');
-  const todayCount = sch.filter(function(s) {
-    return (s.date || '').startsWith(todayStr);
-  }).length;
-  var todayEl = document.getElementById('stat-today');
-  if (todayEl) todayEl.innerHTML = todayCount + '<span class="ts-unit">건</span>';
-
-  // 미답변 문의 (서버 API)
-  if (cfg.adminKey) {
-    fetch(SERVER+'/api/bookings?status=pending&adminKey=' + encodeURIComponent(cfg.adminKey))
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        var cnt = (d.data ? d.data.length : 0);
-        var pendEl = document.getElementById('stat-pending');
-        if (pendEl) pendEl.textContent = cnt;
-      })
-      .catch(function() {});
-
-    // 이달 실적 서버에서 가져오기
-    fetch(SERVER+'/api/stats/monthly?adminKey=' + encodeURIComponent(cfg.adminKey))
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        if (!d.success) return;
-        var perfDoneEl    = document.getElementById('perf-done');
-        var perfRevEl     = document.getElementById('perf-revenue');
-        var perfRevChgEl  = document.getElementById('perf-revenue-change');
-        var perfBookedEl = document.getElementById('perf-booked'); var perfBookedChgEl = document.getElementById('perf-booked-change'); var bookedStat = perfBookedEl && perfBookedEl.closest('.perf-stat'); if (bookedStat && !bookedStat.dataset.clickBound) { bookedStat.dataset.clickBound='1'; bookedStat.style.cursor='pointer'; bookedStat.onclick = function(){ location.href='schedule.html'; }; }
-        if (perfDoneEl)   perfDoneEl.textContent = d.done;
-        if (perfRevEl) {
-          var man = Math.round((d.revenue || 0) / 10000);
-          perfRevEl.textContent = man > 0 ? man : '-';
-        }
-        if (perfRevChgEl && d.revenue > 0) {
-          perfRevChgEl.textContent = Math.round(d.revenue/10000) + '만원';
-        }
-        if (perfBookedEl) {
-          perfBookedEl.textContent = (d.confirmed > 0 ? d.confirmed : '-'); if (perfBookedChgEl && d.confirmed > 0) fetch(SERVER+'/api/bookings?status=confirmed&adminKey='+encodeURIComponent(cfg.adminKey)).then(function(r){return r.json();}).then(function(b){if(!b.data)return;var s=b.data.reduce(function(a,x){return a+(parseInt(x.price)||0);},0);if(s>0)perfBookedChgEl.textContent='예정 '+Math.round(s/10000)+'만';else if(b.data.length>0)perfBookedChgEl.textContent=b.data.length+'건 대기';}).catch(function(){});
-        }
-      })
-      .catch(function() {});
-  }
-
-  // 이달 실적 계산
+  // 이달 실적 (로컬 ssak_schedules 기반 fallback — 서버 응답이 늦을 때 빠른 표시용)
+  // 서버 응답은 loadHomeStats()에서 도착 시 덮어씀
   var now = new Date();
   var ym = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
   var doneThisMonth = sch.filter(function(x) {
     return (x.date||'').startsWith(ym) && x.status === 'done';
   });
-  var confirmedThisMonth = sch.filter(function(x) { return (x.date||'').startsWith(ym) && x.status === 'confirmed'; }); var confirmedRevenue = confirmedThisMonth.reduce(function(acc, x) { return acc + (parseInt(x.price)||0); }, 0); var pBE = document.getElementById('perf-booked'); var pBC = document.getElementById('perf-booked-change'); if (pBE && confirmedThisMonth.length > 0) pBE.textContent = confirmedThisMonth.length; if (pBC && confirmedRevenue > 0) pBC.textContent = '예정 ' + Math.round(confirmedRevenue/10000) + '만'; var totalRevenue = doneThisMonth.reduce(function(acc, x) {
-    return acc + (parseInt(x.price)||0);
-  }, 0);
-  var perfDoneEl = document.getElementById('perf-done');
-  var perfRevEl = document.getElementById('perf-revenue');
-  var perfRevChg = document.getElementById('perf-revenue-change');
-  if (perfDoneEl) perfDoneEl.textContent = doneThisMonth.length;
+  var confirmedThisMonth = sch.filter(function(x) {
+    return (x.date||'').startsWith(ym) && x.status === 'confirmed';
+  });
+  var confirmedRevenue = confirmedThisMonth.reduce(function(acc, x) { return acc + (parseInt(x.price)||0); }, 0);
+  var totalRevenue = doneThisMonth.reduce(function(acc, x) { return acc + (parseInt(x.price)||0); }, 0);
+
+  var perfDoneEl   = document.getElementById('perf-done');
+  var perfRevEl    = document.getElementById('perf-revenue');
+  var perfRevChg   = document.getElementById('perf-revenue-change');
+  var perfBookedEl = document.getElementById('perf-booked');
+  var perfBookedChg= document.getElementById('perf-booked-change');
+
+  if (perfDoneEl && doneThisMonth.length > 0) perfDoneEl.textContent = doneThisMonth.length;
   if (perfRevEl) {
     var manwon = Math.round(totalRevenue / 10000);
-    perfRevEl.textContent = manwon > 0 ? manwon : '-';
+    if (manwon > 0) perfRevEl.textContent = manwon;
   }
   if (perfRevChg && totalRevenue > 0) {
-    perfRevChg.textContent = (totalRevenue/10000).toFixed(0) + '만원';
+    perfRevChg.textContent = Math.round(totalRevenue/10000) + '만원';
+  }
+  if (perfBookedEl && confirmedThisMonth.length > 0) perfBookedEl.textContent = confirmedThisMonth.length;
+  if (perfBookedChg && confirmedRevenue > 0) {
+    perfBookedChg.textContent = '예정 ' + Math.round(confirmedRevenue/10000) + '만';
+  }
+
+  // 확정 예약 박스 클릭 → 스케줄 이동
+  var bookedStat = perfBookedEl && perfBookedEl.closest('.perf-stat');
+  if (bookedStat && !bookedStat.dataset.clickBound) {
+    bookedStat.dataset.clickBound = '1';
+    bookedStat.style.cursor = 'pointer';
+    bookedStat.onclick = function(){ location.href = 'schedule.html?filter=confirmed'; };
   }
 }
 
@@ -353,15 +340,24 @@ function setNav(page) {
 }
 
 function goTo(page) {
+  // 라우팅 맵: [목적지 URL, ssak-quote 내부 탭(있는 경우)]
   const map = {
-    'quote': 'ssak-quote.html',
-    'schedule': 'schedule.html',
-    'my': 'my.html',
-    'community': 'community.html',
-    'booking': 'booking.html',
-    'workforce': 'workforce.html'
+    'quote':     ['ssak-quote.html', 'quote'],     // 빠른견적 탭
+    'report':    ['ssak-quote.html', 'report'],    // 완료보고 탭
+    'settings':  ['ssak-quote.html', 'settings'],  // 설정 탭
+    'faq':       ['ssak-quote.html', 'faq'],       // 스마트답장 탭
+    'schedule':  ['schedule.html'],                 // 예약/스케줄 일원 관리
+    'my':        ['my.html'],
+    'community': ['community.html'],
+    'market':    ['market.html'],
+    'booking':   ['booking.html'],                  // 고객용 예약 신청 (외부 공유 링크)
+    'sign':      ['sign.html'],
+    'workforce': ['workforce.html'],
   };
-  if (map[page]) location.href = map[page];
+  const target = map[page];
+  if (!target) return;
+  if (target[1]) sessionStorage.setItem('gotoTab', target[1]);
+  location.href = target[0];
 }
 
 // ── Toast ────────────────────────────────────
@@ -449,24 +445,7 @@ async function togglePushNotification() {
   }
 }
 
-// 벨 상태 업데이트 (구독 여부 표시)
-async function updateBellState(subscribed) {
-  const btn = document.querySelector('[onclick="togglePushNotification()"]');
-  if (!btn) return;
-  const dot = btn.querySelector('.notif-dot');
-  if (dot) dot.style.background = subscribed ? '#00C896' : '';
-  btn.title = subscribed ? '알림 ON (클릭하면 해제)' : '알림 OFF (클릭하면 설정)';
-}
-
-// 페이지 로드 시 구독 상태 확인
-(async () => {
-  if ('serviceWorker' in navigator && 'PushManager' in window) {
-    const reg = await navigator.serviceWorker.ready.catch(() => null);
-    if (!reg) return;
-    const sub = await reg.pushManager.getSubscription().catch(() => null);
-    updateBellState(!!sub);
-  }
-})();
+// 벨 상태 업데이트는 아래 updateBellState (DOMContentLoaded에서 호출)에서 일원화
 
 // VAPID 키 변환 유틸
 
@@ -476,7 +455,7 @@ async function loadHomeStats() {
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
   const adminKey = cfg.adminKey || '';
 
-  // 오늘 예약 수 (기존 fetchPendingBookings 대체)
+  // 오늘 할 일 (대기 예약 우선)
   try {
     const r = await fetch(SERVER + '/api/bookings?status=pending&adminKey=' + encodeURIComponent(adminKey));
     const d = await r.json();
@@ -484,14 +463,26 @@ async function loadHomeStats() {
     const todayText = document.getElementById('today-text');
     const todaySub  = document.getElementById('today-sub');
     const todayCard = document.getElementById('today-card');
+    const pulseDot  = document.querySelector('.today-card-label .ds-pulse-dot');
+
     if (todayText) {
       if (pending.length > 0) {
-        todayText.textContent = `대기 예약 ${pending.length}건 확인하기`;
-        todaySub && (todaySub.textContent = '탭하면 스케줄로 이동합니다');
-        todayCard && (todayCard.style.outline = '2px solid var(--c-pr)');
+        // 친근하고 액션 지향적 카피
+        todayText.textContent = `대기 예약 ${pending.length}건`;
+        todaySub && (todaySub.textContent = '탭해서 빠르게 처리하세요');
+        if (pulseDot) pulseDot.style.background = 'var(--c-amber)';
+        if (pulseDot && pulseDot.style.cssText.indexOf('box-shadow') === -1) {
+          pulseDot.style.boxShadow = '0 0 0 0 var(--c-amber)';
+        }
+        // 카드를 시각적으로 강조 — 토스 스타일 부드러운 강조
+        todayCard && (todayCard.style.boxShadow = '0 4px 24px rgba(245,158,11,.18)');
       } else {
-        todayText.textContent = '오늘 대기 예약 없음';
-        todaySub && (todaySub.textContent = '여유로운 하루입니다 ☀️');
+        todayText.textContent = '여유로운 하루예요 ☀️';
+        todaySub && (todaySub.textContent = '오늘 대기 중인 예약이 없습니다');
+        if (pulseDot) {
+          pulseDot.style.background = 'var(--c-pr)';
+          pulseDot.style.opacity = '0.5';
+        }
       }
     }
   } catch(e) {
@@ -499,15 +490,17 @@ async function loadHomeStats() {
     if (todayText) todayText.textContent = '스케줄 확인하기';
   }
 
-  // 이달 실적
+  // 이달 실적 (토스 시그니처: 큰 숫자 + 작은 단위)
   try {
     const r2 = await fetch(SERVER + '/api/stats/monthly?adminKey=' + encodeURIComponent(adminKey));
     const d2 = await r2.json();
     if (d2.success) {
       const perfDone    = document.getElementById('perf-done');
       const perfRevenue = document.getElementById('perf-revenue');
+      const perfBooked  = document.getElementById('perf-booked');
       if (perfDone)    perfDone.textContent    = d2.done ?? 0;
-      if (perfRevenue) perfRevenue.textContent = d2.revenue ? Math.round(d2.revenue/10000) : '-'; const perfBooked = document.getElementById('perf-booked'); if (perfBooked) perfBooked.textContent = (d2.confirmed > 0 ? d2.confirmed : '-');
+      if (perfRevenue) perfRevenue.textContent = d2.revenue ? Math.round(d2.revenue/10000) : '-';
+      if (perfBooked)  perfBooked.textContent  = (d2.confirmed > 0 ? d2.confirmed : '-');
     }
   } catch(e) {}
 
