@@ -168,23 +168,14 @@ select.form-input{cursor:pointer;}
       <button class="back-btn" onclick="history.back()">←</button>
       <div class="header-title">⚡ 고객케어</div>
     </div>
-    <button class="settings-btn" onclick="switchTab('settings',document.querySelectorAll('.tab')[6])">⚙️</button>
+    <button class="settings-btn" onclick="switchTab('settings',null)">⚙️</button>
   </div>
   <div class="tabs">
-    <button class="tab active" id="tab-quote"   onclick="switchTab('quote',this)">⚡ 견적발송</button>
-    <button class="tab"        id="tab-report"  onclick="switchTab('report',this)">📸 완료보고서</button>
-    <button class="tab"        id="tab-more"    onclick="toggleMoreMenu(this)">··· 더보기</button>
-  </div>
-  <!-- 더보기 드롭다운 -->
-  <div id="more-menu" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border-bottom:1px solid var(--gray-100);z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.08);">
-    <div style="display:flex;overflow-x:auto;padding:8px 12px;gap:6px;scrollbar-width:none;">
-      <button onclick="switchTab('booking',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">📅 예약</button>
-      <button onclick="switchTab('template',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">📝 템플릿</button>
-      <button onclick="switchTab('faq',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">💡 FAQ</button>
-      <button onclick="switchTab('history',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">📋 이력</button>
-      <button onclick="switchTab('settings',document.getElementById('tab-more'));toggleMoreMenu()" style="flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">⚙️ 설정</button>
-    </div>
-  </div>
+    <button class="tab active" id="tab-quote"    onclick="switchTab('quote',this)">⚡ 견적발송</button>
+    <button class="tab"        id="tab-contract" onclick="switchTab('contract',this)">✍️ 계약서</button>
+    <button class="tab"        id="tab-report"   onclick="switchTab('report',this)">📸 완료보고서</button>
+    <button class="tab"        id="tab-history"  onclick="switchTab('history',this)">📋 이력</button>
+  </div>  </div>
 </div>
 <div class="content">
 
@@ -225,59 +216,42 @@ select.form-input{cursor:pointer;}
   </div>
 </div>
 
-
+<!-- 계약서 -->
+<div id="page-contract" class="page">
+  <div class="card" style="text-align:center;padding:32px 20px 28px;">
+    <div style="font-size:48px;margin-bottom:14px;">✍️</div>
+    <div style="font-size:18px;font-weight:800;color:var(--gray-900);margin-bottom:8px;">계약서 작성</div>
+    <div style="font-size:13px;color:var(--gray-500);line-height:1.7;margin-bottom:24px;">
+      업주가 먼저 서명 후 고객에게<br>서명 링크를 SMS로 발송합니다
+    </div>
+    <button class="btn-primary" onclick="location.href='sign.html'" style="max-width:280px;margin:0 auto;">
+      📄 계약서 작성하기
+    </button>
+  </div>
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title" style="margin-bottom:12px;">📋 계약서 진행 안내</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;">1</div>
+        <div style="font-size:13px;color:var(--gray-700);line-height:1.6;"><b>업주 서명</b><br>계약 내용 확인 후 서명</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;">2</div>
+        <div style="font-size:13px;color:var(--gray-700);line-height:1.6;"><b>고객 서명 링크 발송</b><br>고객 휴대폰으로 서명 URL 전송</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary-dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;">3</div>
+        <div style="font-size:13px;color:var(--gray-700);line-height:1.6;"><b>계약 완료</b><br>양측 서명 완료 시 PDF 자동 발송</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- 템플릿 -->
-<div id="page-template" class="page">
-  <div class="card" style="margin-bottom:10px;">
-    <div class="card-title" style="margin-bottom:12px;">🔍 키워드 빠른 검색</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
-      <button onclick="setKeyword('')"    class="keyword-chip on" id="kw-all">전체</button>
-      <button onclick="setKeyword('견적')" class="keyword-chip"    id="kw-quote">💰 견적</button>
-      <button onclick="setKeyword('예약')" class="keyword-chip"    id="kw-book">📅 예약</button>
-      <button onclick="setKeyword('완료')" class="keyword-chip"    id="kw-done">✅ 완료</button>
-      <button onclick="setKeyword('가격')" class="keyword-chip"    id="kw-price">💵 가격</button>
-    </div>
-    <input class="form-input" id="t-keyword" placeholder="키워드 직접 검색..." oninput="renderTemplates()" style="margin-bottom:0;"/>
-  </div>
-  <div class="card" style="margin-bottom:10px;"><div class="card-title" style="margin-bottom:10px;">👤 개인화</div><div class="form-row" style="gap:12px;"><div class="form-group" style="margin:0;"><label class="form-label">고객 이름</label><input class="form-input" id="t-name" placeholder="김OO" oninput="renderTemplates()"/></div><div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="t-size" type="number" placeholder="32" oninput="renderTemplates()"/></div></div></div>
-  <div id="template-list"></div>
-</div>
 
 <!-- FAQ -->
 
 <!-- 예약 목록 -->
-<div id="page-booking" class="page">
-  <div class="card" style="margin-bottom:12px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-      <div class="card-title" style="margin-bottom:0;">📅 예약 목록</div>
-      <button onclick="loadBookings()" style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새로고침</button>
-    </div>
-    <!-- 상태 필터 -->
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
-      <button class="chip on" id="bf-all"     onclick="filterBookings('all',this)">전체</button>
-      <button class="chip"    id="bf-pending"  onclick="filterBookings('pending',this)">대기중</button>
-      <button class="chip"    id="bf-confirmed"onclick="filterBookings('confirmed',this)">확정</button>
-      <button class="chip"    id="bf-completed"onclick="filterBookings('completed',this)">완료</button>
-      <button class="chip"    id="bf-cancelled"onclick="filterBookings('cancelled',this)">취소</button>
-    </div>
-    <div id="booking-list">
-      <div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">로딩 중...</div>
-    </div>
-  </div>
-</div>
-
-<div id="page-faq" class="page">
-  <div class="card" style="margin-bottom:14px;">
-    <div class="card-title">🤖 FAQ 자동응답</div>
-    <div style="font-size:12px;color:var(--gray-400);margin-bottom:10px;">고객 문자 내용을 붙여넣으면 관련 FAQ를 자동으로 찾아드립니다.</div>
-    <textarea class="form-input" id="faq-auto-input" rows="3" placeholder="고객이 보낸 문자 내용을 여기에 붙여넣으세요..." oninput="matchFaq()" style="resize:none;margin-bottom:10px;"></textarea>
-    <div id="faq-auto-result"></div>
-  </div>
-  <div class="card-title" style="margin-bottom:10px;">📋 전체 FAQ 목록</div>
-  <div id="faq-list"></div>
-  <button class="add-btn" onclick="addFaq()" style="margin-top:4px;">+ FAQ 항목 추가</button>
-</div>
 
 <!-- 설정 -->
 <!-- 완료보고서 -->
@@ -454,21 +428,6 @@ select.form-input{cursor:pointer;}
   <button class="nav-item" onclick="location.href='my.html'"><div class="nav-icon">👤</div><div>MY</div></button>
 </div>
 
-<!-- 템플릿 편집 모달 -->
-<div class="modal-overlay" id="tpl-modal" onclick="if(event.target===this)closeTplModal()">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="tpl-modal-title">✏️ 템플릿 수정</div>
-    <label class="edit-label">이모지</label><input class="edit-input" id="tpl-icon" style="width:70px;"/>
-    <label class="edit-label">제목</label><input class="edit-input" id="tpl-title-input"/>
-    <label class="edit-label">메시지 내용</label>
-    <div class="edit-hint">💡 변수: <b>{이름}</b> · <b>{평수}</b> · <b>{업체명}</b> · <b>{전화번호}</b></div>
-    <textarea class="edit-textarea" id="tpl-content" rows="7"></textarea>
-    <div class="edit-btns"><button class="btn-cancel" onclick="closeTplModal()">취소</button><button class="btn-save" onclick="saveTpl()">저장</button></div>
-    <button class="btn-reset" onclick="resetTpl()">↺ 기본값으로 초기화</button>
-  </div>
-</div>
-
 <!-- FAQ 편집 모달 -->
 <div class="modal-overlay" id="faq-modal" onclick="if(event.target===this)closeFaqModal()">
   <div class="modal-sheet">
@@ -492,33 +451,12 @@ function switchTab(name,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   if(btn)btn.classList.add('active');
-  document.getElementById('page-'+name).classList.add('active');
-  if(name==='template')renderTemplates();
-  if(name==='faq')renderFaq();
+  const pageEl = document.getElementById('page-'+name);
+  if(pageEl) pageEl.classList.add('active');
   if(name==='settings')loadSettingsForm();
   if(name==='history')renderHistory();
   if(name==='report')initReportTab();
-  if(name==='booking')loadBookings();
 }
-
-function toggleMoreMenu(btn) {
-  const menu = document.getElementById('more-menu');
-  if (!menu) return;
-  const open = menu.style.display === 'block';
-  menu.style.display = open ? 'none' : 'block';
-  if (!open) {
-    // 메뉴 외부 클릭 시 닫기
-    setTimeout(() => {
-      document.addEventListener('click', function closeMenu(e) {
-        if (!menu.contains(e.target) && e.target !== btn) {
-          menu.style.display = 'none';
-          document.removeEventListener('click', closeMenu);
-        }
-      });
-    }, 10);
-  }
-}
-
 
 function renderExtraChips(){
   document.getElementById('extra-chips').innerHTML=cfg.extras.map((e,i)=>
@@ -665,50 +603,6 @@ const DEFAULT_TPLS=[
 let customTpls=JSON.parse(localStorage.getItem('ssak_tpls')||'null');
 if(!customTpls)customTpls=DEFAULT_TPLS.map(t=>({...t}));
 
-function applyVars(c,name,size){return c.replace(/\{이름\}/g,name?(name+'님'):'고객님').replace(/\{평수\}/g,size||'평수').replace(/\{업체명\}/g,cfg.company).replace(/\{전화번호\}/g,cfg.phone);}
-function setKeyword(kw) {
-  const el = document.getElementById('t-keyword');
-  if (el) el.value = kw;
-  // 칩 active state 업데이트
-  const kwMap = { '': 'kw-all', '견적': 'kw-quote', '예약': 'kw-book', '완료': 'kw-done', '가격': 'kw-price' };
-  Object.values(kwMap).forEach(id => {
-    const btn = document.getElementById(id);
-    if (btn) btn.classList.remove('on');
-  });
-  const activeId = kwMap[kw];
-  if (activeId) {
-    const btn = document.getElementById(activeId);
-    if (btn) btn.classList.add('on');
-  }
-  renderTemplates();
-}
-
-function renderTemplates(){
-  const name = document.getElementById('t-name').value.trim();
-  const size = document.getElementById('t-size').value;
-  const kwEl = document.getElementById('t-keyword');
-  const kw   = kwEl ? kwEl.value.trim().toLowerCase() : '';
-  const filtered = kw
-    ? customTpls.filter(t => t.title.toLowerCase().includes(kw) || t.content.toLowerCase().includes(kw))
-    : customTpls;
-  const listEl = document.getElementById('template-list');
-  if (!filtered.length) {
-    listEl.innerHTML = '<div style="text-align:center;padding:40px 0;color:var(--gray-400);font-size:13px;">검색 결과가 없습니다</div>';
-    return;
-  }
-  listEl.innerHTML = filtered.map((t, i) => {
-    const origIdx = customTpls.indexOf(t);
-    return `<div class="tpl-card">
-      <div class="tpl-header">
-        <div class="tpl-title">${t.icon} ${t.title}</div>
-        <button class="tpl-edit-btn" onclick="openTplModal(${origIdx})">✏️ 수정</button>
-      </div>
-      <div class="msg-preview">${applyVars(t.content, name, size)}</div>
-      <button class="btn-primary" style="margin-top:12px;margin-bottom:0;" onclick="copyTpl(${origIdx})">📋 복사</button>
-    </div>`;
-  }).join('');
-}
-
 // 야간 시간 체크
 function isNightTime(){
   if(!cfg.nightEnabled)return false;
@@ -738,37 +632,6 @@ const STATUS_COLORS = { pending:'#F59E0B', confirmed:'#3B82F6', completed:'#10B9
 const TYPE_LABELS   = { 'move-in':'입주 전','move-out':'이사 후','new':'신축 준공','life':'생활 청소' };
 let allBookings = [];
 let currentFilter = 'all';
-
-async function loadBookings() {
-  const listEl = document.getElementById('booking-list');
-  if (!listEl) return;
-  listEl.innerHTML = '<div style="text-align:center;padding:40px 0;color:#aaa;font-size:13px;">로딩 중...</div>';
-
-  try {
-    const res = await fetch(`${SERVER}/api/bookings`, {
-      headers: { 'x-admin-key': cfg.adminKey || '' }
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      if (res.status === 401) {
-        listEl.innerHTML = `<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">
-          ⚠️ 관리자 키가 필요합니다.<br><br>
-          <span style="color:#888;">설정 탭에서 관리자 키를 입력해주세요</span>
-        </div>`;
-      } else {
-        listEl.innerHTML = `<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">오류: ${data.error || '불러오기 실패'}</div>`;
-      }
-      return;
-    }
-
-    allBookings = data.data || [];
-    renderBookingList();
-
-  } catch(e) {
-    listEl.innerHTML = '<div style="text-align:center;padding:30px;color:#e55;font-size:13px;">서버 연결 오류</div>';
-  }
-}
 
 function renderBookingList() {
   const listEl = document.getElementById('booking-list');
@@ -821,13 +684,6 @@ function renderBookingList() {
   }).join('');
 }
 
-function filterBookings(status, btn) {
-  currentFilter = status;
-  document.querySelectorAll('[id^="bf-"]').forEach(b => b.classList.remove('on'));
-  if (btn) btn.classList.add('on');
-  renderBookingList();
-}
-
 async function updateBookingStatus(id, status, selectEl) {
   try {
     const res = await fetch(`${SERVER}/api/bookings/${id}/status`, {
@@ -863,30 +719,12 @@ function renderHistory(){
 }
 
 let editingTplIdx=-1;
-function openTplModal(i){editingTplIdx=i;const t=customTpls[i];document.getElementById('tpl-modal-title').textContent=`✏️ 템플릿 ${i+1} 수정`;document.getElementById('tpl-icon').value=t.icon;document.getElementById('tpl-title-input').value=t.title;document.getElementById('tpl-content').value=t.content;document.getElementById('tpl-modal').classList.add('open');}
-function closeTplModal(){document.getElementById('tpl-modal').classList.remove('open');}
-function saveTpl(){if(editingTplIdx<0)return;customTpls[editingTplIdx]={icon:document.getElementById('tpl-icon').value||DEFAULT_TPLS[editingTplIdx].icon,title:document.getElementById('tpl-title-input').value||DEFAULT_TPLS[editingTplIdx].title,content:document.getElementById('tpl-content').value};localStorage.setItem('ssak_tpls',JSON.stringify(customTpls));closeTplModal();renderTemplates();toast('✅ 템플릿 저장!');}
 function resetTpl(){if(editingTplIdx<0)return;customTpls[editingTplIdx]={...DEFAULT_TPLS[editingTplIdx]};localStorage.setItem('ssak_tpls',JSON.stringify(customTpls));closeTplModal();renderTemplates();toast('↺ 기본값으로 초기화');}
-function copyTpl(i){const name=document.getElementById('t-name').value.trim();const size=document.getElementById('t-size').value;navigator.clipboard.writeText(applyVars(customTpls[i].content,name,size)).then(()=>toast('복사 완료!'));}
 
 const DEFAULT_FAQS=[{q:'가격이 얼마예요?',a:'평수와 청소 유형에 따라 다릅니다. 25평 입주 전 기준 약 17~19만원 선입니다.'},{q:'몇 명이 오고, 얼마나 걸리나요?',a:'기본 2인 1조이며, 35평 이상은 3~4인 투입됩니다. 30평 기준 약 4~5시간 소요됩니다.'},{q:'예약은 어떻게 하나요?',a:'문자 또는 카카오로 ①날짜 ②주소 ③평수를 보내주시면 됩니다.'},{q:'당일 예약도 되나요?',a:'일정에 따라 가능합니다. 최소 하루 전 예약을 권장드립니다.'},{q:'에어컨/냉장고 청소도 되나요?',a:'별도 추가 서비스로 가능합니다.\n• 에어컨(벽걸이): 3만원\n• 에어컨(스탠드): 5만원\n• 냉장고 내부: 3.5만원'},{q:'작업 후 문제가 생기면요?',a:'작업 완료 후 48시간 이내 연락 주시면 무상 재방문 처리해 드립니다!'},{q:'친환경 세제를 사용하나요?',a:'네! 유해성분을 최소화한 친환경 세제를 사용합니다.'}];
 let customFaqs=JSON.parse(localStorage.getItem('ssak_faqs')||'null');
 if(!customFaqs)customFaqs=DEFAULT_FAQS.map(f=>({...f}));
 let editingFaqIdx=-1;
-
-function matchFaq(){
-  const input=document.getElementById('faq-auto-input').value.trim();
-  const result=document.getElementById('faq-auto-result');
-  if(!input){result.innerHTML='';return;}
-  const words=input.replace(/[^\w가-힣]/g,' ').split(/\s+/).filter(w=>w.length>1);
-  const scored=customFaqs.map((f,i)=>{
-    const text=(f.q+' '+f.a).toLowerCase();
-    const score=words.reduce((s,w)=>s+(text.includes(w.toLowerCase())?1:0),0);
-    return{...f,i,score};
-  }).filter(f=>f.score>0).sort((a,b)=>b.score-a.score);
-  if(!scored.length){result.innerHTML='<div class="faq-no-match">🔍 관련 FAQ를 찾지 못했습니다</div>';return;}
-  result.innerHTML=scored.slice(0,3).map(f=>`<div class="faq-match-card"><div class="faq-match-q">Q. ${f.q}</div><div class="faq-match-a">${f.a}</div><button class="faq-match-btn" onclick="sendFaqReply(${f.i})">📱 이 답변으로 문자 발송</button></div>`).join('');
-}
 
 async function sendFaqReply(i){
   const phone=prompt('발송할 번호를 입력하세요 (예: 01012345678)');
@@ -925,11 +763,8 @@ async function sendFaqReply(i){
   }catch(e){toast('❌ 서버 연결 오류');}
 }
 
-function renderFaq(){document.getElementById('faq-list').innerHTML=customFaqs.map((f,i)=>`<div class="faq-item" id="faq-${i}"><div class="faq-header"><div class="faq-q" onclick="toggleFaq(${i})">Q. ${f.q}</div><div class="faq-btns"><button class="faq-edit-btn" onclick="openFaqModal(${i})">✏️</button><span class="faq-arrow" onclick="toggleFaq(${i})">▼</span></div></div><div class="faq-a">${f.a.replace(/\n/g,'<br>')}<br><button class="faq-copy-btn" onclick="copyFaq(${i})">📋 답변 복사</button></div></div>`).join('');}
-function toggleFaq(i){document.getElementById('faq-'+i).classList.toggle('open');}
 function copyFaq(i){navigator.clipboard.writeText(customFaqs[i].a).then(()=>toast('FAQ 복사!'));}
 function openFaqModal(i){editingFaqIdx=i;document.getElementById('faq-q-input').value=customFaqs[i].q;document.getElementById('faq-a-input').value=customFaqs[i].a;document.getElementById('faq-modal').classList.add('open');}
-function addFaq(){customFaqs.push({q:'새 질문',a:'답변을 입력하세요'});editingFaqIdx=customFaqs.length-1;document.getElementById('faq-q-input').value='새 질문';document.getElementById('faq-a-input').value='답변을 입력하세요';document.getElementById('faq-modal').classList.add('open');}
 function closeFaqModal(){document.getElementById('faq-modal').classList.remove('open');}
 function saveFaqItem(){if(editingFaqIdx<0)return;customFaqs[editingFaqIdx]={q:document.getElementById('faq-q-input').value,a:document.getElementById('faq-a-input').value};localStorage.setItem('ssak_faqs',JSON.stringify(customFaqs));closeFaqModal();renderFaq();toast('✅ FAQ 저장!');}
 function deleteFaqItem(){if(editingFaqIdx<0)return;customFaqs.splice(editingFaqIdx,1);localStorage.setItem('ssak_faqs',JSON.stringify(customFaqs));closeFaqModal();renderFaq();toast('삭제됨');}
@@ -993,25 +828,9 @@ function saveSettings(){
 
 // ── 계약서 금액 자동계산 ─────────────────────
 
-
-
-
 // ── 계약서 기능 ──────────────────────────────
 
-
-
-
-
-
-
-
-
 // ── 터치 서명 패드 ───────────────────────────────
-
-
-
-
-
 
 // ── 비대면 계약서 발송 ──────────────────────────
 
