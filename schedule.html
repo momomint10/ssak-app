@@ -16,10 +16,19 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
 
 /* 헤더 */
-.header{background:#fff;border-bottom:1px solid var(--gray-200);padding:52px 20px 0;position:sticky;top:0;z-index:50;}
+.header{
+  background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
+  border-bottom:0.5px solid #f5e8e4;
+  padding:52px 20px 0;position:sticky;top:0;z-index:50;
+  position:relative;
+}
+.header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
+}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;}
 .header-title{font-size:18px;font-weight:900;}
-.add-btn-top{width:36px;height:36px;border-radius:50%;background:var(--primary);border:none;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;cursor:pointer;line-height:1;}
+.add-btn-top{width:36px;height:36px;border-radius:50%;background:#FF385C;border:none;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;cursor:pointer;line-height:1;}
 
 /* 월 네비게이션 */
 .month-nav{background:#fff;padding:0 20px 14px;display:flex;align-items:center;justify-content:space-between;}
@@ -36,7 +45,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .cal-day{min-height:44px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:4px 2px;cursor:pointer;transition:background 0.15s;position:relative;}
 .cal-day:active{background:var(--gray-100);}
 .cal-day.other-month .cal-num{color:var(--gray-300);}
-.cal-day.today .cal-num{background:var(--primary);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+.cal-day.today .cal-num{background:#FF385C;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
 .cal-day.selected{background:var(--primary-light);}
 .cal-day.selected .cal-num{color:var(--primary-dark);font-weight:700;}
 .cal-num{font-size:13px;font-weight:500;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
@@ -67,7 +76,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .booking-meta-item{display:flex;align-items:center;gap:3px;}
 .booking-card-footer{margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-100);display:flex;gap:6px;}
 .card-action-btn{flex:1;padding:7px 0;border-radius:8px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;}
-.card-action-btn.primary{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
+.card-action-btn.primary{background:var(--primary-light);border-color:#FF385C;color:var(--primary-dark);}
 .card-action-btn.danger{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
 
 /* 빈 상태 */
@@ -78,7 +87,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* 하단 네비게이션 */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,0.95);border-top:1px solid var(--gray-200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--gray-400);cursor:pointer;}
-.nav-item.active{color:var(--primary);font-weight:700;}
+.nav-item.active{color:#FF385C;font-weight:700;}
 .nav-icon{font-size:20px;line-height:1;}
 
 /* 모달 */
@@ -90,13 +99,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .form-group{margin-bottom:14px;}
 .form-label{font-size:12px;font-weight:600;color:var(--gray-500);margin-bottom:6px;display:block;}
 .form-input{width:100%;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;color:var(--gray-900);outline:none;transition:border-color 0.2s;background:#fff;-webkit-appearance:none;}
-.form-input:focus{border-color:var(--primary);}
+.form-input:focus{border-color:#FF385C;}
 select.form-input{cursor:pointer;}
 textarea.form-input{resize:none;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .modal-btns{display:flex;gap:8px;margin-top:4px;}
 .btn-cancel{flex:1;padding:14px;background:var(--gray-100);color:var(--gray-700);border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;}
-.btn-save{flex:2;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-save{flex:2;padding:14px;background:#FF385C;color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
 .btn-delete{width:100%;padding:13px;background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;}
 
 /* 상태 선택 칩 */
@@ -104,7 +113,7 @@ textarea.form-input{resize:none;}
 .status-chip{padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);background:var(--gray-100);color:var(--gray-500);font-family:inherit;transition:all 0.15s;}
 .status-chip.sel-confirmed{background:#EEF2FF;border-color:#A5B4FC;color:#6366F1;}
 .status-chip.sel-inprogress{background:#FFF7ED;border-color:#FDBA74;color:#EA580C;}
-.status-chip.sel-done{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
+.status-chip.sel-done{background:var(--primary-light);border-color:#FF385C;color:var(--primary-dark);}
 .status-chip.sel-cancelled{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
 
 /* SMS 발송 패널 */
@@ -414,7 +423,7 @@ function renderList() {
   if (items.length === 0) {
     list.innerHTML = `<div class="empty-state">
       <div class="empty-icon">📭</div>
-      <div class="empty-text">이 날 예약이 없습니다<br><span style="color:var(--primary);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
+      <div class="empty-text">이 날 예약이 없습니다<br><span style="color:#FF385C;font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
     </div>`;
     return;
   }

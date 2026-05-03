@@ -13,17 +13,22 @@
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
-  background: #ffffff;
+  background: linear-gradient(160deg, #FFF8F5 0%, #FFFFFF 60%);
   padding: 52px 20px 20px;
   position: relative; overflow: hidden;
-  border-bottom: 0.5px solid #f0f0f0;
+  border-bottom: 0.5px solid #f5e8e4;
+}
+.home-header::after {
+  content:''; position:absolute; bottom:0; left:0; right:0;
+  height:3px;
+  background:linear-gradient(90deg, #FF385C 0%, #FC8181 100%);
 }
 .home-header::before {
   content:''; position:absolute; top:-50px; right:-50px;
   width:180px; height:180px; background:rgba(255,56,92,.04); border-radius:50%;
 }
 .hd-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.hd-greeting { font-size:13px; color:#767676; margin-bottom:3px; letter-spacing:-.1px; }
+.hd-greeting { font-size:13px; color:#FF385C; font-weight:600; margin-bottom:3px; letter-spacing:-.1px; font-size:12px; }
 .hd-name { font-size:22px; font-weight:900; color:#222222; }
 .hd-actions { display:flex; gap:8px; }
 .hd-icon-btn {
@@ -54,29 +59,29 @@
   font-size:22px; flex-shrink:0;
 }
 .today-card-body { flex:1; }
-.today-card-label { font-size:11px; font-weight:700; color:var(--c-g400); margin-bottom:3px; }
+.today-card-label { font-size:13px; font-weight:600; color:var(--c-g400); margin-bottom:3px; }
 .today-card-text { font-size:16px; font-weight:800; color:var(--c-g900); }
 .today-card-sub { font-size:12px; color:var(--c-g500); margin-top:2px; }
 .today-card-arrow { font-size:18px; color:var(--c-g300); flex-shrink:0; }
 
 /* ── 빠른 실행 4버튼 ──────────────────────────────────────── */
 .quick-grid {
-  display:grid; grid-template-columns:repeat(4,1fr); gap:8px;
-  padding:0 20px; margin-top:12px;
+  display:grid; grid-template-columns:repeat(2,1fr); gap:8px;
+  padding:0 16px; margin-top:16px;
 }
 .quick-btn {
   display:flex; flex-direction:column; align-items:center; gap:7px;
-  padding:14px 6px; border-radius:14px;
+  padding:18px 12px; border-radius:16px;
   background:#fff; border:none; cursor:pointer;
   box-shadow: 0 1px 6px rgba(0,0,0,.06);
   font-family:inherit; transition:transform .1s;
 }
 .quick-btn:active { transform:scale(.96); }
 .quick-ico {
-  width:44px; height:44px; border-radius:12px;
-  display:flex; align-items:center; justify-content:center; font-size:20px;
+  width:48px; height:48px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center; font-size:22px;
 }
-.quick-lbl { font-size:11px; font-weight:700; color:var(--c-g700); }
+.quick-lbl { font-size:13px; font-weight:600; color:var(--c-g700); }
 
 /* ── 이번 달 실적 ─────────────────────────────────────────── */
 .perf-card {
@@ -168,21 +173,14 @@
       <div class="quick-ico" style="background:#FFF7ED;">👥</div>
       <div class="quick-lbl">인력매칭</div>
     </button>
-    <button class="quick-btn ds-tap-card" onclick="location.href='community.html'">
-      <div class="quick-ico" style="background:#EFF6FF;">💬</div>
-      <div class="quick-lbl">커뮤니티</div>
-    </button>
-    <button class="quick-btn ds-tap-card" onclick="location.href='market.html'">
-      <div class="quick-ico" style="background:#FFF1F2;">🛒</div>
-      <div class="quick-lbl">중고거래</div>
-    </button>
+
   </div>
 
   <!-- 더보기 메뉴 (접이식) -->
   <div class="section-wrap ds-fade-in ds-fade-in-2" style="margin-top:12px;">
     <div class="recent-card">
       <div class="recent-row ds-tap" onclick="goTo('schedule')">
-        <div class="recent-ico" style="background:#EFF6FF;">📅</div>
+        <div class="recent-ico" style="background:#FFF0F3;">📅</div>
         <div class="recent-body">
           <div class="recent-title">스케줄 관리</div>
           <div class="recent-sub">예약 일정 확인 및 관리</div>
@@ -190,7 +188,7 @@
         <div class="recent-right">›</div>
       </div>
       <div class="recent-row ds-tap" onclick="goTo('community')">
-        <div class="recent-ico" style="background:#F0FDF4;">💬</div>
+        <div class="recent-ico" style="background:#EFF6FF;">💬</div>
         <div class="recent-body">
           <div class="recent-title">커뮤니티</div>
           <div class="recent-sub">청소업 정보 · 팁 · 질문</div>
