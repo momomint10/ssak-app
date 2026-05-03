@@ -371,8 +371,8 @@ select.form-input{cursor:pointer;}
   <!-- STEP 4: 완료 문구 -->
   <div class="card" style="margin-bottom:12px;">
     <div class="card-title">💬 시공 완료 내용 <span style="font-size:11px;color:var(--gray-400);font-weight:400;">(직접 편집 가능)</span></div>
-    <textarea class="form-input" id="rp-notes" rows="6" style="resize:none;font-size:13px;line-height:1.75;"></textarea>
-    <button onclick="rpAutoNotes()" style="margin-top:6px;padding:7px 14px;background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">↺ 기본 문구로 초기화</button>
+    <textarea class="form-input" id="rp-notes" rows="6" style="resize:none;font-size:13px;line-height:1.75;" oninput="rpNotesEdited=true"></textarea>
+    <button onclick="rpNotesEdited=false;rpAutoNotes()" style="margin-top:6px;padding:7px 14px;background:var(--primary-light);color:var(--primary-dark);border:1px solid var(--primary);border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;">↺ 기본 문구로 초기화</button>
   </div>
 
   <!-- STEP 5: 특이사항 (선택) -->
@@ -1064,6 +1064,8 @@ function rpApply(rePhoto=true) {
   rpSyncGrid();
   rpRenderItemUI();
   if (rePhoto) rpRenderPhotos();
+  // 사용자가 직접 편집하지 않은 경우에만 자동 문구 갱신
+  if (!rpNotesEdited) rpAutoNotes();
 }
 
 function rpPreset(type) {
@@ -1093,6 +1095,7 @@ function rpRemoveItem(type) {
 }
 
 let rpInitialized = false;
+let rpNotesEdited  = false; // 사용자가 직접 편집했으면 true → rpApply에서 덮어쓰지 않음
 
 // ── IndexedDB 임시저장 ──────────────────────────────────────────
 const RP_DB_NAME = 'ssak-report-draft';
@@ -1276,6 +1279,7 @@ async function rpResetAll() {
   rpRenderPhotos({});
 
   // 4) 완료 문구 기본값으로 초기화
+  rpNotesEdited = false;
   rpAutoNotes();
 
   // 5) 특이사항 초기화
@@ -1344,6 +1348,7 @@ function rpUpdatePhaseHint(photos) {
 function initReportTab(){
   if(rpInitialized) return;
   rpInitialized = true;
+  rpNotesEdited = false; // 초기화 시 편집 플래그 리셋
   rpApply(false);       // 그리드 + UI 동기화 (사진 렌더 제외)
   rpRenderPhotos();     // 사진 영역
   rpAutoNotes();        // 기본 문구
@@ -1460,44 +1465,70 @@ function rpAutoNotes(){
 
   const nameStr = name ? name + '님' : '고객님';
 
-  // 패턴 기반 설명 (동적 항목 대응)
+  // ── 항목별 구체적 설명 (신뢰 문구) ──────────────────────
   function getDesc(label) {
-    if (/^거실/.test(label))   return label + ' 바닥·벽면·창틀 청소';
-    if (/^주방/.test(label))   return label + ' 바닥·벽면·후드·싱크대 주변 청소';
-    if (/^화장실/.test(label)) return label + ' 바닥·벽면·변기·세면대·거울 청소';
-    if (/^방/.test(label))     return label + ' 바닥·벽면·창틀 청소';
-    if (/^베란다/.test(label)) return label + ' 바닥·벽면·창문 청소';
-    if (/^현관/.test(label))   return label + ' 바닥·벽면 청소';
-    return label + ' 청소';
+    if (/^거실/.test(label))
+      return label + ' — 바닥·벽면·창틀·새시 전체 청소';
+    if (/^주방/.test(label))
+      return label + ' — 바닥·벽면·후드필터·가스레인지·싱크대 전체 청소';
+    if (/^화장실/.test(label))
+      return label + ' — 바닥·벽면·변기·세면대·거울·타일 줄눈·환풍구 청소';
+    if (/^방/.test(label))
+      return label + ' — 바닥·벽면·창틀·붙박이장 외부 청소';
+    if (/^베란다/.test(label))
+      return label + ' — 바닥·벽면·창문(틀 포함)·배수구 청소';
+    if (/^현관/.test(label))
+      return label + ' — 바닥·벽면·신발장 외부·천장 청소';
+    if (/^기타/.test(label))
+      return label + ' — 전체 구역 꼼꼼 마무리 청소';
+    return label + ' 꼼꼼 청소';
   }
 
   const selected = [...document.querySelectorAll('#rp-item-grid .rp-item-btn.on')]
     .map(b => b.querySelector('.rp-item-name').textContent);
 
-  const itemList = selected.map(label => `✅ ${getDesc(label)}`).join('\n');
+  const itemList = selected.length
+    ? selected.map(label => `✅ ${getDesc(label)}`).join('\n')
+    : '✅ 전체 구역 청소 완료';
 
+  // ── 청소 유형별 맞춤 문구 ────────────────────────────────
   const typeMsg = {
     '입주 전 청소': {
-      opening: '새 집 입주 전 청소를 꼼꼼하게 완료했습니다! 🏡✨',
-      closing : '새 보금자리에서 행복하고 설레는 시간 보내시길 바랍니다 😊\n혹시 미흡한 부분이 있으시면 편하게 연락 주세요!',
+      opening : '오늘 입주 전 청소를 꼼꼼하게 완료했습니다. 🏡✨\n' +
+                '새집의 먼지, 페인트 냄새, 공사 잔여물까지 깔끔하게 정리했습니다.',
+      closing : '📸 위 사진에서 청소 전·후 상태를 확인하실 수 있습니다.\n' +
+                '새 보금자리에서 건강하고 행복한 시간 보내시길 바랍니다 😊\n\n' +
+                '⭐ 서비스 관련 문의나 미흡한 부분은 방문 후 48시간 이내 연락 주시면\n' +
+                '   무상으로 재방문해 드리겠습니다!',
     },
     '이사 후 청소': {
-      opening: '이사 후 청소를 깔끔하게 완료했습니다! 🚚✨',
-      closing : '새 집에서의 첫날을 상쾌하게 시작하세요 😊\n혹시 미흡한 부분이 있으시면 편하게 연락 주세요!',
+      opening : '이사 후 청소를 깔끔하게 완료했습니다. 🚚✨\n' +
+                '이전 생활 흔적과 먼지를 꼼꼼히 제거해 새 출발을 깨끗하게 준비했습니다.',
+      closing : '📸 위 사진에서 청소 전·후 상태를 확인하실 수 있습니다.\n' +
+                '깨끗한 공간에서 새 생활을 시작하세요 😊\n\n' +
+                '⭐ 서비스 관련 문의나 미흡한 부분은 방문 후 48시간 이내 연락 주시면\n' +
+                '   무상으로 재방문해 드리겠습니다!',
     },
     '신축 준공 청소': {
-      opening: '신축 준공 청소를 깔끔하게 완료했습니다! 🏗️✨',
-      closing : '깨끗하게 준비된 공간, 잘 활용하시길 바랍니다 😊\n혹시 미흡한 부분이 있으시면 편하게 연락 주세요!',
+      opening : '신축 준공 청소를 전문적으로 완료했습니다. 🏗️✨\n' +
+                '공사 잔여물, 실리콘 자국, 석재 먼지 등을 꼼꼼하게 제거했습니다.',
+      closing : '📸 위 사진에서 청소 전·후 상태를 확인하실 수 있습니다.\n' +
+                '깨끗하게 완성된 공간, 잘 활용하시길 바랍니다 😊\n\n' +
+                '⭐ 서비스 관련 문의나 미흡한 부분은 방문 후 48시간 이내 연락 주시면\n' +
+                '   무상으로 재방문해 드리겠습니다!',
     },
     '생활 청소': {
-      opening: '오늘도 깨끗하게 청소해 드렸습니다! 🧹✨',
-      closing : '깔끔한 공간에서 편안한 시간 보내세요 😊\n다음에도 찾아주시면 더 열심히 하겠습니다 🙏',
+      opening : '오늘도 깨끗하게 청소해 드렸습니다. 🧹✨\n' +
+                '생활 먼지와 오염을 꼼꼼히 제거하고 위생적으로 정리했습니다.',
+      closing : '📸 위 사진에서 청소 전·후 상태를 확인하실 수 있습니다.\n' +
+                '깔끔한 공간에서 편안한 시간 보내세요 😊\n\n' +
+                '다음에도 찾아주시면 더 열심히 하겠습니다 🙏',
     },
   };
 
   const msg      = typeMsg[type] || typeMsg['생활 청소'];
   const sizeText = size ? ` (${size}평)` : '';
-  const phoneText= phone ? `\n📞 ${phone}` : '';
+  const phoneText= phone ? `\n\n📞 ${company} ${phone}` : `\n\n📞 ${company}`;
 
   const notes =
     `안녕하세요, ${nameStr}! 😊\n${company}입니다.\n\n` +
