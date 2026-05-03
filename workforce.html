@@ -32,15 +32,31 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .hd-title{font-size:18px;font-weight:900;}
 .btn-hd{background:#FF385C;color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
-.tabs{display:flex;}
-.tab-row{display:flex;gap:6px;padding:10px 16px;background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);border-bottom:0.5px solid #f5e8e4;overflow-x:auto;}
-.tab{flex-shrink:0;padding:7px 16px;font-size:12px;font-weight:600;color:#767676;cursor:pointer;border:none;background:#f3f3f3;border-radius:20px;font-family:inherit;white-space:nowrap;}
-.tab.on{color:#fff;background:#FF385C;}
+.tab-row{padding:10px 16px;background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);border-bottom:0.5px solid #f5e8e4;}
+/* Segmented Control 탭 */
+.tabs-seg{display:flex;background:var(--g100,#F3F4F6);border-radius:12px;padding:3px;gap:2px;}
+.tab{
+  flex:1;padding:8px 10px;text-align:center;font-size:12.5px;font-weight:600;
+  color:var(--g500,#6B7684);cursor:pointer;border-radius:9px;border:none;
+  background:transparent;font-family:inherit;white-space:nowrap;
+  transition:background .18s,color .18s,box-shadow .18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.tab.on{background:#fff;color:var(--pr,#FF385C);box-shadow:0 1px 6px rgba(0,0,0,.10);}
 /* ── 필터 ── */
 .filter-bar{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;scrollbar-width:none;}
 .filter-bar::-webkit-scrollbar{display:none;}
-.fbtn{flex-shrink:0;padding:5px 12px;border-radius:20px;border:1.5px solid var(--g200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--g500);}
-.fbtn.on{background:var(--pr);border-color:#FF385C;color:#fff;}
+.fbtn{
+  flex-shrink:0;padding:6px 15px;border-radius:20px;
+  border:1.5px solid var(--g200);background:#fff;
+  font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--g500);
+  transition:background .18s,border-color .18s,color .18s,box-shadow .18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.fbtn.on{
+  background:var(--pr);border-color:var(--pr);color:#fff;
+  box-shadow:0 2px 8px rgba(255,56,92,.25);
+}
 /* ── 인력 카드 ── */
 .list{padding:4px 12px 0;}
 .wcard{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;padding:14px;display:flex;gap:12px;cursor:pointer;transition:transform .1s;}
@@ -179,8 +195,19 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 .f-pw .f-inp{padding-right:28px;}
 .f-pu{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--g400);pointer-events:none;}
 .chip-grid{display:flex;flex-wrap:wrap;gap:6px;}
-.chip{padding:6px 12px;border-radius:20px;border:1.5px solid var(--g200);background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--g500);}
-.chip.on{background:var(--pr);border-color:#FF385C;color:#fff;}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:7px 14px;border-radius:20px;
+  border:1.5px solid var(--g200);background:#fff;
+  font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--g500);
+  transition:background .18s,border-color .18s,color .18s,box-shadow .18s,transform .1s;
+  white-space:nowrap;user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.chip:active{transform:scale(.95);}
+.chip.on{
+  background:var(--pr);border-color:var(--pr);color:#fff;
+  box-shadow:0 3px 10px rgba(255,56,92,.28);
+}
 .fs-foot{padding:10px 16px;border-top:1px solid var(--g100);}
 /* ── 매칭 완료 카드 ── */
 .match-card{background:linear-gradient(135deg,#FF385C,#FF6B8A);border-radius:14px;padding:16px;margin-bottom:12px;color:#fff;}
@@ -209,9 +236,11 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
       <button class="btn-hd" id="hd-btn" onclick="onHdBtn()">👤 프로필 등록</button>
     </div>
     <div class="tab-row">
-      <button class="tab on" id="tab-find" onclick="switchTab('find')">🔍 인력 찾기</button>
-      <button class="tab" id="tab-job"  onclick="switchTab('job')">💼 채용정보</button>
-      <button class="tab" id="tab-my"   onclick="switchTab('my')">📋 내 현황</button>
+      <div class="tabs-seg">
+        <button class="tab on" id="tab-find" onclick="switchTab('find')">🔍 인력 찾기</button>
+        <button class="tab" id="tab-job"  onclick="switchTab('job')">💼 채용정보</button>
+        <button class="tab" id="tab-my"   onclick="switchTab('my')">📋 내 현황</button>
+      </div>
     </div>
   </div>
 

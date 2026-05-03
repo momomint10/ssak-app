@@ -505,3 +505,124 @@ html, body {
 .ds-app-header.scrolled {
   box-shadow: 0 2px 16px rgba(0, 0, 0, .07);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   16. 선택 컨트롤 (Selection Controls) — 앱 공통
+   ─────────────────────────────────────────────────────────────
+   A. 선택 칩     .ds-chip  /  .ds-chip.on
+   B. 세그먼트    .ds-seg-wrap > .ds-seg-btn  /  .ds-seg-btn.on
+   C. 필터 칩     .ds-filter-chip  /  .ds-filter-chip.on
+   D. 체크 항목   .ds-check-item  /  .ds-check-item.on
+══════════════════════════════════════════════════════════════ */
+
+/* ── A. 선택 칩 ─────────────────────────────────────────── */
+/* 복수 선택 가능한 둥근 칩. on → 코랄 채우기 + 그림자 */
+.ds-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 14px;
+  font-size: 12.5px; font-weight: 600; font-family: inherit;
+  border: 1.5px solid var(--c-g200);
+  border-radius: 20px;
+  background: #fff;
+  color: var(--c-g500);
+  cursor: pointer;
+  transition: background .18s, border-color .18s, color .18s, box-shadow .18s, transform .1s;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-chip:active { transform: scale(.95); }
+.ds-chip.on {
+  background: var(--c-pr);
+  border-color: var(--c-pr);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(255, 56, 92, .28);
+}
+
+/* ── B. Segmented Control ───────────────────────────────── */
+/* 탭형 단일 선택 (2~5개). on → 흰 카드 + 그림자 부상 */
+.ds-seg-wrap {
+  display: flex;
+  background: var(--c-g100);
+  border-radius: 12px;
+  padding: 3px;
+  gap: 2px;
+}
+.ds-seg-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  font-size: 12.5px; font-weight: 600; font-family: inherit;
+  color: var(--c-g500);
+  cursor: pointer;
+  transition: background .18s, color .18s, box-shadow .18s;
+  white-space: nowrap;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-seg-btn.on {
+  background: #fff;
+  color: var(--c-pr);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .10);
+}
+.ds-seg-btn:not(.on):active { background: rgba(0,0,0,.04); }
+
+/* ── C. 필터 칩 (가로 스크롤용) ────────────────────────── */
+/* 지역/카테고리 필터. on → 코랄 채우기 */
+.ds-filter-chip {
+  display: inline-flex; align-items: center;
+  flex-shrink: 0;
+  padding: 6px 15px;
+  font-size: 12.5px; font-weight: 600; font-family: inherit;
+  border: 1.5px solid var(--c-g200);
+  border-radius: 20px;
+  background: #fff;
+  color: var(--c-g600);
+  cursor: pointer;
+  transition: background .18s, border-color .18s, color .18s, box-shadow .18s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-filter-chip.on {
+  background: var(--c-pr);
+  border-color: var(--c-pr);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(255, 56, 92, .25);
+}
+
+/* ── D. 체크 항목 버튼 ──────────────────────────────────── */
+/* 완료보고서 항목 등. on → 코랄 테두리 + 연핑크 배경 + 그림자 */
+.ds-check-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--c-g200);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, box-shadow .18s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-check-item.on {
+  background: #FFF0F3;
+  border-color: var(--c-pr);
+  box-shadow: 0 2px 8px rgba(255, 56, 92, .14);
+}
+.ds-check-box {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--c-g300);
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  transition: background .15s, border-color .15s;
+}
+.ds-check-item.on .ds-check-box {
+  background: var(--c-pr);
+  border-color: var(--c-pr);
+  color: #fff;
+}
+.ds-check-item.on .ds-check-box::after { content: '✓'; }
