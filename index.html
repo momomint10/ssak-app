@@ -167,6 +167,14 @@
       <div class="quick-ico" style="background:#FFF7ED;">👥</div>
       <div class="quick-lbl">인력매칭</div>
     </button>
+    <button class="quick-btn ds-tap-card" onclick="location.href='community.html'">
+      <div class="quick-ico" style="background:#EFF6FF;">💬</div>
+      <div class="quick-lbl">커뮤니티</div>
+    </button>
+    <button class="quick-btn ds-tap-card" onclick="location.href='market.html'">
+      <div class="quick-ico" style="background:#FFF1F2;">🛒</div>
+      <div class="quick-lbl">중고거래</div>
+    </button>
   </div>
 
   <!-- 더보기 메뉴 (접이식) -->
@@ -243,8 +251,9 @@
   <button class="ds-nav-item" id="nav-quote" onclick="goTo('quote')">
     <div class="ds-nav-ico">⚡</div><div>고객케어</div>
   </button>
-  <button class="ds-nav-item" id="nav-schedule" onclick="location.href='schedule.html'">
+  <button class="ds-nav-item" id="nav-schedule" onclick="location.href='schedule.html'" style="position:relative;">
     <div class="ds-nav-ico">📅</div><div>스케줄</div>
+    <span id="sched-badge" style="display:none;position:absolute;top:4px;right:50%;transform:translateX(14px);width:8px;height:8px;border-radius:50%;background:#EF4444;border:1.5px solid #fff;"></span>
   </button>
   <button class="ds-nav-item" id="nav-community" onclick="location.href='community.html'">
     <div class="ds-nav-ico">💬</div><div>커뮤니티</div>
@@ -367,7 +376,20 @@ setGreeting();
 loadUser();
 
 
-    if ('serviceWorker' in navigator) {
+  
+  // 스케줄 배지: 오늘 예약 있으면 빨간 점
+  (async () => {
+    try {
+      const today = new Date().toISOString().slice(0,10);
+      const r = await fetch(SERVER + '/api/bookings?date=' + today);
+      const d = await r.json();
+      if (d.data && d.data.length > 0) {
+        const b = document.getElementById('sched-badge');
+        if (b) b.style.display = 'block';
+      }
+    } catch(e) {}
+  })();
+  if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js')
           .then(function(reg) { console.log('SW registered:', reg.scope); })
