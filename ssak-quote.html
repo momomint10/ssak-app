@@ -196,7 +196,7 @@ select.form-input{cursor:pointer;}
     <button class="tab active" id="tab-quote"    onclick="switchTab('quote',this)">⚡ 견적발송</button>
     <button class="tab"        id="tab-contract" onclick="switchTab('contract',this)">✍️ 계약서</button>
     <button class="tab"        id="tab-report"   onclick="switchTab('report',this)">📸 완료보고서</button>
-    <button class="tab"        id="tab-history"  onclick="switchTab('history',this)">📋 이력</button>
+
   </div>  </div>
 </div>
 <div class="content">
@@ -421,14 +421,7 @@ select.form-input{cursor:pointer;}
   <div id="rp-phase-hint" style="text-align:center;font-size:11px;color:var(--gray-400);padding-bottom:4px;"></div>
 </div>
 
-<div id="page-history" class="page">
-  <div style="padding:4px 0 12px;font-size:13px;color:var(--gray-400);">발송한 문자 이력입니다.</div>
-  <div style="display:flex;gap:8px;margin-bottom:12px;">
-    <button onclick="clearHistory()" style="padding:8px 14px;background:#fff;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 전체 삭제</button>
-    <div id="history-count" style="padding:8px 0;font-size:12px;color:var(--gray-400);"></div>
-  </div>
-  <div id="history-list"></div>
-</div>
+
 
 <div id="page-settings" class="page">
   <div class="settings-section">
@@ -496,6 +489,16 @@ select.form-input{cursor:pointer;}
   </div>
   <button class="save-settings-btn" onclick="saveSettings()">💾 전체 설정 저장</button>
   <div style="height:16px;"></div>
+
+  <!-- 이력 섹션 (설정 탭 하단) -->
+  <div class="settings-section" style="margin-top:8px;">
+    <div class="settings-title">📋 발송 이력</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;">
+      <button onclick="clearHistory()" style="padding:8px 14px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 전체 삭제</button>
+      <div id="history-count" style="padding:8px 0;font-size:12px;color:var(--gray-400);"></div>
+    </div>
+    <div id="history-list"></div>
+  </div>
 </div>
 
 </div>
@@ -510,7 +513,7 @@ select.form-input{cursor:pointer;}
     <div id="rp-complete-info" style="font-size:13px;color:var(--gray-500);margin-bottom:24px;line-height:1.7;"></div>
     <div style="display:flex;flex-direction:column;gap:10px;">
       <button onclick="rpResetAll()" style="padding:14px;background:var(--primary);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새 보고서 작성하기</button>
-      <button onclick="document.getElementById('rp-complete-modal').style.display='none';switchTab('history',document.getElementById('tab-history'))" style="padding:12px;background:var(--gray-100);color:var(--gray-600);border:none;border-radius:14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">📋 이력 확인하기</button>
+      <button onclick="document.getElementById('rp-complete-modal').style.display='none';switchTab('settings',null);setTimeout(()=>document.getElementById('history-list').scrollIntoView({behavior:'smooth'}),300);" style="padding:12px;background:#f7f7f7;color:#484848;border:0.5px solid #e0e0e0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">📋 이력 확인</button>
     </div>
   </div>
 </div>
@@ -549,7 +552,6 @@ function switchTab(name,btn){
   const pageEl = document.getElementById('page-'+name);
   if(pageEl) pageEl.classList.add('active');
   if(name==='settings')loadSettingsForm();
-  if(name==='history')renderHistory();
   if(name==='report')initReportTab();
 }
 
@@ -1782,9 +1784,10 @@ window.addEventListener('resize', autoFitAllChips);
   const last = localStorage.getItem('ssak_last_tab');
   const valid = ['quote','report','sign','history'];
   if (last && valid.includes(last)) {
-    const tab = document.querySelector(\`.tab[data-tab="\${last}"]\`) ||
-                document.querySelector(\`.tab[onclick*="'\${last}'"]\`);
-    if (tab) switchTab(last, tab);
+    const tabs = document.querySelectorAll('.tab');
+    let found = null;
+    tabs.forEach(t => { if (t.getAttribute('onclick') && t.getAttribute('onclick').includes("'"+last+"'")) found = t; });
+    if (found) switchTab(last, found);
   }
 })();
 </script>
