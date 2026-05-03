@@ -18,7 +18,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* 프로필 헤더 */
 .profile-header{
   background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
-  padding:60px 24px 24px;position:relative;
+  padding:60px 24px 24px;
   border-bottom:0.5px solid #f5e8e4;
 }
 .profile-header::after{
@@ -80,7 +80,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <div class="shell">
 
   <!-- 프로필 헤더 -->
-  <div class="profile-header">
+  <div class="profile-header ds-app-header">
     <div class="profile-header-inner">
       <div class="profile-avatar">🧹</div>
       <div class="profile-info">
@@ -269,6 +269,7 @@ function copyBookingLink() {
 }
 
 init();
+initStickyHeader(); // 스크롤 그림자 헤더
 
 // 초기화 (로그아웃)
 function confirmLogout() {

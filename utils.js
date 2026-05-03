@@ -118,3 +118,26 @@ async function apiFetch(path, options = {}) {
   if (!data.success && data.error) throw new Error(data.error);
   return data;
 }
+
+// ── 고정 헤더 스크롤 감지 ─────────────────────────────────────
+// IntersectionObserver로 scroll 이벤트 없이 성능 최적화
+// 사용법: DOMContentLoaded 후 initStickyHeader() 호출
+// 헤더 요소에 .ds-app-header 클래스가 있으면 자동 적용
+function initStickyHeader() {
+  const headers = document.querySelectorAll('.ds-app-header');
+  if (!headers.length) return;
+
+  // 페이지 최상단에 1px 투명 sentinel 삽입
+  const sentinel = document.createElement('div');
+  sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;';
+  document.body.style.position = 'relative';
+  document.body.insertBefore(sentinel, document.body.firstChild);
+
+  new IntersectionObserver(
+    ([entry]) => {
+      const scrolled = !entry.isIntersecting;
+      headers.forEach(h => h.classList.toggle('scrolled', scrolled));
+    },
+    { threshold: 0 }
+  ).observe(sentinel);
+}

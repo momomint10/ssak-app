@@ -483,3 +483,24 @@ html, body {
 .ds-flex-col { display: flex; flex-direction: column; gap: 8px; }
 .ds-flex-between { display: flex; align-items: center; justify-content: space-between; }
 .ds-grow { flex: 1; }
+
+/* ══════════════════════════════════════════════════════════════
+   15. 공통 앱 헤더 (고정) — .ds-app-header
+   ─────────────────────────────────────────────────────────────
+   모든 페이지 헤더에 class="... ds-app-header" 추가하면 적용.
+   페이지 고유 padding·overflow는 기존 클래스에서 유지.
+═══════════════════════════════════════════════════════════════ */
+.ds-app-header {
+  position: sticky;
+  top: 0;
+  /* iOS 노치·Dynamic Island 안전 영역 자동 확보 */
+  padding-top: max(env(safe-area-inset-top, 0px), 0px);
+  z-index: 100;
+  /* 스크롤 전: 그림자 없음 */
+  box-shadow: none;
+  transition: box-shadow .22s ease;
+}
+/* 스크롤 시 JS가 .scrolled 추가 → 부드러운 그림자 */
+.ds-app-header.scrolled {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, .07);
+}
