@@ -60,7 +60,11 @@
   box-shadow: 0 4px 24px rgba(0,0,0,.12);
   display:flex; align-items:center; gap:14px;
   cursor:pointer;
-  transition: transform .1s; position: relative; z-index: 2;
+  transition: transform .1s, margin-top .28s ease; position: relative; z-index: 2;
+}
+/* 헤더 축소 시 today-card margin 복원 — 헤더 뒤에 가려지는 현상 방지 */
+.home-header.scrolled ~ .today-card {
+  margin-top: 12px;
 }
 .today-card:active { transform:scale(.98); }
 .today-card-ico {
