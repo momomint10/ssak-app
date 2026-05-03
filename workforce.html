@@ -19,12 +19,21 @@
 html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--g50);color:var(--g900);}
 .shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:90px;}
 /* ── 헤더 ── */
-.hd{background:#fff;padding:12px 16px 0;border-bottom:1px solid var(--g200);position:sticky;top:0;z-index:50;}
+.hd{
+  background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
+  padding:12px 16px 0;border-bottom:0.5px solid #f5e8e4;
+  position:sticky;top:0;z-index:50;
+  position:relative;
+}
+.hd::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
+}
 .hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .hd-title{font-size:18px;font-weight:900;}
 .btn-hd{background:#FF385C;color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
 .tabs{display:flex;}
-.tab-row{display:flex;gap:6px;padding:10px 16px;background:#fff;border-bottom:0.5px solid #f0f0f0;overflow-x:auto;}
+.tab-row{display:flex;gap:6px;padding:10px 16px;background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);border-bottom:0.5px solid #f5e8e4;overflow-x:auto;}
 .tab{flex-shrink:0;padding:7px 16px;font-size:12px;font-weight:600;color:#767676;cursor:pointer;border:none;background:#f3f3f3;border-radius:20px;font-family:inherit;white-space:nowrap;}
 .tab.on{color:#fff;background:#FF385C;}
 /* ── 필터 ── */
