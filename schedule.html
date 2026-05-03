@@ -6,13 +6,13 @@
 <title>싹싹 — 스케줄</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
-<meta name="theme-color" content="#00C896">
+<meta name="theme-color" content="#FF385C">
 <link rel="stylesheet" href="design.css">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
-:root{--primary:#00C896;--primary-dark:#00A87A;--primary-light:#E6FAF5;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--red:#EF4444;--amber:#F59E0B;--blue:#3B82F6;--purple:#8B5CF6;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
+:root{--primary:#FF385C;--primary-dark:#E31C5F;--primary-light:#E6FAF5;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--red:#EF4444;--amber:#F59E0B;--blue:#3B82F6;--purple:#8B5CF6;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:var(--gray-900);}
+html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--gray-50);color:var(--gray-900);}
 .shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
 
 /* 헤더 */
@@ -327,7 +327,7 @@ function renderCalendar() {
     dotMap[s.date].push(s.status);
   });
 
-  const STATUS_COLOR = {confirmed:'#6366F1', inprogress:'#EA580C', done:'#00C896', cancelled:'#DC2626'};
+  const STATUS_COLOR = {confirmed:'#6366F1', inprogress:'#EA580C', done:'#FF385C', cancelled:'#DC2626'};
 
   let html = '';
   const totalCells = Math.ceil((firstDay + lastDate) / 7) * 7;

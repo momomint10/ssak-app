@@ -7,34 +7,35 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="싹싹">
-<meta name="theme-color" content="#00C896">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#FF385C">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
 <link rel="stylesheet" href="design.css">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
-  background: linear-gradient(135deg, var(--c-pr) 0%, var(--c-pr-d) 100%);
-  padding: 52px 20px 24px;
+  background: #ffffff;
+  padding: 52px 20px 20px;
   position: relative; overflow: hidden;
+  border-bottom: 0.5px solid #f0f0f0;
 }
 .home-header::before {
   content:''; position:absolute; top:-50px; right:-50px;
-  width:180px; height:180px; background:rgba(255,255,255,.08); border-radius:50%;
+  width:180px; height:180px; background:rgba(255,56,92,.04); border-radius:50%;
 }
 .hd-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.hd-greeting { font-size:13px; color:rgba(255,255,255,.8); margin-bottom:3px; }
-.hd-name { font-size:22px; font-weight:900; color:#fff; }
+.hd-greeting { font-size:13px; color:#767676; margin-bottom:3px; letter-spacing:-.1px; }
+.hd-name { font-size:22px; font-weight:900; color:#222222; }
 .hd-actions { display:flex; gap:8px; }
 .hd-icon-btn {
   width:40px; height:40px; border-radius:50%;
-  background:rgba(255,255,255,.18); border:none;
+  background:#f3f3f3; border:none;
   display:flex; align-items:center; justify-content:center;
-  font-size:18px; cursor:pointer; position:relative; color:#fff;
+  font-size:18px; cursor:pointer; position:relative; color:#222222;
 }
 .hd-notif-dot {
   position:absolute; top:7px; right:7px;
   width:8px; height:8px; border-radius:50%;
-  background:#FFD600; border:1.5px solid rgba(0,200,150,.6);
+  background:#FFD600; border:1.5px solid rgba(255,56,92,.6);
 }
 
 /* ── 오늘 할 일 카드 ──────────────────────────────────────── */
@@ -100,7 +101,7 @@
 .recent-card { background:#fff; border-radius:18px; overflow:hidden; box-shadow: 0 1px 6px rgba(0,0,0,.06); }
 .recent-row {
   display:flex; align-items:center; gap:12px;
-  padding:14px 16px; border-bottom:1px solid var(--c-g100);
+  padding:14px 16px; border-bottom:0.5px solid #f0f0f0;
   cursor:pointer;
 }
 .recent-row:last-child { border-bottom:none; }

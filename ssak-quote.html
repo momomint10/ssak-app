@@ -6,7 +6,7 @@
 <title>싹싹 — SMS 자동응답</title>
 <!-- PWA 홈화면 아이콘 설정 -->
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#00C896">
+<meta name="theme-color" content="#FF385C">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,13 +16,13 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
-<meta name="theme-color" content="#00C896">
+<meta name="theme-color" content="#FF385C">
 <link rel="stylesheet" href="design.css">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
-:root{--primary:#00C896;--primary-dark:#00A87A;--primary-light:#E6FAF5;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--red:#EF4444;--blue:#3B82F6;--amber:#F59E0B;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
+:root{--primary:#FF385C;--primary-dark:#E31C5F;--primary-light:#E6FAF5;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--red:#EF4444;--blue:#3B82F6;--amber:#F59E0B;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:var(--gray-900);}
+html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--gray-50);color:var(--gray-900);}
 .shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
 .header{background:#fff;border-bottom:1px solid var(--gray-200);padding:52px 20px 0;position:sticky;top:0;z-index:50;}
 .header-inner{display:flex;align-items:center;justify-content:space-between;}
@@ -30,9 +30,10 @@ html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:
 .back-btn{width:36px;height:36px;border-radius:50%;background:var(--gray-100);border:none;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
 .header-title{font-size:17px;font-weight:900;}
 .settings-btn{width:36px;height:36px;border-radius:50%;background:var(--gray-100);border:none;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
-.tabs{display:flex;margin-top:16px;border-bottom:2px solid var(--gray-200);}
-.tab{flex:1;padding:11px 0;text-align:center;font-size:13px;font-weight:600;color:var(--gray-400);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;}
-.tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+
+.tab-wrap{display:flex;gap:6px;padding:12px 16px;background:#fff;overflow-x:auto;border-bottom:0.5px solid #f0f0f0;}
+.tab{flex-shrink:0;padding:7px 14px;text-align:center;font-size:12px;font-weight:600;color:#767676;cursor:pointer;border-radius:20px;border:none;background:#f3f3f3;font-family:inherit;transition:all 0.18s;white-space:nowrap;}
+.tab.active{color:#fff;background:#FF385C;}
 .content{padding:20px;}
 .page{display:none;padding:14px 16px 24px;}
 .page.active{display:block;}
@@ -64,7 +65,7 @@ select.form-input{cursor:pointer;}
 .send-btn{padding:12px 18px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;flex-shrink:0;}
 .send-btn:disabled{background:var(--gray-300);cursor:not-allowed;}
 .api-warning{font-size:11.5px;color:var(--amber);background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:8px 12px;}
-.btn-primary{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;box-shadow:0 4px 16px rgba(0,200,150,0.3);display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
+.btn-primary{width:100%;padding:13px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;box-shadow:0 4px 16px rgba(255,56,92,0.3);display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
 .btn-primary:active{transform:scale(0.98);}
 .btn-secondary{width:100%;padding:14px;background:#fff;color:var(--gray-700);border:1.5px solid var(--gray-200);border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;}
 .tpl-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px 18px;margin-bottom:10px;box-shadow:var(--shadow);}
@@ -99,7 +100,7 @@ select.form-input{cursor:pointer;}
 .history-phone{font-size:13px;font-weight:700;color:var(--primary-dark);}
 .history-time{font-size:11px;color:var(--gray-400);}
 .history-msg{font-size:12px;color:var(--gray-500);line-height:1.5;white-space:pre-wrap;max-height:60px;overflow:hidden;}
-.history-night{display:inline-block;background:#EEF2FF;color:#6366F1;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-bottom:4px;}
+.history-night{display:inline-block;background:#EEF2FF;color:#6366F1;font-size:10px;font-weight:700;padding:2px 6px;border-radius:12px;margin-bottom:4px;}
 .night-active{background:var(--primary) !important;}
 /* 보고서 항목 선택 버튼 */
 .rp-item-btn{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:8px;border:1px solid var(--gray-200);background:var(--gray-100);cursor:pointer;user-select:none;}
@@ -129,7 +130,7 @@ select.form-input{cursor:pointer;}
 .price-item-label{font-size:11px;color:var(--gray-500);margin-bottom:6px;}
 .price-item-input{width:100%;padding:9px 8px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;font-weight:700;text-align:center;outline:none;}
 .price-item-input:focus{border-color:var(--primary);}
-.save-settings-btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,200,150,0.3);}
+.save-settings-btn{width:100%;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(255,56,92,0.3);}
 .inq-item{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow);cursor:pointer;}
 .inq-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0;}
 .badge{display:inline-flex;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;}
@@ -181,7 +182,7 @@ select.form-input{cursor:pointer;}
     </div>
     <button class="settings-btn" onclick="switchTab('settings',null)">⚙️</button>
   </div>
-  <div class="tabs">
+  <div class="tab-wrap">
     <button class="tab active" id="tab-quote"    onclick="switchTab('quote',this)">⚡ 견적발송</button>
     <button class="tab"        id="tab-contract" onclick="switchTab('contract',this)">✍️ 계약서</button>
     <button class="tab"        id="tab-report"   onclick="switchTab('report',this)">📸 완료보고서</button>
@@ -226,7 +227,7 @@ select.form-input{cursor:pointer;}
     <div id="send-phone-fallback" style="display:none;margin-bottom:10px;overflow:hidden;transition:all .2s;">
       <div style="font-size:11.5px;color:var(--gray-500);margin-bottom:5px;">고객 연락처가 없습니다. 번호를 입력해 주세요.</div>
       <input class="phone-input" id="send-phone-input" placeholder="010-0000-0000" type="tel" inputmode="tel"
-             style="width:100%;padding:11px 13px;border:1.5px solid var(--primary);border-radius:10px;font-size:14px;font-family:inherit;"/>
+             style="width:100%;padding:11px 13px;border:1.5px solid var(--primary);border-radius:12px;font-size:14px;font-family:inherit;"/>
     </div>
     <!-- 메인 발송 버튼 -->
     <button class="btn-primary" id="send-btn" onclick="sendSMSMain()" style="margin-bottom:8px;">
@@ -242,7 +243,7 @@ select.form-input{cursor:pointer;}
 <div id="page-contract" class="page">
   <div class="card" style="text-align:center;padding:32px 20px 28px;">
     <div style="font-size:48px;margin-bottom:14px;">✍️</div>
-    <div style="font-size:18px;font-weight:800;color:var(--gray-900);margin-bottom:8px;">계약서 작성</div>
+    <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);margin-bottom:8px;">계약서 작성</div>
     <div style="font-size:13px;color:var(--gray-500);line-height:1.7;margin-bottom:24px;">
       업주가 먼저 서명 후 고객에게<br>서명 링크를 SMS로 발송합니다
     </div>
@@ -495,11 +496,11 @@ select.form-input{cursor:pointer;}
 <div id="rp-complete-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
   <div style="background:#fff;border-radius:20px;padding:32px 24px;text-align:center;max-width:320px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.22);">
     <div style="font-size:52px;margin-bottom:14px;">✅</div>
-    <div style="font-size:18px;font-weight:800;color:var(--gray-900);margin-bottom:8px;">보고서 발송 완료!</div>
+    <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);margin-bottom:8px;">보고서 발송 완료!</div>
     <div id="rp-complete-info" style="font-size:13px;color:var(--gray-500);margin-bottom:24px;line-height:1.7;"></div>
     <div style="display:flex;flex-direction:column;gap:10px;">
-      <button onclick="rpResetAll()" style="padding:14px;background:var(--primary);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새 보고서 작성하기</button>
-      <button onclick="document.getElementById('rp-complete-modal').style.display='none';switchTab('history',document.getElementById('tab-history'))" style="padding:12px;background:var(--gray-100);color:var(--gray-600);border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">📋 이력 확인하기</button>
+      <button onclick="rpResetAll()" style="padding:14px;background:var(--primary);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새 보고서 작성하기</button>
+      <button onclick="document.getElementById('rp-complete-modal').style.display='none';switchTab('history',document.getElementById('tab-history'))" style="padding:12px;background:var(--gray-100);color:var(--gray-600);border:none;border-radius:14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">📋 이력 확인하기</button>
     </div>
   </div>
 </div>
@@ -699,7 +700,7 @@ async function sendSMS(){
 }
 
 let nextInqId=3;
-const avatarColors=['#00C896','#3B82F6','#8B5CF6','#F59E0B','#EF4444'];
+const avatarColors=['#FF385C','#3B82F6','#8B5CF6','#F59E0B','#EF4444'];
 const statusBadge={'답변 대기':'badge-wait','견적 발송':'badge-sent','신규':'badge-new'};
 
 function quickQuote(name,phone,size){switchTab('quote',document.querySelectorAll('.tab')[0]);document.getElementById('q-name').value=name;document.getElementById('q-phone').value=phone;document.getElementById('q-size').value=size;calcQuote();window.scrollTo({top:0,behavior:'smooth'});}
@@ -767,7 +768,7 @@ function renderBookingList() {
     const statusColor = STATUS_COLORS[b.status] || '#888';
     const statusLabel = STATUS_LABELS[b.status] || b.status;
 
-    return `<div style="border:1px solid #e8edf2;border-radius:10px;padding:14px;margin-bottom:10px;background:#fff;">
+    return `<div style="border:1px solid #e8edf2;border-radius:12px;padding:14px;margin-bottom:10px;background:#fff;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
         <div>
           <span style="font-size:15px;font-weight:700;color:#1a1f36;">${b.name}</span>
@@ -1369,7 +1370,7 @@ function rpRenderPhotos(draftPhotos){
       const phShow  = saved ? 'display:none;' : '';
       const border  = saved ? 'var(--primary)' : 'var(--gray-200)';
       const badge   = saved
-        ? `<div class="rp-saved-badge" style="position:absolute;top:4px;left:4px;background:var(--primary);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;z-index:1;">✓ 저장됨</div>`
+        ? `<div class="rp-saved-badge" style="position:absolute;top:4px;left:4px;background:var(--primary);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:12px;z-index:1;">✓ 저장됨</div>`
         : '';
       const delBtn  = saved
         ? `<button onclick="rpDeletePhoto('${key}','${type}',this)" style="position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:none;font-size:13px;line-height:1;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;">×</button>`

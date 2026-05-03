@@ -7,8 +7,8 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');
   :root{
-    --primary:#00C896;
-    --primary-dark:#009E78;
+    --primary:#FF385C;
+    --primary-dark:#D4144E;
     --primary-light:#E6FBF5;
     --brown:#2e1f0e;
     --brown-mid:#5c3d1e;
@@ -26,7 +26,7 @@
     --ct-border:#B2DFDB;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Noto Sans KR',sans-serif;background:#f0f0f0;min-height:100vh;}
+  body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:#f0f0f0;min-height:100vh;}
   .app{max-width:480px;margin:0 auto;background:var(--cream);min-height:100vh;}
 
   /* ── 상태 화면 ── */
@@ -64,60 +64,60 @@
   .ow-col:last-child{margin-bottom:0;}
   .ow-label{display:block;font-size:11.5px;font-weight:700;color:var(--gray-700);margin-bottom:5px;}
   .ow-req{color:#e53935;}
-  .ow-input{display:block;width:100%;padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:14px;font-family:inherit;color:var(--gray-900);background:#fff;transition:border-color .15s;-webkit-appearance:none;appearance:none;}
+  .ow-input{display:block;width:100%;padding:11px 13px;border:1.5px solid var(--gray-200);border-radius:12px;font-size:14px;font-family:inherit;color:var(--gray-900);background:#fff;transition:border-color .15s;-webkit-appearance:none;appearance:none;}
   .ow-input:focus{outline:none;border-color:var(--primary);background:#fff;}
   .ow-input::placeholder{color:#bbb;}
   select.ow-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='none' stroke='%23757575' stroke-width='1.5' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;cursor:pointer;}
 
   /* 추가서비스 체크박스 */
   .extra-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .extra-item{display:flex;flex-direction:column;border:1.5px solid var(--gray-200);border-radius:10px;overflow:hidden;transition:border-color .15s;}
+  .extra-item{display:flex;flex-direction:column;border:1.5px solid var(--gray-200);border-radius:12px;overflow:hidden;transition:border-color .15s;}
   .extra-item:has(.extra-cb:checked){border-color:var(--primary);}
   .extra-item-top{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;background:#fff;}
   .extra-item:has(.extra-cb:checked) .extra-item-top{background:var(--primary-light);}
   .extra-cb{width:16px;height:16px;accent-color:var(--primary);flex-shrink:0;}
   .extra-item-label{font-size:12px;font-weight:600;color:var(--gray-700);}
   .extra-item:has(.extra-cb:checked) .extra-item-label{color:var(--primary-dark);}
-  .extra-price-row{display:none;align-items:center;gap:4px;padding:6px 12px 8px;background:var(--primary-light);border-top:1px solid rgba(0,200,150,.15);}
+  .extra-price-row{display:none;align-items:center;gap:4px;padding:6px 12px 8px;background:var(--primary-light);border-top:1px solid rgba(255,56,92,.15);}
   .extra-item:has(.extra-cb:checked) .extra-price-row{display:flex;}
   .extra-price-input{flex:1;border:1.5px solid var(--primary);border-radius:6px;padding:5px 8px;font-size:12px;font-family:inherit;color:var(--gray-900);background:#fff;text-align:right;min-width:0;-webkit-appearance:none;}
   .extra-price-unit{font-size:11px;color:var(--primary-dark);font-weight:700;flex-shrink:0;}
-  .extra-total-box{display:none;background:var(--primary-light);border:1.5px solid var(--primary);border-radius:10px;padding:12px 14px;margin-top:8px;}
+  .extra-total-box{display:none;background:var(--primary-light);border:1.5px solid var(--primary);border-radius:12px;padding:12px 14px;margin-top:8px;}
   .extra-total-box.visible{display:block;}
   .extra-total-row{display:flex;justify-content:space-between;font-size:12px;color:var(--primary-dark);margin-bottom:3px;}
-  .extra-total-sum{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--brown);border-top:1px solid rgba(0,200,150,.2);padding-top:6px;margin-top:4px;}
+  .extra-total-sum{display:flex;justify-content:space-between;font-size:13px;font-weight:800;color:var(--brown);border-top:1px solid rgba(255,56,92,.2);padding-top:6px;margin-top:4px;}
 
   /* 서명 캔버스 */
-  .sig-wrap{position:relative;background:#fafafa;border:2px dashed var(--gray-200);border-radius:12px;overflow:hidden;transition:border-color .15s;}
+  .sig-wrap{position:relative;background:#fafafa;border:2px dashed var(--gray-200);border-radius:14px;overflow:hidden;transition:border-color .15s;}
   .sig-wrap.signed{border-color:var(--primary);border-style:solid;}
   .sig-guide{position:absolute;bottom:18px;left:16px;right:16px;border-bottom:1.5px solid var(--gray-200);pointer-events:none;}
   .sig-guide-label{position:absolute;bottom:22px;left:0;font-size:10px;color:var(--gray-400);}
   .ow-sig-canvas{display:block;width:100%;height:130px;touch-action:none;cursor:crosshair;background:transparent;}
   .sig-btns{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:10px;}
-  .btn-clear{padding:12px;border-radius:10px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;}
-  .btn-send{padding:12px;border-radius:10px;border:none;background:var(--brown);color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .btn-clear{padding:12px;border-radius:12px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;}
+  .btn-send{padding:12px;border-radius:12px;border:none;background:var(--brown);color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
   .btn-send:disabled{background:var(--gray-200);color:var(--gray-400);cursor:not-allowed;}
   .ow-hint{font-size:11.5px;color:var(--gray-400);margin-top:10px;line-height:1.65;display:flex;align-items:flex-start;gap:5px;}
 
   /* ── 고객 서명 화면 ── */
   .content{padding:14px 14px 100px;}
-  .agree-box{display:flex;align-items:flex-start;gap:10px;background:var(--primary-light);border:1px solid var(--primary);border-radius:12px;padding:13px;margin-bottom:14px;}
+  .agree-box{display:flex;align-items:flex-start;gap:10px;background:var(--primary-light);border:1px solid var(--primary);border-radius:14px;padding:13px;margin-bottom:14px;}
   .agree-box input{width:18px;height:18px;margin-top:1px;flex-shrink:0;accent-color:var(--primary-dark);}
   .agree-text{font-size:12px;color:var(--primary-dark);line-height:1.65;font-weight:500;}
   .sign-section{background:#fff;border:1.5px solid var(--primary);border-radius:14px;padding:16px;margin-bottom:14px;}
   .sign-section-title{font-size:14px;font-weight:800;color:var(--brown);margin-bottom:4px;}
   .sign-section-desc{font-size:12px;color:var(--gray-500);margin-bottom:12px;}
-  .cust-sig-wrap{position:relative;background:#fafafa;border:1.5px dashed var(--gray-200);border-radius:10px;overflow:hidden;}
+  .cust-sig-wrap{position:relative;background:#fafafa;border:1.5px dashed var(--gray-200);border-radius:12px;overflow:hidden;}
   .cust-sig-wrap.signed{border-color:var(--primary);border-style:solid;}
   #sig-canvas{display:block;width:100%;height:100px;touch-action:none;cursor:crosshair;}
   .cust-guide{position:absolute;bottom:16px;left:12px;right:12px;border-bottom:1px solid var(--gray-200);pointer-events:none;}
   .btn-row{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:10px;}
-  .btn-sig-clear{padding:11px;background:#fff;color:var(--gray-500);border:1.5px solid var(--gray-200);border-radius:10px;font-family:inherit;font-size:13px;cursor:pointer;font-weight:600;}
-  .btn-confirm{padding:11px;background:var(--brown);color:#fff;border:none;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+  .btn-sig-clear{padding:11px;background:#fff;color:var(--gray-500);border:1.5px solid var(--gray-200);border-radius:12px;font-family:inherit;font-size:13px;cursor:pointer;font-weight:600;}
+  .btn-confirm{padding:11px;background:var(--brown);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
   .btn-confirm:disabled{background:var(--gray-200);color:var(--gray-400);cursor:not-allowed;}
 
   /* ── 계약서 종이 (PDF 대상) ── */
-  .contract-paper{background:#fff;border:1px solid #ccc;border-radius:8px;padding:0;margin-bottom:14px;font-family:'Noto Sans KR',sans-serif;overflow:hidden;}
+  .contract-paper{background:#fff;border:1px solid #ccc;border-radius:8px;padding:0;margin-bottom:14px;font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;overflow:hidden;}
   .ct-brand{background:var(--ct-head);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
   .ct-brand-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:0.3px;}
   .ct-brand-num{font-size:9px;color:rgba(255,255,255,.65);letter-spacing:0.3px;margin-top:2px;}
@@ -144,8 +144,8 @@
 
   /* 전송 완료 화면 */
   .done-card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:24px;margin-bottom:14px;text-align:center;}
-  .btn-primary{display:block;width:100%;padding:14px;background:var(--brown);color:#fff;text-align:center;border:none;border-radius:12px;text-decoration:none;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;margin-bottom:10px;}
-  .btn-outline{display:block;width:100%;padding:13px;background:#fff;color:var(--brown);border:1.5px solid var(--brown);border-radius:12px;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;text-align:center;text-decoration:none;}
+  .btn-primary{display:block;width:100%;padding:14px;background:var(--brown);color:#fff;text-align:center;border:none;border-radius:14px;text-decoration:none;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;margin-bottom:10px;}
+  .btn-outline{display:block;width:100%;padding:13px;background:#fff;color:var(--brown);border:1.5px solid var(--brown);border-radius:14px;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;text-align:center;text-decoration:none;}
 
   .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#1E2130;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -204,7 +204,7 @@
         </div>
         <div style="font-size:13px;color:var(--gray-500);line-height:1.6;">고객이 서명을 완료하면<br>양측에 계약서 PDF가 자동 발송됩니다.</div>
       </div>
-      <div style="background:#fff;border:1px solid var(--gray-200);border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="background:#fff;border:1px solid var(--gray-200);border-radius:14px;padding:14px;margin-bottom:14px;">
         <div style="font-size:11px;font-weight:700;color:var(--brown);margin-bottom:6px;">🔗 서명 링크</div>
         <a id="owner-done-link" style="font-size:11.5px;color:var(--primary-dark);word-break:break-all;line-height:1.6;display:block;" href="#"></a>
       </div>

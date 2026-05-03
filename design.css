@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
 /*
  * 싹싹(Ssak-ssak) 공통 디자인 시스템
  * 토스·에어비앤비 스타일 참고
@@ -6,22 +8,26 @@
 
 /* ── 1. 색상 토큰 ──────────────────────────────────────────────── */
 :root {
-  /* Primary — 브랜드 단일 컬러 (기존 초록 유지, 전 페이지 통일) */
-  --c-pr:    #00C896;
-  --c-pr-d:  #00A87A;
-  --c-pr-l:  #E6FAF5;
-  --c-pr-xl: #F0FDF9;
+  /* Primary — Airbnb Rausch (따뜻한 코랄) */
+  --c-pr:    #FF385C;
+  --c-pr-d:  #E31C5F;
+  --c-pr-l:  #FFF0F3;
+  --c-pr-xl: #FFF8F9;
+  /* Secondary — Babu (기존 그린 유지, 완료/성공 상태) */
+  --c-teal:  #00C896;
+  --c-teal-d:#00A87A;
+  --c-teal-l:#E6FAF5;
 
   /* Neutral */
-  --c-bg:    #F8FAFB;   /* 앱 배경 */
+  --c-bg:    #F7F7F7;   /* 앱 배경 - Airbnb cream */
   --c-white: #FFFFFF;
   --c-g100:  #F1F4F6;
   --c-g200:  #E4E9EE;
   --c-g300:  #C8D0DA;
   --c-g400:  #9AA5B4;   /* placeholder, 비활성 */
-  --c-g500:  #6B7684;   /* secondary text */
-  --c-g700:  #3D4A5C;   /* body text */
-  --c-g900:  #1A1F36;   /* title text */
+  --c-g500:  #767676;   /* secondary text - Airbnb Foggy */
+  --c-g700:  #484848;   /* body text - Airbnb Hof */
+  --c-g900:  #222222;   /* title text - Airbnb Hof */
 
   /* Semantic */
   --c-red:   #FF3B30;
@@ -29,10 +35,10 @@
   --c-blue:  #3B82F6;
 
   /* ── 2. 간격 & 반경 ─────────────────────────────────────────── */
-  --r-sm:  10px;
-  --r-md:  14px;
-  --r-lg:  18px;
-  --r-xl:  24px;
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-xl:  20px;
   --r-full: 9999px;
 
   --sp-xs: 4px;
@@ -40,10 +46,10 @@
   --sp-md: 16px;
   --sp-lg: 24px;
 
-  /* ── 3. 그림자 ───────────────────────────────────────────────── */
-  --sh-sm: 0 1px 6px rgba(0,0,0,.06);
-  --sh-md: 0 2px 12px rgba(0,0,0,.08);
-  --sh-lg: 0 4px 24px rgba(0,0,0,.10);
+  /* ── 3. 그림자 — Airbnb 3레이어 시스템 ──────────────────────── */
+  --sh-sm: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 8px;
+  --sh-md: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.05) 0px 4px 12px, rgba(0,0,0,0.12) 0px 8px 16px;
+  --sh-lg: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 8px 20px, rgba(0,0,0,0.14) 0px 16px 32px;
 
   /* ── 4. 타이포 ───────────────────────────────────────────────── */
   --f-xs:  11px;
@@ -58,7 +64,7 @@
 /* ── 글로벌 리셋 ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
-  font-family: 'Noto Sans KR', -apple-system, sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Noto Sans KR", sans-serif;
   background: var(--c-bg);
   color: var(--c-g900);
   -webkit-tap-highlight-color: transparent;
@@ -88,7 +94,8 @@ html, body {
 
 .ds-btn-primary {
   background: var(--c-pr); color: #fff;
-  padding: 13px 20px; font-size: var(--f-md); width: 100%; border-radius: var(--r-md);
+  padding: 14px 20px; font-size: var(--f-md); width: 100%; border-radius: var(--r-md);
+  font-weight: 600; letter-spacing: -0.2px;
 }
 .ds-btn-secondary {
   background: var(--c-g100); color: var(--c-g700);
@@ -133,6 +140,7 @@ html, body {
 .ds-badge-blue  { background: #EFF6FF; color: #2563EB; }
 .ds-badge-gray  { background: var(--c-g100); color: var(--c-g500); }
 .ds-badge-pr    { background: var(--c-pr-l); color: var(--c-pr-d); }
+.ds-badge-teal  { background: var(--c-teal-l); color: var(--c-teal-d); }
 
 /* ── 스피너 ───────────────────────────────────────────────────── */
 .ds-spin {
@@ -163,7 +171,13 @@ html, body {
   cursor: pointer; padding: 4px 0;
   transition: color .15s;
 }
-.ds-nav-item.on { color: var(--c-pr); font-weight: 800; }
+.ds-nav-item.on { color: var(--c-pr); font-weight: 700; }
+.ds-nav-item.on .ds-nav-ico {
+  background: var(--c-pr-l);
+  border-radius: 8px;
+  padding: 2px 8px;
+  color: var(--c-pr);
+}
 .ds-nav-ico { font-size: 22px; line-height: 1; }
 
 /* ── 토스트 ───────────────────────────────────────────────────── */
@@ -250,8 +264,8 @@ html, body {
  * ════════════════════════════════════════════════════════════════ */
 
 /* ── 1. 타이포그래피 위계 (토스 스타일 명확한 hierarchy) ──────────── */
-.ds-h1 { font-size: 26px; font-weight: 800; color: var(--c-g900); line-height: 1.3; letter-spacing: -.5px; }
-.ds-h2 { font-size: 20px; font-weight: 800; color: var(--c-g900); line-height: 1.35; letter-spacing: -.3px; }
+.ds-h1 { font-size: 26px; font-weight: 700; color: var(--c-g900); line-height: 1.3; letter-spacing: -.44px; }
+.ds-h2 { font-size: 20px; font-weight: 700; color: var(--c-g900); line-height: 1.35; letter-spacing: -.3px; }
 .ds-h3 { font-size: 16px; font-weight: 700; color: var(--c-g900); line-height: 1.4; }
 .ds-body { font-size: 14px; font-weight: 500; color: var(--c-g700); line-height: 1.55; }
 .ds-cap { font-size: 12px; font-weight: 600; color: var(--c-g500); line-height: 1.45; }
@@ -319,10 +333,10 @@ html, body {
 /* ── 5. 통계 카드 (토스 스타일 그라데이션) ─────────────────────────── */
 .ds-stat-card {
   position: relative; overflow: hidden;
-  background: linear-gradient(135deg, var(--c-pr) 0%, var(--c-pr-d) 100%);
+  background: linear-gradient(135deg, #FF385C 0%, #E31C5F 100%);
   color: #fff;
   border-radius: var(--r-xl); padding: 22px 20px;
-  box-shadow: 0 4px 20px rgba(0, 200, 150, .25);
+  box-shadow: 0 4px 20px rgba(255,56,92,.25);
 }
 .ds-stat-card-label { font-size: 13px; font-weight: 700; opacity: .9; margin-bottom: 8px; }
 .ds-stat-card-num { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
@@ -417,7 +431,7 @@ html, body {
   border: none; border-radius: var(--r-md);
   font-family: inherit; font-size: 15px; font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0,200,150,.3);
+  box-shadow: 0 4px 14px rgba(255,56,92,.3);
   transition: transform .12s, box-shadow .12s;
   -webkit-tap-highlight-color: transparent;
 }
