@@ -2,7 +2,7 @@
 const CACHE_NAME = 'ssak-v7';
 const STATIC_ASSETS = [
   '/',
-  '/index.html',
+  '/index.html?v=7',
   '/ssak-quote.html',
   '/booking.html',
   '/schedule.html',
