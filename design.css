@@ -498,7 +498,8 @@ html, body {
   z-index: 100;
   /* 스크롤 전: 그림자 없음 */
   box-shadow: none;
-  transition: box-shadow .22s ease;
+  /* padding 변화까지 함께 애니메이션 */
+  transition: box-shadow .22s ease, padding .28s ease;
 }
 /* 스크롤 시 JS가 .scrolled 추가 → 부드러운 그림자 */
 .ds-app-header.scrolled {

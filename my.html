@@ -21,15 +21,24 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   padding:60px 24px 24px;
   border-bottom:0.5px solid #f5e8e4;
 }
+/* 스크롤 시 헤더 축소 */
+.profile-header.scrolled{ padding:10px 24px 8px; }
 .profile-header::after{
   content:'';position:absolute;bottom:0;left:0;right:0;
   height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
 }
 .profile-header-inner{display:flex;align-items:center;gap:16px;}
-.profile-avatar{width:72px;height:72px;border-radius:50%;background:#FFF5F0;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border:2.5px solid #FF385C;}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:#FFF5F0;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border:2.5px solid #FF385C;
+  transition:width .22s ease,height .22s ease,font-size .22s ease;}
+.profile-header.scrolled .profile-avatar{width:40px;height:40px;font-size:18px;}
 .profile-info{flex:1;}
-.profile-name{font-size:22px;font-weight:700;color:#222222;margin-bottom:4px;letter-spacing:-.3px;}
-.profile-company{font-size:14px;color:#767676;font-weight:500;margin-bottom:6px;}
+.profile-name{font-size:22px;font-weight:700;color:#222222;margin-bottom:4px;letter-spacing:-.3px;
+  transition:font-size .22s ease;}
+.profile-header.scrolled .profile-name{font-size:16px;}
+.profile-company{font-size:14px;color:#767676;font-weight:500;margin-bottom:6px;
+  max-height:24px;overflow:hidden;
+  transition:opacity .18s ease,max-height .28s ease,margin .28s ease;}
+.profile-header.scrolled .profile-company{opacity:0;max-height:0;margin:0;}
 .profile-edit-btn-unused{padding:6px 14px;background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.4);border-radius:20px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
 
 /* 이달 통계 */

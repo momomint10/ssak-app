@@ -18,6 +18,10 @@
   overflow: hidden;  /* ::before 장식 원 클리핑용 */
   border-bottom: 0.5px solid #f5e8e4;
 }
+/* 스크롤 시 헤더 축소 */
+.home-header.scrolled {
+  padding: 10px 20px 8px;
+}
 .home-header::after {
   content:''; position:absolute; bottom:0; left:0; right:0;
   height:3px;
@@ -28,8 +32,14 @@
   width:180px; height:180px; background:rgba(255,56,92,.04); border-radius:50%;
 }
 .hd-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.hd-greeting { font-size:13px; color:#FF385C; font-weight:600; margin-bottom:3px; letter-spacing:-.1px; font-size:12px; }
-.hd-name { font-size:22px; font-weight:900; color:#222222; }
+.hd-greeting { font-size:13px; color:#FF385C; font-weight:600; margin-bottom:3px; letter-spacing:-.1px; font-size:12px;
+  /* 스크롤 시 페이드아웃 */
+  max-height:24px; overflow:hidden;
+  transition: opacity .18s ease, max-height .28s ease, margin .28s ease; }
+.home-header.scrolled .hd-greeting { opacity:0; max-height:0; margin:0; }
+.hd-name { font-size:22px; font-weight:900; color:#222222;
+  transition: font-size .22s ease; }
+.home-header.scrolled .hd-name { font-size:17px; }
 .hd-actions { display:flex; gap:8px; }
 .hd-icon-btn {
   width:40px; height:40px; border-radius:50%;
