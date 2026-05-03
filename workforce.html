@@ -182,7 +182,13 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 .ni.on{color:var(--pr);font-weight:700;}
 .ni-ico{font-size:20px;line-height:1;}
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.92);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:85vw;}
-</style>
+
+    @keyframes skeleton-shimmer {
+      0%{background-position:-400px 0}
+      100%{background-position:400px 0}
+    }
+    [style*="skeleton-shimmer"] > div { background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:800px 100%;animation:skeleton-shimmer 1.4s infinite linear; }
+  </style>
 <script src="utils.js"></script>
 </head>
 <body>
@@ -421,7 +427,16 @@ function setJobRegion(r){curJobRegion=r;renderJobFilters();loadJobs();}
 // ── 인력 목록 ────────────────────────────────────────────────
 async function loadWorkers(){
   const list=document.getElementById('worker-list');
-  list.innerHTML='<div style="text-align:center;padding:30px;"><div class="sp"></div></div>';
+  list.innerHTML = Array(4).fill(`
+    <div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #f0f0f0;animation:skeleton-shimmer 1.4s infinite;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:52px;height:52px;border-radius:50%;background:#f0f0f0;flex-shrink:0;"></div>
+        <div style="flex:1;">
+          <div style="height:14px;background:#f0f0f0;border-radius:4px;margin-bottom:8px;width:60%;"></div>
+          <div style="height:11px;background:#f0f0f0;border-radius:4px;width:80%;"></div>
+        </div>
+      </div>
+    </div>`).join('');
   try{
     let url=SERVER+'/api/workers?';
     if(curRegion!=='전체') url+='region='+encodeURIComponent(curRegion)+'&';
@@ -432,7 +447,7 @@ async function loadWorkers(){
     }
     list.innerHTML=d.data.map(w=>`
       <div class="wcard" onclick="openDet('${w.id}')">
-        <div class="avatar">${w.photo_url?`<img src="${esc(w.photo_url)}" alt="">`:' <span style="font-size:22px;">👤</span>'}</div>
+        <div class="avatar">${w.photo_url?`<img loading="lazy" src="${esc(w.photo_url)}" alt="">`:' <span style="font-size:22px;">👤</span>'}</div>
         <div class="wcard-body">
           <div class="wcard-top">
             <span class="wcard-name"><span class="act-dot"></span>${esc(w.nickname)}</span>
@@ -449,7 +464,16 @@ async function loadWorkers(){
 // ── 채용공고 목록 ─────────────────────────────────────────────
 async function loadJobs(){
   const list=document.getElementById('job-list');
-  list.innerHTML='<div style="text-align:center;padding:30px;"><div class="sp"></div></div>';
+  list.innerHTML = Array(4).fill(`
+    <div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #f0f0f0;animation:skeleton-shimmer 1.4s infinite;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:52px;height:52px;border-radius:50%;background:#f0f0f0;flex-shrink:0;"></div>
+        <div style="flex:1;">
+          <div style="height:14px;background:#f0f0f0;border-radius:4px;margin-bottom:8px;width:60%;"></div>
+          <div style="height:11px;background:#f0f0f0;border-radius:4px;width:80%;"></div>
+        </div>
+      </div>
+    </div>`).join('');
   try{
     let url=SERVER+'/api/jobs?status=open';
     if(curJobRegion&&curJobRegion!=='전체') url+='&region='+encodeURIComponent(curJobRegion);
@@ -493,7 +517,7 @@ async function openDet(id){
     const w=curWorker=d.data;
     const isMine=w.anon_id===getAnon();
     const detAv=document.getElementById('det-emoji');
-    if(w.photo_url){detAv.innerHTML=`<img src="${esc(w.photo_url)}" alt="" style="width:72px;height:72px;border-radius:50%;object-fit:cover;">`;detAv.style.background='transparent';}
+    if(w.photo_url){detAv.innerHTML=`<img loading="lazy" src="${esc(w.photo_url)}" alt="" style="width:72px;height:72px;border-radius:50%;object-fit:cover;">`;detAv.style.background='transparent';}
     else{detAv.innerHTML='<span style="font-size:34px;">👤</span>';detAv.style.background='';}
     document.getElementById('det-name').textContent=w.nickname;
     document.getElementById('det-rate').textContent=fmtRate(w.daily_rate);
@@ -771,7 +795,7 @@ async function loadMyProfile(){
       html+=`<div class="my-card" style="margin-bottom:12px;">
         <div class="my-profile-head">
           <div class="my-avatar">${myProfile.photo_url
-            ?`<img src="${esc(myProfile.photo_url)}" alt="">`
+            ?`<img loading="lazy" src="${esc(myProfile.photo_url)}" alt="">`
             :'<span style="font-size:28px;">👤</span>'}</div>
           <div>
             <div class="my-name">${esc(myProfile.nickname)}</div>
@@ -928,7 +952,7 @@ async function openChat(){
   if(!d.success){toast('오류: '+(d.error||'서버 오류'));return;}
   curChatId=d.data.id;lastMsgTime=null;
   const avEl=document.getElementById('ch-av');
-  if(curWorker.photo_url){avEl.innerHTML=`<img src="${esc(curWorker.photo_url)}" alt="">`;avEl.style.background='transparent';}
+  if(curWorker.photo_url){avEl.innerHTML=`<img loading="lazy" src="${esc(curWorker.photo_url)}" alt="">`;avEl.style.background='transparent';}
   else{avEl.innerHTML='👤';avEl.style.background='';}
   document.getElementById('ch-name').textContent=curWorker.nickname;
   document.getElementById('ch-sub').textContent=fmtRate(curWorker.daily_rate)+' · '+(curWorker.regions||[]).slice(0,2).join(', ');
@@ -979,10 +1003,10 @@ function startPoll(){stopPoll();pollTimer=setInterval(()=>loadMsgs(false),3000);
 function stopPoll(){clearInterval(pollTimer);pollTimer=null;}
 function closeChat(){stopPoll();document.getElementById('ch-ov').classList.remove('on');curChatId=null;}
 
-// ── 초기화 ───────────────────────────────────────────────────
+// ── 초기화 (병렬 로딩) ───────────────────────────────────────
 renderFilters();
 renderJobFilters();
-loadWorkers();
+Promise.all([ loadWorkers(), loadJobs() ]).catch(()=>{});
 // URL 파라미터 탭 전환
 (()=>{ const p=new URLSearchParams(location.search); const t=p.get('tab'); if(t&&['find','job','my'].includes(t)) switchTab(t); })();
 </script>

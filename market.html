@@ -180,7 +180,11 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
   .ch-inp:focus{border-color:var(--pr);background:#fff;}
   .ch-send{background:var(--g900);color:#fff;border:none;border-radius:50%;width:36px;height:36px;flex-shrink:0;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
   .ch-send:disabled{background:var(--g300);}
-</style>
+
+    @keyframes skeleton-shimmer {
+      0%{opacity:1} 50%{opacity:.5} 100%{opacity:1}
+    }
+  </style>
 <script src="utils.js"></script>
 </head>
 <body>
@@ -383,7 +387,12 @@ async function loadFeed(reset=false){
   if(!hasMore) return;
   loading=true;
   const feed = document.getElementById('feed');
-  if(page===0) feed.innerHTML='<div class="loading"><div class="sp"></div></div>';
+  if(page===0) feed.innerHTML = Array(4).fill(`
+    <div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;border:1px solid #f0f0f0;animation:skeleton-shimmer 1.4s infinite;">
+      <div style="height:160px;background:#f0f0f0;border-radius:10px;margin-bottom:10px;"></div>
+      <div style="height:13px;background:#f0f0f0;border-radius:4px;margin-bottom:7px;width:70%;"></div>
+      <div style="height:11px;background:#f0f0f0;border-radius:4px;width:40%;"></div>
+    </div>`).join('');
   try{
     let url = SERVER+'/api/market/listings?page='+page+'&limit=20';
     if(searchKw) url+='&search='+encodeURIComponent(searchKw);
