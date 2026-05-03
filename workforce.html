@@ -492,7 +492,7 @@ async function loadJobs(){
       return `<div class="jcard" onclick="openJobDet('${j.id}')">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
           <div class="jcard-title">${esc(j.title)}</div>
-          <div style="display:flex;gap:4px;flex-shrink:0;margin-left:6px;">\${matchBadge(isMatch,isMine)}</div>
+          <div style="display:flex;gap:4px;flex-shrink:0;margin-left:6px;">${matchBadge(isMatch,isMine)}</div>
         </div>
         <div class="jcard-meta">
           📍 ${esc(j.region)} · 📅 ${j.work_date||'날짜 미정'} · 👥 ${j.headcount||1}명
