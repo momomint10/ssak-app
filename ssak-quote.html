@@ -133,20 +133,22 @@ select.form-input{cursor:pointer;}
 .night-active{background:var(--primary) !important;}
 /* 보고서 항목 선택 버튼 */
 .rp-item-btn{
-  display:flex;align-items:center;gap:8px;padding:9px 12px;
-  border-radius:10px;border:1.5px solid var(--gray-200);
+  display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
+  border-radius:20px;border:1.5px solid var(--gray-200);
   background:#fff;cursor:pointer;user-select:none;
-  transition:background .18s,border-color .18s,box-shadow .18s;
+  font-family:inherit;
+  transition:background .18s,border-color .18s,color .18s,box-shadow .18s,transform .1s;
   -webkit-tap-highlight-color:transparent;
 }
+.rp-item-btn:active{transform:scale(.95);}
 .rp-item-btn.on{
-  background:#FFF0F3;border-color:var(--primary);
-  box-shadow:0 2px 8px rgba(255,56,92,.14);
+  background:var(--primary);border-color:var(--primary);
+  box-shadow:0 3px 10px rgba(255,56,92,.28);
 }
-.rp-item-check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--gray-300);background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;}
-.rp-item-btn.on .rp-item-check{background:var(--primary);border-color:var(--primary);color:#fff;}
-.rp-item-name{font-size:12px;color:var(--gray-700);}
-.rp-item-btn.on .rp-item-name{color:var(--primary-dark);font-weight:600;}
+.rp-item-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--gray-300);background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;transition:background .15s,border-color .15s;}
+.rp-item-btn.on .rp-item-check{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.5);color:#fff;}
+.rp-item-name{font-size:12.5px;color:var(--gray-700);font-weight:600;}
+.rp-item-btn.on .rp-item-name{color:#fff;}
 /* 사진 업로드 */
 .rp-photo-label{position:relative;display:block;cursor:pointer;border-radius:7px;overflow:hidden;background:var(--gray-100);border:1.5px dashed var(--gray-200);}
 .rp-photo-label:hover{border-color:var(--primary);}
@@ -198,10 +200,12 @@ select.form-input{cursor:pointer;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
     /* ── 항목 선택 UI ────────────────────────── */
-    .rp-preset-btn{padding:7px 15px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-600);transition:all .15s;}
-    .rp-preset-btn.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
-    .rp-single-btn{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);transition:all .15s;}
-    .rp-single-btn.on{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
+    .rp-preset-btn{padding:7px 15px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);transition:background .18s,border-color .18s,color .18s,box-shadow .18s,transform .1s;-webkit-tap-highlight-color:transparent;}
+    .rp-preset-btn:active{transform:scale(.95);}
+    .rp-preset-btn.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 3px 10px rgba(255,56,92,.28);}
+    .rp-single-btn{padding:7px 15px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);transition:background .18s,border-color .18s,color .18s,box-shadow .18s,transform .1s;-webkit-tap-highlight-color:transparent;}
+    .rp-single-btn:active{transform:scale(.95);}
+    .rp-single-btn.on{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 3px 10px rgba(255,56,92,.28);}
     .rp-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 8px 5px 12px;border-radius:20px;font-size:12px;font-weight:700;background:var(--primary-light);border:1.5px solid var(--primary);color:var(--primary-dark);}
     .rp-tag-x{width:17px;height:17px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:12px;cursor:pointer;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;font-family:inherit;}
     .rp-add-btn{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;border:1.5px dashed var(--gray-300);background:#fff;color:var(--gray-400);}
