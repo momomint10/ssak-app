@@ -20,7 +20,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
   padding:60px 24px 24px;
   border-bottom:0.5px solid #f5e8e4;
-  position:relative;
+  /* position:relative 제거 → ds-app-header의 position:sticky 적용 */
+  /* position:sticky도 positioned 요소이므로 ::after, .profile-edit-btn의 absolute 정상 작동 */
 }
 /* 스크롤 시 헤더 축소 */
 .profile-header.scrolled{ padding:10px 24px 8px; }
