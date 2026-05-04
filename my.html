@@ -20,6 +20,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
   padding:60px 24px 24px;
   border-bottom:0.5px solid #f5e8e4;
+  position:relative;
 }
 /* 스크롤 시 헤더 축소 */
 .profile-header.scrolled{ padding:10px 24px 8px; }
@@ -39,7 +40,21 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   max-height:24px;overflow:hidden;
   transition:opacity .18s ease,max-height .28s ease,margin .28s ease;}
 .profile-header.scrolled .profile-company{opacity:0;max-height:0;margin:0;}
-.profile-edit-btn-unused{padding:6px 14px;background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.4);border-radius:20px;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+/* 구 버튼 스타일 제거 */
+.profile-edit-btn{
+  position:absolute;top:16px;right:16px;
+  width:36px;height:36px;
+  border-radius:50%;
+  background:rgba(255,56,92,.1);
+  border:1.5px solid rgba(255,56,92,.28);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#FF385C;
+  cursor:pointer;
+  transition:background .18s,transform .1s;
+  -webkit-tap-highlight-color:transparent;
+}
+.profile-edit-btn:active{transform:scale(.88);}
+.profile-header.scrolled .profile-edit-btn{top:10px;}
 
 /* 이달 통계 */
 .stats-bar{background:#fff;margin:0 0 12px;padding:20px 24px;box-shadow:var(--shadow);}
@@ -90,12 +105,12 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
   <!-- 프로필 헤더 -->
   <div class="profile-header ds-app-header">
+    <button class="profile-edit-btn" onclick="goSettings()" aria-label="프로필 수정">✏️</button>
     <div class="profile-header-inner">
       <div class="profile-avatar">🧹</div>
       <div class="profile-info">
         <div class="profile-name" id="my-name">사장님</div>
         <div class="profile-company" id="my-company">업체명 미설정</div>
-        <button class="profile-edit-btn ds-tap" onclick="goSettings()">✏️ 프로필 수정</button>
       </div>
     </div>
   </div>
