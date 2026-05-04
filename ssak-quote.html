@@ -1947,6 +1947,62 @@ window.addEventListener('resize', autoFitAllChips);
     if (found) switchTab(last, found);
   }
 })();
+
+// ── 스케줄에서 원클릭 진입 시 자동 입력 (Phase 2) ───────────────────
+// 다른 탭 복원 로직보다 늦게 실행되어 prefill이 우선됨
+(function applySchedulePrefill() {
+  try {
+    const params = new URLSearchParams(location.search);
+    if (params.get('prefill') !== '1') return;
+    const tab = params.get('tab') || 'quote';
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el && val !== null && val !== undefined) el.value = val; };
+
+    // 탭 자동 전환 (현재 구조: tab-quote, tab-contract, tab-report)
+    const tabIds = { quote: 'tab-quote', report: 'tab-report' };
+    if (tabIds[tab]) {
+      const btn = document.getElementById(tabIds[tab]);
+      if (btn && typeof switchTab === 'function') switchTab(tab, btn);
+    }
+
+    // 견적 탭 자동 입력 (랜딩 → 폼 전환 포함)
+    if (tab === 'quote') {
+      if (typeof showQuoteForm === 'function') showQuoteForm();
+      setVal('q-name',  params.get('name'));
+      setVal('q-phone', params.get('phone'));
+      setVal('q-size',  params.get('size'));
+      // q-type은 value가 영문 코드(move-in/move-out/new/life) — 한글을 매핑
+      const typeKor = params.get('type') || '';
+      const typeMap = {
+        '입주 전 청소':   'move-in',
+        '이사 후 청소':   'move-out',
+        '신축 준공 청소': 'new',
+        '생활 청소':      'life'
+      };
+      const mappedType = typeMap[typeKor];
+      if (mappedType) setVal('q-type', mappedType);
+      setVal('q-date',  params.get('date'));
+      // 평수가 있으면 자동 견적 계산 시도
+      if (typeof calcQuote === 'function' && params.get('size')) {
+        setTimeout(() => { try { calcQuote(); } catch(e){} }, 100);
+      }
+    }
+
+    // 보고서 탭 자동 입력 (랜딩 → 폼 전환 포함)
+    if (tab === 'report') {
+      if (typeof showReportForm === 'function') showReportForm();
+      setVal('rp-name',  params.get('name'));
+      setVal('rp-phone', params.get('phone'));
+      setVal('rp-addr',  params.get('addr'));
+      setVal('rp-size',  params.get('size'));
+      setVal('rp-type',  params.get('type'));
+    }
+
+    // 안내 토스트
+    if (typeof toast === 'function') {
+      setTimeout(() => toast('📋 스케줄 정보가 자동 입력됐습니다'), 200);
+    }
+  } catch(e) { console.log('prefill error:', e.message); }
+})();
 </script>
 <!-- PDF 생성 라이브러리 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>

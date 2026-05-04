@@ -709,6 +709,24 @@ window.onload = async () => {
         );
       }
     }, 200);
+    // 스케줄에서 원클릭 진입 시 자동 입력 (Phase 2)
+    try {
+      const params = new URLSearchParams(location.search);
+      if (params.get('prefill') === '1') {
+        const setVal = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+        setVal('o-cust-name',  params.get('name'));
+        setVal('o-cust-phone', params.get('phone'));
+        setVal('o-addr',       params.get('addr'));
+        setVal('o-type',       params.get('type'));
+        setVal('o-size',       params.get('size'));
+        setVal('o-date',       params.get('date'));
+        const price = params.get('price');
+        if (price) setVal('o-price', String(price).replace(/[^0-9]/g, ''));
+        if (typeof toast === 'function') {
+          setTimeout(() => toast('📋 고객 정보가 자동 입력됐습니다'), 250);
+        }
+      }
+    } catch(e) { console.log('sign prefill error:', e.message); }
     return;
   }
   try {
