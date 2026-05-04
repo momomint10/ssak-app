@@ -1,8 +1,8 @@
 // 싹싹 앱 Service Worker v2.0 (Web Push 지원)
-const CACHE_NAME = 'ssak-v7';
+const CACHE_NAME = 'ssak-v8';
 const STATIC_ASSETS = [
   '/',
-  '/index.html?v=7',
+  '/index.html?v=8',
   '/ssak-quote.html',
   '/booking.html',
   '/schedule.html',
