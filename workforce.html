@@ -30,7 +30,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
 }
 .hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.hd-title{font-size:18px;font-weight:900;}
+.hd-title{font-size:18px;font-weight:900;line-height:1.2;}
+.hd-sub{font-size:11px;font-weight:600;color:#FF385C;letter-spacing:.03em;margin-top:2px;}
 .btn-hd{background:#FF385C;color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
 .tab-row{padding:10px 16px;background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);border-bottom:0.5px solid #f5e8e4;}
 /* Segmented Control 탭 */
@@ -232,14 +233,14 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 <div class="shell">
   <div class="hd">
     <div class="hd-top">
-      <div class="hd-title">👥 인력 매칭</div>
-      <button class="btn-hd" id="hd-btn" onclick="onHdBtn()">👤 프로필 등록</button>
+      <div><div class="hd-title">인력 매칭</div><div class="hd-sub">Recruitment</div></div>
+      <button class="btn-hd" id="hd-btn" onclick="onHdBtn()">프로필 등록</button>
     </div>
     <div class="tab-row">
       <div class="tabs-seg">
-        <button class="tab on" id="tab-find" onclick="switchTab('find')">🔍 인력 찾기</button>
-        <button class="tab" id="tab-job"  onclick="switchTab('job')">💼 채용정보</button>
-        <button class="tab" id="tab-my"   onclick="switchTab('my')">📋 내 현황</button>
+        <button class="tab on" id="tab-find" onclick="switchTab('find')">인력 찾기</button>
+        <button class="tab" id="tab-job"  onclick="switchTab('job')">채용정보</button>
+        <button class="tab" id="tab-my"   onclick="switchTab('my')">내 현황</button>
       </div>
     </div>
   </div>
