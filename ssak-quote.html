@@ -236,6 +236,36 @@ select.form-input{cursor:pointer;}
 
 <!-- 견적 -->
 <div id="page-quote" class="page active">
+<div id="q-landing">
+  <div class="card" style="text-align:center;padding:32px 20px 28px;">
+    <div style="font-size:48px;margin-bottom:14px;">📋</div>
+    <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);margin-bottom:8px;">견적 발송</div>
+    <div style="font-size:13px;color:var(--gray-500);line-height:1.7;margin-bottom:24px;">
+      청소 비용을 자동 계산하고<br>고객에게 SMS로 발송합니다
+    </div>
+    <button class="btn-primary" onclick="showQuoteForm()" style="max-width:280px;margin:0 auto;">
+      📋 견적 작성하기
+    </button>
+  </div>
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title" style="margin-bottom:12px;">📋 견적 발송 안내</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+        <div style="font-size:13px;color:var(--gray-700);line-height:1.6;"><b>고객 정보 입력</b><br>고객명, 연락처, 평수, 청소 유형 입력</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+        <div style="font-size:13px;color:var(--gray-700);line-height:1.6;"><b>금액 자동 계산</b><br>설정된 단가 기준으로 견적 자동 산출</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+        <div style="font-size:13px;color:var(--gray-700);line-height:1.6;"><b>SMS 발송</b><br>홍보 링크 포함 견적 메시지 발송</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="q-form-body" style="display:none;">
   <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
       <div class="card-title" style="margin-bottom:0;">👤 고객 정보</div>
@@ -280,6 +310,7 @@ select.form-input{cursor:pointer;}
     <!-- 복사 fallback -->
     <button class="btn-secondary" onclick="location.href='sign.html'" id="contract-btn" style="display:none;margin-top:8px;">📄 계약서 작성하기</button>
   </div>
+  </div>
 </div>
 
 <!-- 계약서 -->
@@ -322,6 +353,36 @@ select.form-input{cursor:pointer;}
 <!-- 설정 -->
 <!-- 완료보고서 -->
 <div id="page-report" class="page">
+<div id="rp-landing">
+  <div class="card" style="text-align:center;padding:32px 20px 28px;">
+    <div style="font-size:48px;margin-bottom:14px;">📸</div>
+    <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);margin-bottom:8px;">완료 보고서</div>
+    <div style="font-size:13px;color:var(--gray-500);line-height:1.7;margin-bottom:24px;">
+      시공 전/후 사진과 함께<br>완료 보고서를 PDF로 발송합니다
+    </div>
+    <button class="btn-primary" onclick="showReportForm()" style="max-width:280px;margin:0 auto;">
+      📸 보고서 작성하기
+    </button>
+  </div>
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title" style="margin-bottom:12px;">📸 완료 보고서 안내</div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+        <div style="font-size:13px;color:var(--gray-700);line-height:1.6;"><b>항목 설정 및 사진 등록</b><br>청소 항목 선택 후 전·후 사진 등록</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+        <div style="font-size:13px;color:var(--gray-700);line-height:1.6;"><b>보고서 자동 생성</b><br>입력 내용 기반 PDF 보고서 자동 작성</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+        <div style="font-size:13px;color:var(--gray-700);line-height:1.6;"><b>PDF 발송</b><br>완료 보고서를 고객에게 SMS로 전달</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="rp-form-body" style="display:none;">
 
   <!-- 임시저장 배너 -->
   <div id="rp-draft-banner" style="display:none;margin-bottom:12px;">
@@ -452,6 +513,7 @@ select.form-input{cursor:pointer;}
     </button>
   </div>
   <div id="rp-phase-hint" style="text-align:center;font-size:11px;color:var(--gray-400);padding-bottom:4px;"></div>
+  </div>
 </div>
 
 
@@ -584,8 +646,28 @@ function switchTab(name,btn){
   if(btn)btn.classList.add('active');
   const pageEl = document.getElementById('page-'+name);
   if(pageEl) pageEl.classList.add('active');
-  if(name==='settings')loadSettingsForm();
-  if(name==='report')initReportTab();
+  if(name==='settings') loadSettingsForm();
+  // 견적발송: 탭 전환 시 항상 랜딩 화면으로
+  if(name==='quote'){
+    document.getElementById('q-landing').style.display='';
+    document.getElementById('q-form-body').style.display='none';
+  }
+  // 완료보고서: 탭 전환 시 항상 랜딩 화면으로 (initReportTab은 showReportForm에서 호출)
+  if(name==='report'){
+    document.getElementById('rp-landing').style.display='';
+    document.getElementById('rp-form-body').style.display='none';
+  }
+}
+
+// ── 랜딩 → 폼 전환 ───────────────────────────────────────────
+function showQuoteForm(){
+  document.getElementById('q-landing').style.display='none';
+  document.getElementById('q-form-body').style.display='';
+}
+function showReportForm(){
+  document.getElementById('rp-landing').style.display='none';
+  document.getElementById('rp-form-body').style.display='';
+  initReportTab(); // 최초 1회만 초기화 (rpInitialized 플래그로 중복 방지)
 }
 
 function renderExtraChips(){
