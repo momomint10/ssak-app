@@ -6,31 +6,20 @@
 <title>싹싹 — 스케줄</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
-<meta name="theme-color" content="#FF385C">
+<meta name="theme-color" content="#00C896">
 <link rel="stylesheet" href="design.css">
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--primary:#FF385C;--primary-dark:#E31C5F;--primary-light:#FFF0F3;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--red:#EF4444;--amber:#F59E0B;--blue:#3B82F6;--purple:#8B5CF6;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
+:root{--primary:#00C896;--primary-dark:#00A87A;--primary-light:#E6FAF5;--gray-50:#F8FAFB;--gray-100:#F1F4F6;--gray-200:#E4E9EE;--gray-300:#C8D0DA;--gray-400:#9AA5B4;--gray-500:#6B7684;--gray-700:#3D4A5C;--gray-900:#1A1F36;--red:#EF4444;--amber:#F59E0B;--blue:#3B82F6;--purple:#8B5CF6;--radius:16px;--radius-sm:10px;--shadow:0 2px 12px rgba(0,0,0,0.07);}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--gray-50);color:var(--gray-900);}
+html,body{font-family:'Noto Sans KR',sans-serif;background:var(--gray-50);color:var(--gray-900);}
 .shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
 
 /* 헤더 */
-.header{
-  background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
-  border-bottom:0.5px solid #f5e8e4;
-  padding:52px 20px 0;position:sticky;top:0;z-index:100;
-  transition:padding .28s ease,box-shadow .22s ease;
-}
-.header.scrolled{padding:10px 20px 0;box-shadow:0 2px 16px rgba(0,0,0,.07);}
-.header::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;
-  height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
-}
+.header{background:#fff;border-bottom:1px solid var(--gray-200);padding:52px 20px 0;position:sticky;top:0;z-index:50;}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;}
-.header-title{font-size:18px;font-weight:900;line-height:1.2;}
-.header-sub{font-size:11px;font-weight:600;color:#FF385C;letter-spacing:.03em;margin-top:2px;}
-.add-btn-top{width:36px;height:36px;border-radius:50%;background:#FF385C;border:none;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;cursor:pointer;line-height:1;}
+.header-title{font-size:18px;font-weight:900;}
+.add-btn-top{width:36px;height:36px;border-radius:50%;background:var(--primary);border:none;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;cursor:pointer;line-height:1;}
 
 /* 월 네비게이션 */
 .month-nav{background:#fff;padding:0 20px 14px;display:flex;align-items:center;justify-content:space-between;}
@@ -44,25 +33,30 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .cal-wd:first-child{color:#EF4444;}
 .cal-wd:last-child{color:var(--blue);}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
-.cal-day{min-height:44px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:4px 2px;cursor:pointer;transition:background 0.15s;position:relative;}
+.cal-day{min-height:54px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:4px 2px;cursor:pointer;transition:background 0.15s;position:relative;}
 .cal-day:active{background:var(--gray-100);}
 .cal-day.other-month .cal-num{color:var(--gray-300);}
-.cal-day.today .cal-num{background:#FF385C;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
-.cal-day.selected{background:#FFF0EC;}
+.cal-day.today .cal-num{background:var(--primary);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
+.cal-day.selected{background:var(--primary-light);}
 .cal-day.selected .cal-num{color:var(--primary-dark);font-weight:700;}
-.cal-num{font-size:13px;font-weight:500;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+.cal-num{font-size:13px;font-weight:500;width:22px;height:22px;display:flex;align-items:center;justify-content:center;}
 .cal-day:first-child .cal-num,.cal-day.sunday .cal-num{color:#EF4444;}
 .cal-day.today:first-child .cal-num,.cal-day.today.sunday .cal-num{color:#fff;}
 .cal-day.saturday .cal-num{color:var(--blue);}
 .cal-day.today.saturday .cal-num{color:#fff;}
-.cal-dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px;min-height:6px;}
+.cal-dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;min-height:5px;margin-top:1px;}
 .cal-dot{width:5px;height:5px;border-radius:50%;}
+/* Phase 4: 미니 텍스트 (첫 예약 시간 + N건) */
+.cal-mini{font-size:9.5px;font-weight:600;color:var(--gray-500);line-height:1.1;margin-top:1px;white-space:nowrap;overflow:hidden;max-width:100%;text-align:center;}
+.cal-mini-count{display:inline-block;background:var(--primary);color:#fff;border-radius:6px;padding:0 3px;font-size:8.5px;margin-left:1px;font-weight:700;}
+.cal-day.selected .cal-mini{color:var(--primary-dark);}
+.cal-day.other-month .cal-mini{color:var(--gray-300);}
 
 /* 콘텐츠 */
 .content{padding:16px 20px;}
 .section-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .section-title span{flex:1;}
-.section-title .count-badge{background:#FFF0EC;color:var(--primary-dark);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.section-title .count-badge{background:var(--primary-light);color:var(--primary-dark);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
 
 /* 예약 카드 */
 .booking-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.15s;}
@@ -72,13 +66,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .booking-status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;}
 .status-confirmed{background:#EEF2FF;color:#6366F1;}
 .status-inprogress{background:#FFF7ED;color:#EA580C;}
-.status-done{background:#FFF0EC;color:var(--primary-dark);}
+.status-done{background:var(--primary-light);color:var(--primary-dark);}
 .status-cancelled{background:#FEF2F2;color:#DC2626;}
 .booking-meta{display:flex;gap:10px;font-size:12px;color:var(--gray-500);flex-wrap:wrap;}
 .booking-meta-item{display:flex;align-items:center;gap:3px;}
 .booking-card-footer{margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-100);display:flex;gap:6px;}
 .card-action-btn{flex:1;padding:7px 0;border-radius:8px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;}
-.card-action-btn.primary{background:#FFF0EC;border-color:#FF385C;color:var(--primary-dark);}
+.card-action-btn.primary{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
 .card-action-btn.danger{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
 
 /* 빈 상태 */
@@ -89,7 +83,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* 하단 네비게이션 */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,0.95);border-top:1px solid var(--gray-200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--gray-400);cursor:pointer;}
-.nav-item.active{color:#FF385C;font-weight:700;}
+.nav-item.active{color:var(--primary);font-weight:700;}
 .nav-icon{font-size:20px;line-height:1;}
 
 /* 모달 */
@@ -101,13 +95,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .form-group{margin-bottom:14px;}
 .form-label{font-size:12px;font-weight:600;color:var(--gray-500);margin-bottom:6px;display:block;}
 .form-input{width:100%;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;color:var(--gray-900);outline:none;transition:border-color 0.2s;background:#fff;-webkit-appearance:none;}
-.form-input:focus{border-color:#FF385C;}
+.form-input:focus{border-color:var(--primary);}
 select.form-input{cursor:pointer;}
 textarea.form-input{resize:none;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .modal-btns{display:flex;gap:8px;margin-top:4px;}
 .btn-cancel{flex:1;padding:14px;background:var(--gray-100);color:var(--gray-700);border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;}
-.btn-save{flex:2;padding:14px;background:#FF385C;color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+.btn-save{flex:2;padding:14px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
 .btn-delete{width:100%;padding:13px;background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;border-radius:var(--radius);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;}
 
 /* 상태 선택 칩 */
@@ -115,11 +109,11 @@ textarea.form-input{resize:none;}
 .status-chip{padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--gray-200);background:var(--gray-100);color:var(--gray-500);font-family:inherit;transition:all 0.15s;}
 .status-chip.sel-confirmed{background:#EEF2FF;border-color:#A5B4FC;color:#6366F1;}
 .status-chip.sel-inprogress{background:#FFF7ED;border-color:#FDBA74;color:#EA580C;}
-.status-chip.sel-done{background:#FFF0EC;border-color:#FF385C;color:var(--primary-dark);}
+.status-chip.sel-done{background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark);}
 .status-chip.sel-cancelled{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
 
 /* SMS 발송 패널 */
-.sms-quick{background:#FFF0EC;border:1.5px solid var(--primary);border-radius:var(--radius-sm);padding:12px 14px;margin-top:12px;}
+.sms-quick{background:var(--primary-light);border:1.5px solid var(--primary);border-radius:var(--radius-sm);padding:12px 14px;margin-top:12px;}
 .sms-quick-title{font-size:12px;font-weight:700;color:var(--primary-dark);margin-bottom:8px;}
 .sms-tpl-btn{padding:7px 12px;border-radius:8px;background:#fff;border:1px solid var(--primary);color:var(--primary-dark);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-right:6px;margin-bottom:6px;}
 
@@ -140,6 +134,97 @@ textarea.form-input{resize:none;}
 .pending-card-btns{display:flex;gap:8px;}
 .btn-approve{flex:2;padding:9px;background:#6366F1;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
 .btn-reject{flex:1;padding:9px;background:var(--gray-100);color:var(--gray-500);border:1.5px solid var(--gray-200);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+
+/* === 헤더 액션 버튼 그룹 === */
+.header-actions{display:flex;gap:8px;align-items:center;}
+.icon-btn{width:36px;height:36px;border-radius:50%;background:var(--gray-100);border:none;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gray-700);cursor:pointer;}
+
+/* === Phase 5: 뷰 토글 === */
+.view-toggle{display:flex;background:var(--gray-100);border-radius:20px;padding:3px;margin:0 20px 12px;}
+.view-toggle-btn{flex:1;padding:7px 0;border:none;background:transparent;font-family:inherit;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer;border-radius:18px;transition:all 0.15s;}
+.view-toggle-btn.active{background:#fff;color:var(--primary-dark);box-shadow:0 1px 4px rgba(0,0,0,0.06);}
+
+/* === Phase 5: 아젠다 뷰 === */
+.agenda-wrap{padding:8px 16px 16px;display:none;}
+.agenda-wrap.active{display:block;}
+.agenda-day-group{margin-bottom:18px;}
+.agenda-day-header{display:flex;align-items:center;gap:10px;padding:0 4px 8px;position:sticky;top:0;background:var(--gray-50);z-index:5;}
+.agenda-day-num{width:36px;height:36px;border-radius:10px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid var(--gray-200);}
+.agenda-day-num .a-d{font-size:14px;font-weight:900;color:var(--gray-900);line-height:1;}
+.agenda-day-num .a-w{font-size:9px;color:var(--gray-500);font-weight:700;margin-top:1px;}
+.agenda-day-num.today{background:var(--primary);border-color:var(--primary);}
+.agenda-day-num.today .a-d,.agenda-day-num.today .a-w{color:#fff;}
+.agenda-day-num.sunday .a-d{color:#EF4444;}
+.agenda-day-num.saturday .a-d{color:var(--blue);}
+.agenda-day-label{flex:1;font-size:13px;color:var(--gray-500);font-weight:600;}
+.agenda-day-count{font-size:11px;font-weight:700;color:var(--primary-dark);background:var(--primary-light);padding:2px 8px;border-radius:20px;}
+.agenda-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:10px;}
+.agenda-card:active{background:var(--gray-50);}
+.agenda-time{font-size:13px;font-weight:700;color:var(--gray-700);min-width:46px;}
+.agenda-info{flex:1;min-width:0;}
+.agenda-name{font-size:13px;font-weight:700;color:var(--gray-900);}
+.agenda-meta{font-size:11.5px;color:var(--gray-500);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.agenda-empty{text-align:center;padding:48px 20px;color:var(--gray-400);}
+
+/* === Phase 8: 매출 그래프 === */
+.stats-card{margin:12px 16px 0;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;}
+.stats-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.stats-title{font-size:12px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.3px;}
+.stats-totals{display:flex;gap:16px;}
+.stats-total-item{display:flex;flex-direction:column;align-items:flex-end;}
+.stats-total-num{font-size:15px;font-weight:900;color:var(--gray-900);}
+.stats-total-lbl{font-size:10px;color:var(--gray-400);font-weight:600;margin-top:1px;}
+.stats-chart{width:100%;height:80px;display:block;}
+
+/* === Phase 7: 카드 스와이프 === */
+.booking-card-wrap{position:relative;overflow:hidden;border-radius:var(--radius);margin-bottom:10px;}
+.booking-card-wrap .booking-card{margin-bottom:0;transition:transform 0.18s ease;will-change:transform;touch-action:pan-y;}
+.swipe-action{position:absolute;top:0;right:0;height:100%;width:90px;display:flex;align-items:center;justify-content:center;background:#DC2626;color:#fff;font-size:13px;font-weight:700;border-top-right-radius:var(--radius);border-bottom-right-radius:var(--radius);cursor:pointer;font-family:inherit;border:none;}
+
+/* === 검색 모달 === */
+.search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:300;}
+.search-overlay.open{display:block;}
+.search-sheet{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;}
+.search-header{padding:14px 16px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;gap:10px;}
+.search-input{flex:1;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;outline:none;}
+.search-input:focus{border-color:var(--primary);}
+.search-close{background:none;border:none;font-size:15px;font-weight:700;color:var(--gray-500);cursor:pointer;padding:6px;font-family:inherit;}
+.search-results{flex:1;overflow-y:auto;padding:8px 16px 80px;}
+.search-result-item{padding:13px 14px;border-radius:var(--radius-sm);background:#fff;border:1px solid var(--gray-200);margin-bottom:8px;cursor:pointer;}
+.search-result-item:active{background:var(--gray-50);}
+.search-result-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.search-result-name{font-size:14px;font-weight:700;color:var(--gray-900);}
+.search-result-date{font-size:11.5px;color:var(--gray-500);}
+.search-result-meta{font-size:12px;color:var(--gray-500);line-height:1.5;}
+.search-empty{text-align:center;padding:40px 20px;color:var(--gray-400);font-size:13px;}
+.search-hint{font-size:12px;color:var(--gray-400);margin:8px 0 4px;}
+
+/* === 액션 시트 === */
+.action-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:flex-end;}
+.action-overlay.open{display:flex;}
+.action-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:480px;margin:0 auto;padding:14px 16px env(safe-area-inset-bottom,16px);max-height:85vh;overflow-y:auto;}
+.action-handle{width:36px;height:4px;background:var(--gray-200);border-radius:2px;margin:0 auto 10px;}
+.action-header{padding:6px 4px 14px;border-bottom:1px solid var(--gray-100);margin-bottom:10px;}
+.action-header-name{font-size:16px;font-weight:900;}
+.action-header-meta{font-size:12px;color:var(--gray-500);margin-top:3px;}
+.action-section-title{font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin:10px 0 6px;padding:0 4px;}
+.action-row{display:flex;gap:8px;margin-bottom:8px;}
+.action-btn{flex:1;padding:14px 8px;border-radius:var(--radius);background:#fff;border:1.5px solid var(--gray-200);cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:5px;transition:all 0.15s;}
+.action-btn:active{transform:scale(0.96);background:var(--gray-50);}
+.action-btn-icon{font-size:22px;line-height:1;}
+.action-btn-label{font-size:11.5px;font-weight:600;color:var(--gray-700);}
+.action-btn.primary{background:var(--primary-light);border-color:var(--primary);}
+.action-btn.primary .action-btn-label{color:var(--primary-dark);}
+.action-btn.danger{background:#FEF2F2;border-color:#FECACA;}
+.action-btn.danger .action-btn-label{color:#DC2626;}
+
+/* === 반복 옵션 === */
+.repeat-info{font-size:11.5px;color:var(--primary-dark);background:var(--primary-light);padding:6px 10px;border-radius:8px;margin-top:6px;display:none;}
+.repeat-info.show{display:block;}
+
+/* === 자동 리마인더 토글 === */
+.reminder-status{font-size:11px;color:var(--gray-500);text-align:right;padding:4px 16px 0;background:#fff;}
+.reminder-status .on{color:var(--primary);font-weight:700;}
 </style>
 <script src="utils.js"></script>
 </head>
@@ -147,12 +232,16 @@ textarea.form-input{resize:none;}
 <div class="shell">
 
   <!-- 헤더 -->
-  <div class="header ds-app-header">
+  <div class="header">
     <div class="header-inner">
-      <div><div class="header-title">스케줄</div><div class="header-sub">Schedule</div></div>
-      <button class="add-btn-top" onclick="openAddModal()">+</button>
+      <div class="header-title">📅 스케줄</div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="openSearch()" aria-label="검색">🔍</button>
+        <button class="add-btn-top" onclick="openAddModal()" aria-label="예약 추가">+</button>
+      </div>
     </div>
   </div>
+  <div class="reminder-status" id="reminder-status"></div>
 
   <!-- 월 네비게이션 -->
   
@@ -165,6 +254,14 @@ textarea.form-input{resize:none;}
   </div>
   <div class="pending-sheet" id="pending-sheet"><div id="pending-list"></div></div>
 
+  <!-- Phase 5: 뷰 토글 -->
+  <div class="view-toggle" id="view-toggle">
+    <button class="view-toggle-btn active" id="vbtn-month" onclick="setView('month')">📅 월간</button>
+    <button class="view-toggle-btn" id="vbtn-agenda" onclick="setView('agenda')">📋 리스트</button>
+  </div>
+
+<!-- 월간 뷰 영역 -->
+<div id="view-month">
 <div class="month-nav">
     <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
     <span class="month-label" id="month-label"></span>
@@ -185,6 +282,24 @@ textarea.form-input{resize:none;}
     <div class="cal-grid" id="cal-grid"></div>
   </div>
 
+  <!-- Phase 8: 매출 그래프 -->
+  <div class="stats-card" id="stats-card">
+    <div class="stats-row">
+      <div class="stats-title" id="stats-title">이번 달 매출</div>
+      <div class="stats-totals">
+        <div class="stats-total-item">
+          <div class="stats-total-num" id="stats-total">0만</div>
+          <div class="stats-total-lbl">매출</div>
+        </div>
+        <div class="stats-total-item">
+          <div class="stats-total-num" id="stats-count">0</div>
+          <div class="stats-total-lbl">완료</div>
+        </div>
+      </div>
+    </div>
+    <svg class="stats-chart" id="stats-chart" viewBox="0 0 320 80" preserveAspectRatio="none"></svg>
+  </div>
+
   <!-- 예약 목록 -->
   <div class="content">
     <div class="section-title">
@@ -193,15 +308,21 @@ textarea.form-input{resize:none;}
     </div>
     <div id="booking-list"></div>
   </div>
+</div>
+
+<!-- 아젠다 뷰 영역 -->
+<div id="view-agenda" class="agenda-wrap">
+  <div id="agenda-list"></div>
+</div>
 
 </div>
 
 <!-- 하단 네비게이션 -->
 <div class="bottom-nav">
   <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">🏠</div><div>홈</div></button>
-  <button class="nav-item" onclick="location.href='ssak-quote.html'"><div class="nav-icon">⚡</div><div>고객케어</div></button>
-  <button class="nav-item active" style="position:relative;"><div class="nav-icon">📅</div><div>스케줄</div></button>
-  <button class="nav-item" onclick="location.href='workforce.html'"><div class="nav-icon">👥</div><div>인력매칭</div></button>
+  <button class="nav-item" onclick="location.href='ssak-quote.html'"><div class="nav-icon">⚡</div><div>견적</div></button>
+  <button class="nav-item active"><div class="nav-icon">📅</div><div>스케줄</div></button>
+  <button class="nav-item" onclick="location.href='community.html'"><div class="nav-icon">👥</div><div>커뮤니티</div></button>
   <button class="nav-item" onclick="location.href='my.html'"><div class="nav-icon">👤</div><div>MY</div></button>
 </div>
 
@@ -277,6 +398,17 @@ textarea.form-input{resize:none;}
       <textarea class="form-input" id="b-memo" rows="3" placeholder="특이사항, 요청사항 등"></textarea>
     </div>
 
+    <div class="form-group" id="repeat-group">
+      <label class="form-label">반복</label>
+      <select class="form-input" id="b-repeat" onchange="updateRepeatInfo()">
+        <option value="none">반복 없음</option>
+        <option value="weekly">매주 (8회)</option>
+        <option value="biweekly">격주 (6회)</option>
+        <option value="monthly">매달 (6회)</option>
+      </select>
+      <div class="repeat-info" id="repeat-info"></div>
+    </div>
+
     <!-- 빠른 SMS 발송 -->
     <div class="sms-quick" id="sms-quick-panel" style="display:none;">
       <div class="sms-quick-title">📱 빠른 문자 발송</div>
@@ -294,6 +426,72 @@ textarea.form-input{resize:none;}
   </div>
 </div>
 
+<!-- 액션 시트 (예약 카드 클릭 시) -->
+<div class="action-overlay" id="action-overlay" onclick="if(event.target===this)closeActionSheet()">
+  <div class="action-sheet">
+    <div class="action-handle"></div>
+    <div class="action-header">
+      <div class="action-header-name" id="as-name"></div>
+      <div class="action-header-meta" id="as-meta"></div>
+    </div>
+
+    <div class="action-section-title">⚡ 빠른 발송</div>
+    <div class="action-row">
+      <button class="action-btn primary" onclick="actionSend('quote')">
+        <span class="action-btn-icon">⚡</span><span class="action-btn-label">견적 보내기</span>
+      </button>
+      <button class="action-btn primary" onclick="actionSend('contract')">
+        <span class="action-btn-icon">✍️</span><span class="action-btn-label">계약서</span>
+      </button>
+      <button class="action-btn primary" onclick="actionSend('report')">
+        <span class="action-btn-icon">📸</span><span class="action-btn-label">완료보고서</span>
+      </button>
+    </div>
+
+    <div class="action-section-title">📱 SMS</div>
+    <div class="action-row">
+      <button class="action-btn" onclick="actionSMS('confirm')">
+        <span class="action-btn-icon">✅</span><span class="action-btn-label">예약확정</span>
+      </button>
+      <button class="action-btn" onclick="actionSMS('remind')">
+        <span class="action-btn-icon">🔔</span><span class="action-btn-label">리마인드</span>
+      </button>
+      <button class="action-btn" onclick="actionSMS('done')">
+        <span class="action-btn-icon">🎉</span><span class="action-btn-label">완료안내</span>
+      </button>
+    </div>
+
+    <div class="action-section-title">🛠 관리</div>
+    <div class="action-row">
+      <button class="action-btn" onclick="actionEdit()">
+        <span class="action-btn-icon">✏️</span><span class="action-btn-label">수정</span>
+      </button>
+      <button class="action-btn" onclick="actionToggleStatus()">
+        <span class="action-btn-icon">🔄</span><span class="action-btn-label">상태변경</span>
+      </button>
+      <button class="action-btn danger" onclick="actionDelete()">
+        <span class="action-btn-icon">🗑</span><span class="action-btn-label">삭제</span>
+      </button>
+    </div>
+
+    <div style="height:6px;"></div>
+    <button class="btn-cancel" style="width:100%;padding:13px;background:var(--gray-100);color:var(--gray-700);border:none;border-radius:var(--radius);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;" onclick="closeActionSheet()">닫기</button>
+  </div>
+</div>
+
+<!-- 검색 모달 -->
+<div class="search-overlay" id="search-overlay">
+  <div class="search-sheet">
+    <div class="search-header">
+      <input class="search-input" id="search-input" placeholder="이름·전화·주소·메모 검색" oninput="doSearch()" autocomplete="off">
+      <button class="search-close" onclick="closeSearch()">취소</button>
+    </div>
+    <div class="search-results" id="search-results">
+      <div class="search-empty">이름·전화·주소·메모로<br>예약을 빠르게 찾아보세요</div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -303,6 +501,130 @@ let cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
 
 function saveSchedules() {
   localStorage.setItem('ssak_schedules', JSON.stringify(schedules));
+}
+
+// ── Supabase 동기화 ──────────────────────────
+// 서버 row → 로컬 형식 (id는 UUID 그대로 유지)
+function srvToLocal(r) {
+  return {
+    id: r.id,
+    name: r.name || '',
+    phone: r.phone || '',
+    date: r.date || '',
+    time: r.time || '',
+    addr: r.addr || '',
+    type: r.type || '입주 전 청소',
+    size: r.size || '',
+    price: r.price ? String(r.price) : '',
+    memo: r.memo || '',
+    status: r.status || 'confirmed',
+    source: r.source || 'manual',
+    source_id: r.source_id || null,
+    updatedAt: r.updated_at ? new Date(r.updated_at).getTime() : Date.now()
+  };
+}
+
+// 로컬 객체 → 서버 페이로드
+function localToSrv(s) {
+  return {
+    anon_id: getAnon(),
+    name: s.name || '',
+    phone: s.phone || '',
+    date: s.date,
+    time: s.time || '',
+    addr: s.addr || '',
+    type: s.type || '입주 전 청소',
+    size: s.size || '',
+    price: s.price ? Number(String(s.price).replace(/[^0-9]/g,'')) || 0 : 0,
+    memo: s.memo || '',
+    status: s.status || 'confirmed',
+    source: s.source || 'manual',
+    source_id: s.source_id || null
+  };
+}
+
+// UUID 형식인지 (서버에서 발급된 ID)
+function isServerId(id) {
+  return typeof id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(id);
+}
+
+// 서버에서 본인 일정 전체 가져와 로컬 갱신
+async function serverFetchSchedules() {
+  try {
+    const r = await fetch(SERVER + '/api/schedules?anon_id=' + encodeURIComponent(getAnon()));
+    const d = await r.json();
+    if (d && d.success && Array.isArray(d.data)) {
+      schedules = d.data.map(srvToLocal);
+      saveSchedules();
+      return true;
+    }
+  } catch (e) { console.log('serverFetchSchedules:', e.message); }
+  return false;
+}
+
+// 서버에 신규 등록 (성공 시 로컬 id를 서버 UUID로 교체)
+async function serverInsert(s) {
+  try {
+    const r = await fetch(SERVER + '/api/schedules', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(localToSrv(s))
+    });
+    const d = await r.json();
+    if (d && d.success && d.data) return d.data.id;
+  } catch (e) { console.log('serverInsert:', e.message); }
+  return null;
+}
+
+// 서버에 업데이트 (서버 ID인 경우만)
+async function serverUpdate(s) {
+  if (!isServerId(s.id)) return false;
+  try {
+    const body = localToSrv(s);
+    const r = await fetch(SERVER + '/api/schedules/' + encodeURIComponent(s.id), {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    const d = await r.json();
+    return !!(d && d.success);
+  } catch (e) { console.log('serverUpdate:', e.message); return false; }
+}
+
+// 서버에서 삭제
+async function serverDelete(id) {
+  if (!isServerId(id)) return true; // 로컬 전용 ID는 그대로 통과
+  try {
+    const r = await fetch(SERVER + '/api/schedules/' + encodeURIComponent(id) + '?anon_id=' + encodeURIComponent(getAnon()), {
+      method: 'DELETE'
+    });
+    const d = await r.json();
+    return !!(d && d.success);
+  } catch (e) { console.log('serverDelete:', e.message); return false; }
+}
+
+// 첫 진입 시 1회: 기존 localStorage 데이터를 서버로 마이그레이션
+async function migrateLocalToServerOnce() {
+  if (localStorage.getItem('ssak_sched_migrated_v1') === '1') return;
+  const local = (JSON.parse(localStorage.getItem('ssak_schedules') || '[]')) || [];
+  const toMigrate = local.filter(s => !isServerId(s.id) && s.name && s.date);
+  if (toMigrate.length === 0) {
+    localStorage.setItem('ssak_sched_migrated_v1', '1');
+    return;
+  }
+  let ok = 0;
+  for (const s of toMigrate) {
+    const newId = await serverInsert(s);
+    if (newId) {
+      // 로컬 id 갱신
+      const idx = schedules.findIndex(x => x.id === s.id);
+      if (idx >= 0) schedules[idx].id = newId;
+      ok++;
+    }
+  }
+  saveSchedules();
+  if (ok > 0) console.log(`[싹싹] ${ok}건 클라우드 동기화 완료`);
+  localStorage.setItem('ssak_sched_migrated_v1', '1');
 }
 
 // ── 날짜 유틸 ──────────────────────────────
@@ -331,14 +653,17 @@ function renderCalendar() {
   const lastDate = new Date(viewYear, viewMonth+1, 0).getDate();
   const prevLastDate = new Date(viewYear, viewMonth, 0).getDate();
 
-  // 예약 날짜별 집계
+  // 예약 날짜별 집계 (Phase 4: 시간/카운트도 함께)
   const dotMap = {};
+  const dayBookings = {};
   schedules.forEach(s => {
     if (!dotMap[s.date]) dotMap[s.date] = [];
     dotMap[s.date].push(s.status);
+    if (!dayBookings[s.date]) dayBookings[s.date] = [];
+    dayBookings[s.date].push(s);
   });
 
-  const STATUS_COLOR = {confirmed:'#6366F1', inprogress:'#EA580C', done:'#FF385C', cancelled:'#DC2626'};
+  const STATUS_COLOR = {confirmed:'#6366F1', inprogress:'#EA580C', done:'#00C896', cancelled:'#DC2626'};
 
   let html = '';
   const totalCells = Math.ceil((firstDay + lastDate) / 7) * 7;
@@ -381,19 +706,36 @@ function renderCalendar() {
       `<div class="cal-dot" style="background:${STATUS_COLOR[st]||'#ccc'}"></div>`
     ).join('');
 
+    // Phase 4: 미니 텍스트 — 첫 예약 시간 + 추가 건수 카운트
+    let miniHtml = '';
+    const dayList = dayBookings[dateStr];
+    if (dayList && dayList.length > 0 && !isOther) {
+      const sortedDay = [...dayList].sort((a,b) => (a.time || '99:99').localeCompare(b.time || '99:99'));
+      const firstTime = sortedDay[0].time || '';
+      const extra = sortedDay.length - 1;
+      if (firstTime) {
+        miniHtml = `<div class="cal-mini">${firstTime}${extra > 0 ? `<span class="cal-mini-count">+${extra}</span>` : ''}</div>`;
+      } else if (extra > 0) {
+        miniHtml = `<div class="cal-mini"><span class="cal-mini-count">${dayList.length}</span></div>`;
+      }
+    }
+
     html += `<div class="${cls}" onclick="selectDay('${dateStr}')">
       <div class="cal-num">${dateNum}</div>
       <div class="cal-dots">${dots}</div>
+      ${miniHtml}
     </div>`;
   }
 
   grid.innerHTML = html;
+  // Phase 8: 매출 그래프도 함께 갱신
+  if (typeof renderSalesChart === 'function') renderSalesChart();
 }
 
 function selectDay(dateStr) {
   selectedDate = dateStr;
-  renderCalendar();
-  renderList();
+  if (viewMode === 'month') { renderCalendar(); renderList(); }
+  else renderAgenda();
 }
 
 function changeMonth(dir) {
@@ -425,7 +767,7 @@ function renderList() {
   if (items.length === 0) {
     list.innerHTML = `<div class="empty-state">
       <div class="empty-icon">📭</div>
-      <div class="empty-text">이 날 예약이 없습니다<br><span style="color:#FF385C;font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
+      <div class="empty-text">이 날 예약이 없습니다<br><span style="color:var(--primary);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
     </div>`;
     return;
   }
@@ -434,28 +776,37 @@ function renderList() {
   const STATUS_CLASS = {confirmed:'status-confirmed', inprogress:'status-inprogress', done:'status-done', cancelled:'status-cancelled'};
 
   list.innerHTML = items.map(s => `
-    <div class="booking-card" onclick="openEditModal('${s.id}')">
-      <div class="booking-card-top">
-        <div>
-          <div class="booking-name">${s.name}</div>
-          <div class="booking-meta" style="margin-top:4px;">
-            ${s.time ? `<span class="booking-meta-item">🕐 ${s.time}</span>` : ''}
-            ${s.type ? `<span class="booking-meta-item">🧹 ${s.type}</span>` : ''}
-            ${s.size ? `<span class="booking-meta-item">📐 ${s.size}평</span>` : ''}
+    <div class="booking-card-wrap" data-id="${s.id}">
+      <button class="swipe-action" type="button" onclick="event.stopPropagation();swipeDelete('${s.id}')">🗑 삭제</button>
+      <div class="booking-card" onclick="openActionSheet('${s.id}')">
+        <div class="booking-card-top">
+          <div>
+            <div class="booking-name">${s.name}</div>
+            <div class="booking-meta" style="margin-top:4px;">
+              ${s.time ? `<span class="booking-meta-item">🕐 ${s.time}</span>` : ''}
+              ${s.type ? `<span class="booking-meta-item">🧹 ${s.type}</span>` : ''}
+              ${s.size ? `<span class="booking-meta-item">📐 ${s.size}평</span>` : ''}
+            </div>
           </div>
+          <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||s.status}</span>
         </div>
-        <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||s.status}</span>
-      </div>
-      ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">📍 ${s.addr}</div>` : ''}
-      ${s.price ? `<div style="font-size:12.5px;font-weight:700;color:var(--gray-700);">💰 ${Number(s.price).toLocaleString()}원</div>` : ''}
-      ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">💬 ${s.memo}</div>` : ''}
-      <div class="booking-card-footer">
-        <button class="card-action-btn primary" onclick="event.stopPropagation();openEditModal('${s.id}')">✏️ 수정</button>
-        <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${s.id}')">🔄 상태변경</button>
-        <button class="card-action-btn" onclick="event.stopPropagation();quickSMSCard('${s.id}')">📱 문자</button>
+        ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">📍 ${s.addr}</div>` : ''}
+        ${s.price ? `<div style="font-size:12.5px;font-weight:700;color:var(--gray-700);">💰 ${Number(s.price).toLocaleString()}원</div>` : ''}
+        ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">💬 ${s.memo}</div>` : ''}
+        <div class="booking-card-footer">
+          <button class="card-action-btn primary" onclick="event.stopPropagation();openActionSheet('${s.id}')">⚡ 액션</button>
+          <button class="card-action-btn" onclick="event.stopPropagation();openEditModal('${s.id}')">✏️ 수정</button>
+          <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${s.id}')">🔄 상태</button>
+        </div>
       </div>
     </div>
   `).join('');
+
+  // Phase 7: 스와이프 이벤트 바인딩
+  bindSwipeHandlers();
+
+  // 아젠다 모드일 땐 아젠다도 갱신 (모든 데이터 변경 지점에서 자동 호출됨)
+  if (viewMode === 'agenda' && typeof renderAgenda === 'function') renderAgenda();
 }
 
 // ── 모달 ─────────────────────────────────────
@@ -472,6 +823,9 @@ function openAddModal() {
   document.getElementById('b-size').value = '';
   document.getElementById('b-price').value = '';
   document.getElementById('b-memo').value = '';
+  document.getElementById('b-repeat').value = 'none';
+  document.getElementById('repeat-group').style.display = 'block';
+  updateRepeatInfo();
   document.getElementById('btn-delete').style.display = 'none';
   document.getElementById('sms-quick-panel').style.display = 'none';
   updateStatusChips();
@@ -493,6 +847,8 @@ function openEditModal(id) {
   document.getElementById('b-size').value = s.size || '';
   document.getElementById('b-price').value = s.price || '';
   document.getElementById('b-memo').value = s.memo || '';
+  document.getElementById('b-repeat').value = 'none';
+  document.getElementById('repeat-group').style.display = 'none'; // 수정 시 반복 옵션 숨김
   document.getElementById('btn-delete').style.display = 'block';
   document.getElementById('sms-quick-panel').style.display = 'block';
   updateStatusChips();
@@ -517,13 +873,12 @@ function updateStatusChips() {
   });
 }
 
-function saveBooking() {
+async function saveBooking() {
   const name = document.getElementById('b-name').value.trim();
   const date = document.getElementById('b-date').value;
   if (!name || !date) { toast('고객명과 날짜는 필수입니다'); return; }
 
-  const data = {
-    id: editingId || Date.now().toString(),
+  const baseData = {
     name,
     phone: document.getElementById('b-phone').value.trim(),
     date,
@@ -533,44 +888,115 @@ function saveBooking() {
     size: document.getElementById('b-size').value,
     price: document.getElementById('b-price').value,
     memo: document.getElementById('b-memo').value.trim(),
-    status: selectedStatus,
-    updatedAt: Date.now()
+    status: selectedStatus
   };
 
+  // 수정 모드: 단일 처리
   if (editingId) {
+    const data = { ...baseData, id: editingId, updatedAt: Date.now() };
     const idx = schedules.findIndex(s => s.id === editingId);
-    if (idx >= 0) schedules[idx] = data;
-  } else {
-    schedules.push(data);
+    if (idx >= 0) schedules[idx] = { ...schedules[idx], ...data };
+    saveSchedules();
+    selectedDate = date;
+    const d = new Date(date + 'T00:00:00');
+    viewYear = d.getFullYear();
+    viewMonth = d.getMonth();
+    closeModal();
+    renderCalendar(); renderList();
+    toast('✅ 예약이 수정됐습니다');
+    if (isServerId(editingId)) serverUpdate(data);
+    return;
   }
 
+  // 신규 모드: 반복 처리
+  const repeat = document.getElementById('b-repeat').value || 'none';
+  const dates = expandRepeatDates(date, repeat);
+  const seriesId = repeat !== 'none' ? ('series-' + Date.now().toString(36)) : null;
+  const newRows = [];
+  for (const dt of dates) {
+    const row = {
+      ...baseData,
+      id: 'local-' + Date.now().toString() + '-' + Math.random().toString(36).slice(2, 5),
+      date: dt,
+      memo: seriesId ? ((baseData.memo || '') + (baseData.memo ? ' ' : '') + '[정기]') : baseData.memo,
+      updatedAt: Date.now(),
+      series_id: seriesId
+    };
+    schedules.push(row);
+    newRows.push(row);
+  }
   saveSchedules();
   selectedDate = date;
-
-  // 월/연도도 맞추기
   const d = new Date(date + 'T00:00:00');
   viewYear = d.getFullYear();
   viewMonth = d.getMonth();
-
   closeModal();
-  renderCalendar();
-  renderList();
-  toast(editingId ? '✅ 예약이 수정됐습니다' : '✅ 예약이 추가됐습니다');
+  renderCalendar(); renderList();
+  toast(dates.length > 1 ? `✅ 정기 예약 ${dates.length}건이 추가됐습니다` : '✅ 예약이 추가됐습니다');
+
+  // 서버 동기화 (백그라운드, 일괄)
+  for (const row of newRows) {
+    const newId = await serverInsert(row);
+    if (newId) {
+      const idx = schedules.findIndex(x => x.id === row.id);
+      if (idx >= 0) schedules[idx].id = newId;
+    }
+  }
+  saveSchedules();
 }
 
-function deleteBooking() {
+// 반복 옵션에 따라 날짜 배열 생성
+function expandRepeatDates(startDateStr, repeat) {
+  if (!repeat || repeat === 'none') return [startDateStr];
+  const out = [startDateStr];
+  const start = new Date(startDateStr + 'T00:00:00');
+  const config = {
+    weekly:    { count: 8, addDays: 7 },
+    biweekly:  { count: 6, addDays: 14 },
+    monthly:   { count: 6, addMonths: 1 }
+  }[repeat];
+  if (!config) return out;
+  for (let i = 1; i < config.count; i++) {
+    const d = new Date(start);
+    if (config.addMonths) d.setMonth(d.getMonth() + i * config.addMonths);
+    else d.setDate(d.getDate() + i * config.addDays);
+    out.push(toDateStr(d));
+  }
+  return out;
+}
+
+function updateRepeatInfo() {
+  const sel = document.getElementById('b-repeat');
+  const info = document.getElementById('repeat-info');
+  if (!sel || !info) return;
+  const v = sel.value;
+  if (v === 'none') { info.classList.remove('show'); info.textContent = ''; return; }
+  const date = document.getElementById('b-date').value;
+  if (!date) return;
+  const dates = expandRepeatDates(date, v);
+  const last = dates[dates.length - 1];
+  const lastD = new Date(last + 'T00:00:00');
+  const dn = ['일','월','화','수','목','금','토'][lastD.getDay()];
+  info.textContent = `📅 ${dates.length}회 자동 생성 (마지막: ${lastD.getMonth()+1}월 ${lastD.getDate()}일 ${dn})`;
+  info.classList.add('show');
+}
+
+async function deleteBooking() {
   if (!editingId) return;
   if (!confirm('이 예약을 삭제하시겠습니까?')) return;
-  schedules = schedules.filter(s => s.id !== editingId);
+  const targetId = editingId;
+  schedules = schedules.filter(s => s.id !== targetId);
   saveSchedules();
   closeModal();
   renderCalendar();
   renderList();
   toast('🗑 예약이 삭제됐습니다');
+  // 서버 삭제 (백그라운드)
+  serverDelete(targetId);
 }
 
 // ── 상태 빠른 변경 ────────────────────────────
-function changeStatus(id) {
+async function changeStatus(id) {
   const ORDER = ['confirmed','inprogress','done','cancelled'];
   const LABEL = {confirmed:'예약확정', inprogress:'진행중', done:'완료', cancelled:'취소'};
   const s = schedules.find(x => x.id === id);
@@ -582,6 +1008,8 @@ function changeStatus(id) {
   renderCalendar();
   renderList();
   toast(`→ ${LABEL[s.status]}으로 변경됐습니다`);
+  // 서버 동기화 (백그라운드)
+  serverUpdate(s);
 }
 
 // ── SMS 빠른 발송 ─────────────────────────────
@@ -620,7 +1048,7 @@ function sendQuickSMS(type) {
 
   toast('📱 문자 발송 중...');
 
-  fetch(SERVER + '/send-sms', {
+  fetch('https://ssakssak-server-production.up.railway.app/send-sms', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({ to: phone, from: fromPhone, text: msg, apiKey, apiSecret })
@@ -628,6 +1056,424 @@ function sendQuickSMS(type) {
     if (data.success) toast('✅ 문자 발송 완료!');
     else toast('❌ 발송 실패: ' + (data.error||'오류'));
   }).catch(() => toast('❌ 서버 오류'));
+}
+
+// ── 액션 시트 (Phase 2: 카드 → 원클릭) ─────────
+let actionTargetId = null;
+
+function openActionSheet(id) {
+  const s = schedules.find(x => x.id === id);
+  if (!s) return;
+  actionTargetId = id;
+  document.getElementById('as-name').textContent = s.name + (s.phone ? ' · ' + s.phone : '');
+  const d = s.date ? new Date(s.date + 'T00:00:00') : null;
+  const dn = d ? ['일','월','화','수','목','금','토'][d.getDay()] : '';
+  const dateLbl = d ? `${d.getMonth()+1}월 ${d.getDate()}일 (${dn})` : '';
+  const parts = [dateLbl, s.time, s.type, s.size ? s.size + '평' : ''].filter(Boolean);
+  document.getElementById('as-meta').textContent = parts.join(' · ');
+  document.getElementById('action-overlay').classList.add('open');
+}
+
+function closeActionSheet() {
+  document.getElementById('action-overlay').classList.remove('open');
+  actionTargetId = null;
+}
+
+// 원클릭 → 견적/계약/보고서 페이지로 이동 (prefill 파라미터 전달)
+function actionSend(kind) {
+  const s = schedules.find(x => x.id === actionTargetId);
+  if (!s) return;
+  const params = new URLSearchParams({
+    prefill: '1',
+    name: s.name || '',
+    phone: s.phone || '',
+    addr: s.addr || '',
+    size: s.size || '',
+    type: s.type || '',
+    date: s.date || '',
+    time: s.time || '',
+    price: s.price || '',
+    schedule_id: s.id || ''
+  });
+  closeActionSheet();
+  if (kind === 'quote') {
+    location.href = 'ssak-quote.html?tab=quote&' + params.toString();
+  } else if (kind === 'report') {
+    location.href = 'ssak-quote.html?tab=report&' + params.toString();
+  } else if (kind === 'contract') {
+    location.href = 'sign.html?' + params.toString();
+  }
+}
+
+function actionSMS(type) {
+  const s = schedules.find(x => x.id === actionTargetId);
+  if (!s) return;
+  closeActionSheet();
+  sendSmsForBooking(s, type);
+}
+
+function actionEdit() {
+  const id = actionTargetId;
+  closeActionSheet();
+  if (id) openEditModal(id);
+}
+
+function actionToggleStatus() {
+  const id = actionTargetId;
+  closeActionSheet();
+  if (id) changeStatus(id);
+}
+
+async function actionDelete() {
+  const id = actionTargetId;
+  if (!id) return;
+  if (!confirm('이 예약을 삭제하시겠습니까?')) return;
+  schedules = schedules.filter(s => s.id !== id);
+  saveSchedules();
+  closeActionSheet();
+  renderCalendar(); renderList();
+  toast('🗑 예약이 삭제됐습니다');
+  serverDelete(id);
+}
+
+// ── 통합 SMS 전송 (액션시트·자동리마인더 공용) ───
+function sendSmsForBooking(s, type) {
+  const c = cfg || JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  const apiKey = c.apiKey, apiSecret = c.apiSecret, fromPhone = c.fromPhone;
+  if (!apiKey || !apiSecret || !fromPhone) {
+    toast('설정에서 CoolSMS API를 먼저 설정해주세요'); return Promise.resolve(false);
+  }
+  if (!s || !s.phone) { toast('연락처가 없습니다'); return Promise.resolve(false); }
+  const company = c.company || '싹싹클린';
+  const d = s.date ? new Date(s.date + 'T00:00:00') : new Date();
+  const dateLabel = `${d.getMonth()+1}월 ${d.getDate()}일`;
+  const tm = s.time || '';
+  const addr = s.addr || '협의';
+  const phone = c.fromPhone || c.phone || '';
+  const review = c.review || '';
+
+  const MSGS = {
+    confirm: `[${company}] ${s.name}님, ${dateLabel} ${tm} 입주청소 예약이 확정됐습니다. 주소: ${addr}. 문의: ${phone} 감사합니다 😊`,
+    remind:  `[${company}] ${s.name}님, 내일 ${tm} 입주청소 일정 안내드립니다. 잊지 마세요! 문의: ${phone}`,
+    done:    `[${company}] ${s.name}님, 오늘 청소가 완료됐습니다. 이용해 주셔서 감사합니다 🙏${review ? ' 후기: ' + review : ''}`
+  };
+  const msg = MSGS[type];
+  if (!msg) return Promise.resolve(false);
+
+  toast('📱 문자 발송 중...');
+  return fetch(SERVER + '/send-sms', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ to: s.phone, from: fromPhone, text: msg, apiKey, apiSecret })
+  }).then(r => r.json()).then(data => {
+    if (data.success) { toast('✅ 문자 발송 완료!'); return true; }
+    toast('❌ 발송 실패: ' + (data.error || '오류'));
+    return false;
+  }).catch(() => { toast('❌ 서버 오류'); return false; });
+}
+
+// ── 검색 (Phase 1B) ─────────────────────────
+function openSearch() {
+  document.getElementById('search-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('search-input').focus(), 100);
+}
+
+function closeSearch() {
+  document.getElementById('search-overlay').classList.remove('open');
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-results').innerHTML =
+    '<div class="search-empty">이름·전화·주소·메모로<br>예약을 빠르게 찾아보세요</div>';
+}
+
+function doSearch() {
+  const q = (document.getElementById('search-input').value || '').trim().toLowerCase();
+  const box = document.getElementById('search-results');
+  if (!q) {
+    box.innerHTML = '<div class="search-empty">이름·전화·주소·메모로<br>예약을 빠르게 찾아보세요</div>';
+    return;
+  }
+  const hits = schedules.filter(s => {
+    const blob = [s.name, s.phone, s.addr, s.memo, s.type].filter(Boolean).join(' ').toLowerCase();
+    return blob.indexOf(q) >= 0;
+  }).sort((a,b) => (b.date||'').localeCompare(a.date||''));
+
+  if (hits.length === 0) {
+    box.innerHTML = '<div class="search-empty">검색 결과가 없습니다</div>';
+    return;
+  }
+
+  const STATUS_LABEL = {confirmed:'예약확정', inprogress:'진행중', done:'완료', cancelled:'취소'};
+  const STATUS_CLASS = {confirmed:'status-confirmed', inprogress:'status-inprogress', done:'status-done', cancelled:'status-cancelled'};
+
+  box.innerHTML = `<div class="search-hint">검색 결과 ${hits.length}건</div>` + hits.map(s => {
+    const d = s.date ? new Date(s.date + 'T00:00:00') : null;
+    const dn = d ? ['일','월','화','수','목','금','토'][d.getDay()] : '';
+    const dateLbl = d ? `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} (${dn})` : '';
+    const meta = [s.time, s.phone, s.addr].filter(Boolean).join(' · ');
+    return `<div class="search-result-item" onclick="goToSchedule('${s.id}')">
+      <div class="search-result-top">
+        <span class="search-result-name">${s.name||''}</span>
+        <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||s.status||''}</span>
+      </div>
+      <div class="search-result-date">${dateLbl}</div>
+      <div class="search-result-meta">${meta}</div>
+    </div>`;
+  }).join('');
+}
+
+function goToSchedule(id) {
+  const s = schedules.find(x => x.id === id);
+  if (!s || !s.date) return;
+  const d = new Date(s.date + 'T00:00:00');
+  viewYear = d.getFullYear();
+  viewMonth = d.getMonth();
+  selectedDate = s.date;
+  closeSearch();
+  renderCalendar(); renderList();
+  // 약간의 시간차를 둔 후 액션 시트 열어서 바로 작업 가능하게
+  setTimeout(() => openActionSheet(id), 250);
+}
+
+// ── 자동 리마인더 (Phase 3) ─────────────────
+// 진입 시 1회: 내일 예약 중 미발송 건에 대해 자동 SMS 발송
+async function checkAutoReminders() {
+  const c = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  // 기본값: ON. 명시적으로 false 일 때만 OFF
+  const enabled = c.autoReminder !== false;
+  const statusEl = document.getElementById('reminder-status');
+  if (!enabled) {
+    if (statusEl) statusEl.innerHTML = '🔕 자동 리마인더 OFF';
+    return;
+  }
+
+  // SMS 설정 없으면 안내만 띄우고 종료
+  if (!c.apiKey || !c.apiSecret || !c.fromPhone) {
+    if (statusEl) statusEl.innerHTML = '🔔 자동 리마인더 <span style="color:var(--gray-400)">대기 (설정에서 SMS 등록 필요)</span>';
+    return;
+  }
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tStr = toDateStr(tomorrow);
+  const sentMap = JSON.parse(localStorage.getItem('ssak_reminded_v1') || '{}');
+
+  const targets = schedules.filter(s =>
+    s.date === tStr &&
+    s.status === 'confirmed' &&
+    s.phone &&
+    !sentMap[`${tStr}:${s.id}`]
+  );
+
+  if (targets.length === 0) {
+    if (statusEl) statusEl.innerHTML = `🔔 자동 리마인더 <span class="on">ON</span> · 내일 발송 대상 0건`;
+    return;
+  }
+
+  if (statusEl) statusEl.innerHTML = `🔔 리마인더 발송 중… ${targets.length}건`;
+
+  let ok = 0;
+  for (const s of targets) {
+    const success = await sendSmsForBooking(s, 'remind');
+    if (success) {
+      sentMap[`${tStr}:${s.id}`] = Date.now();
+      ok++;
+    }
+  }
+  localStorage.setItem('ssak_reminded_v1', JSON.stringify(sentMap));
+  if (statusEl) statusEl.innerHTML = `🔔 자동 리마인더 <span class="on">ON</span> · 내일 ${ok}건 발송완료`;
+  if (ok > 0) toast(`📱 내일 일정 ${ok}건 자동 리마인더 발송!`);
+}
+
+// ── Phase 5: 뷰 전환 (월간 / 아젠다) ───────────
+let viewMode = localStorage.getItem('ssak_view_mode') || 'month';
+
+function setView(mode) {
+  viewMode = mode;
+  localStorage.setItem('ssak_view_mode', mode);
+  document.getElementById('vbtn-month').classList.toggle('active', mode === 'month');
+  document.getElementById('vbtn-agenda').classList.toggle('active', mode === 'agenda');
+  document.getElementById('view-month').style.display = mode === 'month' ? 'block' : 'none';
+  document.getElementById('view-agenda').classList.toggle('active', mode === 'agenda');
+  if (mode === 'agenda') renderAgenda();
+  else { renderCalendar(); renderList(); renderSalesChart(); }
+}
+
+function renderAgenda() {
+  const box = document.getElementById('agenda-list');
+  if (!box) return;
+  const today = todayStr();
+  // 다가오는 60일 이내 + 오늘 이후 (또는 진행중) 일정
+  const upcoming = schedules
+    .filter(s => s.date >= today || s.status === 'inprogress')
+    .sort((a,b) => (a.date||'').localeCompare(b.date||'') || (a.time||'').localeCompare(b.time||''));
+
+  if (upcoming.length === 0) {
+    box.innerHTML = `<div class="agenda-empty">
+      <div style="font-size:40px;margin-bottom:10px;">📭</div>
+      <div style="font-size:14px;line-height:1.6;">다가오는 예약이 없습니다<br><span style="color:var(--primary);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
+    </div>`;
+    return;
+  }
+
+  // 날짜별 그룹핑
+  const groups = {};
+  upcoming.forEach(s => {
+    if (!groups[s.date]) groups[s.date] = [];
+    groups[s.date].push(s);
+  });
+
+  const STATUS_LABEL = {confirmed:'확정', inprogress:'진행중', done:'완료', cancelled:'취소'};
+  const STATUS_CLASS = {confirmed:'status-confirmed', inprogress:'status-inprogress', done:'status-done', cancelled:'status-cancelled'};
+  const dayNames = ['일','월','화','수','목','금','토'];
+
+  let html = '';
+  Object.keys(groups).sort().forEach(date => {
+    const d = new Date(date + 'T00:00:00');
+    const dn = dayNames[d.getDay()];
+    const isToday = date === today;
+    const monthDay = `${d.getMonth()+1}월 ${d.getDate()}일`;
+    let dayCls = 'agenda-day-num';
+    if (isToday) dayCls += ' today';
+    if (d.getDay() === 0) dayCls += ' sunday';
+    if (d.getDay() === 6) dayCls += ' saturday';
+
+    html += `<div class="agenda-day-group">
+      <div class="agenda-day-header">
+        <div class="${dayCls}">
+          <div class="a-d">${d.getDate()}</div>
+          <div class="a-w">${dn}</div>
+        </div>
+        <div class="agenda-day-label">${isToday ? '오늘 · ' : ''}${monthDay}</div>
+        <div class="agenda-day-count">${groups[date].length}건</div>
+      </div>`;
+    groups[date].forEach(s => {
+      const meta = [s.type, s.size ? s.size+'평' : '', s.addr].filter(Boolean).join(' · ');
+      html += `<div class="agenda-card" onclick="openActionSheet('${s.id}')">
+        <div class="agenda-time">${s.time || '—'}</div>
+        <div class="agenda-info">
+          <div class="agenda-name">${s.name||''} <span class="booking-status ${STATUS_CLASS[s.status]||''}" style="margin-left:4px;">${STATUS_LABEL[s.status]||''}</span></div>
+          <div class="agenda-meta">${meta}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  box.innerHTML = html;
+}
+
+// ── Phase 7: 카드 좌측 스와이프 → 빠른 삭제 ─────
+function bindSwipeHandlers() {
+  const wraps = document.querySelectorAll('.booking-card-wrap');
+  wraps.forEach(wrap => {
+    const card = wrap.querySelector('.booking-card');
+    if (!card) return;
+    let startX = 0, currentX = 0, dragging = false, openOffset = -90;
+    const reset = () => { card.style.transform = 'translateX(0)'; wrap._open = false; };
+
+    card.addEventListener('touchstart', (e) => {
+      // 다른 카드가 열려있으면 먼저 닫기
+      document.querySelectorAll('.booking-card-wrap').forEach(w => {
+        if (w !== wrap && w._open) { const c = w.querySelector('.booking-card'); if (c) c.style.transform = 'translateX(0)'; w._open = false; }
+      });
+      startX = e.touches[0].clientX;
+      currentX = startX;
+      dragging = true;
+    }, { passive: true });
+
+    card.addEventListener('touchmove', (e) => {
+      if (!dragging) return;
+      currentX = e.touches[0].clientX;
+      const dx = Math.min(0, Math.max(currentX - startX, openOffset));
+      card.style.transform = `translateX(${dx}px)`;
+    }, { passive: true });
+
+    card.addEventListener('touchend', () => {
+      if (!dragging) return;
+      dragging = false;
+      const dx = currentX - startX;
+      if (dx < -45) {
+        card.style.transform = `translateX(${openOffset}px)`;
+        wrap._open = true;
+      } else {
+        reset();
+      }
+    });
+
+    // 카드 영역(swipe-action 외) 클릭 시 닫기
+    card.addEventListener('click', (e) => {
+      if (wrap._open) { e.stopPropagation(); e.preventDefault(); reset(); }
+    }, true);
+  });
+}
+
+async function swipeDelete(id) {
+  if (!confirm('이 예약을 삭제하시겠습니까?')) return;
+  schedules = schedules.filter(s => s.id !== id);
+  saveSchedules();
+  if (viewMode === 'month') { renderCalendar(); renderList(); renderSalesChart(); }
+  else renderAgenda();
+  toast('🗑 예약이 삭제됐습니다');
+  serverDelete(id);
+}
+
+// ── Phase 8: 이번 달 매출 막대 그래프 ─────────
+function renderSalesChart() {
+  const svg = document.getElementById('stats-chart');
+  if (!svg) return;
+  const W = 320, H = 80, PAD_T = 4, PAD_B = 16, PAD_L = 4, PAD_R = 4;
+  const lastDate = new Date(viewYear, viewMonth+1, 0).getDate();
+
+  // 일별 매출(완료 건만 합산) + 완료 건수
+  const dayRevenue = new Array(lastDate + 1).fill(0);
+  let totalRev = 0, doneCount = 0;
+  schedules.forEach(s => {
+    if (!s.date) return;
+    const d = new Date(s.date + 'T00:00:00');
+    if (d.getFullYear() !== viewYear || d.getMonth() !== viewMonth) return;
+    const day = d.getDate();
+    const p = s.price ? Number(String(s.price).replace(/[^0-9]/g,'')) || 0 : 0;
+    if (s.status === 'done') {
+      dayRevenue[day] += p;
+      totalRev += p;
+      doneCount++;
+    }
+  });
+
+  const maxRev = Math.max(...dayRevenue, 1);
+  const barW = (W - PAD_L - PAD_R) / lastDate;
+  const today = new Date();
+  const isThisMonth = today.getFullYear() === viewYear && today.getMonth() === viewMonth;
+  const todayD = today.getDate();
+
+  let bars = '';
+  for (let day = 1; day <= lastDate; day++) {
+    const rev = dayRevenue[day];
+    const h = rev > 0 ? Math.max(2, ((H - PAD_T - PAD_B) * rev) / maxRev) : 0;
+    const x = PAD_L + (day - 1) * barW;
+    const y = H - PAD_B - h;
+    const isToday = isThisMonth && day === todayD;
+    const fill = isToday ? '#00C896' : (rev > 0 ? '#A7F3D0' : '#E4E9EE');
+    if (h > 0) {
+      bars += `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${(barW * 0.7).toFixed(2)}" height="${h.toFixed(2)}" rx="1.5" fill="${fill}"/>`;
+    } else {
+      // 빈 날짜는 베이스라인 점
+      bars += `<rect x="${x.toFixed(2)}" y="${(H - PAD_B - 1).toFixed(2)}" width="${(barW * 0.7).toFixed(2)}" height="1" fill="#E4E9EE"/>`;
+    }
+  }
+  // X축 레이블 (1, 10, 20, 말일)
+  let labels = '';
+  [1, 10, 20, lastDate].forEach(day => {
+    const x = PAD_L + (day - 1) * barW + (barW * 0.35);
+    labels += `<text x="${x.toFixed(2)}" y="${H - 4}" font-size="9" fill="#9AA5B4" text-anchor="middle">${day}</text>`;
+  });
+
+  svg.innerHTML = bars + labels;
+  document.getElementById('stats-total').textContent = totalRev > 0 ? Math.round(totalRev / 10000).toLocaleString() + '만' : '0만';
+  document.getElementById('stats-count').textContent = doneCount;
+
+  // 타이틀 (이번 달 vs 다른 달 표시)
+  const monthLbl = `${viewYear}.${String(viewMonth+1).padStart(2,'0')}`;
+  document.getElementById('stats-title').textContent = isThisMonth ? '이번 달 매출' : `${monthLbl} 매출`;
 }
 
 // ── 토스트 ──────────────────────────────────
@@ -666,17 +1512,29 @@ function togglePendingSheet() {
 
 async function approveBooking(id, bStr) {
   const b = JSON.parse(bStr);
-  schedules.push({
-    id: Date.now().toString(),
+  const newSched = {
+    id: 'local-' + Date.now().toString(),
     name: b.name, phone: b.phone,
     date: b.preferred_date || b.date,
     time: b.preferred_time || b.time,
     addr: b.address || b.addr,
     type: b.type, size: b.size,
     memo: b.notes, status: 'confirmed',
+    source: 'booking', source_id: id,
     updatedAt: Date.now()
-  });
+  };
+  schedules.push(newSched);
   saveSchedules();
+
+  // 서버에 schedule로 등록 (백그라운드)
+  const newId = await serverInsert(newSched);
+  if (newId) {
+    const idx = schedules.findIndex(x => x.id === newSched.id);
+    if (idx >= 0) schedules[idx].id = newId;
+    saveSchedules();
+  }
+
+  // 기존 booking 상태도 confirmed로 업데이트 (기존 동작 유지)
   try {
     const ak2 = JSON.parse(localStorage.getItem('ssak_cfg') || '{}').adminKey || '';
     await fetch(SERVER + '/api/bookings/' + id + '/status?adminKey=' + encodeURIComponent(ak2), {
@@ -723,10 +1581,24 @@ async function rejectBooking(id) {
   toast('거절 처리됐습니다');
 }
 
-renderCalendar();
-renderList();
+// 1) localStorage 캐시로 즉시 표시 (오프라인에서도 빠르게)
+setView(viewMode); // 저장된 뷰 모드 적용 (기본 month)
 fetchPendingBookings();
-initStickyHeader(); // 헤더 스크롤 축소 효과
+
+// 2) 백그라운드: 첫 진입 시 마이그레이션 → 서버 fetch → 화면 갱신 → 자동 리마인더
+(async function initSync() {
+  try {
+    await migrateLocalToServerOnce();
+    const ok = await serverFetchSchedules();
+    if (ok) {
+      // 서버 데이터로 현재 모드 다시 렌더
+      if (viewMode === 'month') { renderCalendar(); renderList(); }
+      else renderAgenda();
+    }
+    // 서버 fetch 후 최신 데이터로 자동 리마인더 체크
+    await checkAutoReminders();
+  } catch (e) { console.log('initSync:', e.message); }
+})();
 </script>
 </body>
 </html>
