@@ -124,8 +124,10 @@ async function apiFetch(path, options = {}) {
 // 사용법: DOMContentLoaded 후 initStickyHeader() 호출
 // 헤더 요소에 .ds-app-header 클래스가 있으면 자동 적용
 function initStickyHeader() {
+  if (window._stickyInited) return; // 중복 실행 방지
   const headers = document.querySelectorAll('.ds-app-header');
   if (!headers.length) return;
+  window._stickyInited = true;
 
   // 페이지 최상단에 1px 투명 sentinel 삽입
   const sentinel = document.createElement('div');
@@ -141,3 +143,14 @@ function initStickyHeader() {
     { threshold: 0 }
   ).observe(sentinel);
 }
+
+// ── 자동 실행: 모든 페이지에서 .ds-app-header가 있으면 자동 적용 ──
+(function() {
+  function _run() { initStickyHeader(); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _run);
+  } else {
+    // 이미 로드됐으면 즉시 실행 (단, 다른 스크립트 완료 후)
+    setTimeout(_run, 0);
+  }
+})();
