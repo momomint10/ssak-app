@@ -465,6 +465,7 @@ async function togglePushNotification() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         endpoint, p256dh: keys.p256dh, auth: keys.auth,
+        anon_id: getAnon(),
         deviceId: cfg.company || 'unknown'
       })
     });
