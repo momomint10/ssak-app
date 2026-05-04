@@ -778,27 +778,27 @@ function renderList() {
   const STATUS_CLASS = {confirmed:'status-confirmed', inprogress:'status-inprogress', done:'status-done', cancelled:'status-cancelled'};
 
   list.innerHTML = items.map(s => `
-    <div class="booking-card-wrap" data-id="${s.id}">
-      <button class="swipe-action" type="button" onclick="event.stopPropagation();swipeDelete('${s.id}')">🗑 삭제</button>
-      <div class="booking-card" onclick="openActionSheet('${s.id}')">
+    <div class="booking-card-wrap" data-id="${esc(s.id)}">
+      <button class="swipe-action" type="button" onclick="event.stopPropagation();swipeDelete('${esc(s.id)}')">🗑 삭제</button>
+      <div class="booking-card" onclick="openActionSheet('${esc(s.id)}')">
         <div class="booking-card-top">
           <div>
-            <div class="booking-name">${s.name}</div>
+            <div class="booking-name">${esc(s.name)}</div>
             <div class="booking-meta" style="margin-top:4px;">
-              ${s.time ? `<span class="booking-meta-item">🕐 ${s.time}</span>` : ''}
-              ${s.type ? `<span class="booking-meta-item">🧹 ${s.type}</span>` : ''}
-              ${s.size ? `<span class="booking-meta-item">📐 ${s.size}평</span>` : ''}
+              ${s.time ? `<span class="booking-meta-item">🕐 ${esc(s.time)}</span>` : ''}
+              ${s.type ? `<span class="booking-meta-item">🧹 ${esc(s.type)}</span>` : ''}
+              ${s.size ? `<span class="booking-meta-item">📐 ${esc(s.size)}평</span>` : ''}
             </div>
           </div>
-          <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||s.status}</span>
+          <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||esc(s.status)}</span>
         </div>
-        ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">📍 ${s.addr}</div>` : ''}
+        ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">📍 ${esc(s.addr)}</div>` : ''}
         ${s.price ? `<div style="font-size:12.5px;font-weight:700;color:var(--gray-700);">💰 ${Number(s.price).toLocaleString()}원</div>` : ''}
-        ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">💬 ${s.memo}</div>` : ''}
+        ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">💬 ${esc(s.memo)}</div>` : ''}
         <div class="booking-card-footer">
-          <button class="card-action-btn primary" onclick="event.stopPropagation();openActionSheet('${s.id}')">⚡ 액션</button>
-          <button class="card-action-btn" onclick="event.stopPropagation();openEditModal('${s.id}')">✏️ 수정</button>
-          <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${s.id}')">🔄 상태</button>
+          <button class="card-action-btn primary" onclick="event.stopPropagation();openActionSheet('${esc(s.id)}')">⚡ 액션</button>
+          <button class="card-action-btn" onclick="event.stopPropagation();openEditModal('${esc(s.id)}')">✏️ 수정</button>
+          <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${esc(s.id)}')">🔄 상태</button>
         </div>
       </div>
     </div>
@@ -1075,12 +1075,12 @@ async function fetchPendingBookings() {
       const size = b.size ? b.size + '평' : '';
       const addr = b.address || b.addr || '주소 미입력';
       const bEnc = encodeURIComponent(JSON.stringify(b));
-      return `<div class="pending-card" id="pc-${b.id}">
-        <div class="pending-card-name">${b.name} <span style="font-size:12px;color:#6366F1;">${b.phone}</span></div>
-        <div class="pending-card-meta">📅 ${date} ${time}<br>🧹 ${b.type||''} ${size}<br>📍 ${addr}</div>
+      return `<div class="pending-card" id="pc-${esc(b.id)}">
+        <div class="pending-card-name">${esc(b.name)} <span style="font-size:12px;color:#6366F1;">${esc(b.phone)}</span></div>
+        <div class="pending-card-meta">📅 ${esc(date)} ${esc(time)}<br>🧹 ${esc(b.type||'')} ${esc(size)}<br>📍 ${esc(addr)}</div>
         <div class="pending-card-btns">
-          <button class="btn-approve" onclick="approveBooking('${b.id}', decodeURIComponent('${bEnc}'))">✅ 스케줄 추가</button>
-          <button class="btn-reject" onclick="rejectBooking('${b.id}')">✕ 거절</button>
+          <button class="btn-approve" onclick="approveBooking('${esc(b.id)}', decodeURIComponent('${bEnc}'))">✅ 스케줄 추가</button>
+          <button class="btn-reject" onclick="rejectBooking('${esc(b.id)}')">✕ 거절</button>
         </div></div>`;
     }).join('');
   } catch(e) { console.log('pending error:', e); }
@@ -1315,11 +1315,11 @@ function doSearch() {
     const d = s.date ? new Date(s.date + 'T00:00:00') : null;
     const dn = d ? ['일','월','화','수','목','금','토'][d.getDay()] : '';
     const dateLbl = d ? `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} (${dn})` : '';
-    const meta = [s.time, s.phone, s.addr].filter(Boolean).join(' · ');
-    return `<div class="search-result-item" onclick="goToSchedule('${s.id}')">
+    const meta = [s.time, s.phone, s.addr].filter(Boolean).map(esc).join(' · ');
+    return `<div class="search-result-item" onclick="goToSchedule('${esc(s.id)}')">
       <div class="search-result-top">
-        <span class="search-result-name">${s.name||''}</span>
-        <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||s.status||''}</span>
+        <span class="search-result-name">${esc(s.name||'')}</span>
+        <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||esc(s.status||'')}</span>
       </div>
       <div class="search-result-date">${dateLbl}</div>
       <div class="search-result-meta">${meta}</div>
@@ -1444,11 +1444,11 @@ function renderAgenda() {
         <div class="agenda-day-count">${groups[date].length}건</div>
       </div>`;
     groups[date].forEach(s => {
-      const meta = [s.type, s.size ? s.size+'평' : '', s.addr].filter(Boolean).join(' · ');
-      html += `<div class="agenda-card" onclick="openActionSheet('${s.id}')">
-        <div class="agenda-time">${s.time || '—'}</div>
+      const meta = [s.type, s.size ? s.size+'평' : '', s.addr].filter(Boolean).map(esc).join(' · ');
+      html += `<div class="agenda-card" onclick="openActionSheet('${esc(s.id)}')">
+        <div class="agenda-time">${esc(s.time || '—')}</div>
         <div class="agenda-info">
-          <div class="agenda-name">${s.name||''} <span class="booking-status ${STATUS_CLASS[s.status]||''}" style="margin-left:4px;">${STATUS_LABEL[s.status]||''}</span></div>
+          <div class="agenda-name">${esc(s.name||'')} <span class="booking-status ${STATUS_CLASS[s.status]||''}" style="margin-left:4px;">${STATUS_LABEL[s.status]||''}</span></div>
           <div class="agenda-meta">${meta}</div>
         </div>
       </div>`;
