@@ -177,6 +177,19 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .ch-inp:focus{border-color:#FF385C;background:#fff;}
 .ch-send{background:#FF385C;color:#fff;border:none;border-radius:50%;width:36px;height:36px;flex-shrink:0;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
 .ch-send:disabled{background:var(--g300);}
+
+/* ── 메신저 UI 개선 (날짜·읽음·상태) ── */
+.msg-day-divider{align-self:center;margin:8px 0 4px;font-size:11px;color:var(--g400);background:var(--g100);padding:3px 10px;border-radius:12px;font-weight:600;}
+.msg-row.has-time .msg-time{display:inline;}
+.msg-row:not(.has-time) .msg-time{display:none;}
+.msg-meta{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0;margin-bottom:2px;}
+.msg-row:not(.me) .msg-meta{align-items:flex-start;}
+.msg-state{font-size:10px;color:var(--g300);font-weight:600;}
+.msg-state.read{color:#FF385C;}
+.msg-state.sending{color:var(--g300);font-style:italic;}
+.msg-state.failed{color:#DC2626;cursor:pointer;font-weight:700;}
+.ch-conn{display:none;text-align:center;font-size:11px;padding:5px 12px;background:#FEF2F2;color:#DC2626;font-weight:600;}
+.ch-conn.show{display:block;}
 /* ── 폼 시트 ── */
 .fo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;}
 .fo.on{display:block;}
@@ -313,6 +326,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
       <button class="ch-close" onclick="closeChat()">×</button>
     </div>
     <div class="ch-notice">🛡️ 전화번호 없이 익명으로 안전하게 대화하세요.</div>
+    <div class="ch-conn" id="ch-conn">⚠️ 연결이 불안정합니다. 재시도 중...</div>
     <div class="ch-msgs" id="ch-msgs"><div class="ch-empty">채팅을 시작해보세요 👋</div></div>
     <div class="ch-bar">
       <textarea class="ch-inp" id="ch-inp" rows="1" placeholder="메시지를 입력하세요..."
@@ -983,62 +997,289 @@ async function saveProfile(){
 }
 
 // ── 채팅 ─────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// 메신저 (Phase 1+2: 깔끔/속도/안정성)
+// ══════════════════════════════════════════════════════════════
+
+// 상태 추적: 현재 채팅의 메시지 캐시 (UI 렌더링·시간 그룹핑·낙관적 업데이트용)
+let chatMsgs = [];          // 화면에 표시되는 메시지들 (서버 + 낙관적 임시 모두 포함)
+let lastReadAt = 0;         // 마지막으로 read API 호출한 시각 (debounce용)
+let chFailCount = 0;        // 연속 실패 카운트 (연결 상태 표시용)
+
+// ── 채팅 열기 ────────────────────────────────────────────
 async function openChat(){
   if(!curWorker) return;
-  const d=await fetch(SERVER+'/api/worker-chats',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({worker_id:curWorker.id,requester_anon_id:getAnon()})}).then(r=>r.json());
-  if(!d.success){toast('오류: '+(d.error||'서버 오류'));return;}
-  curChatId=d.data.id;lastMsgTime=null;
-  const avEl=document.getElementById('ch-av');
-  if(curWorker.photo_url){avEl.innerHTML=`<img loading="lazy" src="${esc(curWorker.photo_url)}" alt="">`;avEl.style.background='transparent';}
-  else{avEl.innerHTML='👤';avEl.style.background='';}
-  document.getElementById('ch-name').textContent=curWorker.nickname;
-  document.getElementById('ch-sub').textContent=fmtRate(curWorker.daily_rate)+' · '+(curWorker.regions||[]).slice(0,2).join(', ');
+  try{
+    const r = await fetch(SERVER+'/api/worker-chats', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ worker_id: curWorker.id, requester_anon_id: getAnon() })
+    });
+    const d = await r.json();
+    if(!d.success){ toast('오류: '+(d.error||'서버 오류')); return; }
+    curChatId = d.data.id;
+    lastMsgTime = null;
+    chatMsgs = [];
+    chFailCount = 0;
+  }catch(e){ toast('연결 오류: '+e.message); return; }
+
+  // UI 셋업
+  const avEl = document.getElementById('ch-av');
+  if(curWorker.photo_url){
+    avEl.innerHTML = `<img loading="lazy" src="${esc(curWorker.photo_url)}" alt="">`;
+    avEl.style.background = 'transparent';
+  } else {
+    avEl.innerHTML = '👤';
+    avEl.style.background = '';
+  }
+  document.getElementById('ch-name').textContent = curWorker.nickname;
+  document.getElementById('ch-sub').textContent = fmtRate(curWorker.daily_rate)+' · '+(curWorker.regions||[]).slice(0,2).join(', ');
   document.getElementById('ch-ov').classList.add('on');
-  document.getElementById('ch-msgs').innerHTML='<div class="ch-empty">불러오는 중...</div>';
-  document.getElementById('ch-inp').value='';
+  document.getElementById('ch-conn').classList.remove('show');
+  document.getElementById('ch-msgs').innerHTML = '<div class="ch-empty">불러오는 중...</div>';
+  document.getElementById('ch-inp').value = '';
+
   await loadMsgs(true);
+  markRead();
   startPoll();
-  setTimeout(()=>document.getElementById('ch-inp').focus(),300);
+  setTimeout(()=>document.getElementById('ch-inp').focus(), 300);
 }
+
+// ── 메시지 가져오기 (?after= 증분 작동) ──────────────────────
 async function loadMsgs(reset=false){
   if(!curChatId) return;
-  const myAnon=getAnon();
-  let url=SERVER+'/api/worker-chats/'+curChatId+'/messages?anon_id='+encodeURIComponent(myAnon);
-  if(lastMsgTime&&!reset) url+='&after='+encodeURIComponent(lastMsgTime);
+  const myAnon = getAnon();
+  let url = SERVER+'/api/worker-chats/'+curChatId+'/messages?anon_id='+encodeURIComponent(myAnon);
+  if(lastMsgTime && !reset) url += '&after='+encodeURIComponent(lastMsgTime);
+
   try{
-    const d=await fetch(url).then(r=>r.json());if(!d.success)return;
-    const msgs=d.data||[];const c=document.getElementById('ch-msgs');
-    if(reset){c.innerHTML=!msgs.length?'<div class="ch-empty">채팅을 시작해보세요 👋</div>':'';}
-    msgs.forEach(m=>{
-      c.querySelector('.ch-empty')?.remove();
-      const isMe=m.sender_anon_id===myAnon;
-      const t=new Date(m.created_at);
-      const ts=t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0');
-      c.insertAdjacentHTML('beforeend',`<div class="msg-row${isMe?' me':''}"><div class="msg-bubble">${esc(m.content)}</div><div class="msg-time">${ts}</div></div>`);
-      lastMsgTime=m.created_at;
-    });
-    if(msgs.length||reset) c.scrollTop=c.scrollHeight;
-  }catch(e){}
+    const r = await fetch(url);
+    const d = await r.json();
+    if(!d.success){ chFailCount++; updateConnUI(); return; }
+    chFailCount = 0; updateConnUI();
+
+    const msgs = d.data || [];
+    if(reset){
+      chatMsgs = msgs.slice();  // 전체 교체
+    } else if(msgs.length){
+      // 증분: 낙관적 메시지(temp_id)는 서버 응답으로 교체
+      msgs.forEach(srv => {
+        const tempIdx = chatMsgs.findIndex(m =>
+          m._optimistic && m.sender_anon_id === srv.sender_anon_id && m.content === srv.content
+        );
+        if(tempIdx >= 0) chatMsgs[tempIdx] = srv;
+        else chatMsgs.push(srv);
+      });
+    }
+
+    if(msgs.length){
+      lastMsgTime = msgs[msgs.length-1].created_at;
+      // 받은 메시지 중 상대방이 보낸 게 있으면 read 처리
+      const hasIncoming = msgs.some(m => m.sender_anon_id !== myAnon);
+      if(hasIncoming) markRead();
+    }
+    if(msgs.length || reset) renderMsgs();
+  }catch(e){
+    chFailCount++; updateConnUI();
+  }
 }
+
+// ── 메시지 렌더링 (시간 그룹핑 + 날짜 구분선 + 읽음 표시) ─────
+function renderMsgs(){
+  const c = document.getElementById('ch-msgs');
+  if(!c) return;
+  if(!chatMsgs.length){
+    c.innerHTML = '<div class="ch-empty">채팅을 시작해보세요 👋</div>';
+    return;
+  }
+  const myAnon = getAnon();
+  let html = '';
+  let prevDay = '', prevMin = '', prevSender = '';
+
+  // 정렬 (created_at 오름차순)
+  chatMsgs.sort((a,b) => (a.created_at||a._tempTime||'').localeCompare(b.created_at||b._tempTime||''));
+
+  chatMsgs.forEach((m, i) => {
+    const t = new Date(m.created_at || m._tempTime || Date.now());
+    const dayKey = t.getFullYear()+'-'+(t.getMonth()+1)+'-'+t.getDate();
+    const minKey = dayKey+'-'+t.getHours()+'-'+t.getMinutes();
+    const isMe = m.sender_anon_id === myAnon;
+
+    // 날짜 구분선
+    if(dayKey !== prevDay){
+      html += `<div class="msg-day-divider">${fmtDayLabel(t)}</div>`;
+      prevDay = dayKey;
+      prevMin = ''; // 날짜 바뀌면 시간도 다시 표시
+    }
+
+    // 시간 그룹핑 — 같은 분의 같은 발신자 마지막 메시지에만 시간 표시
+    const next = chatMsgs[i+1];
+    const nextSameMin = next &&
+      (new Date(next.created_at || next._tempTime || 0).getHours() === t.getHours()) &&
+      (new Date(next.created_at || next._tempTime || 0).getMinutes() === t.getMinutes()) &&
+      (next.sender_anon_id === m.sender_anon_id);
+    const showTime = !nextSameMin;
+
+    // 시간 + 상태
+    const ts = t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0');
+    let stateHtml = '';
+    if(isMe && showTime){
+      if(m._failed){
+        stateHtml = `<div class="msg-state failed" onclick="retrySend('${esc(m._tempId||'')}')">전송 실패 · 다시 보내기</div>`;
+      } else if(m._optimistic){
+        stateHtml = `<div class="msg-state sending">전송 중...</div>`;
+      } else if(m.read_at){
+        stateHtml = `<div class="msg-state read">읽음</div>`;
+      }
+    }
+
+    const meta = showTime ? `<div class="msg-meta"><div class="msg-time">${ts}</div>${stateHtml}</div>` : '';
+    html += `<div class="msg-row${isMe?' me':''}${showTime?' has-time':''}"><div class="msg-bubble">${esc(m.content)}</div>${meta}</div>`;
+
+    prevMin = minKey;
+    prevSender = m.sender_anon_id;
+  });
+
+  c.innerHTML = html;
+  c.scrollTop = c.scrollHeight;
+}
+
+// 날짜 라벨 ("오늘"/"어제"/"5월 3일 (월)")
+function fmtDayLabel(d){
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const target = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.round((today - target) / 86400000);
+  if(diffDays === 0) return '오늘';
+  if(diffDays === 1) return '어제';
+  const dn = ['일','월','화','수','목','금','토'][d.getDay()];
+  if(d.getFullYear() === now.getFullYear()){
+    return `${d.getMonth()+1}월 ${d.getDate()}일 (${dn})`;
+  }
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+}
+
+// ── 메시지 전송 (낙관적 업데이트 + 중복 방지 + 재시도) ────────
 async function sendMsg(){
-  const inp=document.getElementById('ch-inp');const content=inp.value.trim();
-  if(!content||!curChatId)return;
-  inp.value='';inp.style.height='auto';
-  const btn=document.getElementById('ch-send-btn');btn.disabled=true;
+  const inp = document.getElementById('ch-inp');
+  const content = (inp.value||'').trim();
+  if(!content || !curChatId) return;
+
+  inp.value = ''; inp.style.height = 'auto';
+  const btn = document.getElementById('ch-send-btn');
+  btn.disabled = true;
+
+  // 낙관적 업데이트: 즉시 화면에 표시
+  const tempId = 't_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+  const myAnon = getAnon();
+  const optimistic = {
+    _optimistic: true, _tempId: tempId, _tempTime: new Date().toISOString(),
+    sender_anon_id: myAnon, content, created_at: null, read_at: null
+  };
+  chatMsgs.push(optimistic);
+  renderMsgs();
+
   try{
-    const d=await fetch(SERVER+'/api/worker-chats/'+curChatId+'/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({anon_id:getAnon(),content})}).then(r=>r.json());
-    if(!d.success)throw new Error(d.error);
-    const c=document.getElementById('ch-msgs');c.querySelector('.ch-empty')?.remove();
-    const msg=d.data;const t=new Date(msg.created_at);
-    const ts=t.getHours().toString().padStart(2,'0')+':'+t.getMinutes().toString().padStart(2,'0');
-    c.insertAdjacentHTML('beforeend',`<div class="msg-row me"><div class="msg-bubble">${esc(content)}</div><div class="msg-time">${ts}</div></div>`);
-    c.scrollTop=c.scrollHeight;lastMsgTime=msg.created_at;
-  }catch(e){toast('전송 오류: '+e.message);inp.value=content;}
-  btn.disabled=false;
+    const r = await fetch(SERVER+'/api/worker-chats/'+curChatId+'/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ anon_id: myAnon, content })
+    });
+    const d = await r.json();
+    if(!d.success) throw new Error(d.error||'서버 오류');
+
+    // 임시 메시지 → 서버 응답으로 교체
+    const idx = chatMsgs.findIndex(m => m._tempId === tempId);
+    if(idx >= 0) chatMsgs[idx] = d.data;
+    if(d.data && d.data.created_at && d.data.created_at > (lastMsgTime||'')){
+      lastMsgTime = d.data.created_at;
+    }
+    renderMsgs();
+    chFailCount = 0; updateConnUI();
+  }catch(e){
+    // 실패 표시 (사용자가 다시 보내기 가능)
+    const idx = chatMsgs.findIndex(m => m._tempId === tempId);
+    if(idx >= 0){ chatMsgs[idx]._failed = true; chatMsgs[idx]._optimistic = false; }
+    renderMsgs();
+    chFailCount++; updateConnUI();
+    toast('전송 실패: '+e.message);
+  } finally {
+    btn.disabled = false;
+  }
 }
-function startPoll(){stopPoll();pollTimer=setInterval(()=>loadMsgs(false),3000);}
-function stopPoll(){clearInterval(pollTimer);pollTimer=null;}
-function closeChat(){stopPoll();document.getElementById('ch-ov').classList.remove('on');curChatId=null;}
+
+// ── 전송 실패 메시지 재시도 ─────────────────────────────────
+async function retrySend(tempId){
+  const idx = chatMsgs.findIndex(m => m._tempId === tempId);
+  if(idx < 0) return;
+  const msg = chatMsgs[idx];
+  msg._failed = false; msg._optimistic = true;
+  renderMsgs();
+
+  try{
+    const r = await fetch(SERVER+'/api/worker-chats/'+curChatId+'/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ anon_id: getAnon(), content: msg.content })
+    });
+    const d = await r.json();
+    if(!d.success) throw new Error(d.error||'서버 오류');
+    chatMsgs[idx] = d.data;
+    if(d.data.created_at > (lastMsgTime||'')) lastMsgTime = d.data.created_at;
+    renderMsgs();
+    chFailCount = 0; updateConnUI();
+  }catch(e){
+    chatMsgs[idx]._failed = true; chatMsgs[idx]._optimistic = false;
+    renderMsgs();
+    chFailCount++; updateConnUI();
+    toast('재전송 실패: '+e.message);
+  }
+}
+
+// ── 읽음 처리 (debounce 2초) ─────────────────────────────
+async function markRead(){
+  if(!curChatId) return;
+  const now = Date.now();
+  if(now - lastReadAt < 2000) return; // 2초 안에 중복 호출 방지
+  lastReadAt = now;
+  try{
+    await fetch(SERVER+'/api/worker-chats/'+curChatId+'/read', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ anon_id: getAnon() })
+    });
+  }catch(e){ /* read 실패는 무시 */ }
+}
+
+// ── 연결 상태 UI 표시 ───────────────────────────────────
+function updateConnUI(){
+  const el = document.getElementById('ch-conn');
+  if(!el) return;
+  el.classList.toggle('show', chFailCount >= 2);
+}
+
+// ── Polling (1.5초, Visibility API로 백그라운드 자동 중단) ──
+function startPoll(){
+  stopPoll();
+  pollTimer = setInterval(() => {
+    if(document.hidden) return; // 페이지 background면 스킵 (배터리·트래픽 절약)
+    loadMsgs(false);
+  }, 1500);
+}
+function stopPoll(){ clearInterval(pollTimer); pollTimer = null; }
+
+// 페이지 visibility 변화 감지 — foreground 복귀 시 즉시 1회 + 폴링 재개
+document.addEventListener('visibilitychange', () => {
+  if(!curChatId) return;
+  if(!document.hidden){
+    loadMsgs(false);
+    markRead();
+  }
+});
+
+function closeChat(){
+  stopPoll();
+  document.getElementById('ch-ov').classList.remove('on');
+  curChatId = null;
+  chatMsgs = [];
+  chFailCount = 0;
+}
 
 // ── 초기화 (병렬 로딩) ───────────────────────────────────────
 renderFilters();
