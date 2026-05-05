@@ -610,9 +610,8 @@ select.form-input{cursor:pointer;}
 <!-- 📋 발송이력 페이지 (단순화) -->
 <div id="page-history" class="page">
   <div class="card" style="margin-bottom:12px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <div style="margin-bottom:10px;">
       <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);">📋 발송이력 <span id="history-count" style="font-size:13px;color:var(--gray-500);font-weight:400;">(0)</span></div>
-      <button onclick="clearHistory()" style="padding:6px 12px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 삭제</button>
     </div>
     <div style="display:flex;gap:6px;flex-wrap:wrap;">
       <button class="chip on" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;">⚡ 견적발송</button>
@@ -919,6 +918,7 @@ function saveHistory(to,msg,isNight,type,customerName){
   if(document.getElementById('page-history').classList.contains('active'))renderHistory();
 }
 function clearHistory(){if(!confirm('전체 이력을 삭제할까요?'))return;smsHistory=[];localStorage.removeItem('ssak_history');renderHistory();toast('이력 삭제 완료');}
+function deleteSentHistory(time){if(!time)return;if(!confirm('이 항목을 삭제할까요?'))return;smsHistory=smsHistory.filter(h=>h.time!==time);localStorage.setItem('ssak_history',JSON.stringify(smsHistory));renderHistory();toast('삭제됨');}
 
 // ══════════════════════════════════════════════════════════════════
 // 📅 예약 목록 관리
@@ -1058,8 +1058,15 @@ function renderRow(item){
   const typeLabel=HIST_TYPE_LABEL[item.type]||'견적';
   const isDraft=item.kind==='draft';
   const status=isDraft?`<span style="color:#B45309;">📝 ${typeLabel} 작성중</span>`:`<span style="color:#059669;">${typeLabel} 발송 ✓</span>`;
-  const timeStr=isDraft?timeAgoShort(item.time):timeAgoShort(item.time);
-  const action=isDraft?`<button onclick="loadDraft('${item.type}','${item.id}')" style="padding:6px 10px;background:var(--primary);color:#fff;border:0;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;">이어서</button><button onclick="deleteDraft('${item.type}','${item.id}')" style="padding:6px 8px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;font-size:11px;cursor:pointer;color:var(--gray-400);flex-shrink:0;">🗑</button>`:'';
+  const timeStr=timeAgoShort(item.time);
+  let action='';
+  if(isDraft){
+    action=`<button onclick="loadDraft('${item.type}','${item.id}')" style="padding:6px 10px;background:var(--primary);color:#fff;border:0;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;">이어서</button><button onclick="deleteDraft('${item.type}','${item.id}')" style="padding:6px 8px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;font-size:11px;cursor:pointer;color:var(--gray-400);flex-shrink:0;">🗑</button>`;
+  }else{
+    // 발송 이력 — 개별 삭제
+    const sentTime=esc(item.raw?.time||'');
+    action=`<button onclick="deleteSentHistory('${sentTime}')" style="padding:6px 8px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;font-size:11px;cursor:pointer;color:var(--gray-400);flex-shrink:0;">🗑</button>`;
+  }
   return `<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 4px;border-bottom:1px solid var(--gray-100);gap:8px;">
     <div style="flex:1;min-width:0;">
       <div style="font-size:14px;font-weight:600;color:var(--gray-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${icon} ${esc(item.label||'')}</div>
