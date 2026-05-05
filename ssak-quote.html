@@ -611,38 +611,23 @@ select.form-input{cursor:pointer;}
 </div>
 
 
-<!-- 📋 발송이력 페이지 -->
+<!-- 📋 발송이력 페이지 (단순화) -->
 <div id="page-history" class="page">
   <div class="card" style="margin-bottom:12px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);">📋 발송이력</div>
-      <button onclick="clearHistory()" style="padding:6px 12px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 전체 삭제</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);">📋 발송이력 <span id="history-count" style="font-size:13px;color:var(--gray-500);font-weight:400;">(0)</span></div>
+      <button onclick="clearHistory()" style="padding:6px 12px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 삭제</button>
     </div>
-  </div>
-
-  <!-- 진행 중 (임시저장) -->
-  <div class="card" style="margin-bottom:12px;">
-    <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-      <span>📝 진행 중 작업 <span id="drafts-count" style="font-size:12px;color:var(--gray-500);font-weight:400;">(0)</span></span>
-    </div>
-    <div id="drafts-list" style="margin-top:8px;"></div>
-  </div>
-
-  <!-- 오늘 발송 -->
-  <div class="card" style="margin-bottom:12px;">
-    <div class="card-title">📤 오늘 발송 <span id="today-count" style="font-size:12px;color:var(--gray-500);font-weight:400;">(0)</span></div>
-    <div id="today-list" style="margin-top:8px;"></div>
-  </div>
-
-  <!-- 전체 이력 (필터) -->
-  <div class="card" style="margin-bottom:12px;">
-    <div class="card-title">📁 전체 이력 <span id="history-count" style="font-size:12px;color:var(--gray-500);font-weight:400;">(0)</span></div>
-    <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
       <button class="chip on" id="hist-filter-all" onclick="setHistFilter('all')" style="font-size:12px;">전체</button>
+      <button class="chip" id="hist-filter-drafts" onclick="setHistFilter('drafts')" style="font-size:12px;">📝 작성중</button>
       <button class="chip" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;">⚡ 견적</button>
-      <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;">📄 계약서</button>
-      <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;">📸 보고서</button>
+      <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;">📄 계약</button>
+      <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;">📸 보고</button>
     </div>
+  </div>
+
+  <div class="card">
     <div id="history-list"></div>
   </div>
 </div>
@@ -1015,78 +1000,70 @@ async function updateBookingStatus(id, status, selectEl) {
   }
 }
 
-// ── 발송이력 탭 렌더 (3섹션) ──
+// ── 발송이력 탭 렌더 (단순화: 1리스트 통합) ──
 let histFilter='all';
-const TYPE_LABELS_HIST={quote:'⚡ 견적',contract:'📄 계약서',report:'📸 보고서',faq:'💬 FAQ'};
+const HIST_TYPE_LABEL={quote:'견적',contract:'계약서',report:'보고서',faq:'FAQ'};
+const HIST_TYPE_ICON={quote:'⚡',contract:'📄',report:'📸',faq:'💬'};
 function setHistFilter(f){
   histFilter=f;
-  ['all','quote','contract','report'].forEach(k=>{
+  ['all','drafts','quote','contract','report'].forEach(k=>{
     const b=document.getElementById('hist-filter-'+k);
     if(b)b.classList.toggle('on',k===f);
   });
-  renderHistoryList();
+  renderHistory();
 }
-function isToday(t){const d=new Date(t),n=new Date();return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate();}
+function timeAgoShort(t){
+  const ms=Date.now()-new Date(t).getTime();
+  if(ms<60000)return '방금';
+  if(ms<3600000)return Math.floor(ms/60000)+'분 전';
+  if(ms<86400000)return Math.floor(ms/3600000)+'시간 전';
+  if(ms<2*86400000)return '어제';
+  const d=new Date(t);return `${d.getMonth()+1}/${d.getDate()}`;
+}
 function renderHistory(){
-  // 진행 중 (임시저장)
-  renderDraftsList();
-  // 오늘 발송
-  renderTodayList();
-  // 전체 이력
-  renderHistoryList();
-}
-function renderDraftsList(){
-  const cnt=document.getElementById('drafts-count');
-  const el=document.getElementById('drafts-list');
-  if(!cnt||!el)return;
-  const all=[...listDrafts('quote').map(d=>({...d,kind:'quote'})),...listDrafts('report').map(d=>({...d,kind:'report'}))];
-  all.sort((a,b)=>b.savedAt-a.savedAt);
-  cnt.textContent=`(${all.length})`;
-  if(!all.length){el.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--gray-400);font-size:13px;">진행 중인 작업이 없습니다</div>';return;}
-  el.innerHTML=all.map(d=>{
-    const ago=draftAgo(d.savedAt);
-    const icon=d.kind==='quote'?'⚡':'📸';
-    const tabName=d.kind;
-    return `<div style="border:1px solid var(--gray-100);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:600;color:var(--gray-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${icon} ${esc(d.label||(d.kind==='quote'?'견적 작업':'보고서 작업'))}</div>
-        <div style="font-size:11.5px;color:var(--gray-400);margin-top:2px;">💾 ${ago}</div>
-      </div>
-      <button onclick="loadDraft('${d.kind}','${d.id}')" style="padding:8px 14px;background:var(--primary);color:#fff;border:0;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">이어서</button>
-      <button onclick="deleteDraft('${d.kind}','${d.id}')" title="삭제" style="padding:8px 10px;background:#fff;border:1px solid var(--gray-200);border-radius:10px;font-size:13px;cursor:pointer;color:var(--gray-400);">🗑</button>
-    </div>`;
-  }).join('');
-}
-function renderTodayList(){
-  const cnt=document.getElementById('today-count');
-  const el=document.getElementById('today-list');
-  if(!cnt||!el)return;
-  const today=smsHistory.filter(h=>isToday(h.time));
-  cnt.textContent=`(${today.length})`;
-  if(!today.length){el.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--gray-400);font-size:13px;">오늘 발송 내역이 없습니다</div>';return;}
-  el.innerHTML=today.map(h=>renderHistoryItemHtml(h)).join('');
-}
-function renderHistoryList(){
-  const list=document.getElementById('history-list');
+  // 1) 임시저장 → 통합 항목 (kind: draft)
+  const drafts=[
+    ...listDrafts('quote').map(d=>({kind:'draft',type:'quote',id:d.id,label:d.label,time:d.savedAt,_data:d.data})),
+    ...listDrafts('report').map(d=>({kind:'draft',type:'report',id:d.id,label:d.label,time:d.savedAt,_data:d.data})),
+  ];
+  // 2) 발송 이력 → 통합 항목 (kind: sent)
+  const sent=smsHistory.map(h=>({kind:'sent',type:h.type||'quote',label:formatHistLabel(h),time:new Date(h.time).getTime(),raw:h}));
+  // 3) 합쳐서 시간순 정렬 (최신 우선)
+  let all=[...drafts,...sent].sort((a,b)=>b.time-a.time);
+  // 4) 필터 적용
+  if(histFilter==='drafts')all=all.filter(x=>x.kind==='draft');
+  else if(histFilter!=='all')all=all.filter(x=>x.type===histFilter);
+  // 5) 카운트
   const cnt=document.getElementById('history-count');
-  if(!list||!cnt)return;
-  const filtered=histFilter==='all'?smsHistory:smsHistory.filter(h=>(h.type||'quote')===histFilter);
-  if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--gray-400);font-size:13px;">'+(histFilter==='all'?'발송 이력이 없습니다':'해당 유형 이력이 없습니다')+'</div>';cnt.textContent=`(0)`;return;}
-  cnt.textContent=`(${filtered.length})`;
-  list.innerHTML=filtered.map(h=>renderHistoryItemHtml(h)).join('');
+  if(cnt)cnt.textContent=`(${all.length})`;
+  // 6) 렌더
+  const list=document.getElementById('history-list');
+  if(!list)return;
+  if(!all.length){
+    list.innerHTML='<div style="text-align:center;padding:32px 0;color:var(--gray-400);font-size:13px;">'+(histFilter==='all'?'아직 활동이 없어요':'해당 항목이 없습니다')+'</div>';
+    return;
+  }
+  list.innerHTML=all.map(item=>renderRow(item)).join('');
 }
-function renderHistoryItemHtml(h){
-  const d=new Date(h.time);
-  const timeStr=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-  const typeLabel=TYPE_LABELS_HIST[h.type||'quote']||'⚡ 견적';
-  const customer=h.customerName?` · ${esc(h.customerName)}`:'';
-  const nightTag=h.isNight?'<span style="font-size:10px;background:#FEF3C7;color:#B45309;padding:1px 6px;border-radius:6px;margin-left:4px;">🌙 야간</span>':'';
-  return `<div style="border-bottom:1px solid var(--gray-100);padding:10px 0;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-      <div style="font-size:12px;font-weight:600;color:var(--gray-700);">${typeLabel}${customer}${nightTag}</div>
-      <div style="font-size:11px;color:var(--gray-400);">${timeStr} · ${esc(h.to||'')}</div>
+function formatHistLabel(h){
+  // 발송 이력 항목의 라벨: 고객명 (있으면) — 없으면 전화번호 뒷자리
+  if(h.customerName)return h.customerName;
+  if(h.to){const t=String(h.to).replace(/-/g,'');return t.length>=4?'***'+t.slice(-4):t;}
+  return '고객';
+}
+function renderRow(item){
+  const icon=HIST_TYPE_ICON[item.type]||'⚡';
+  const typeLabel=HIST_TYPE_LABEL[item.type]||'견적';
+  const isDraft=item.kind==='draft';
+  const status=isDraft?`<span style="color:#B45309;">📝 ${typeLabel} 작성중</span>`:`<span style="color:#059669;">${typeLabel} 발송 ✓</span>`;
+  const timeStr=isDraft?timeAgoShort(item.time):timeAgoShort(item.time);
+  const action=isDraft?`<button onclick="loadDraft('${item.type}','${item.id}')" style="padding:6px 10px;background:var(--primary);color:#fff;border:0;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;">이어서</button><button onclick="deleteDraft('${item.type}','${item.id}')" style="padding:6px 8px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;font-size:11px;cursor:pointer;color:var(--gray-400);flex-shrink:0;">🗑</button>`:'';
+  return `<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 4px;border-bottom:1px solid var(--gray-100);gap:8px;">
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:14px;font-weight:600;color:var(--gray-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${icon} ${esc(item.label||'')}</div>
+      <div style="font-size:11.5px;color:var(--gray-500);margin-top:3px;display:flex;gap:6px;align-items:center;">${status}<span style="color:var(--gray-300);">·</span><span style="color:var(--gray-400);">${timeStr}</span></div>
     </div>
-    <div style="font-size:12px;color:var(--gray-500);max-height:60px;overflow:hidden;text-overflow:ellipsis;white-space:pre-wrap;">${esc((h.msg||'').slice(0,150))}${(h.msg||'').length>150?'…':''}</div>
+    ${action?`<div style="display:flex;gap:4px;">${action}</div>`:''}
   </div>`;
 }
 // ── 임시저장 시스템 ──
@@ -1195,7 +1172,7 @@ function deleteDraft(kind,id){
   const arr=listDrafts(kind).filter(d=>d.id!==id);
   saveDraftsRaw(kind,arr);
   updateDraftCount(kind);
-  if(document.getElementById('page-history').classList.contains('active'))renderDraftsList();
+  if(document.getElementById('page-history').classList.contains('active'))renderHistory();
   // 모달 열려있으면 갱신
   const modal=document.getElementById('draft-modal');
   if(modal&&modal.style.display==='flex'){openDraftList(kind);}
