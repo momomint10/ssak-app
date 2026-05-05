@@ -285,7 +285,7 @@ select.form-input{cursor:pointer;}
     </div>
   </div>
   <div class="card"><div class="card-title">✅ 추가 서비스</div><div class="chips" id="extra-chips"></div></div>
-  <div class="card"><div class="card-title">📤 발송 옵션</div><div class="chips"><button class="chip on" id="opt-video" onclick="this.classList.toggle('on');buildMsg()">📹 홍보영상</button><button class="chip on" id="opt-booking" onclick="this.classList.toggle('on');buildMsg()">📅 예약링크</button><button class="chip" id="opt-review" onclick="this.classList.toggle('on');buildMsg()">⭐ 후기링크</button><button class="chip on" id="opt-kakao" onclick="this.classList.toggle('on');buildMsg()">💬 카카오</button></div></div>
+  <div class="card"><div class="card-title">📤 발송 옵션</div><div class="chips"><button class="chip on" id="opt-video" onclick="this.classList.toggle('on');buildMsg()">📹 홍보영상</button><button class="chip on" id="opt-booking" onclick="this.classList.toggle('on');buildMsg()">📅 예약링크</button><button class="chip on" id="opt-notice" onclick="this.classList.toggle('on');buildMsg()">📋 안내사항</button><button class="chip" id="opt-review" onclick="this.classList.toggle('on');buildMsg()">⭐ 후기링크</button><button class="chip on" id="opt-kakao" onclick="this.classList.toggle('on');buildMsg()">💬 카카오</button></div></div>
   <div class="quote-result" id="quote-result" style="display:none;"><div class="qr-label">예상 견적금액 (VAT 포함)</div><div class="qr-price" id="qr-price">—</div><div class="qr-rows" id="qr-rows"></div></div>
   <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -582,6 +582,25 @@ select.form-input{cursor:pointer;}
       </div>
     </div>
   </div>
+  <div class="settings-section">
+    <div class="settings-title">📋 견적 안내사항 (자동 포함)</div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">고객에게 안내할 사항 (견적 메시지에 자동 포함)</label>
+        <textarea class="form-input" id="s-notice" rows="11" style="resize:vertical;font-size:13px;line-height:1.55;font-family:inherit;">━━━━ 안내사항 ━━━━
+① 현장 상태(평수 상이/오염 심함/준공 미비/구축)에 따라 추가요금 발생할 수 있어요
+   ※ 입주청소는 샷시 외창 제외
+② 현금영수증·카드·세금계산서 발행 시 VAT 10% 별도
+③ 청소 시간 동안 현장은 비워주세요 (원활한 작업을 위해)
+④ 청소 시작 전 문 개방 부탁드려요
+⑤ AS는 당일 검수 시점만 가능하니 꼼꼼히 확인해 주세요
+⑥ 주차등록 필요 시 사전 신청 부탁드려요
+⑦ 예약자 사유 취소 시 예약금 환불은 어렵습니다
+━━━━━━━━━━━━━━</textarea>
+      </div>
+      <div style="font-size:11.5px;color:var(--gray-400);margin-top:10px;line-height:1.6;">💡 발송 옵션의 '📋 안내사항' 칩을 OFF하면 메시지에서 제외됩니다. 비워두면 기본 문구가 사용됩니다.</div>
+    </div>
+  </div>
   <button class="save-settings-btn" onclick="saveSettings()">💾 전체 설정 저장</button>
   <div style="height:16px;"></div>
 
@@ -636,7 +655,7 @@ select.form-input{cursor:pointer;}
 <div id="toast"></div>
 
 <script>
-const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}]};
+const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}],notice:'━━━━ 안내사항 ━━━━\n① 현장 상태(평수 상이/오염 심함/준공 미비/구축)에 따라 추가요금 발생할 수 있어요\n   ※ 입주청소는 샷시 외창 제외\n② 현금영수증·카드·세금계산서 발행 시 VAT 10% 별도\n③ 청소 시간 동안 현장은 비워주세요 (원활한 작업을 위해)\n④ 청소 시작 전 문 개방 부탁드려요\n⑤ AS는 당일 검수 시점만 가능하니 꼼꼼히 확인해 주세요\n⑥ 주차등록 필요 시 사전 신청 부탁드려요\n⑦ 예약자 사유 취소 시 예약금 환불은 어렵습니다\n━━━━━━━━━━━━━━'};
 let cfg=JSON.parse(localStorage.getItem('ssak_cfg')||'null')||{...DEFAULT_CFG,extras:[...DEFAULT_CFG.extras]};
 function saveCfg(){localStorage.setItem('ssak_cfg',JSON.stringify(cfg));}
 
@@ -716,6 +735,11 @@ function buildMsg(size,type,total,extraItems){
   if(extraItems&&extraItems.length)msg+=`추가: ${extraItems.map(e=>e.label).join(', ')}\n`;
   if(date)msg+=`희망일: ${date}\n`;
   msg+=`━━━━━━━━━━━━━━`;
+  // 📋 안내사항 (옵션 ON일 때 자동 포함)
+  if(document.getElementById('opt-notice')?.classList.contains('on')){
+    const notice=((cfg.notice||DEFAULT_CFG.notice)||'').trim();
+    if(notice)msg+='\n\n'+notice;
+  }
   const links=[];
   if(document.getElementById('opt-video')?.classList.contains('on'))links.push(`\n📹 시공영상: ${cfg.video}`);
   if(document.getElementById('opt-review')?.classList.contains('on'))links.push(`\n⭐ 고객후기: ${cfg.review}`);
@@ -1030,6 +1054,9 @@ function loadSettingsForm(){
   document.getElementById('s-night-start').value=cfg.nightStart||'21:00';
   document.getElementById('s-night-end').value=cfg.nightEnd||'09:00';
   document.getElementById('s-night-msg').value=cfg.nightMsg||'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊';
+  // 📋 안내사항 로드
+  const noticeEl=document.getElementById('s-notice');
+  if(noticeEl)noticeEl.value=(cfg.notice!==undefined?cfg.notice:DEFAULT_CFG.notice)||'';
   const bg=document.getElementById('night-toggle-bg');
   if(bg)bg.style.background=cfg.nightEnabled?'var(--primary)':'var(--gray-300)';
   document.getElementById('s-night-enabled').onchange=function(){
@@ -1064,6 +1091,9 @@ function saveSettings(){
   cfg.nightStart=document.getElementById('s-night-start').value;
   cfg.nightEnd=document.getElementById('s-night-end').value;
   cfg.nightMsg=document.getElementById('s-night-msg').value.trim();
+  // 📋 안내사항 저장
+  const noticeSaveEl=document.getElementById('s-notice');
+  if(noticeSaveEl)cfg.notice=noticeSaveEl.value.trim();
   saveCfg();renderExtraChips();updateApiWarning();toast('✅ 설정 저장 완료!');
 }
 
