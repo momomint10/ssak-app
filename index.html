@@ -391,7 +391,8 @@ loadUser();
   (async () => {
     try {
       const today = new Date().toISOString().slice(0,10);
-      const r = await fetch(SERVER + '/api/bookings?date=' + today);
+      const adminKey = (JSON.parse(localStorage.getItem('ssak_cfg')||'{}').adminKey)||'';
+      const r = await fetch(SERVER + '/api/bookings?date=' + today + '&adminKey=' + encodeURIComponent(adminKey));
       const d = await r.json();
       if (d.data && d.data.length > 0) {
         const b = document.getElementById('sched-badge');
