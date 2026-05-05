@@ -154,3 +154,85 @@ function initStickyHeader() {
     setTimeout(_run, 0);
   }
 })();
+
+// ── Phase 3-B: 인앱 메신저 배지 ───────────────────────────────
+// 모든 nav 패턴 지원 (ds-nav-item / nav-item / ni)
+// 텍스트 "인력매칭" 포함 버튼을 자동 탐색 → 빨간 배지 부착 + 30초 폴링
+function _findWorkforceNavButtons() {
+  // 4가지 nav 패턴 지원: <nav>, .nav, .ds-nav, .bottom-nav
+  const buttons = document.querySelectorAll('nav button, .nav button, .ds-nav button, .bottom-nav button');
+  return Array.from(buttons).filter(b => b.textContent.includes('인력매칭'));
+}
+
+function _ensureNavBadgeStyle() {
+  if (document.getElementById('ssak-nav-badge-style')) return;
+  const s = document.createElement('style');
+  s.id = 'ssak-nav-badge-style';
+  s.textContent = '.ssak-nav-badge{position:absolute;top:4px;right:14px;min-width:16px;height:16px;padding:0 5px;border-radius:9px;background:#FF3B30;color:#fff;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.2);pointer-events:none;z-index:1;line-height:1;}.ssak-nav-badge.show{display:flex;}';
+  document.head.appendChild(s);
+}
+
+function setupNavBadge() {
+  _ensureNavBadgeStyle();
+  const buttons = _findWorkforceNavButtons();
+  buttons.forEach(btn => {
+    if (getComputedStyle(btn).position === 'static') {
+      btn.style.position = 'relative';
+    }
+    if (!btn.querySelector('.ssak-nav-badge')) {
+      const badge = document.createElement('span');
+      badge.className = 'ssak-nav-badge';
+      btn.appendChild(badge);
+    }
+  });
+}
+
+async function refreshNavBadge() {
+  try {
+    if (typeof getAnon !== 'function') return;
+    const anonId = getAnon();
+    if (!anonId) return;
+    const r = await fetch(SERVER + '/api/worker-chats/unread-count?anon_id=' + encodeURIComponent(anonId));
+    if (!r.ok) return;
+    const j = await r.json();
+    const count = (j && j.success && j.count) || 0;
+    document.querySelectorAll('.ssak-nav-badge').forEach(b => {
+      if (count > 0) {
+        b.textContent = count > 9 ? '9+' : String(count);
+        b.classList.add('show');
+      } else {
+        b.classList.remove('show');
+      }
+    });
+  } catch (e) {
+    // graceful: 실패 시 변화 없음
+  }
+}
+
+let _navBadgeInterval = null;
+function initNavBadge() {
+  if (window._navBadgeInited) return;
+  window._navBadgeInited = true;
+  setupNavBadge();
+  if (!_findWorkforceNavButtons().length) return; // 인력매칭 nav 없는 페이지(sign/booking)는 폴링도 스킵
+  refreshNavBadge();
+  _navBadgeInterval = setInterval(refreshNavBadge, 30000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (_navBadgeInterval) { clearInterval(_navBadgeInterval); _navBadgeInterval = null; }
+    } else {
+      refreshNavBadge();
+      if (!_navBadgeInterval) _navBadgeInterval = setInterval(refreshNavBadge, 30000);
+    }
+  });
+}
+
+// ── 자동 실행 ──────────────────────────────────────────────
+(function() {
+  function _run() { initNavBadge(); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _run);
+  } else {
+    setTimeout(_run, 0);
+  }
+})();
