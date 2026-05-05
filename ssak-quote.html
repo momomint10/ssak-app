@@ -230,6 +230,7 @@ select.form-input{cursor:pointer;}
       <button class="tab active" id="tab-quote"    onclick="switchTab('quote',this)">견적발송</button>
       <button class="tab"        id="tab-contract" onclick="switchTab('contract',this)">계약서</button>
       <button class="tab"        id="tab-report"   onclick="switchTab('report',this)">완료보고서</button>
+      <button class="tab"        id="tab-history"  onclick="switchTab('history',this)">📋 발송이력</button>
     </div>
   </div>  </div>
 <div class="content">
@@ -285,6 +286,7 @@ select.form-input{cursor:pointer;}
     </div>
   </div>
   <div class="card"><div class="card-title">✅ 추가 서비스</div><div class="chips" id="extra-chips"></div></div>
+  <div class="card" style="padding:12px 16px;"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span style="font-size:12px;color:var(--gray-500);font-weight:600;margin-right:4px;">💼 작업</span><button class="chip" id="quote-save-btn" onclick="saveDraft('quote')" style="font-size:12px;padding:6px 12px;">💾 저장</button><button class="chip" id="quote-load-btn" onclick="openDraftList('quote')" style="font-size:12px;padding:6px 12px;">📂 불러오기 <span id="quote-draft-count">(0)</span></button><button class="chip" onclick="newDraft('quote')" style="font-size:12px;padding:6px 12px;">🆕 새로</button></div></div>
   <div class="card"><div class="card-title">📤 발송 옵션</div><div class="chips"><button class="chip on" id="opt-video" onclick="this.classList.toggle('on');buildMsg()">📹 홍보영상</button><button class="chip on" id="opt-booking" onclick="this.classList.toggle('on');buildMsg()">📅 예약링크</button><button class="chip on" id="opt-notice" onclick="this.classList.toggle('on');buildMsg()">📋 안내사항</button><button class="chip" id="opt-review" onclick="this.classList.toggle('on');buildMsg()">⭐ 후기링크</button><button class="chip on" id="opt-kakao" onclick="this.classList.toggle('on');buildMsg()">💬 카카오</button></div></div>
   <div class="quote-result" id="quote-result" style="display:none;"><div class="qr-label">예상 견적금액 (VAT 포함)</div><div class="qr-price" id="qr-price">—</div><div class="qr-rows" id="qr-rows"></div></div>
   <div class="card">
@@ -382,6 +384,7 @@ select.form-input{cursor:pointer;}
     </div>
   </div>
 </div>
+<div class="card" id="rp-draft-bar" style="padding:12px 16px;"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span style="font-size:12px;color:var(--gray-500);font-weight:600;margin-right:4px;">💼 작업</span><button class="chip" onclick="saveDraft('report')" style="font-size:12px;padding:6px 12px;">💾 저장</button><button class="chip" onclick="openDraftList('report')" style="font-size:12px;padding:6px 12px;">📂 불러오기 <span id="report-draft-count">(0)</span></button><button class="chip" onclick="newDraft('report')" style="font-size:12px;padding:6px 12px;">🆕 새로</button></div></div>
 <div id="rp-form-body" style="display:none;">
 
   <!-- 임시저장 배너 -->
@@ -602,20 +605,58 @@ select.form-input{cursor:pointer;}
   <button class="save-settings-btn" onclick="saveSettings()">💾 전체 설정 저장</button>
   <div style="height:16px;"></div>
 
-  <!-- 이력 섹션 (설정 탭 하단) -->
-  <div class="settings-section" style="margin-top:8px;">
-    <div class="settings-title">📋 발송 이력</div>
-    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;">
-      <button onclick="clearHistory()" style="padding:8px 14px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 전체 삭제</button>
-      <div id="history-count" style="padding:8px 0;font-size:12px;color:var(--gray-400);"></div>
+</div>
+
+</div>
+</div>
+
+
+<!-- 📋 발송이력 페이지 -->
+<div id="page-history" class="page">
+  <div class="card" style="margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);">📋 발송이력</div>
+      <button onclick="clearHistory()" style="padding:6px 12px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 전체 삭제</button>
+    </div>
+  </div>
+
+  <!-- 진행 중 (임시저장) -->
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>📝 진행 중 작업 <span id="drafts-count" style="font-size:12px;color:var(--gray-500);font-weight:400;">(0)</span></span>
+    </div>
+    <div id="drafts-list" style="margin-top:8px;"></div>
+  </div>
+
+  <!-- 오늘 발송 -->
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-title">📤 오늘 발송 <span id="today-count" style="font-size:12px;color:var(--gray-500);font-weight:400;">(0)</span></div>
+    <div id="today-list" style="margin-top:8px;"></div>
+  </div>
+
+  <!-- 전체 이력 (필터) -->
+  <div class="card" style="margin-bottom:12px;">
+    <div class="card-title">📁 전체 이력 <span id="history-count" style="font-size:12px;color:var(--gray-500);font-weight:400;">(0)</span></div>
+    <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;">
+      <button class="chip on" id="hist-filter-all" onclick="setHistFilter('all')" style="font-size:12px;">전체</button>
+      <button class="chip" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;">⚡ 견적</button>
+      <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;">📄 계약서</button>
+      <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;">📸 보고서</button>
     </div>
     <div id="history-list"></div>
   </div>
 </div>
 
+<!-- 임시저장 모달 -->
+<div id="draft-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:18px;padding:20px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div style="font-size:16px;font-weight:700;" id="draft-modal-title">📂 저장된 작업</div>
+      <button onclick="document.getElementById('draft-modal').style.display='none';" style="background:transparent;border:0;font-size:20px;cursor:pointer;color:var(--gray-400);">✕</button>
+    </div>
+    <div id="draft-modal-list"></div>
+  </div>
 </div>
-</div>
-
 
 <!-- 완료보고서 발송 완료 모달 (page 외부, position:fixed) -->
 <div id="rp-complete-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
@@ -625,7 +666,7 @@ select.form-input{cursor:pointer;}
     <div id="rp-complete-info" style="font-size:13px;color:var(--gray-500);margin-bottom:24px;line-height:1.7;"></div>
     <div style="display:flex;flex-direction:column;gap:10px;">
       <button onclick="rpResetAll()" style="padding:14px;background:var(--primary);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 새 보고서 작성하기</button>
-      <button onclick="document.getElementById('rp-complete-modal').style.display='none';switchTab('settings',null);setTimeout(()=>document.getElementById('history-list').scrollIntoView({behavior:'smooth'}),300);" style="padding:12px;background:#f7f7f7;color:#484848;border:0.5px solid #e0e0e0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">📋 이력 확인</button>
+      <button onclick="document.getElementById('rp-complete-modal').style.display='none';switchTab('history',document.getElementById('tab-history'));" style="padding:12px;background:#f7f7f7;color:#484848;border:0.5px solid #e0e0e0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">📋 이력 확인</button>
     </div>
   </div>
 </div>
@@ -664,15 +705,18 @@ function switchTab(name,btn){
   const pageEl = document.getElementById('page-'+name);
   if(pageEl) pageEl.classList.add('active');
   if(name==='settings') loadSettingsForm();
+  if(name==='history') renderHistory();
   // 견적발송: 탭 전환 시 항상 랜딩 화면으로
   if(name==='quote'){
     document.getElementById('q-landing').style.display='';
     document.getElementById('q-form-body').style.display='none';
+    if(typeof updateDraftCount==='function')updateDraftCount('quote');
   }
   // 완료보고서: 탭 전환 시 항상 랜딩 화면으로 (initReportTab은 showReportForm에서 호출)
   if(name==='report'){
     document.getElementById('rp-landing').style.display='';
     document.getElementById('rp-form-body').style.display='none';
+    if(typeof updateDraftCount==='function')updateDraftCount('report');
   }
 }
 
@@ -842,7 +886,7 @@ async function sendSMS(){
     }
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg:finalMsg,subject})});
     const data=await res.json();
-    if(data.success){saveHistory(to,msg,night);toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');}
+    if(data.success){saveHistory(to,msg,night,'quote',document.getElementById('q-name')?.value?.trim()||'');toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');}
     else toast('❌ 발송 실패: '+(data.error||'오류'));
   }catch(err){toast('서버 연결 오류.');}
   finally{document.getElementById('send-btn-text').textContent='발송';document.getElementById('send-loading').style.display='none';btn.disabled=false;}
@@ -879,9 +923,11 @@ function isNightTime(){
 
 // 이력 관련
 let smsHistory=JSON.parse(localStorage.getItem('ssak_history')||'[]');
-function saveHistory(to,msg,isNight){
-  smsHistory.unshift({to,msg,isNight,time:new Date().toISOString()});
-  if(smsHistory.length>100)smsHistory=smsHistory.slice(0,100);
+// 페이지 로드 후 chip count 초기화
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{if(typeof initDraftCounts==='function')initDraftCounts();});else setTimeout(()=>{if(typeof initDraftCounts==='function')initDraftCounts();},0);
+function saveHistory(to,msg,isNight,type,customerName){
+  smsHistory.unshift({to,msg,isNight,time:new Date().toISOString(),type:type||'quote',customerName:customerName||''});
+  if(smsHistory.length>200)smsHistory=smsHistory.slice(0,200);
   localStorage.setItem('ssak_history',JSON.stringify(smsHistory));
   if(document.getElementById('page-history').classList.contains('active'))renderHistory();
 }
@@ -969,17 +1015,238 @@ async function updateBookingStatus(id, status, selectEl) {
   }
 }
 
+// ── 발송이력 탭 렌더 (3섹션) ──
+let histFilter='all';
+const TYPE_LABELS_HIST={quote:'⚡ 견적',contract:'📄 계약서',report:'📸 보고서',faq:'💬 FAQ'};
+function setHistFilter(f){
+  histFilter=f;
+  ['all','quote','contract','report'].forEach(k=>{
+    const b=document.getElementById('hist-filter-'+k);
+    if(b)b.classList.toggle('on',k===f);
+  });
+  renderHistoryList();
+}
+function isToday(t){const d=new Date(t),n=new Date();return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate();}
 function renderHistory(){
-  const list=document.getElementById('history-list');
-  const cnt=document.getElementById('history-count');
-  if(!smsHistory.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray-400);font-size:13px;">발송 이력이 없습니다</div>';cnt.textContent='';return;}
-  cnt.textContent=`총 ${smsHistory.length}건`;
-  list.innerHTML=smsHistory.map(h=>{
-    const d=new Date(h.time);
-    const timeStr=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-    return`<div class="history-item">${h.isNight?'<div class="history-night">🌙 야간</div>':''}<div class="history-meta"><span class="history-phone">📱 ${h.to}</span><span class="history-time">${timeStr}</span></div><div class="history-msg">${h.msg}</div></div>`;
+  // 진행 중 (임시저장)
+  renderDraftsList();
+  // 오늘 발송
+  renderTodayList();
+  // 전체 이력
+  renderHistoryList();
+}
+function renderDraftsList(){
+  const cnt=document.getElementById('drafts-count');
+  const el=document.getElementById('drafts-list');
+  if(!cnt||!el)return;
+  const all=[...listDrafts('quote').map(d=>({...d,kind:'quote'})),...listDrafts('report').map(d=>({...d,kind:'report'}))];
+  all.sort((a,b)=>b.savedAt-a.savedAt);
+  cnt.textContent=`(${all.length})`;
+  if(!all.length){el.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--gray-400);font-size:13px;">진행 중인 작업이 없습니다</div>';return;}
+  el.innerHTML=all.map(d=>{
+    const ago=draftAgo(d.savedAt);
+    const icon=d.kind==='quote'?'⚡':'📸';
+    const tabName=d.kind;
+    return `<div style="border:1px solid var(--gray-100);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:600;color:var(--gray-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${icon} ${esc(d.label||(d.kind==='quote'?'견적 작업':'보고서 작업'))}</div>
+        <div style="font-size:11.5px;color:var(--gray-400);margin-top:2px;">💾 ${ago}</div>
+      </div>
+      <button onclick="loadDraft('${d.kind}','${d.id}')" style="padding:8px 14px;background:var(--primary);color:#fff;border:0;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">이어서</button>
+      <button onclick="deleteDraft('${d.kind}','${d.id}')" title="삭제" style="padding:8px 10px;background:#fff;border:1px solid var(--gray-200);border-radius:10px;font-size:13px;cursor:pointer;color:var(--gray-400);">🗑</button>
+    </div>`;
   }).join('');
 }
+function renderTodayList(){
+  const cnt=document.getElementById('today-count');
+  const el=document.getElementById('today-list');
+  if(!cnt||!el)return;
+  const today=smsHistory.filter(h=>isToday(h.time));
+  cnt.textContent=`(${today.length})`;
+  if(!today.length){el.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--gray-400);font-size:13px;">오늘 발송 내역이 없습니다</div>';return;}
+  el.innerHTML=today.map(h=>renderHistoryItemHtml(h)).join('');
+}
+function renderHistoryList(){
+  const list=document.getElementById('history-list');
+  const cnt=document.getElementById('history-count');
+  if(!list||!cnt)return;
+  const filtered=histFilter==='all'?smsHistory:smsHistory.filter(h=>(h.type||'quote')===histFilter);
+  if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--gray-400);font-size:13px;">'+(histFilter==='all'?'발송 이력이 없습니다':'해당 유형 이력이 없습니다')+'</div>';cnt.textContent=`(0)`;return;}
+  cnt.textContent=`(${filtered.length})`;
+  list.innerHTML=filtered.map(h=>renderHistoryItemHtml(h)).join('');
+}
+function renderHistoryItemHtml(h){
+  const d=new Date(h.time);
+  const timeStr=`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const typeLabel=TYPE_LABELS_HIST[h.type||'quote']||'⚡ 견적';
+  const customer=h.customerName?` · ${esc(h.customerName)}`:'';
+  const nightTag=h.isNight?'<span style="font-size:10px;background:#FEF3C7;color:#B45309;padding:1px 6px;border-radius:6px;margin-left:4px;">🌙 야간</span>':'';
+  return `<div style="border-bottom:1px solid var(--gray-100);padding:10px 0;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+      <div style="font-size:12px;font-weight:600;color:var(--gray-700);">${typeLabel}${customer}${nightTag}</div>
+      <div style="font-size:11px;color:var(--gray-400);">${timeStr} · ${esc(h.to||'')}</div>
+    </div>
+    <div style="font-size:12px;color:var(--gray-500);max-height:60px;overflow:hidden;text-overflow:ellipsis;white-space:pre-wrap;">${esc((h.msg||'').slice(0,150))}${(h.msg||'').length>150?'…':''}</div>
+  </div>`;
+}
+// ── 임시저장 시스템 ──
+const DRAFT_TTL_DAYS=30;
+const DRAFT_MAX=20;
+function loadDraftsRaw(kind){
+  return JSON.parse(localStorage.getItem('ssak_drafts_'+kind)||'[]');
+}
+function saveDraftsRaw(kind,arr){
+  localStorage.setItem('ssak_drafts_'+kind,JSON.stringify(arr));
+}
+function listDrafts(kind){
+  const now=Date.now();
+  const ttlMs=DRAFT_TTL_DAYS*86400000;
+  let arr=loadDraftsRaw(kind).filter(d=>(now-d.savedAt)<ttlMs);
+  if(arr.length>DRAFT_MAX)arr=arr.slice(0,DRAFT_MAX);
+  saveDraftsRaw(kind,arr);
+  return arr;
+}
+function captureFormData(kind){
+  if(kind==='quote'){
+    return {
+      q_name:document.getElementById('q-name')?.value||'',
+      q_phone:document.getElementById('q-phone')?.value||'',
+      q_size:document.getElementById('q-size')?.value||'',
+      q_type:document.getElementById('q-type')?.value||'',
+      q_date:document.getElementById('q-date')?.value||'',
+      q_house:document.getElementById('q-house')?.value||'',
+      extras:document.querySelectorAll('.extra-chip.on')?Array.from(document.querySelectorAll('.extra-chip.on')).map(c=>c.dataset.id):[]
+    };
+  }
+  if(kind==='report'){
+    return {
+      rp_name:document.getElementById('rp-name')?.value||'',
+      rp_phone:document.getElementById('rp-phone')?.value||'',
+      rp_size:document.getElementById('rp-size')?.value||'',
+      rp_type:document.getElementById('rp-type')?.value||''
+    };
+  }
+  return {};
+}
+function applyFormData(kind,data){
+  if(!data)return;
+  if(kind==='quote'){
+    if('q_name' in data){const e=document.getElementById('q-name');if(e)e.value=data.q_name||'';}
+    if('q_phone' in data){const e=document.getElementById('q-phone');if(e)e.value=data.q_phone||'';}
+    if('q_size' in data){const e=document.getElementById('q-size');if(e)e.value=data.q_size||'';}
+    if('q_type' in data){const e=document.getElementById('q-type');if(e)e.value=data.q_type||'';}
+    if('q_date' in data){const e=document.getElementById('q-date');if(e)e.value=data.q_date||'';}
+    if('q_house' in data){const e=document.getElementById('q-house');if(e)e.value=data.q_house||'';}
+    document.querySelectorAll('.extra-chip').forEach(c=>{c.classList.toggle('on',(data.extras||[]).includes(c.dataset.id));});
+    if(typeof calcQuote==='function')calcQuote();
+  }
+  if(kind==='report'){
+    if('rp_name' in data){const e=document.getElementById('rp-name');if(e)e.value=data.rp_name||'';}
+    if('rp_phone' in data){const e=document.getElementById('rp-phone');if(e)e.value=data.rp_phone||'';}
+    if('rp_size' in data){const e=document.getElementById('rp-size');if(e)e.value=data.rp_size||'';}
+    if('rp_type' in data){const e=document.getElementById('rp-type');if(e)e.value=data.rp_type||'';}
+  }
+}
+function saveDraft(kind){
+  const data=captureFormData(kind);
+  // 자동 라벨 생성
+  let label='';
+  if(kind==='quote'){
+    const name=data.q_name?.trim();const size=data.q_size?.trim();
+    if(name&&size)label=`${name} (${size}평)`;
+    else if(size)label=`${size}평 견적`;
+    else if(name)label=`${name} 견적`;
+    else label='견적 작업';
+  } else if(kind==='report'){
+    const name=data.rp_name?.trim();const size=data.rp_size?.trim();
+    if(name&&size)label=`${name} (${size}평)`;
+    else if(size)label=`${size}평 보고서`;
+    else if(name)label=`${name} 보고서`;
+    else label='보고서 작업';
+  }
+  const customLabel=prompt('💾 저장 라벨 (수정 가능)',label);
+  if(customLabel===null)return;
+  const finalLabel=customLabel.trim()||label;
+  const arr=listDrafts(kind);
+  const id='d'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  arr.unshift({id,label:finalLabel,data,savedAt:Date.now()});
+  if(arr.length>DRAFT_MAX)arr.pop();
+  saveDraftsRaw(kind,arr);
+  updateDraftCount(kind);
+  toast('💾 임시저장 완료: '+finalLabel);
+}
+function loadDraft(kind,id){
+  const arr=listDrafts(kind);
+  const draft=arr.find(d=>d.id===id);
+  if(!draft){toast('❌ 작업을 찾을 수 없습니다');return;}
+  // 모달 닫기 + 탭 전환 + 폼 채우기
+  const modal=document.getElementById('draft-modal');if(modal)modal.style.display='none';
+  if(kind==='quote'){
+    const tab=document.getElementById('tab-quote');if(tab)switchTab('quote',tab);
+    if(typeof showQuoteForm==='function')showQuoteForm();
+  }else if(kind==='report'){
+    const tab=document.getElementById('tab-report');if(tab)switchTab('report',tab);
+    if(typeof showReportForm==='function')showReportForm();
+  }
+  setTimeout(()=>{applyFormData(kind,draft.data);toast('📂 불러왔습니다: '+draft.label);},150);
+}
+function deleteDraft(kind,id){
+  if(!confirm('이 작업을 삭제할까요?'))return;
+  const arr=listDrafts(kind).filter(d=>d.id!==id);
+  saveDraftsRaw(kind,arr);
+  updateDraftCount(kind);
+  if(document.getElementById('page-history').classList.contains('active'))renderDraftsList();
+  // 모달 열려있으면 갱신
+  const modal=document.getElementById('draft-modal');
+  if(modal&&modal.style.display==='flex'){openDraftList(kind);}
+  toast('삭제됨');
+}
+function newDraft(kind){
+  if(!confirm('현재 작업을 초기화할까요? (저장 안 한 내용은 사라집니다)'))return;
+  if(kind==='quote'){
+    ['q-name','q-phone','q-size','q-date'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+    document.querySelectorAll('.extra-chip').forEach(c=>c.classList.remove('on'));
+    if(typeof calcQuote==='function')calcQuote();
+  }else if(kind==='report'){
+    ['rp-name','rp-phone','rp-size'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  }
+  toast('🆕 새 작업 시작');
+}
+function openDraftList(kind){
+  const modal=document.getElementById('draft-modal');
+  const list=document.getElementById('draft-modal-list');
+  const title=document.getElementById('draft-modal-title');
+  if(!modal||!list)return;
+  title.textContent=kind==='quote'?'📂 저장된 견적 작업':'📂 저장된 보고서 작업';
+  const arr=listDrafts(kind);
+  if(!arr.length){list.innerHTML='<div style="text-align:center;padding:32px 0;color:var(--gray-400);font-size:13px;">저장된 작업이 없습니다</div>';}
+  else{
+    list.innerHTML=arr.map(d=>`<div style="border:1px solid var(--gray-100);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(d.label)}</div>
+        <div style="font-size:11.5px;color:var(--gray-400);margin-top:2px;">💾 ${draftAgo(d.savedAt)}</div>
+      </div>
+      <button onclick="loadDraft('${kind}','${d.id}')" style="padding:6px 12px;background:var(--primary);color:#fff;border:0;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">이어서</button>
+      <button onclick="deleteDraft('${kind}','${d.id}')" style="padding:6px 10px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;font-size:12px;cursor:pointer;color:var(--gray-400);">🗑</button>
+    </div>`).join('');
+  }
+  modal.style.display='flex';
+}
+function draftAgo(savedAt){
+  const ms=Date.now()-savedAt;
+  if(ms<60000)return '방금';
+  if(ms<3600000)return Math.floor(ms/60000)+'분 전';
+  if(ms<86400000)return Math.floor(ms/3600000)+'시간 전';
+  return Math.floor(ms/86400000)+'일 전';
+}
+function updateDraftCount(kind){
+  const arr=listDrafts(kind);
+  const el=document.getElementById(kind+'-draft-count');
+  if(el)el.textContent='('+arr.length+')';
+}
+// 페이지 로드 시 chip 카운트 초기화
+function initDraftCounts(){updateDraftCount('quote');updateDraftCount('report');}
+
 
 let editingTplIdx=-1;
 function resetTpl(){if(editingTplIdx<0)return;customTpls[editingTplIdx]={...DEFAULT_TPLS[editingTplIdx]};localStorage.setItem('ssak_tpls',JSON.stringify(customTpls));closeTplModal();renderTemplates();toast('↺ 기본값으로 초기화');}
@@ -1021,7 +1288,7 @@ async function sendFaqReply(i){
     }
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg:finalMsg,subject})});
     const data=await res.json();
-    if(data.success){saveHistory(to,msg,night);toast(night?'✅ FAQ 발송 완료 (야간 문구 추가)':'✅ FAQ 답변 발송 완료!');}
+    if(data.success){saveHistory(to,msg,night,'faq','');toast(night?'✅ FAQ 발송 완료 (야간 문구 추가)':'✅ FAQ 답변 발송 완료!');}
     else toast('❌ 발송 실패: '+(data.error||'오류'));
   }catch(e){toast('❌ 서버 연결 오류');}
 }
@@ -1924,7 +2191,7 @@ async function generateReport(){
     const data = await res.json();
 
     if(data.success){
-      saveHistory(phone, `청소완료 보고서 발송\n${data.pdfUrl}`, false);
+      saveHistory(phone, `청소완료 보고서 발송\n${data.pdfUrl}`, false, 'report', document.getElementById('rp-name')?.value?.trim()||'');
       // 완료 모달 표시
       const modal = document.getElementById('rp-complete-modal');
       const info  = document.getElementById('rp-complete-info');
