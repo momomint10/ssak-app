@@ -743,7 +743,7 @@ function buildMsg(size,type,total,extraItems){
   if(document.getElementById('opt-review')?.classList.contains('on'))links.push(`\n⭐ 고객후기: ${cfg.review}`);
   if(document.getElementById('opt-booking')?.classList.contains('on')){
     // 고객 정보를 URL에 담아 booking.html로 연결
-    const bookingBase = 'https://momomint10.github.io/ssak-app/booking.html';
+    const bookingBase = 'https://ssakapp.co.kr/booking.html';
     const bParams = new URLSearchParams({
       name:    name !== '고객님' ? name : '',
       phone:   document.getElementById('q-phone')?.value?.trim() || '',
@@ -822,7 +822,7 @@ async function sendSMS(){
     const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적안내`;
     // 예약링크 단축: 긴 URL을 토큰 URL로 교체
     let finalMsg = msg;
-    const bookingLongUrl = msg.match(/https:\/\/momomint10\.github\.io\/ssak-app\/booking\.html\?[^\s\n]+/);
+    const bookingLongUrl = msg.match(/https:\/\/ssakapp\.co\.kr\/booking\.html\?[^\s\n]+/);
     if (bookingLongUrl) {
       try {
         const tokenRes = await fetch(`${SERVER}/api/booking/token`, {
@@ -1001,7 +1001,7 @@ async function sendFaqReply(i){
     const subject = document.getElementById('msg-preview')?.dataset?.smsSubject || `[${cfg.company||'서프로클린'}] 견적안내`;
     // 예약링크 단축: 긴 URL을 토큰 URL로 교체
     let finalMsg = msg;
-    const bookingLongUrl = msg.match(/https:\/\/momomint10\.github\.io\/ssak-app\/booking\.html\?[^\s\n]+/);
+    const bookingLongUrl = msg.match(/https:\/\/ssakapp\.co\.kr\/booking\.html\?[^\s\n]+/);
     if (bookingLongUrl) {
       try {
         const tokenRes = await fetch(`${SERVER}/api/booking/token`, {
