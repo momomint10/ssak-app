@@ -615,11 +615,10 @@ select.form-input{cursor:pointer;}
       <button onclick="clearHistory()" style="padding:6px 12px;background:#fff;border:1.5px solid var(--gray-200);border-radius:10px;font-size:12px;color:var(--gray-400);cursor:pointer;">🗑️ 삭제</button>
     </div>
     <div style="display:flex;gap:6px;flex-wrap:wrap;">
-      <button class="chip on" id="hist-filter-all" onclick="setHistFilter('all')" style="font-size:12px;">전체</button>
-      <button class="chip" id="hist-filter-drafts" onclick="setHistFilter('drafts')" style="font-size:12px;">📝 작성중</button>
-      <button class="chip" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;">⚡ 견적</button>
-      <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;">📄 계약</button>
-      <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;">📸 보고</button>
+      <button class="chip on" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;">⚡ 견적발송</button>
+      <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;">📄 계약서</button>
+      <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;">📸 완료보고서</button>
+      <button class="chip" id="hist-filter-drafts" onclick="setHistFilter('drafts')" style="font-size:12px;">📝 임시저장</button>
     </div>
   </div>
 
@@ -1004,12 +1003,12 @@ async function updateBookingStatus(id, status, selectEl) {
 }
 
 // ── 발송이력 탭 렌더 (단순화: 1리스트 통합) ──
-let histFilter='all';
+let histFilter='quote';
 const HIST_TYPE_LABEL={quote:'견적',contract:'계약서',report:'보고서',faq:'FAQ'};
 const HIST_TYPE_ICON={quote:'⚡',contract:'📄',report:'📸',faq:'💬'};
 function setHistFilter(f){
   histFilter=f;
-  ['all','drafts','quote','contract','report'].forEach(k=>{
+  ['drafts','quote','contract','report'].forEach(k=>{
     const b=document.getElementById('hist-filter-'+k);
     if(b)b.classList.toggle('on',k===f);
   });
@@ -1033,9 +1032,9 @@ function renderHistory(){
   const sent=smsHistory.map(h=>({kind:'sent',type:h.type||'quote',label:formatHistLabel(h),time:new Date(h.time).getTime(),raw:h}));
   // 3) 합쳐서 시간순 정렬 (최신 우선)
   let all=[...drafts,...sent].sort((a,b)=>b.time-a.time);
-  // 4) 필터 적용
+  // 4) 필터 적용 (4개 카테고리)
   if(histFilter==='drafts')all=all.filter(x=>x.kind==='draft');
-  else if(histFilter!=='all')all=all.filter(x=>x.type===histFilter);
+  else all=all.filter(x=>x.type===histFilter);
   // 5) 카운트
   const cnt=document.getElementById('history-count');
   if(cnt)cnt.textContent=`(${all.length})`;
@@ -1043,7 +1042,7 @@ function renderHistory(){
   const list=document.getElementById('history-list');
   if(!list)return;
   if(!all.length){
-    list.innerHTML='<div style="text-align:center;padding:32px 0;color:var(--gray-400);font-size:13px;">'+(histFilter==='all'?'아직 활동이 없어요':'해당 항목이 없습니다')+'</div>';
+    list.innerHTML='<div style="text-align:center;padding:32px 0;color:var(--gray-400);font-size:13px;">해당 항목이 없습니다</div>';
     return;
   }
   list.innerHTML=all.map(item=>renderRow(item)).join('');
