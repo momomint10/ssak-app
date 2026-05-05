@@ -587,16 +587,14 @@ select.form-input{cursor:pointer;}
     <div class="card" style="margin-bottom:0;">
       <div class="form-group" style="margin:0;">
         <label class="form-label">고객에게 안내할 사항 (견적 메시지에 자동 포함)</label>
-        <textarea class="form-input" id="s-notice" rows="10" style="resize:vertical;font-size:13px;line-height:1.55;font-family:inherit;">━━━━ 안내사항 ━━━━
-① 현장 상태로 추가요금 가능
-② 입주청소: 샷시 외창 제외
-③ 모든 결제 시 VAT 10% 별도
-④ 청소 중 현장 비워주세요
-⑤ 시작 전 문 개방 부탁
-⑥ AS는 당일 검수만 가능
-⑦ 주차등록 사전 신청 부탁
-⑧ 취소 시 예약금 환불 불가
-━━━━━━━━━━━━━━</textarea>
+        <textarea class="form-input" id="s-notice" rows="8" style="resize:vertical;font-size:13px;line-height:1.55;font-family:inherit;">① 현장에 따라 추가요금 있어요
+② 샷시 외창은 청소 안 해요
+③ 결제 시 VAT 10%는 별도예요
+④ 청소 시 현장 비워주세요
+⑤ 시작 전에 문 열어주세요
+⑥ AS는 당일 검수까지예요
+⑦ 주차등록은 미리 부탁드려요
+⑧ 취소 시 환불은 어려워요</textarea>
       </div>
       <div style="font-size:11.5px;color:var(--gray-400);margin-top:10px;line-height:1.6;">💡 발송 옵션의 '📋 안내사항' 칩을 OFF하면 메시지에서 제외됩니다. 비워두면 기본 문구가 사용됩니다.</div>
     </div>
@@ -655,7 +653,7 @@ select.form-input{cursor:pointer;}
 <div id="toast"></div>
 
 <script>
-const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}],notice:'━━━━ 안내사항 ━━━━\n① 현장 상태로 추가요금 가능\n② 입주청소: 샷시 외창 제외\n③ 모든 결제 시 VAT 10% 별도\n④ 청소 중 현장 비워주세요\n⑤ 시작 전 문 개방 부탁\n⑥ AS는 당일 검수만 가능\n⑦ 주차등록 사전 신청 부탁\n⑧ 취소 시 예약금 환불 불가\n━━━━━━━━━━━━━━'};
+const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}],notice:'① 현장에 따라 추가요금 있어요\n② 샷시 외창은 청소 안 해요\n③ 결제 시 VAT 10%는 별도예요\n④ 청소 시 현장 비워주세요\n⑤ 시작 전에 문 열어주세요\n⑥ AS는 당일 검수까지예요\n⑦ 주차등록은 미리 부탁드려요\n⑧ 취소 시 환불은 어려워요'};
 let cfg=JSON.parse(localStorage.getItem('ssak_cfg')||'null')||{...DEFAULT_CFG,extras:[...DEFAULT_CFG.extras]};
 function saveCfg(){localStorage.setItem('ssak_cfg',JSON.stringify(cfg));}
 
