@@ -599,6 +599,28 @@ select.form-input{cursor:pointer;}
     </div>
   </div>
   <div class="settings-section">
+    <div class="settings-title">⏰ 자동 Follow-up (견적 미응답 시 리마인드)</div>
+    <div class="card" style="margin-bottom:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <label style="font-size:13px;font-weight:600;">자동 리마인드 사용</label>
+        <label style="position:relative;display:inline-block;width:44px;height:24px;">
+          <input type="checkbox" id="s-followup-enabled" onchange="const b=document.getElementById('followup-toggle-bg');if(b)b.style.background=this.checked?'var(--primary)':'var(--gray-300)';" style="opacity:0;width:0;height:0;">
+          <span onclick="document.getElementById('s-followup-enabled').click()" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--gray-300);border-radius:24px;transition:.3s;" id="followup-toggle-bg"></span>
+        </label>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <label class="form-label">발송 후 몇 시간 뒤 (1~168, 기본 24)</label>
+        <input class="form-input" id="s-followup-hours" type="number" min="1" max="168" value="24"/>
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">리마인드 문구 ({이름}, {업체명} 변수 사용)</label>
+        <textarea class="form-input" id="s-followup-msg" rows="3" style="resize:vertical;font-size:13px;line-height:1.55;font-family:inherit;">안녕하세요 {이름}님! 어제 보내드린 견적 검토하셨나요? 궁금한 점 있으시면 편하게 연락주세요 😊
+[{업체명}]</textarea>
+      </div>
+      <div style="font-size:11.5px;color:var(--gray-400);margin-top:10px;line-height:1.6;">💡 견적 발송 후 설정한 시간 뒤 자동 리마인드 SMS 발송. 고객이 그 사이 예약 신청하면 자동 취소됨.</div>
+    </div>
+  </div>
+  <div class="settings-section">
     <div class="settings-title">📋 견적 안내사항 (자동 포함)</div>
     <div class="card" style="margin-bottom:0;">
       <div class="form-group" style="margin:0;">
@@ -697,7 +719,7 @@ select.form-input{cursor:pointer;}
 <div id="toast"></div>
 
 <script>
-const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}],autoSelfNotify:false,notice:'① 현장에 따라 추가요금 있어요\n② 샷시 외창은 청소 안 해요\n③ 결제 시 VAT 10%는 별도예요\n④ 청소 시 현장 비워주세요\n⑤ 시작 전에 문 열어주세요\n⑥ AS는 당일 검수까지예요\n⑦ 주차등록은 미리 부탁드려요\n⑧ 취소 시 환불은 어려워요'};
+const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}],autoSelfNotify:false,followUpEnabled:false,followUpHours:24,followUpMsg:'안녕하세요 {이름}님! 어제 보내드린 견적 검토하셨나요? 궁금한 점 있으시면 편하게 연락주세요 😊\n[{업체명}]',notice:'① 현장에 따라 추가요금 있어요\n② 샷시 외창은 청소 안 해요\n③ 결제 시 VAT 10%는 별도예요\n④ 청소 시 현장 비워주세요\n⑤ 시작 전에 문 열어주세요\n⑥ AS는 당일 검수까지예요\n⑦ 주차등록은 미리 부탁드려요\n⑧ 취소 시 환불은 어려워요'};
 let cfg=JSON.parse(localStorage.getItem('ssak_cfg')||'null')||{...DEFAULT_CFG,extras:[...DEFAULT_CFG.extras]};
 function saveCfg(){localStorage.setItem('ssak_cfg',JSON.stringify(cfg));}
 
@@ -892,6 +914,35 @@ async function sendSMS(){
     if(data.success){
       saveHistory(to,msg,night,'quote',document.getElementById('q-name')?.value?.trim()||'');
       toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');
+
+      // 자동 Follow-up 예약 (옵션 ON 시)
+      if(cfg.followUpEnabled && cfg.followUpHours > 0){
+        try {
+          const cName = document.getElementById('q-name')?.value?.trim() || '';
+          const tplMsg = (cfg.followUpMsg || '안녕하세요 {이름}님! 어제 보내드린 견적 검토하셨나요?')
+            .replace(/\{이름\}/g, cName || '고객')
+            .replace(/\{업체명\}/g, cfg.company || '서프로클린');
+          fetch(`${SERVER}/api/reminders`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-admin-key': cfg.adminKey || ''
+            },
+            body: JSON.stringify({
+              anon_id: getAnon(),
+              customer_phone: to,
+              customer_name: cName,
+              message: tplMsg,
+              hours_later: parseInt(cfg.followUpHours, 10) || 24,
+              source_type: 'quote',
+              source_ref: new Date().toISOString()
+            })
+          }).then(r => r.json()).then(d => {
+            if(d.success) console.log('Follow-up 예약됨:', cfg.followUpHours, '시간 후');
+          }).catch(() => null);
+        } catch(e) { /* 무시 — 견적 자체는 발송 성공 */ }
+      }
+
       // 자동 본인 알림 (옵션 ON 시 사장님 폰에도 백업 SMS)
       if(cfg.autoSelfNotify){
         const ownerPhone=cfg.fromPhone||cfg.phone;
@@ -1450,6 +1501,15 @@ function loadSettingsForm(){
   if(selfNotifyEl)selfNotifyEl.checked=cfg.autoSelfNotify||false;
   const selfBg=document.getElementById('self-notify-toggle-bg');
   if(selfBg)selfBg.style.background=cfg.autoSelfNotify?'var(--primary)':'var(--gray-300)';
+  // Follow-up
+  const fuEnabled=document.getElementById('s-followup-enabled');
+  if(fuEnabled)fuEnabled.checked=cfg.followUpEnabled||false;
+  const fuBg=document.getElementById('followup-toggle-bg');
+  if(fuBg)fuBg.style.background=cfg.followUpEnabled?'var(--primary)':'var(--gray-300)';
+  const fuHours=document.getElementById('s-followup-hours');
+  if(fuHours)fuHours.value=cfg.followUpHours||24;
+  const fuMsg=document.getElementById('s-followup-msg');
+  if(fuMsg)fuMsg.value=cfg.followUpMsg||'안녕하세요 {이름}님! 어제 보내드린 견적 검토하셨나요? 궁금한 점 있으시면 편하게 연락주세요 😊\n[{업체명}]';
   // 📋 안내사항 로드
   const noticeEl=document.getElementById('s-notice');
   if(noticeEl)noticeEl.value=(cfg.notice!==undefined?cfg.notice:DEFAULT_CFG.notice)||'';
@@ -1490,6 +1550,13 @@ function saveSettings(){
   // 자동 본인 알림
   const selfNotifyEl2=document.getElementById('s-auto-self-notify');
   if(selfNotifyEl2)cfg.autoSelfNotify=selfNotifyEl2.checked;
+  // Follow-up
+  const fuE=document.getElementById('s-followup-enabled');
+  if(fuE)cfg.followUpEnabled=fuE.checked;
+  const fuH=document.getElementById('s-followup-hours');
+  if(fuH){const h=parseInt(fuH.value,10);cfg.followUpHours=Number.isFinite(h)&&h>=1&&h<=168?h:24;}
+  const fuM=document.getElementById('s-followup-msg');
+  if(fuM)cfg.followUpMsg=fuM.value.trim();
   // 📋 안내사항 저장
   const noticeSaveEl=document.getElementById('s-notice');
   if(noticeSaveEl)cfg.notice=noticeSaveEl.value.trim();
