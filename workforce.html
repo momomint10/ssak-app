@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>싹싹 — 인력매칭</title>
+<title>싹싹 — 동료</title>
 <meta name="theme-color" content="#FF385C">
 <link rel="stylesheet" href="design.css">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
@@ -246,25 +246,25 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 <div class="shell">
   <div class="hd">
     <div class="hd-top">
-      <div><div class="hd-title">인력 매칭</div><div class="hd-sub">Recruitment</div></div>
+      <div><div class="hd-title">동료</div><div class="hd-sub">Coworkers</div></div>
       <button class="btn-hd" id="hd-btn" onclick="onHdBtn()">프로필 등록</button>
     </div>
     <div class="tab-row">
       <div class="tabs-seg">
-        <button class="tab on" id="tab-find" onclick="switchTab('find')">인력 찾기</button>
-        <button class="tab" id="tab-job"  onclick="switchTab('job')">채용정보</button>
-        <button class="tab" id="tab-my"   onclick="switchTab('my')">내 현황</button>
+        <button class="tab on" id="tab-find" onclick="switchTab('find')">동료 찾기</button>
+        <button class="tab" id="tab-job"  onclick="switchTab('job')">동료 모집</button>
+        <button class="tab" id="tab-my"   onclick="switchTab('my')">내 활동</button>
       </div>
     </div>
   </div>
 
-  <!-- 인력 찾기 -->
+  <!-- 동료 찾기 -->
   <div id="sec-find">
     <div class="filter-bar" id="region-filter"></div>
     <div class="list" id="worker-list"></div>
   </div>
 
-  <!-- 채용정보 -->
+  <!-- 동료 모집 -->
   <div id="sec-job" style="display:none;">
     <div class="filter-bar" id="job-region-filter"></div>
     <div class="list" id="job-list"></div>
@@ -405,7 +405,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
   <button class="ni" onclick="location.href='index.html'"><div class="ni-ico">🏠</div><div>홈</div></button>
   <button class="ni" onclick="location.href='ssak-quote.html'"><div class="ni-ico">⚡</div><div>고객케어</div></button>
   <button class="ni" onclick="location.href='schedule.html'"><div class="ni-ico">📅</div><div>스케줄</div></button>
-  <button class="ni on"><div class="ni-ico">👥</div><div>인력매칭</div></button>
+  <button class="ni on"><div class="ni-ico">👥</div><div>동료</div></button>
   <button class="ni" onclick="location.href='my.html'"><div class="ni-ico">👤</div><div>MY</div></button>
 </div>
 <div id="toast"></div>

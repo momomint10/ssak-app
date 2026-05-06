@@ -661,7 +661,7 @@ select.form-input{cursor:pointer;}
   <button class="nav-item" onclick="location.href='index.html'"><div class="nav-icon">🏠</div><div>홈</div></button>
   <button class="nav-item active"><div class="nav-icon">⚡</div><div>고객케어</div></button>
   <button class="nav-item" onclick="location.href='schedule.html'"><div class="nav-icon">📅</div><div>스케줄</div></button>
-  <button class="nav-item" onclick="location.href='workforce.html'"><div class="nav-icon">👥</div><div>인력매칭</div></button>
+  <button class="nav-item" onclick="location.href='workforce.html'"><div class="nav-icon">👥</div><div>동료</div></button>
   <button class="nav-item" onclick="location.href='my.html'"><div class="nav-icon">👤</div><div>MY</div></button>
 </div>
 
@@ -919,6 +919,35 @@ function saveHistory(to,msg,isNight,type,customerName){
 }
 function clearHistory(){if(!confirm('전체 이력을 삭제할까요?'))return;smsHistory=[];localStorage.removeItem('ssak_history');renderHistory();toast('이력 삭제 완료');}
 function deleteSentHistory(time){if(!time)return;if(!confirm('이 항목을 삭제할까요?'))return;smsHistory=smsHistory.filter(h=>h.time!==time);localStorage.setItem('ssak_history',JSON.stringify(smsHistory));renderHistory();toast('삭제됨');}
+function resendFromHistory(time){
+  if(!time)return;
+  const h=smsHistory.find(x=>x.time===time);
+  if(!h){toast('항목을 찾을 수 없습니다');return;}
+  // 메시지 본문에서 평수 추출 (예: "32평 입주 전 청소")
+  const sizeMatch=(h.msg||'').match(/(\d+)\s*평/);
+  const size=sizeMatch?sizeMatch[1]:'';
+  const targetType=h.type==='report'?'report':'quote';
+  // 탭 전환 + 폼 채움
+  const tab=document.getElementById('tab-'+targetType);
+  if(tab && typeof switchTab==='function'){switchTab(targetType, tab);}
+  // 폼 활성화 (랜딩 → 폼)
+  if(targetType==='quote' && typeof showQuoteForm==='function'){showQuoteForm();}
+  if(targetType==='report' && typeof showReportForm==='function'){showReportForm();}
+  setTimeout(()=>{
+    if(targetType==='quote'){
+      // 이름/전화는 새 고객용으로 비워두고 평수만 채움
+      const nameEl=document.getElementById('q-name');if(nameEl)nameEl.value='';
+      const phoneEl=document.getElementById('q-phone');if(phoneEl)phoneEl.value='';
+      const sizeEl=document.getElementById('q-size');if(sizeEl && size)sizeEl.value=size;
+      if(typeof calcQuote==='function')calcQuote();
+    }else if(targetType==='report'){
+      const nameEl=document.getElementById('rp-name');if(nameEl)nameEl.value='';
+      const phoneEl=document.getElementById('rp-phone');if(phoneEl)phoneEl.value='';
+      const sizeEl=document.getElementById('rp-size');if(sizeEl && size)sizeEl.value=size;
+    }
+    toast(`⚡ ${size?size+'평 ':''}템플릿 불러옴 (이름/전화 입력)`);
+  }, 150);
+}
 
 // ══════════════════════════════════════════════════════════════════
 // 📅 예약 목록 관리
@@ -1063,9 +1092,13 @@ function renderRow(item){
   if(isDraft){
     action=`<button onclick="loadDraft('${item.type}','${item.id}')" style="padding:6px 10px;background:var(--primary);color:#fff;border:0;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;">이어서</button><button onclick="deleteDraft('${item.type}','${item.id}')" style="padding:6px 8px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;font-size:11px;cursor:pointer;color:var(--gray-400);flex-shrink:0;">🗑</button>`;
   }else{
-    // 발송 이력 — 개별 삭제
+    // 발송 이력 — 견적/보고서는 다시 보내기 + 삭제
     const sentTime=esc(item.raw?.time||'');
-    action=`<button onclick="deleteSentHistory('${sentTime}')" style="padding:6px 8px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;font-size:11px;cursor:pointer;color:var(--gray-400);flex-shrink:0;">🗑</button>`;
+    let resendBtn = '';
+    if(item.type === 'quote' || item.type === 'report'){
+      resendBtn = `<button onclick="resendFromHistory('${sentTime}')" style="padding:6px 10px;background:#fff;border:1.5px solid var(--primary);color:var(--primary);border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;">⚡ 다시</button>`;
+    }
+    action=resendBtn + `<button onclick="deleteSentHistory('${sentTime}')" style="padding:6px 8px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;font-size:11px;cursor:pointer;color:var(--gray-400);flex-shrink:0;">🗑</button>`;
   }
   return `<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 4px;border-bottom:1px solid var(--gray-100);gap:8px;">
     <div style="flex:1;min-width:0;">

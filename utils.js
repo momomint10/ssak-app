@@ -157,11 +157,11 @@ function initStickyHeader() {
 
 // ── Phase 3-B: 인앱 메신저 배지 ───────────────────────────────
 // 모든 nav 패턴 지원 (ds-nav-item / nav-item / ni)
-// 텍스트 "인력매칭" 포함 버튼을 자동 탐색 → 빨간 배지 부착 + 30초 폴링
+// 텍스트 "동료" 포함 버튼을 자동 탐색 → 빨간 배지 부착 + 30초 폴링
 function _findWorkforceNavButtons() {
   // 4가지 nav 패턴 지원: <nav>, .nav, .ds-nav, .bottom-nav
   const buttons = document.querySelectorAll('nav button, .nav button, .ds-nav button, .bottom-nav button');
-  return Array.from(buttons).filter(b => b.textContent.includes('인력매칭'));
+  return Array.from(buttons).filter(b => b.textContent.includes('동료'));
 }
 
 function _ensureNavBadgeStyle() {
@@ -214,7 +214,7 @@ function initNavBadge() {
   if (window._navBadgeInited) return;
   window._navBadgeInited = true;
   setupNavBadge();
-  if (!_findWorkforceNavButtons().length) return; // 인력매칭 nav 없는 페이지(sign/booking)는 폴링도 스킵
+  if (!_findWorkforceNavButtons().length) return; // 동료 nav 없는 페이지(sign/booking)는 폴링도 스킵
   refreshNavBadge();
   _navBadgeInterval = setInterval(refreshNavBadge, 30000);
   document.addEventListener('visibilitychange', () => {
