@@ -586,6 +586,19 @@ select.form-input{cursor:pointer;}
     </div>
   </div>
   <div class="settings-section">
+    <div class="settings-title">📲 자동 본인 알림 (옵션)</div>
+    <div class="card" style="margin-bottom:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <label style="font-size:13px;font-weight:600;">견적 발송 시 사장님 본인 폰에도 백업 SMS</label>
+        <label style="position:relative;display:inline-block;width:44px;height:24px;">
+          <input type="checkbox" id="s-auto-self-notify" onchange="const b=document.getElementById('self-notify-toggle-bg');if(b)b.style.background=this.checked?'var(--primary)':'var(--gray-300)';" style="opacity:0;width:0;height:0;">
+          <span onclick="document.getElementById('s-auto-self-notify').click()" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--gray-300);border-radius:24px;transition:.3s;" id="self-notify-toggle-bg"></span>
+        </label>
+      </div>
+      <div style="font-size:11.5px;color:var(--gray-400);line-height:1.6;">💡 ON 시 견적 발송할 때마다 "누구에게 얼마 보냈는지" 사장님 폰으로도 SMS 받음 (이력 백업).</div>
+    </div>
+  </div>
+  <div class="settings-section">
     <div class="settings-title">📋 견적 안내사항 (자동 포함)</div>
     <div class="card" style="margin-bottom:0;">
       <div class="form-group" style="margin:0;">
@@ -613,11 +626,15 @@ select.form-input{cursor:pointer;}
     <div style="margin-bottom:10px;">
       <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);">📋 발송이력 <span id="history-count" style="font-size:13px;color:var(--gray-500);font-weight:400;">(0)</span></div>
     </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
       <button class="chip on" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;">견적발송</button>
       <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;">계약서</button>
       <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;">완료보고서</button>
       <button class="chip" id="hist-filter-drafts" onclick="setHistFilter('drafts')" style="font-size:12px;">임시저장</button>
+      <span style="margin-left:auto;display:inline-flex;gap:0;border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;">
+        <button class="hist-mode on" id="hist-mode-flat" onclick="setHistMode('flat')" style="padding:5px 10px;background:var(--primary);color:#fff;border:0;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">📋 목록</button>
+        <button class="hist-mode" id="hist-mode-customer" onclick="setHistMode('customer')" style="padding:5px 10px;background:#fff;color:var(--gray-500);border:0;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">👥 고객별</button>
+      </span>
     </div>
   </div>
 
@@ -680,7 +697,7 @@ select.form-input{cursor:pointer;}
 <div id="toast"></div>
 
 <script>
-const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}],notice:'① 현장에 따라 추가요금 있어요\n② 샷시 외창은 청소 안 해요\n③ 결제 시 VAT 10%는 별도예요\n④ 청소 시 현장 비워주세요\n⑤ 시작 전에 문 열어주세요\n⑥ AS는 당일 검수까지예요\n⑦ 주차등록은 미리 부탁드려요\n⑧ 취소 시 환불은 어려워요'};
+const DEFAULT_CFG={adminKey:'',company:'서프로클린',phone:'010-1234-5678',video:'https://youtu.be/샘플',kakao:'https://pf.kakao.com/샘플',review:'https://naver.me/후기',booking:'https://forms.gle/예약',p1:8000,p2:6500,p3:5500,apiKey:'',apiSecret:'',fromPhone:'',adminKey:'',nightEnabled:false,nightStart:'21:00',nightEnd:'09:00',nightMsg:'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊',extras:[{id:'balcony',label:'🪟 발코니',price:30000},{id:'window',label:'✨ 창문청소',price:40000},{id:'hood',label:'🍳 주방후드',price:25000},{id:'ac',label:'❄️ 에어컨',price:50000},{id:'fridge',label:'🧊 냉장고',price:35000}],autoSelfNotify:false,notice:'① 현장에 따라 추가요금 있어요\n② 샷시 외창은 청소 안 해요\n③ 결제 시 VAT 10%는 별도예요\n④ 청소 시 현장 비워주세요\n⑤ 시작 전에 문 열어주세요\n⑥ AS는 당일 검수까지예요\n⑦ 주차등록은 미리 부탁드려요\n⑧ 취소 시 환불은 어려워요'};
 let cfg=JSON.parse(localStorage.getItem('ssak_cfg')||'null')||{...DEFAULT_CFG,extras:[...DEFAULT_CFG.extras]};
 function saveCfg(){localStorage.setItem('ssak_cfg',JSON.stringify(cfg));}
 
@@ -872,7 +889,21 @@ async function sendSMS(){
     }
     const res=await fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,msg:finalMsg,subject})});
     const data=await res.json();
-    if(data.success){saveHistory(to,msg,night,'quote',document.getElementById('q-name')?.value?.trim()||'');toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');}
+    if(data.success){
+      saveHistory(to,msg,night,'quote',document.getElementById('q-name')?.value?.trim()||'');
+      toast(night?'✅ 발송 완료 (야간 문구 추가됨)':'✅ 문자 발송 완료!');
+      // 자동 본인 알림 (옵션 ON 시 사장님 폰에도 백업 SMS)
+      if(cfg.autoSelfNotify){
+        const ownerPhone=cfg.fromPhone||cfg.phone;
+        if(ownerPhone && ownerPhone.replace(/[^0-9]/g,'').replace(/-/g,'') !== to.replace(/-/g,'')){
+          const who=document.getElementById('q-name')?.value?.trim()||'고객';
+          const sizeStr=document.getElementById('q-size')?.value;
+          const priceStr=document.getElementById('qr-price')?.textContent?.trim();
+          const summary=`📤 견적 발송 완료\n${who}님 (${to})\n${sizeStr?sizeStr+'평':''} ${priceStr||''}`;
+          fetch(`${SERVER}/api/sms/send`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:ownerPhone.replace(/-/g,''),msg:summary,subject:'[싹싹] 발송 백업'})}).catch(()=>null);
+        }
+      }
+    }
     else toast('❌ 발송 실패: '+(data.error||'오류'));
   }catch(err){toast('서버 연결 오류.');}
   finally{document.getElementById('send-btn-text').textContent='발송';document.getElementById('send-loading').style.display='none';btn.disabled=false;}
@@ -1051,7 +1082,22 @@ function timeAgoShort(t){
   if(ms<2*86400000)return '어제';
   const d=new Date(t);return `${d.getMonth()+1}/${d.getDate()}`;
 }
+let histMode='flat'; // 'flat' | 'customer'
+function setHistMode(m){
+  histMode=m;
+  ['flat','customer'].forEach(k=>{
+    const b=document.getElementById('hist-mode-'+k);
+    if(b){
+      b.classList.toggle('on', k===m);
+      b.style.background = k===m ? 'var(--primary)' : '#fff';
+      b.style.color = k===m ? '#fff' : 'var(--gray-500)';
+    }
+  });
+  renderHistory();
+}
 function renderHistory(){
+  if(histMode === 'customer') return renderHistoryByCustomer();
+  // 기본: 평면 목록 (기존 흐름)
   // 1) 임시저장 → 통합 항목 (kind: draft)
   const drafts=[
     ...listDrafts('quote').map(d=>({kind:'draft',type:'quote',id:d.id,label:d.label,time:d.savedAt,_data:d.data})),
@@ -1082,6 +1128,67 @@ function formatHistLabel(h){
   if(h.to){const t=String(h.to).replace(/-/g,'');return t.length>=4?'***'+t.slice(-4):t;}
   return '고객';
 }
+function _normalizePhone(p){return String(p||'').replace(/[^0-9]/g,'');}
+function renderHistoryByCustomer(){
+  // 발송이력 + 임시저장을 phone 기준으로 그룹핑
+  const drafts=[
+    ...listDrafts('quote').map(d=>({kind:'draft',type:'quote',id:d.id,label:d.label,time:d.savedAt,phone:_normalizePhone(d.data?.q_phone),customerName:d.data?.q_name||''})),
+    ...listDrafts('report').map(d=>({kind:'draft',type:'report',id:d.id,label:d.label,time:d.savedAt,phone:_normalizePhone(d.data?.rp_phone),customerName:d.data?.rp_name||''})),
+  ];
+  const sent=smsHistory.map(h=>({kind:'sent',type:h.type||'quote',time:new Date(h.time).getTime(),phone:_normalizePhone(h.to),customerName:h.customerName||'',raw:h}));
+  
+  // 필터 적용 (filter chip)
+  let all=[...drafts,...sent];
+  if(histFilter==='drafts')all=all.filter(x=>x.kind==='draft');
+  else all=all.filter(x=>x.type===histFilter);
+  
+  // 고객별 그룹핑 (phone 기준 — 빈 phone은 'unknown' 그룹)
+  const groups={};
+  all.forEach(item=>{
+    const key=item.phone||'unknown';
+    if(!groups[key])groups[key]={phone:item.phone,name:item.customerName,items:[]};
+    if(item.customerName && !groups[key].name)groups[key].name=item.customerName;
+    groups[key].items.push(item);
+  });
+  // 그룹 내 시간 정렬, 그룹 자체는 가장 최근 활동 기준 정렬
+  const sortedGroups=Object.values(groups).map(g=>{
+    g.items.sort((a,b)=>b.time-a.time);
+    g.lastTime=g.items[0]?.time||0;
+    return g;
+  }).sort((a,b)=>b.lastTime-a.lastTime);
+  
+  // 카운트
+  const cnt=document.getElementById('history-count');
+  if(cnt)cnt.textContent=`(${sortedGroups.length}명)`;
+  
+  // 렌더
+  const list=document.getElementById('history-list');
+  if(!list)return;
+  if(!sortedGroups.length){
+    list.innerHTML='<div style="text-align:center;padding:32px 0;color:var(--gray-400);font-size:13px;">해당 항목이 없습니다</div>';
+    return;
+  }
+  list.innerHTML=sortedGroups.map(g=>{
+    const phoneDisplay=g.phone?g.phone.replace(/(\d{3})(\d{3,4})(\d{4})/,'$1-$2-$3'):'(번호 없음)';
+    const itemsHtml=g.items.map(item=>{
+      const icon=HIST_TYPE_ICON[item.type]||'⚡';
+      const typeLabel=HIST_TYPE_LABEL[item.type]||'견적';
+      const isDraft=item.kind==='draft';
+      const status=isDraft?`📝 ${typeLabel} 작성중`:`${typeLabel} 발송 ✓`;
+      const statusColor=isDraft?'#B45309':'#059669';
+      const timeStr=timeAgoShort(item.time);
+      return `<div style="padding:6px 0;display:flex;justify-content:space-between;align-items:center;font-size:12px;">
+        <span><span style="color:${statusColor};">${icon} ${esc(status)}</span></span>
+        <span style="color:var(--gray-400);font-size:11px;">${timeStr}</span>
+      </div>`;
+    }).join('');
+    return `<div style="border:1px solid var(--gray-100);border-radius:12px;padding:12px;margin-bottom:10px;background:#fff;">
+      <div style="font-size:14px;font-weight:600;color:var(--gray-900);margin-bottom:4px;">📞 ${esc(g.name||'고객')} <span style="font-size:12px;color:var(--gray-400);font-weight:400;">${phoneDisplay}</span></div>
+      ${itemsHtml}
+    </div>`;
+  }).join('');
+}
+
 function renderRow(item){
   const icon=HIST_TYPE_ICON[item.type]||'⚡';
   const typeLabel=HIST_TYPE_LABEL[item.type]||'견적';
@@ -1338,6 +1445,11 @@ function loadSettingsForm(){
   document.getElementById('s-night-start').value=cfg.nightStart||'21:00';
   document.getElementById('s-night-end').value=cfg.nightEnd||'09:00';
   document.getElementById('s-night-msg').value=cfg.nightMsg||'🌙 야간에 문의 주셨네요! 내일 오전 9시 이후 연락드리겠습니다. 감사합니다 😊';
+  // 자동 본인 알림
+  const selfNotifyEl=document.getElementById('s-auto-self-notify');
+  if(selfNotifyEl)selfNotifyEl.checked=cfg.autoSelfNotify||false;
+  const selfBg=document.getElementById('self-notify-toggle-bg');
+  if(selfBg)selfBg.style.background=cfg.autoSelfNotify?'var(--primary)':'var(--gray-300)';
   // 📋 안내사항 로드
   const noticeEl=document.getElementById('s-notice');
   if(noticeEl)noticeEl.value=(cfg.notice!==undefined?cfg.notice:DEFAULT_CFG.notice)||'';
@@ -1375,6 +1487,9 @@ function saveSettings(){
   cfg.nightStart=document.getElementById('s-night-start').value;
   cfg.nightEnd=document.getElementById('s-night-end').value;
   cfg.nightMsg=document.getElementById('s-night-msg').value.trim();
+  // 자동 본인 알림
+  const selfNotifyEl2=document.getElementById('s-auto-self-notify');
+  if(selfNotifyEl2)cfg.autoSelfNotify=selfNotifyEl2.checked;
   // 📋 안내사항 저장
   const noticeSaveEl=document.getElementById('s-notice');
   if(noticeSaveEl)cfg.notice=noticeSaveEl.value.trim();
