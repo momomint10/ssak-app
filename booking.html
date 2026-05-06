@@ -334,9 +334,13 @@ function submitBooking() {
   btn.disabled = true;
   btn.textContent = '⏳ 신청 중...';
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  // 10초 timeout (응답 안 오면 강제 종료)
+  const _ctrl = new AbortController();
+  const _tid = setTimeout(() => _ctrl.abort(), 10000);
   fetch(SERVER + '/api/booking', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
+    signal: _ctrl.signal,
     body: JSON.stringify({name, phone, address, size, type, date, time, notes,
       ownerPhone: cfg.fromPhone || cfg.phone || '',
       company: cfg.company || '싹싹클린',
@@ -366,11 +370,14 @@ function submitBooking() {
       btn.textContent = '📅 예약 신청하기';
     }
   })
-  .catch(() => {
-    showToast('서버 오류. 잠시 후 다시 시도해주세요.');
+  .catch((e) => {
+    clearTimeout(_tid);
+    const isAbort = e && e.name === 'AbortError';
+    showToast(isAbort ? '응답 시간 초과. 다시 시도해주세요.' : '서버 오류. 잠시 후 다시 시도해주세요.');
     btn.disabled = false;
     btn.textContent = '📅 예약 신청하기';
-  });
+  })
+  .finally(() => { clearTimeout(_tid); });
 }
 
 let toastTimer;
