@@ -653,6 +653,7 @@ select.form-input{cursor:pointer;}
       <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;">계약서</button>
       <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;">완료보고서</button>
       <button class="chip" id="hist-filter-drafts" onclick="setHistFilter('drafts')" style="font-size:12px;">임시저장</button>
+      <button class="chip" id="hist-filter-reminders" onclick="setHistFilter('reminders')" style="font-size:12px;">⏰ 예약 발송</button>
       <span style="margin-left:auto;display:inline-flex;gap:0;border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;">
         <button class="hist-mode on" id="hist-mode-flat" onclick="setHistMode('flat')" style="padding:5px 10px;background:var(--primary);color:#fff;border:0;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">📋 목록</button>
         <button class="hist-mode" id="hist-mode-customer" onclick="setHistMode('customer')" style="padding:5px 10px;background:#fff;color:var(--gray-500);border:0;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">👥 고객별</button>
@@ -1119,7 +1120,7 @@ const HIST_TYPE_LABEL={quote:'견적',contract:'계약서',report:'보고서',fa
 const HIST_TYPE_ICON={quote:'⚡',contract:'📄',report:'📸',faq:'💬'};
 function setHistFilter(f){
   histFilter=f;
-  ['drafts','quote','contract','report'].forEach(k=>{
+  ['drafts','quote','contract','report','reminders'].forEach(k=>{
     const b=document.getElementById('hist-filter-'+k);
     if(b)b.classList.toggle('on',k===f);
   });
@@ -1148,6 +1149,7 @@ function setHistMode(m){
 }
 function renderHistory(){
   if(histMode === 'customer') return renderHistoryByCustomer();
+  if(histFilter === 'reminders') return renderRemindersList();
   // 기본: 평면 목록 (기존 흐름)
   // 1) 임시저장 → 통합 항목 (kind: draft)
   const drafts=[
@@ -1238,6 +1240,73 @@ function renderHistoryByCustomer(){
       ${itemsHtml}
     </div>`;
   }).join('');
+}
+
+async function renderRemindersList(){
+  const list=document.getElementById('history-list');
+  const cnt=document.getElementById('history-count');
+  if(!list)return;
+  list.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--gray-400);font-size:13px;">⏰ 예약 발송 불러오는 중...</div>';
+  try {
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg')||'{}');
+    const r = await fetch(`${SERVER}/api/reminders?anon_id=${encodeURIComponent(getAnon())}&status=scheduled`, {
+      headers: { 'x-admin-key': cfg.adminKey || '' }
+    });
+    const j = await r.json();
+    if (!j.success) {
+      list.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--gray-400);font-size:13px;">'+esc(j.error||'불러오지 못했습니다')+'</div>';
+      if(cnt)cnt.textContent='(0)';
+      return;
+    }
+    const reminders = j.data || [];
+    if(cnt)cnt.textContent=`(${reminders.length})`;
+    if(!reminders.length){
+      list.innerHTML='<div style="text-align:center;padding:32px 0;color:var(--gray-400);font-size:13px;">예약된 발송이 없습니다<br><span style="font-size:11.5px;">설정에서 ⏰ 자동 Follow-up을 켜면 견적 발송 후 자동 예약됩니다.</span></div>';
+      return;
+    }
+    list.innerHTML=reminders.map(rem=>{
+      const sendAt = new Date(rem.send_at);
+      const now = new Date();
+      const diffMs = sendAt - now;
+      let timeLabel;
+      if (diffMs <= 0) timeLabel = '곧 발송';
+      else if (diffMs < 3600000) timeLabel = Math.ceil(diffMs/60000) + '분 후';
+      else if (diffMs < 86400000) timeLabel = Math.ceil(diffMs/3600000) + '시간 후';
+      else timeLabel = Math.ceil(diffMs/86400000) + '일 후';
+      const phone = rem.customer_phone ? rem.customer_phone.replace(/(\d{3})(\d{3,4})(\d{4})/,'$1-$2-$3') : '';
+      const name = rem.customer_name || '고객';
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 4px;border-bottom:1px solid var(--gray-100);gap:8px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:600;color:var(--gray-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">⏰ ${esc(name)} <span style="font-size:11px;color:var(--gray-400);font-weight:400;">${phone}</span></div>
+          <div style="font-size:11.5px;color:var(--gray-500);margin-top:3px;display:flex;gap:6px;align-items:center;"><span style="color:#7c3aed;">${esc(timeLabel)} 발송 예정</span></div>
+        </div>
+        <button onclick="cancelReminder('${rem.id}')" style="padding:6px 10px;background:#fff;border:1px solid var(--gray-200);border-radius:8px;font-size:11px;cursor:pointer;color:var(--gray-500);flex-shrink:0;">취소</button>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML='<div style="text-align:center;padding:24px 0;color:#dc2626;font-size:13px;">서버 연결 오류</div>';
+    if(cnt)cnt.textContent='(0)';
+  }
+}
+
+async function cancelReminder(id){
+  if(!confirm('이 예약 발송을 취소할까요?'))return;
+  try {
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg')||'{}');
+    const r = await fetch(`${SERVER}/api/reminders/${encodeURIComponent(id)}?anon_id=${encodeURIComponent(getAnon())}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-key': cfg.adminKey || '' }
+    });
+    const j = await r.json();
+    if (j.success) {
+      toast('취소됨');
+      renderRemindersList();
+    } else {
+      toast('취소 실패: '+(j.error||'오류'));
+    }
+  } catch(e) {
+    toast('서버 연결 오류');
+  }
 }
 
 function renderRow(item){
