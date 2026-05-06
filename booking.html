@@ -339,11 +339,9 @@ function submitBooking() {
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({name, phone, address, size, type, date, time, notes,
       ownerPhone: cfg.fromPhone || cfg.phone || '',
-      apiKey: cfg.apiKey || '',
-      apiSecret: cfg.apiSecret || '',
-      fromPhone: cfg.fromPhone || '',
       company: cfg.company || '싹싹클린',
       companyName: cfg.company || '싹싹클린'
+      // ⚠️ apiKey/apiSecret/fromPhone 제거 — 서버 환경변수에서 로드 (보안 강화)
     })
   })
   .then(r => r.json())
