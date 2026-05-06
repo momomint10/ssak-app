@@ -286,8 +286,7 @@ select.form-input{cursor:pointer;}
     </div>
   </div>
   <div class="card"><div class="card-title">✅ 추가 서비스</div><div class="chips" id="extra-chips"></div></div>
-  <div class="card" style="padding:12px 16px;"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span style="font-size:12px;color:var(--gray-500);font-weight:600;margin-right:4px;">💼 작업</span><button class="chip" id="quote-save-btn" onclick="saveDraft('quote')" style="font-size:12px;padding:6px 12px;">💾 저장</button><button class="chip" id="quote-load-btn" onclick="openDraftList('quote')" style="font-size:12px;padding:6px 12px;">📂 불러오기 <span id="quote-draft-count">(0)</span></button><button class="chip" onclick="newDraft('quote')" style="font-size:12px;padding:6px 12px;">🆕 새로</button></div></div>
-  <div class="card"><div class="card-title">📤 발송 옵션</div><div class="chips"><button class="chip on" id="opt-video" onclick="this.classList.toggle('on');buildMsg()">📹 홍보영상</button><button class="chip on" id="opt-booking" onclick="this.classList.toggle('on');buildMsg()">📅 예약링크</button><button class="chip on" id="opt-notice" onclick="this.classList.toggle('on');buildMsg()">📋 안내사항</button><button class="chip" id="opt-review" onclick="this.classList.toggle('on');buildMsg()">⭐ 후기링크</button><button class="chip on" id="opt-kakao" onclick="this.classList.toggle('on');buildMsg()">💬 카카오</button></div></div>
+  <div class="card"><div class="card-title">📤 발송 옵션</div><div class="chips"><button class="chip on" id="opt-video" onclick="this.classList.toggle('on');buildMsg()">📹 홍보영상</button><button class="chip on" id="opt-booking" onclick="this.classList.toggle('on');buildMsg()">📅 예약링크</button><button class="chip on" id="opt-notice" onclick="this.classList.toggle('on');buildMsg()">📋 안내사항</button></div></div>
   <div class="quote-result" id="quote-result" style="display:none;"><div class="qr-label">예상 견적금액 (VAT 포함)</div><div class="qr-price" id="qr-price">—</div><div class="qr-rows" id="qr-rows"></div></div>
   <div class="card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
@@ -384,7 +383,6 @@ select.form-input{cursor:pointer;}
     </div>
   </div>
 </div>
-<div class="card" id="rp-draft-bar" style="padding:12px 16px;"><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"><span style="font-size:12px;color:var(--gray-500);font-weight:600;margin-right:4px;">💼 작업</span><button class="chip" onclick="saveDraft('report')" style="font-size:12px;padding:6px 12px;">💾 저장</button><button class="chip" onclick="openDraftList('report')" style="font-size:12px;padding:6px 12px;">📂 불러오기 <span id="report-draft-count">(0)</span></button><button class="chip" onclick="newDraft('report')" style="font-size:12px;padding:6px 12px;">🆕 새로</button></div></div>
 <div id="rp-form-body" style="display:none;">
 
   <!-- 임시저장 배너 -->
@@ -810,7 +808,7 @@ function buildMsg(size,type,total,extraItems){
   }
   const links=[];
   if(document.getElementById('opt-video')?.classList.contains('on'))links.push(`\n📹 시공영상: ${cfg.video}`);
-  if(document.getElementById('opt-review')?.classList.contains('on'))links.push(`\n⭐ 고객후기: ${cfg.review}`);
+
   if(document.getElementById('opt-booking')?.classList.contains('on')){
     // 고객 정보를 URL에 담아 booking.html로 연결
     const bookingBase = 'https://ssakapp.co.kr/booking.html';
@@ -826,7 +824,7 @@ function buildMsg(size,type,total,extraItems){
     [...bParams.keys()].forEach(k => { if(!bParams.get(k)) bParams.delete(k); });
     links.push(`\n📅 예약신청: ${bookingBase}?${bParams.toString()}`);
   }
-  if(document.getElementById('opt-kakao')?.classList.contains('on'))links.push(`\n💬 카카오: ${cfg.kakao}`);
+
   if(links.length)msg+=links.join('');
   const previewEl=document.getElementById('msg-preview');
   previewEl.textContent=msg;
