@@ -1,13 +1,11 @@
 // 싹싹 앱 Service Worker v2.0 (Web Push 지원)
-const CACHE_NAME = 'ssak-v8';
+const CACHE_NAME = 'ssak-v9';
 const STATIC_ASSETS = [
   '/',
   '/index.html?v=8',
   '/ssak-quote.html',
-  '/booking.html',
   '/schedule.html',
   '/my.html',
-  '/sign.html',
   '/community.html',
   '/market.html',
   '/workforce.html',
@@ -39,6 +37,13 @@ self.addEventListener('fetch', event => {
   if (url.hostname.includes('ssakssak-server') ||
       url.hostname.includes('supabase') ||
       url.hostname.includes('coolsms')) return;
+
+  // 동적 페이지(booking, sign) + 단축 URL(b/) — network-only (캐싱 안 함)
+  const isDynamic = /\/(booking|sign)\.html/.test(url.pathname) || url.pathname.startsWith('/b/');
+  if (isDynamic) {
+    event.respondWith(fetch(event.request).catch(() => new Response('서버 연결 오류', { status: 503 })));
+    return;
+  }
 
   event.respondWith(
     fetch(event.request).then(response => {
