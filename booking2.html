@@ -93,26 +93,66 @@
   .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#1E2130;color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
+<style>
+#diag-panel {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 9999;
+  background: #1a1a1a; color: #4ade80; font-family: monospace;
+  font-size: 12px; padding: 8px 12px; max-height: 200px;
+  overflow-y: auto; border-top: 2px solid #4ade80;
+  line-height: 1.5;
+}
+#diag-panel .err { color: #f87171; }
+#diag-panel .warn { color: #fbbf24; }
+#diag-panel .ok { color: #4ade80; }
+#diag-panel .info { color: #93c5fd; }
+#diag-panel .time { color: #888; font-size: 10px; }
+</style>
+<div id="diag-panel"></div>
+<script>
+// 화면 디버그 로거 (사장님이 직접 진행 상황 확인 가능)
+window.DLOG = function(msg, level='info') {
+  const panel = document.getElementById('diag-panel');
+  if (!panel) return;
+  const time = new Date().toLocaleTimeString('ko-KR');
+  const div = document.createElement('div');
+  div.className = level;
+  div.innerHTML = `<span class="time">${time}</span> ${msg}`;
+  panel.appendChild(div);
+  panel.scrollTop = panel.scrollHeight;
+};
+DLOG('📱 booking2.html 로드 완료', 'ok');
+DLOG('🌍 User-Agent: ' + navigator.userAgent.slice(0, 60) + '...', 'info');
+DLOG('🔧 Service Worker: ' + ('serviceWorker' in navigator ? '지원' : '미지원'), 'info');
+window.addEventListener('error', e => DLOG('❌ JS Error: ' + e.message, 'err'));
+</script>
 <script>
 // 🔧 진단/긴급 fix: 페이지 로드 시 옛 sw + 캐시 자동 청소 (한 번만)
 (async () => {
-  if ('serviceWorker' in navigator && !sessionStorage.getItem('sw-cleared-v10')) {
+  if ('serviceWorker' in navigator && !sessionStorage.getItem('sw-cleared-v11')) {
     try {
-      sessionStorage.setItem('sw-cleared-v10', '1');
+      sessionStorage.setItem('sw-cleared-v11', '1');
+      DLOG('🧹 sw 캐시 청소 시작...', 'warn');
       const regs = await navigator.serviceWorker.getRegistrations();
       let cleared = false;
       for (const r of regs) {
-        // 옛 sw 업데이트 트리거
         await r.update();
         cleared = true;
       }
+      DLOG('🧹 sw ' + regs.length + '개 업데이트 트리거', 'info');
       if ('caches' in window) {
         const keys = await caches.keys();
         await Promise.all(keys.map(k => caches.delete(k)));
+        DLOG('🧹 cache ' + keys.length + '개 삭제', 'info');
       }
-      // 한 번 새로고침해서 새 sw + 새 코드 적용
-      if (cleared) setTimeout(() => location.reload(), 200);
-    } catch(e) { console.log('sw clear error:', e); }
+      if (cleared) {
+        DLOG('🔄 잠시 후 새로고침...', 'warn');
+        setTimeout(() => location.reload(), 500);
+      } else {
+        DLOG('✅ sw 없음 — 청소 스킵', 'ok');
+      }
+    } catch(e) { DLOG('❌ sw clear error: ' + e.message, 'err'); }
+  } else {
+    DLOG('✅ sw 이미 청소됨 (스킵)', 'ok');
   }
 })();
 </script>
@@ -362,7 +402,8 @@ function submitBooking() {
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
   // 10초 timeout (응답 안 오면 강제 종료)
   const _ctrl = new AbortController();
-  const _tid = setTimeout(() => _ctrl.abort(), 10000);
+  const _tid = setTimeout(() => { _ctrl.abort(); DLOG('⏱ 10초 timeout 발동', 'warn'); }, 10000);
+  DLOG('📤 서버에 요청 전송 시작: ' + SERVER + '/api/booking', 'info');
   fetch(SERVER + '/api/booking', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
@@ -371,12 +412,13 @@ function submitBooking() {
       ownerPhone: cfg.fromPhone || cfg.phone || '',
       company: cfg.company || '싹싹클린',
       companyName: cfg.company || '싹싹클린'
-      // ⚠️ apiKey/apiSecret/fromPhone 제거 — 서버 환경변수에서 로드 (보안 강화)
     })
   })
-  .then(r => r.json())
+  .then(r => { DLOG('📥 HTTP ' + r.status + ' 응답 받음', r.ok ? 'ok' : 'err'); return r.json(); })
   .then(data => {
+    DLOG('📋 데이터: success=' + data.success + (data.error ? ', error=' + data.error : ''), data.success ? 'ok' : 'err');
     if (data.success) {
+      DLOG('✅ 예약 신청 성공!', 'ok');
       document.getElementById('screen-main').style.display = 'none';
       document.getElementById('screen-done').style.display = 'flex';
       // 완료 화면에 예약 정보 표시
@@ -399,11 +441,12 @@ function submitBooking() {
   .catch((e) => {
     clearTimeout(_tid);
     const isAbort = e && e.name === 'AbortError';
+    DLOG('❌ fetch 실패: ' + (e.name || 'Unknown') + ' - ' + (e.message || 'no message'), 'err');
     showToast(isAbort ? '응답 시간 초과. 다시 시도해주세요.' : '서버 오류. 잠시 후 다시 시도해주세요.');
     btn.disabled = false;
     btn.textContent = '📅 예약 신청하기';
   })
-  .finally(() => { clearTimeout(_tid); });
+  .finally(() => { clearTimeout(_tid); DLOG('🏁 fetch 흐름 종료', 'info'); });
 }
 
 let toastTimer;
