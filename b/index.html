@@ -3,8 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-store">
 <title>예약 신청</title>
-<script>location.replace('/booking.html'+location.search);</script>
+<script>
+// 옛 sw + 옛 cache 강제 해제 + booking2.html로 redirect
+(async () => {
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const r of regs) await r.update();
+    }
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  } catch(e) {}
+  // 타임스탬프 추가 강제 새로 받음
+  const params = new URLSearchParams(location.search);
+  params.set('_', Date.now());
+  location.replace('/booking2.html?' + params.toString());
+})();
+</script>
 </head>
 <body></body>
 </html>
