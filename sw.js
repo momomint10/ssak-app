@@ -1,5 +1,5 @@
 // 싹싹 앱 Service Worker v2.0 (Web Push 지원)
-const CACHE_NAME = 'ssak-v9';
+const CACHE_NAME = 'ssak-v10';
 const STATIC_ASSETS = [
   '/',
   '/index.html?v=8',
@@ -22,13 +22,23 @@ self.addEventListener('install', event => {
   );
 });
 
-// ── 활성화 ─────────────────────────────────────────────────────
+// ── 활성화 (강제 캐시 비우기 + 모든 클라이언트 새로고침) ──────────
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
-  );
+  event.waitUntil((async () => {
+    // 1) 모든 캐시 삭제 (현재 버전 포함 — 완전 초기화)
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+    // 2) 모든 클라이언트 제어권 즉시 획득
+    await self.clients.claim();
+    // 3) 모든 열린 페이지 강제 새로고침 (옛 booking.html 등 즉시 교체)
+    const clients = await self.clients.matchAll({ includeUncontrolled: true });
+    for (const c of clients) {
+      try {
+        // sw 컨텍스트에서 navigate로 reload 트리거
+        if ('navigate' in c) await c.navigate(c.url);
+      } catch (e) {}
+    }
+  })());
 });
 
 // ── Fetch: 네트워크 우선 ────────────────────────────────────────
