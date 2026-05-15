@@ -142,6 +142,33 @@ html, body {
 .ds-badge-pr    { background: var(--c-pr-l); color: var(--c-pr-d); }
 .ds-badge-teal  { background: var(--c-teal-l); color: var(--c-teal-d); }
 
+/* ── 인터랙티브 칩 (44pt 터치 영역, 50대 사장님 손가락 친화) ── */
+/* 표시-only는 .ds-badge, 클릭 가능한 chip은 .ds-chip-interactive */
+.ds-chip-interactive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--f-md);
+  font-weight: 600;
+  padding: 10px 18px;
+  min-height: 40px;
+  border-radius: var(--r-full);
+  background: var(--c-g100);
+  color: var(--c-g900);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s, border-color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-chip-interactive:hover { background: var(--c-g200); }
+.ds-chip-interactive:active { transform: scale(.97); }
+.ds-chip-interactive.is-active {
+  background: var(--c-pr-l);
+  color: var(--c-pr-d);
+  border-color: var(--c-pr);
+}
+
 /* ── 스피너 ───────────────────────────────────────────────────── */
 .ds-spin {
   width: 22px; height: 22px;
