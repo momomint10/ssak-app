@@ -94,7 +94,8 @@
   .sig-guide{position:absolute;bottom:18px;left:16px;right:16px;border-bottom:1.5px solid var(--gray-200);pointer-events:none;}
   .sig-guide-label{position:absolute;bottom:22px;left:0;font-size:10px;color:var(--gray-400);}
   .ow-sig-canvas{display:block;width:100%;height:130px;touch-action:none;cursor:crosshair;background:transparent;}
-  .sig-btns{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:10px;}
+  /* sticky 발송 버튼 영역 (TOP-F): 긴 계약서 스크롤 시에도 항상 보이게 */
+  .sig-btns{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:10px;position:sticky;bottom:0;background:rgba(255,253,248,0.96);backdrop-filter:blur(10px);padding:12px 0 max(12px,env(safe-area-inset-bottom));z-index:50;border-top:1px solid rgba(46,31,14,0.08);}
   .btn-clear{padding:12px;border-radius:12px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;}
   .btn-send{padding:12px;border-radius:12px;border:none;background:var(--brown);color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
   .btn-send:disabled{background:var(--gray-200);color:var(--gray-400);cursor:not-allowed;}
@@ -112,31 +113,39 @@
   .cust-sig-wrap.signed{border-color:var(--primary);border-style:solid;}
   #sig-canvas{display:block;width:100%;height:100px;touch-action:none;cursor:crosshair;}
   .cust-guide{position:absolute;bottom:16px;left:12px;right:12px;border-bottom:1px solid var(--gray-200);pointer-events:none;}
-  .btn-row{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:10px;}
+  /* sticky 서명 완료 버튼 영역 (고객측, TOP-F) */
+  .btn-row{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:10px;position:sticky;bottom:0;background:rgba(255,253,248,0.96);backdrop-filter:blur(10px);padding:12px 0 max(12px,env(safe-area-inset-bottom));z-index:50;border-top:1px solid rgba(46,31,14,0.08);}
   .btn-sig-clear{padding:11px;background:#fff;color:var(--gray-500);border:1.5px solid var(--gray-200);border-radius:12px;font-family:inherit;font-size:13px;cursor:pointer;font-weight:600;}
   .btn-confirm{padding:11px;background:var(--brown);color:#fff;border:none;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
   .btn-confirm:disabled{background:var(--gray-200);color:var(--gray-400);cursor:not-allowed;}
 
   /* ── 계약서 종이 (PDF 대상) ── */
   /* ── 계약서 영역 가독성 최적화 (2026-05-16) ──
-   * 사장님 + 고객 (20-60대) 양측 대상.
-   * 너무 작으면 50대+ 불편, 너무 크면 20대 답답. 13-15px 황금지점.
+   * 사장님 + 고객 (20-50대) 양측 대상.
+   * 기본 13px (모바일 본문 표준) + A-/A/A+ 토글로 사용자 선택 (TOP-A 적용)
    * 폰트: 나눔고딕 우선 (계약서/공문 한글 가독성 표준), system fallback */
-  .contract-paper{background:#fff;border:1px solid #ccc;border-radius:8px;padding:0;margin-bottom:14px;font-family:'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic','Pretendard Variable',Pretendard,-apple-system,sans-serif;overflow:hidden;}
+  :root { --ct-scale: 1; }   /* A- = 0.85 / A = 1 / A+ = 1.2 (JS로 동적 변경) */
+  /* 글자 크기 토글 (A-/A/A+) */
+  .ct-font-toggle{position:absolute;top:14px;right:14px;display:inline-flex;gap:3px;padding:3px;background:rgba(255,255,255,.18);border-radius:9px;backdrop-filter:blur(8px);}
+  .ct-ft-btn{padding:5px 9px;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:12px;color:rgba(255,255,255,.7);cursor:pointer;border-radius:6px;transition:background .15s,color .15s;line-height:1;min-width:28px;}
+  .ct-ft-btn.active{background:#fff;color:var(--ct-head);}
+  .ct-ft-btn:hover{color:#fff;}
+  .ct-ft-btn.active:hover{color:var(--ct-head);}
+  .contract-paper{position:relative;background:#fff;border:1px solid #ccc;border-radius:8px;padding:0;margin-bottom:14px;font-family:'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic','Pretendard Variable',Pretendard,-apple-system,sans-serif;overflow:hidden;}
   .ct-brand{background:var(--ct-head);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
   .ct-brand-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:0.3px;}
   .ct-brand-num{font-size:11px;color:rgba(255,255,255,.7);letter-spacing:0.3px;margin-top:2px;}
   .ct-inner{padding:20px 18px 0;}
-  .ct-main-title{text-align:center;font-size:17px;font-weight:700;letter-spacing:3px;color:#111;margin-bottom:4px;padding-bottom:10px;border-bottom:2.5px solid var(--ct-accent);}
-  .ct-subtitle{text-align:center;font-size:12px;color:#6a8060;line-height:1.5;margin:8px 0 18px;}
-  .ct-date{text-align:center;font-size:13px;font-weight:700;color:#333;margin:16px 0;}
-  table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:13px;}
-  table th{background:var(--ct-lite);padding:8px 11px;font-weight:700;border:1px solid var(--ct-border);color:var(--ct-head);text-align:left;white-space:nowrap;font-size:12px;}
+  .ct-main-title{text-align:center;font-size:calc(17px * var(--ct-scale));font-weight:700;letter-spacing:3px;color:#111;margin-bottom:4px;padding-bottom:10px;border-bottom:2.5px solid var(--ct-accent);}
+  .ct-subtitle{text-align:center;font-size:calc(12px * var(--ct-scale));color:#6a8060;line-height:1.5;margin:8px 0 18px;}
+  .ct-date{text-align:center;font-size:calc(13px * var(--ct-scale));font-weight:700;color:#333;margin:16px 0;}
+  table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:calc(13px * var(--ct-scale));}
+  table th{background:var(--ct-lite);padding:8px 11px;font-weight:700;border:1px solid var(--ct-border);color:var(--ct-head);text-align:left;white-space:nowrap;font-size:calc(12px * var(--ct-scale));}
   table td{padding:8px 11px;border:1px solid var(--ct-border);color:#2a2a2a;word-break:break-all;line-height:1.65;}
-  .tbl-head{background:var(--ct-head) !important;color:#fff !important;font-weight:700 !important;font-size:14px !important;letter-spacing:0.5px !important;padding:10px 12px !important;}
-  .tbl-note{font-size:11.5px;color:#4a7060;background:#f0faf6;line-height:1.65;font-style:italic;}
-  /* 조항 셀 폰트 (계약서 본문) — 20-50대 고객 모두에게 적당한 사이즈 */
-  .clause-td{vertical-align:top;font-size:13px;line-height:1.7;padding:11px 12px;}
+  .tbl-head{background:var(--ct-head) !important;color:#fff !important;font-weight:700 !important;font-size:calc(14px * var(--ct-scale)) !important;letter-spacing:0.5px !important;padding:10px 12px !important;}
+  .tbl-note{font-size:calc(11.5px * var(--ct-scale));color:#4a7060;background:#f0faf6;line-height:1.65;font-style:italic;}
+  /* 조항 셀 폰트 (계약서 본문) — 20-50대 고객 모두에게 적당한 사이즈, A-/A/A+ 토글 비례 적용 */
+  .clause-td{vertical-align:top;font-size:calc(13px * var(--ct-scale));line-height:1.7;padding:11px 12px;}
   /* hanging indent: 조 안에 항/호 대시(-, ①②) 또는 숫자 목록 있을 때 자동 들여쓰기 */
   .clause-td ul, .clause-td ol{padding-left:18px;margin:4px 0;}
   .clause-td li{padding-left:0;margin-bottom:4px;line-height:1.7;}
@@ -434,6 +443,13 @@
       <!-- 계약서 종이 (PDF 캡처 대상) -->
       <div class="contract-paper" id="contract-paper">
 
+        <!-- 글자 크기 토글 (A-/A/A+) — 20-50대 고객 모두 본인 선택 -->
+        <div class="ct-font-toggle" role="group" aria-label="글자 크기 조절">
+          <button class="ct-ft-btn" data-scale="0.85" onclick="setContractFontScale(0.85,this)" title="작게">A-</button>
+          <button class="ct-ft-btn active" data-scale="1" onclick="setContractFontScale(1,this)" title="기본">A</button>
+          <button class="ct-ft-btn" data-scale="1.2" onclick="setContractFontScale(1.2,this)" title="크게">A+</button>
+        </div>
+
         <!-- 브랜딩 헤더 -->
         <div class="ct-brand">
           <div>
@@ -615,6 +631,31 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+// ── 글자 크기 토글 (TOP-A): A-/A/A+ ──────────────────────────
+// 20-50대 고객 모두 본인 편한 크기로. localStorage에 저장 → 다음 방문 시 자동 복원.
+function setContractFontScale(scale, btn) {
+  document.documentElement.style.setProperty('--ct-scale', scale);
+  try { localStorage.setItem('ssak_contract_font_scale', String(scale)); } catch(e){}
+  document.querySelectorAll('.ct-ft-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+// 페이지 로드 시 복원
+(function restoreContractFontScale(){
+  try {
+    const saved = parseFloat(localStorage.getItem('ssak_contract_font_scale') || '1');
+    if (Math.abs(saved - 1) < 0.01) return;  // 기본값이면 스킵
+    document.documentElement.style.setProperty('--ct-scale', saved);
+    // active state 복원은 DOM ready 후
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.ct-ft-btn').forEach(b => {
+        const s = parseFloat(b.getAttribute('data-scale') || '1');
+        if (Math.abs(s - saved) < 0.01) b.classList.add('active');
+        else b.classList.remove('active');
+      });
+    });
+  } catch(e){}
+})();
+
 let token = null, contractData = null, drawing = false, hasSig = false;
 
 const params = new URLSearchParams(location.search);
