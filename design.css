@@ -217,6 +217,25 @@ html, body {
   pointer-events: none; white-space: nowrap;
 }
 
+/* ── 페이지 타이틀 (h1 시멘틱) ──────────────────────────────────── */
+/* 사용: <h1 class="ds-page-title">동료</h1> + <p class="ds-page-subtitle">Coworkers</p> */
+/* Airbnb hero scale (28px / weight 600 / Hof neutrals) */
+.ds-page-title {
+  font-size: var(--f-3xl);    /* 28px */
+  font-weight: 600;            /* modest, not 800 */
+  color: var(--c-g900);
+  letter-spacing: -0.02em;     /* Airbnb 정통 */
+  line-height: 1.2;
+  margin: 16px 0 4px;
+}
+.ds-page-subtitle {
+  font-size: var(--f-xs);      /* 11px */
+  font-weight: 600;
+  color: var(--c-pr);          /* Rausch 액센트 */
+  letter-spacing: 0.03em;
+  margin: 0 0 12px;
+}
+
 /* ── 섹션 타이틀 ──────────────────────────────────────────────── */
 .ds-section-title {
   font-size: var(--f-sm); font-weight: 700;
