@@ -145,11 +145,34 @@
   table td{padding:8px 11px;border:1px solid var(--ct-border);color:#2a2a2a;word-break:break-all;line-height:1.65;}
   .tbl-head{background:var(--ct-head) !important;color:#fff !important;font-weight:700 !important;font-size:calc(14px * var(--ct-scale)) !important;letter-spacing:0.5px !important;padding:10px 12px !important;}
   .tbl-note{font-size:calc(11.5px * var(--ct-scale));color:#4a7060;background:#f0faf6;line-height:1.65;font-style:italic;}
-  /* 조항 셀 폰트 (계약서 본문) — 20-50대 고객 모두에게 적당한 사이즈, A-/A/A+ 토글 비례 적용 */
+  /* 조항 셀 폰트 (legacy clause-td — 신규 양식 .article로 마이그됨) */
   .clause-td{vertical-align:top;font-size:calc(13px * var(--ct-scale));line-height:1.7;padding:11px 12px;}
-  /* hanging indent: 조 안에 항/호 대시(-, ①②) 또는 숫자 목록 있을 때 자동 들여쓰기 */
   .clause-td ul, .clause-td ol{padding-left:18px;margin:4px 0;}
   .clause-td li{padding-left:0;margin-bottom:4px;line-height:1.7;}
+
+  /* ═══ 신규 양식 (2026-05-16) ═══
+   * 표 기반 → 정형데이터 표 1개 + 법적 조항 텍스트 7개로 재설계
+   * 페이지 분할 친화: break-inside:avoid 로 조 블록 단위 페이지 가두기 */
+  /* B영역 — 핵심 정보 통합 표 (페이지 분할 시 통째로 유지) */
+  .ct-info-table{margin-bottom:8px;break-inside:avoid;page-break-inside:avoid;}
+  .ct-info-table tr{break-inside:avoid;page-break-inside:avoid;}
+  .ct-info-note{font-size:calc(11.5px * var(--ct-scale));color:#c05000;background:#fff8f0;padding:7px 10px;border-radius:5px;margin-bottom:14px;line-height:1.6;break-inside:avoid;page-break-inside:avoid;}
+
+  /* C영역 — 법적 조항 (조 단위 페이지 가두기) */
+  .article{margin-bottom:13px;break-inside:avoid;page-break-inside:avoid;}
+  .article-title{font-size:calc(14px * var(--ct-scale));font-weight:700;color:var(--ct-head);margin-bottom:6px;padding-bottom:4px;border-bottom:1.5px solid var(--ct-border);letter-spacing:0.2px;break-after:avoid;page-break-after:avoid;}
+  /* 조 안 항(①②③) — hanging indent */
+  .article-list{list-style:decimal;padding-left:22px;margin:0;font-size:calc(13px * var(--ct-scale));line-height:1.75;color:#2a2a2a;}
+  .article-list > li{margin-bottom:5px;padding-left:2px;}
+  .article-list > li::marker{font-weight:600;color:var(--ct-head);}
+  /* 항 안 호(1.2.3.) — 두 번째 단계 들여쓰기 */
+  .sub-list{list-style:decimal;padding-left:22px;margin:3px 0 4px;}
+  .sub-list > li{margin-bottom:2px;font-size:calc(12.5px * var(--ct-scale));color:#3a3a3a;}
+  /* 법령 참조 */
+  .ref{font-size:calc(11px * var(--ct-scale));color:#6a8060;font-style:italic;}
+
+  /* 서명란 — 통째로 한 페이지 안에 (한 사람만 분리되면 안 됨) */
+  .sig-row{break-inside:avoid;page-break-inside:avoid;}
   /* 서명란 */
   .sig-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 0;padding-top:16px;border-top:2px solid var(--ct-lite);}
   .sig-box{border:1px solid var(--ct-border);border-radius:8px;padding:12px;text-align:center;background:#fafffe;}
@@ -472,110 +495,117 @@
           <div class="ct-main-title">청 소 서 비 스 계 약 서</div>
           <div class="ct-subtitle">소비자기본법 및 공정거래위원회 소비자분쟁해결기준에 따라 작성된 전자계약서입니다</div>
 
-          <!-- 제1조 계약 당사자 -->
-          <table>
-            <tr><th class="tbl-head" colspan="4">제1조 &nbsp;계약 당사자</th></tr>
+          <!-- ═══ B. 핵심 정보 (정형 데이터 통합 표 — 한 페이지 안에 가둠) ═══ -->
+          <table class="ct-info-table">
+            <tr><th class="tbl-head" colspan="4">핵심 계약 정보</th></tr>
             <tr><th>사업자(갑)</th><td id="td-company"></td><th>대표자</th><td id="td-owner"></td></tr>
             <tr><th>사업자 연락처</th><td id="td-cphone"></td><th>고객(을)</th><td id="td-name"></td></tr>
             <tr><th>고객 연락처</th><td colspan="3" id="td-phone"></td></tr>
-          </table>
-
-          <!-- 제2조 서비스 내용 -->
-          <table>
-            <tr><th class="tbl-head" colspan="4">제2조 &nbsp;서비스 내용</th></tr>
             <tr><th>청소 유형</th><td id="td-type"></td><th>평수</th><td id="td-size"></td></tr>
             <tr><th>시공 주소</th><td colspan="3" id="td-addr"></td></tr>
             <tr><th>시공 일시</th><td colspan="3" id="td-wdate"></td></tr>
             <tr id="tr-extra" style="display:none;"><th>추가 서비스</th><td colspan="3" id="td-extra"></td></tr>
-            <tr id="tr-extra-note" style="display:none;"><td colspan="4" class="tbl-note" style="color:#c05000;background:#fff8f0;">⚠️ 위 추가 서비스는 기본 금액에 포함되지 않으며, 시공 완료 후 별도 청구됩니다.</td></tr>
             <tr id="tr-memo" style="display:none;"><th>특이사항</th><td colspan="3" id="td-memo"></td></tr>
-            <tr><td colspan="4" class="tbl-note">※ 미포함 항목: 가구·가전 내부청소, 외벽·외부창문, 곰팡이·석회 제거, 입주 후 오염, 계약 외 추가작업</td></tr>
-          </table>
-
-          <!-- 제3조 금액 및 결제 -->
-          <table>
-            <tr><th class="tbl-head" colspan="4">제3조 &nbsp;서비스 금액 및 결제</th></tr>
             <tr><th>기본금액</th><td id="td-base"></td><th id="td-vat-label">VAT(10%)</th><td id="td-vat"></td></tr>
             <tr><th style="font-weight:800;">총 금액</th><td style="font-weight:800;color:var(--ct-accent);" id="td-total"></td><th>계약금</th><td id="td-deposit"></td></tr>
             <tr><th>잔금</th><td colspan="3" id="td-balance"></td></tr>
-            <tr><td colspan="4" class="tbl-note">※ 잔금은 시공 완료 즉시 결제 · 추가서비스는 사전 문자 동의 후 청구 (소비자기본법 제4조)</td></tr>
           </table>
+          <div class="ct-info-note" id="tr-extra-note" style="display:none;">⚠️ 추가 서비스는 기본 금액 미포함 · 시공 완료 후 별도 청구</div>
 
-          <!-- 제4조 취소·환불 -->
-          <table>
-            <tr><th class="tbl-head" colspan="2">제4조 &nbsp;취소·환불 정책</th></tr>
-            <tr>
-              <td class="clause-td" style="width:50%;">
-                <b>[고객 귀책 취소]</b><br>
-                · 4일 전 이상 취소 → 전액 환불<br>
-                · 2~3일 전 취소 → 50% 공제 후 환불<br>
-                · 1일 전·당일 취소 → 계약금 몰취<br>
-                · 고객 부재·연락두절 → 당일 취소와 동일
-              </td>
-              <td class="clause-td" style="width:50%;">
-                <b>[사업자 귀책 취소]</b><br>
-                · 사업자 귀책 취소 → 전액 환불<br>
-                · 불가항력 → 전액 환불, 배상 없음<br><br>
-                ※ 소비자기본법 제4조, 공정거래법 준용
-              </td>
-            </tr>
-          </table>
+          <!-- ═══ C. 계약 조항 (조-항-호 텍스트, hanging indent) ═══ -->
+          <div class="article">
+            <h3 class="article-title">제1조 (목적)</h3>
+            <ol class="article-list">
+              <li>본 계약은 사업자(갑)가 고객(을)에게 청소서비스를 제공함에 있어 양 당사자의 권리와 의무를 정함을 목적으로 한다.</li>
+              <li>본 계약서는 「소비자기본법」 및 공정거래위원회 「소비자분쟁해결기준」에 따라 작성된 전자계약서이며, 「전자서명법」에 의해 법적 효력을 가진다.</li>
+            </ol>
+          </div>
 
-          <!-- 제5조 A/S 보증 -->
-          <table>
-            <tr><th class="tbl-head" colspan="2">제5조 &nbsp;A/S 보증</th></tr>
-            <tr>
-              <td class="clause-td" style="width:50%;">
-                <b>[A/S 접수 조건]</b><br>
-                · 접수: 시공 후 <b>24시간 이내</b> (문자+사진)<br>
-                · 범위: 계약 명시 항목 1회 무상 재시공
-              </td>
-              <td class="clause-td" style="width:50%;">
-                <b>[A/S 제외 사항]</b><br>
-                · 입주 후 발생 오염·파손<br>
-                · 24시간 경과 후 접수 민원<br>
-                · 계약 범위 외 항목 요구<br>
-                · 주관적 만족도 기반 재시공 요구
-              </td>
-            </tr>
-          </table>
+          <div class="article">
+            <h3 class="article-title">제2조 (작업 범위)</h3>
+            <ol class="article-list">
+              <li>작업 일정, 장소, 청소 유형 및 면적은 본 계약서 상단 「핵심 계약 정보」 표를 따른다.</li>
+              <li>다음 항목은 본 계약의 범위에 포함되지 않는다.
+                <ol class="sub-list">
+                  <li>가구·가전 내부청소</li>
+                  <li>외벽·외부창문 청소</li>
+                  <li>곰팡이·석회 제거</li>
+                  <li>입주 후 발생한 오염</li>
+                  <li>계약 명시 외의 추가 작업</li>
+                </ol>
+              </li>
+            </ol>
+          </div>
 
-          <!-- 제6조 손해배상 -->
-          <table>
-            <tr><th class="tbl-head" colspan="2">제6조 &nbsp;손해배상 및 면책</th></tr>
-            <tr>
-              <td class="clause-td" style="width:50%;">
-                <b>[손해배상]</b><br>
-                · 과실 파손: 시가 기준 보상 (민법 제763조)<br>
-                · 배상 한도: 계약 총금액 이내
-              </td>
-              <td class="clause-td" style="width:50%;">
-                <b>[면책 사항]</b><br>
-                · 기존 하자·미고지 결함<br>
-                · 특수 소재 손상<br>
-                · 제3자 손해·불가항력
-              </td>
-            </tr>
-          </table>
+          <div class="article">
+            <h3 class="article-title">제3조 (대금 지급)</h3>
+            <ol class="article-list">
+              <li>계약금은 계약 체결 시 즉시 지급한다.</li>
+              <li>잔금은 시공 완료 즉시 지급한다.</li>
+              <li>추가서비스 금액은 시공 완료 후 별도 청구하며, 사전에 문자로 동의를 받은 경우에만 청구한다. <span class="ref">(소비자기본법 제4조)</span></li>
+            </ol>
+          </div>
 
-          <!-- 제7~9조 기타 -->
-          <table style="margin-bottom:14px;">
-            <tr><th class="tbl-head" colspan="2">제7~9조 &nbsp;기타 사항</th></tr>
-            <tr>
-              <td class="clause-td" style="width:50%;">
-                <b>[개인정보 및 촬영]</b><br>
-                · 시공 전·중·후 사진 촬영 동의<br>
-                · 개인정보: 서비스 목적으로만 활용<br>
-                · 보유기간: 3년 (개인정보보호법)
-              </td>
-              <td class="clause-td" style="width:50%;">
-                <b>[분쟁 해결]</b><br>
-                · 분쟁: 협의 → 소비자원 조정<br>
-                · 관할법원: 사업자 소재지<br>
-                &nbsp;&nbsp;(민사소송법 제24조)
-              </td>
-            </tr>
-          </table>
+          <div class="article">
+            <h3 class="article-title">제4조 (취소·환불)</h3>
+            <ol class="article-list">
+              <li>고객(을) 귀책 취소
+                <ol class="sub-list">
+                  <li>시공 4일 전 이상 취소: 전액 환불</li>
+                  <li>시공 2~3일 전 취소: 50% 공제 후 환불</li>
+                  <li>시공 1일 전 또는 당일 취소: 계약금 몰취</li>
+                  <li>고객 부재·연락두절: 당일 취소와 동일하게 처리</li>
+                </ol>
+              </li>
+              <li>사업자(갑) 귀책 취소: 전액 환불</li>
+              <li>불가항력 사유 발생 시: 전액 환불하며 별도 배상 책임 없음. <span class="ref">(소비자기본법 제4조, 공정거래법 준용)</span></li>
+            </ol>
+          </div>
+
+          <div class="article">
+            <h3 class="article-title">제5조 (A/S 보증)</h3>
+            <ol class="article-list">
+              <li>A/S 접수 조건은 다음과 같다.
+                <ol class="sub-list">
+                  <li>시공 완료 후 <b>24시간 이내</b> 문자로 사진과 함께 접수</li>
+                  <li>범위: 본 계약서에 명시된 항목에 한하여 1회 무상 재시공</li>
+                </ol>
+              </li>
+              <li>다음 사유는 A/S 대상에서 제외한다.
+                <ol class="sub-list">
+                  <li>입주 후 발생한 오염·파손</li>
+                  <li>24시간 경과 후 접수된 민원</li>
+                  <li>계약 범위 외 항목에 대한 요구</li>
+                  <li>주관적 만족도 기반의 재시공 요구</li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+
+          <div class="article">
+            <h3 class="article-title">제6조 (손해배상 및 면책)</h3>
+            <ol class="article-list">
+              <li>사업자(갑)의 과실로 인한 파손은 시가 기준으로 보상한다. <span class="ref">(민법 제763조)</span></li>
+              <li>배상 한도는 본 계약 총금액을 초과하지 아니한다.</li>
+              <li>다음 사유로 인한 손해는 사업자(갑)의 책임에서 면책한다.
+                <ol class="sub-list">
+                  <li>기존 하자·미고지 결함</li>
+                  <li>특수 소재의 손상</li>
+                  <li>제3자의 행위 또는 불가항력</li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+
+          <div class="article">
+            <h3 class="article-title">제7조 (개인정보 및 분쟁 해결)</h3>
+            <ol class="article-list">
+              <li>고객(을)은 사업자(갑)가 시공 전·중·후 사진을 촬영하는 것에 동의한다. 촬영물은 서비스 목적으로만 활용한다.</li>
+              <li>개인정보 보유기간은 <b>3년</b>으로 한다. <span class="ref">(개인정보보호법)</span></li>
+              <li>본 계약에서 발생하는 분쟁은 우선 상호 협의로 해결하며, 협의 불성립 시 한국소비자원의 조정을 거친다.</li>
+              <li>조정 불성립 시 관할법원은 사업자(갑)의 소재지로 한다. <span class="ref">(민사소송법 제24조)</span></li>
+            </ol>
+          </div>
 
           <!-- 계약일 -->
           <div class="ct-date" id="ct-date-line">계약일: —</div>
@@ -965,28 +995,64 @@ async function submitSign() {
 
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-    const mg = 8;                         // 여백 8mm
+    const mg = 12;                        // 여백 12mm (페이지 상하 안전 영역)
     const pgW = 210, pgH = 297;
-    const cntW = pgW - mg*2;              // 194mm
-    const cntH = pgH - mg*2;             // 281mm
-    const scaleW = cntW / canvas.width;  // mm/px
-    const totalMm = canvas.height * scaleW;
-    const numPages = Math.ceil(totalMm / cntH);
+    const cntW = pgW - mg*2;              // 186mm
+    const cntH = pgH - mg*2;              // 273mm
+    const scaleW = cntW / canvas.width;   // mm/px
     const pxPerPage = Math.floor(cntH / scaleW);
 
-    for (let pg = 0; pg < numPages; pg++) {
-      if (pg > 0) pdf.addPage();
-      const startY = pg * pxPerPage;
-      const endY   = Math.min(startY + pxPerPage, canvas.height);
-      const sliceH = endY - startY;
+    // ═══ Smart break: 페이지 경계를 블록 사이로 snap ═══
+    // 원본 DOM의 주요 블록 (.article / .ct-info-table / 서명란 등) 시작 Y 좌표 수집
+    // → 페이지 자르기 위치가 블록 내부에 떨어지면 가장 가까운 블록 경계로 이동
+    // → 한 조항/한 표/한 서명란이 두 페이지에 걸쳐 잘리지 않음
+    const paperRect = paper.getBoundingClientRect();
+    const blocks = paper.querySelectorAll('.article, .ct-info-table, .ct-info-note, .ct-date, .sig-row, .ct-brand, .ct-main-title, .ct-subtitle, .ct-footer-bar');
+    const canvasScale = canvas.width / paper.offsetWidth;  // 비례 보정 (html2canvas scale)
+    const safeBreaks = new Set([0, canvas.height]);
+    blocks.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const topPx = Math.round((r.top - paperRect.top) * canvasScale);
+      const botPx = Math.round((r.bottom - paperRect.top) * canvasScale);
+      if (topPx > 0 && topPx < canvas.height) safeBreaks.add(topPx);
+      if (botPx > 0 && botPx < canvas.height) safeBreaks.add(botPx);
+    });
+    const sortedBreaks = [...safeBreaks].sort((a,b) => a-b);
+
+    // 페이지 분할 위치 결정
+    const pages = [];
+    let cursor = 0;
+    while (cursor < canvas.height) {
+      const idealEnd = cursor + pxPerPage;
+      if (idealEnd >= canvas.height) {
+        pages.push({ start: cursor, end: canvas.height });
+        break;
+      }
+      // cursor < safeBreak <= idealEnd 범위에서 가장 큰 safeBreak (= 페이지를 최대한 채우는 안전 위치)
+      let chosen = 0;
+      for (const sb of sortedBreaks) {
+        if (sb > cursor && sb <= idealEnd) chosen = sb;
+      }
+      // 안전 위치가 너무 일찍 끊으면 (페이지 절반도 못 채움) → 그냥 idealEnd 사용 (긴 단일 블록 케이스)
+      if (chosen === 0 || (chosen - cursor) < pxPerPage * 0.4) {
+        chosen = idealEnd;
+      }
+      pages.push({ start: cursor, end: chosen });
+      cursor = chosen;
+    }
+
+    // 각 페이지를 캡처 → PDF 추가
+    pages.forEach((p, pgIdx) => {
+      if (pgIdx > 0) pdf.addPage();
+      const sliceH = p.end - p.start;
       const sliceCanvas = document.createElement('canvas');
       sliceCanvas.width = canvas.width; sliceCanvas.height = sliceH;
       const sCtx = sliceCanvas.getContext('2d');
       sCtx.fillStyle = '#ffffff'; sCtx.fillRect(0,0,sliceCanvas.width,sliceH);
-      sCtx.drawImage(canvas, 0, startY, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+      sCtx.drawImage(canvas, 0, p.start, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
       const sliceMm = sliceH * scaleW;
       pdf.addImage(sliceCanvas.toDataURL('image/jpeg',0.9), 'JPEG', mg, mg, cntW, sliceMm);
-    }
+    });
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
     window._lastSignedPdfB64 = pdfBase64;
 
