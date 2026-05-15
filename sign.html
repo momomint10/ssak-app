@@ -125,12 +125,13 @@
    * 기본 13px (모바일 본문 표준) + A-/A/A+ 토글로 사용자 선택 (TOP-A 적용)
    * 폰트: 나눔고딕 우선 (계약서/공문 한글 가독성 표준), system fallback */
   :root { --ct-scale: 1; }   /* A- = 0.85 / A = 1 / A+ = 1.2 (JS로 동적 변경) */
-  /* 글자 크기 토글 (A-/A/A+) */
-  .ct-font-toggle{position:absolute;top:14px;right:14px;display:inline-flex;gap:3px;padding:3px;background:rgba(255,255,255,.18);border-radius:9px;backdrop-filter:blur(8px);}
-  .ct-ft-btn{padding:5px 9px;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:12px;color:rgba(255,255,255,.7);cursor:pointer;border-radius:6px;transition:background .15s,color .15s;line-height:1;min-width:28px;}
-  .ct-ft-btn.active{background:#fff;color:var(--ct-head);}
-  .ct-ft-btn:hover{color:#fff;}
-  .ct-ft-btn.active:hover{color:var(--ct-head);}
+  /* 글자 크기 토글 (A-/A/A+) — .contract-paper 외부 컨테이너 (PDF 캡처 영역 밖) */
+  .ct-font-toggle-wrap{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:4px 2px 8px;}
+  .ct-font-toggle-label{font-size:11px;font-weight:600;color:var(--gray-500);}
+  .ct-font-toggle{display:inline-flex;gap:3px;padding:3px;background:var(--gray-100);border:1px solid var(--gray-200);border-radius:9px;}
+  .ct-ft-btn{padding:6px 10px;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:12px;color:var(--gray-500);cursor:pointer;border-radius:6px;transition:background .15s,color .15s;line-height:1;min-width:30px;}
+  .ct-ft-btn.active{background:#fff;color:var(--ct-head);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  .ct-ft-btn:active{transform:scale(.94);}
   .contract-paper{position:relative;background:#fff;border:1px solid #ccc;border-radius:8px;padding:0;margin-bottom:14px;font-family:'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic','Pretendard Variable',Pretendard,-apple-system,sans-serif;overflow:hidden;}
   .ct-brand{background:var(--ct-head);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
   .ct-brand-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:0.3px;}
@@ -440,15 +441,20 @@
 
     <div class="content">
 
-      <!-- 계약서 종이 (PDF 캡처 대상) -->
-      <div class="contract-paper" id="contract-paper">
-
-        <!-- 글자 크기 토글 (A-/A/A+) — 20-50대 고객 모두 본인 선택 -->
+      <!-- 글자 크기 토글 (A-/A/A+) — .contract-paper 외부로 이동
+           ↳ PDF 캡처 대상에서 제외 (html2canvas 영역 밖) → PDF에 토글 안 박힘
+           ↳ 화면에서는 계약서 위에 분리된 컨트롤로 보임 (계약번호 영역 겹침 해소) -->
+      <div class="ct-font-toggle-wrap" id="ct-font-toggle-wrap">
+        <span class="ct-font-toggle-label">글자 크기</span>
         <div class="ct-font-toggle" role="group" aria-label="글자 크기 조절">
           <button class="ct-ft-btn" data-scale="0.85" onclick="setContractFontScale(0.85,this)" title="작게">A-</button>
           <button class="ct-ft-btn active" data-scale="1" onclick="setContractFontScale(1,this)" title="기본">A</button>
           <button class="ct-ft-btn" data-scale="1.2" onclick="setContractFontScale(1.2,this)" title="크게">A+</button>
         </div>
+      </div>
+
+      <!-- 계약서 종이 (PDF 캡처 대상) -->
+      <div class="contract-paper" id="contract-paper">
 
         <!-- 브랜딩 헤더 -->
         <div class="ct-brand">
@@ -943,9 +949,18 @@ async function submitSign() {
 
     btn.textContent = '계약서 변환 중...';
     const paper = document.getElementById('contract-paper');
+    // PDF 캡처: 영구 보관용이므로 토글 등 UI 컨트롤은 항상 제외
+    // (onclone은 DOM 복제 후 실행되어 원본 영향 0, 안전망)
+    // 또한 PDF에는 항상 기본 글자 크기 (--ct-scale=1) 적용 → 토글 상태 무관하게 일관된 출력
     const canvas = await html2canvas(paper, {
       scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false,
-      imageTimeout: 0, windowWidth: 680, windowHeight: paper.scrollHeight
+      imageTimeout: 0, windowWidth: 680, windowHeight: paper.scrollHeight,
+      onclone: (clonedDoc) => {
+        // 1) 토글이 .contract-paper 안에 잘못 들어가 있어도 제거 (이중 안전망)
+        clonedDoc.querySelectorAll('.ct-font-toggle-wrap, .ct-font-toggle').forEach(el => el.remove());
+        // 2) PDF는 항상 기본 사이즈 (사용자 선택 토글 상태가 PDF에 영향 X)
+        clonedDoc.documentElement.style.setProperty('--ct-scale', '1');
+      }
     });
 
     const { jsPDF } = window.jspdf;
