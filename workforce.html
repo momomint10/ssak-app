@@ -8,12 +8,25 @@
 <link rel="stylesheet" href="design.css">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
+/* design.css 토큰으로 마이그레이션됨 (TOP 1 시범 적용 2026-05-15) */
+/* 페이지 로컬 변수는 design.css 토큰의 alias로만 작동 - 시각 거의 동일, 시스템 통합 */
 :root{
-  --pr:#FF385C;--pr-d:#222222;--pr-l:#f7f7f7;
-  --green:#10B981;--orange:#F97316;--red:#EF4444;
-  --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g300:#CBD5E1;
-  --g400:#94A3B8;--g500:#64748B;--g700:#334155;--g900:#0F172A;
-  --radius:14px;--shadow:0 1px 8px rgba(0,0,0,.07);
+  --pr: var(--c-pr);          /* Rausch */
+  --pr-d: var(--c-g900);      /* ink #222 */
+  --pr-l: var(--c-g100);      /* surface-soft */
+  --green: var(--c-teal);     /* Babu teal */
+  --orange: #F97316;          /* market sub-brand 외엔 미사용 */
+  --red: var(--c-red);
+  --g50: var(--c-bg);         /* Airbnb cream #F7F7F7 */
+  --g100: var(--c-g100);
+  --g200: var(--c-g200);
+  --g300: var(--c-g300);
+  --g400: var(--c-g400);
+  --g500: var(--c-g500);      /* Airbnb Foggy #767676 */
+  --g700: var(--c-g700);      /* Airbnb Hof body #484848 */
+  --g900: var(--c-g900);      /* Airbnb Hof title #222 */
+  --radius: var(--r-md);      /* 12px (기존 14px → -2px, 거의 동일) */
+  --shadow: var(--sh-sm);     /* Airbnb 3-layer */
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--g50);color:var(--g900);}
