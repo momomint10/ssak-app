@@ -9,7 +9,7 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 :root{
-  --pr:#FF385C;--pr-d:#4F46E5;--pr-l:#EEF2FF;
+  --pr:#FF385C;--pr-d:#222222;--pr-l:#f7f7f7;
   --green:#10B981;--orange:#F97316;--red:#EF4444;
   --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g300:#CBD5E1;
   --g400:#94A3B8;--g500:#64748B;--g700:#334155;--g900:#0F172A;
@@ -417,7 +417,7 @@ const statusBadge = (status, openTxt='모집중', closeTxt='마감') =>
   `<span style="font-size:11px;padding:2px 8px;border-radius:12px;background:${status==='open'?'#DCFCE7':'#F3F4F6'};color:${status==='open'?'#16A34A':'#6B7280'};">${status==='open'?openTxt:closeTxt}</span>`;
 
 const matchBadge = (isMatch, isMine) =>
-  (isMatch && !isMine ? '<span style="font-size:10px;background:#EEF2FF;color:#FF385C;padding:2px 7px;border-radius:12px;font-weight:700;">✨ 매칭</span>' : '') +
+  (isMatch && !isMine ? '<span style="font-size:10px;background:#f7f7f7;color:#FF385C;padding:2px 7px;border-radius:12px;font-weight:700;">✨ 매칭</span>' : '') +
   (isMine ? '<span style="font-size:10px;background:#FEF3C7;color:#D97706;padding:2px 7px;border-radius:12px;font-weight:700;">내 공고</span>' : '');
 
 const skillChips = (skills) =>
