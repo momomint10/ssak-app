@@ -118,21 +118,28 @@
   .btn-confirm:disabled{background:var(--gray-200);color:var(--gray-400);cursor:not-allowed;}
 
   /* ── 계약서 종이 (PDF 대상) ── */
-  .contract-paper{background:#fff;border:1px solid #ccc;border-radius:8px;padding:0;margin-bottom:14px;font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;overflow:hidden;}
+  /* ── 계약서 영역 가독성 최적화 (2026-05-16) ──
+   * 사장님 + 고객 (20-60대) 양측 대상.
+   * 너무 작으면 50대+ 불편, 너무 크면 20대 답답. 13-15px 황금지점.
+   * 폰트: 나눔고딕 우선 (계약서/공문 한글 가독성 표준), system fallback */
+  .contract-paper{background:#fff;border:1px solid #ccc;border-radius:8px;padding:0;margin-bottom:14px;font-family:'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic','Pretendard Variable',Pretendard,-apple-system,sans-serif;overflow:hidden;}
   .ct-brand{background:var(--ct-head);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
   .ct-brand-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:0.3px;}
-  .ct-brand-num{font-size:9px;color:rgba(255,255,255,.65);letter-spacing:0.3px;margin-top:2px;}
-  .ct-inner{padding:18px 16px 0;}
-  .ct-main-title{text-align:center;font-size:18px;font-weight:800;letter-spacing:4px;color:#111;margin-bottom:4px;padding-bottom:8px;border-bottom:2.5px solid var(--ct-accent);}
-  .ct-subtitle{text-align:center;font-size:9.5px;color:#6a8060;margin:6px 0 16px;}
-  .ct-date{text-align:center;font-size:11.5px;font-weight:700;color:#333;margin:14px 0;}
-  table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:11px;}
-  table th{background:var(--ct-lite);padding:6px 9px;font-weight:700;border:1px solid var(--ct-border);color:var(--ct-head);text-align:left;white-space:nowrap;}
-  table td{padding:6px 9px;border:1px solid var(--ct-border);color:#2a2a2a;word-break:break-all;line-height:1.5;}
-  .tbl-head{background:var(--ct-head) !important;color:#fff !important;font-weight:700 !important;font-size:10.5px !important;letter-spacing:0.5px !important;}
-  .tbl-note{font-size:9.5px;color:#4a7060;background:#f0faf6;line-height:1.6;font-style:italic;}
-  /* 조항 셀 폰트 */
-  .clause-td{vertical-align:top;font-size:10.5px;line-height:1.75;padding:9px 10px;}
+  .ct-brand-num{font-size:11px;color:rgba(255,255,255,.7);letter-spacing:0.3px;margin-top:2px;}
+  .ct-inner{padding:20px 18px 0;}
+  .ct-main-title{text-align:center;font-size:17px;font-weight:700;letter-spacing:3px;color:#111;margin-bottom:4px;padding-bottom:10px;border-bottom:2.5px solid var(--ct-accent);}
+  .ct-subtitle{text-align:center;font-size:12px;color:#6a8060;line-height:1.5;margin:8px 0 18px;}
+  .ct-date{text-align:center;font-size:13px;font-weight:700;color:#333;margin:16px 0;}
+  table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:14px;}
+  table th{background:var(--ct-lite);padding:8px 11px;font-weight:700;border:1px solid var(--ct-border);color:var(--ct-head);text-align:left;white-space:nowrap;font-size:13px;}
+  table td{padding:8px 11px;border:1px solid var(--ct-border);color:#2a2a2a;word-break:break-all;line-height:1.65;}
+  .tbl-head{background:var(--ct-head) !important;color:#fff !important;font-weight:700 !important;font-size:15px !important;letter-spacing:0.5px !important;padding:10px 12px !important;}
+  .tbl-note{font-size:12px;color:#4a7060;background:#f0faf6;line-height:1.65;font-style:italic;}
+  /* 조항 셀 폰트 (계약서 본문) */
+  .clause-td{vertical-align:top;font-size:14px;line-height:1.7;padding:11px 12px;}
+  /* hanging indent: 조 안에 항/호 대시(-, ①②) 또는 숫자 목록 있을 때 자동 들여쓰기 */
+  .clause-td ul, .clause-td ol{padding-left:18px;margin:4px 0;}
+  .clause-td li{padding-left:0;margin-bottom:4px;line-height:1.7;}
   /* 서명란 */
   .sig-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 0;padding-top:16px;border-top:2px solid var(--ct-lite);}
   .sig-box{border:1px solid var(--ct-border);border-radius:8px;padding:12px;text-align:center;background:#fafffe;}
