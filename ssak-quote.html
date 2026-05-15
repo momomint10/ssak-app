@@ -274,10 +274,10 @@ select.form-input{cursor:pointer;}
     </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">고객 이름</label><input class="form-input" id="q-name" placeholder="김OO" oninput="buildMsg()"/></div>
-      <div class="form-group"><label class="form-label">연락처</label><input class="form-input" id="q-phone" placeholder="010-0000-0000" type="tel"/></div>
+      <div class="form-group"><label class="form-label">연락처</label><input class="form-input" id="q-phone" placeholder="010-0000-0000" type="tel" inputmode="tel"/></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">평수</label><input class="form-input" id="q-size" type="number" placeholder="예: 32" oninput="calcQuote()"/></div>
+      <div class="form-group"><label class="form-label">평수</label><input class="form-input" id="q-size" type="number" inputmode="numeric" placeholder="예: 32" oninput="calcQuote()"/></div>
       <div class="form-group"><label class="form-label">청소 유형</label><select class="form-input" id="q-type" onchange="calcQuote()"><option value="move-in">입주 전</option><option value="move-out">이사 후</option><option value="new">신축 준공</option><option value="life">생활 청소</option></select></div>
     </div>
     <div class="form-row">
@@ -408,7 +408,7 @@ select.form-input{cursor:pointer;}
     </div>
     <div class="form-row">
       <div class="form-group" style="margin:0;"><label class="form-label">고객명</label><input class="form-input" id="rp-name" placeholder="김OO"/></div>
-      <div class="form-group" style="margin:0;"><label class="form-label">연락처</label><input class="form-input" id="rp-phone" placeholder="010-0000-0000" type="tel"/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">연락처</label><input class="form-input" id="rp-phone" placeholder="010-0000-0000" type="tel" inputmode="tel"/></div>
     </div>
     <div style="margin-top:10px;" class="form-row">
       <div class="form-group" style="margin:0;"><label class="form-label">청소 유형</label>
@@ -416,7 +416,7 @@ select.form-input{cursor:pointer;}
           <option>입주 전 청소</option><option>이사 후 청소</option><option>신축 준공 청소</option><option>생활 청소</option>
         </select>
       </div>
-      <div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="rp-size" type="number" placeholder="32"/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">평수</label><input class="form-input" id="rp-size" type="number" inputmode="numeric" placeholder="32"/></div>
     </div>
     <div style="margin-top:10px;" class="form-row">
       <div class="form-group" style="margin:0;"><label class="form-label">시공 주소</label><input class="form-input" id="rp-addr" placeholder="인천 부평구 ..."/></div>
@@ -527,7 +527,7 @@ select.form-input{cursor:pointer;}
     <div class="card" style="margin-bottom:0;">
       <div class="form-group"><label class="form-label">API Key</label><input class="form-input" id="s-api-key" placeholder="CoolSMS API Key" type="password"/></div>
       <div class="form-group"><label class="form-label">API Secret</label><input class="form-input" id="s-api-secret" placeholder="CoolSMS API Secret" type="password"/></div>
-      <div class="form-group" style="margin:0;"><label class="form-label">발신 번호 (CoolSMS 등록 번호)</label><input class="form-input" id="s-from-phone" placeholder="010-0000-0000"/></div>
+      <div class="form-group" style="margin:0;"><label class="form-label">발신 번호 (CoolSMS 등록 번호)</label><input class="form-input" id="s-from-phone" placeholder="010-0000-0000" type="tel" inputmode="tel"/></div>
       <div style="font-size:11.5px;color:var(--gray-400);margin-top:10px;line-height:1.6;">💡 <a href="https://coolsms.co.kr" target="_blank" style="color:var(--primary);">coolsms.co.kr</a> 가입 후 API 키를 발급받으세요. 건당 약 20원입니다.</div>
     </div>
   </div>
