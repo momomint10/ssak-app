@@ -219,14 +219,14 @@ html, body {
 
 /* ── 페이지 타이틀 (h1 시멘틱) ──────────────────────────────────── */
 /* 사용: <h1 class="ds-page-title">동료</h1> + <p class="ds-page-subtitle">Coworkers</p> */
-/* Airbnb hero scale (28px / weight 600 / Hof neutrals) */
+/* 헤더 컨텍스트 스케일 (Airbnb host-card 톤, 너무 크지 않음) */
 .ds-page-title {
-  font-size: var(--f-3xl);    /* 28px */
-  font-weight: 600;            /* modest, not 800 */
+  font-size: 22px;            /* 18px → 22px 살짝 키움 (페이지 헤더용) */
+  font-weight: 600;            /* modest, not 800/900 */
   color: var(--c-g900);
   letter-spacing: -0.02em;     /* Airbnb 정통 */
   line-height: 1.2;
-  margin: 16px 0 4px;
+  margin: 0;                   /* 페이지 헤더의 자체 padding 사용 */
 }
 .ds-page-subtitle {
   font-size: var(--f-xs);      /* 11px */
