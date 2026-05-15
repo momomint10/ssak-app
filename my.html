@@ -141,56 +141,45 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
   </div>
 
-  <!-- 메뉴 -->
+  <!-- 메뉴 (TOP-A,B,C,D 정돈 2026-05-16) -->
+  <!-- TOP-A: 스케줄 관리 제거 (하단 nav 중복) -->
+  <!-- TOP-B: "고객 예약 신청 링크" + "예약 링크 복사" 통합 -->
+  <!-- TOP-C: 이용 가이드 숨김 (미구현 toast → 사용자 인지 부담) -->
+  <!-- TOP-D: 그룹 헤더 명확화 (핵심 도구 / 설정 / 지원) -->
   <div class="section">
-    <div class="section-header">내 서비스</div>
+    <div class="section-header">📌 핵심 도구</div>
     <div class="menu-item ds-tap-card" onclick="location.href='ssak-quote.html'">
       <div class="menu-icon green">⚡</div>
       <div class="menu-text"><div class="menu-title">고객케어</div><div class="menu-sub">견적·계약서·완료보고서 발송</div></div>
       <div class="menu-arrow">›</div>
     </div>
-    <div class="menu-item ds-tap-card" onclick="location.href='schedule.html'">
-      <div class="menu-icon blue">📅</div>
-      <div class="menu-text"><div class="menu-title">스케줄 관리</div><div class="menu-sub">예약 일정 확인 및 관리</div></div>
-      <div class="menu-arrow">›</div>
-    </div>
-    <div class="menu-item ds-tap-card" onclick="location.href='booking.html'">
-      <div class="menu-icon amber">📋</div>
-      <div class="menu-text"><div class="menu-title">고객 예약 신청 링크</div><div class="menu-sub">booking.html 링크를 고객에게 공유</div></div>
-      <div class="menu-arrow">›</div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-header">설정</div>
-    <div class="menu-item ds-tap-card" onclick="goSettings()">
-      <div class="menu-icon purple">⚙️</div>
-      <div class="menu-text"><div class="menu-title">앱 설정</div><div class="menu-sub">API키, 업체정보, 단가 설정</div></div>
-      <div class="menu-arrow">›</div>
-    </div>
     <div class="menu-item ds-tap-card" onclick="copyBookingLink()">
-      <div class="menu-icon green">🔗</div>
-      <div class="menu-text"><div class="menu-title">예약 링크 복사</div><div class="menu-sub">고객에게 전달할 예약 URL</div></div>
+      <div class="menu-icon amber">🔗</div>
+      <div class="menu-text"><div class="menu-title">고객 예약 링크</div><div class="menu-sub">고객에게 전달할 예약 URL 복사</div></div>
       <span class="menu-badge">복사</span>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-header">정보</div>
-    <div class="menu-item ds-tap-card" onclick="toast('준비 중입니다 😊')">
-      <div class="menu-icon blue">❓</div>
-      <div class="menu-text"><div class="menu-title">이용 가이드</div><div class="menu-sub">앱 사용법 및 FAQ</div></div>
+    <div class="section-header">⚙️ 설정</div>
+    <div class="menu-item ds-tap-card" onclick="goSettings()">
+      <div class="menu-icon purple">⚙️</div>
+      <div class="menu-text"><div class="menu-title">앱 설정</div><div class="menu-sub">API키, 업체정보, 단가 설정</div></div>
+      <div class="menu-arrow">›</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">❓ 지원</div>
+    <div class="menu-item ds-tap-card" onclick="toast('카카오톡: @싹싹클린')">
+      <div class="menu-icon amber">💬</div>
+      <div class="menu-text"><div class="menu-title">고객센터</div><div class="menu-sub">문의 및 피드백</div></div>
       <div class="menu-arrow">›</div>
     </div>
     <div class="menu-item ds-tap-card" onclick="confirmLogout()">
       <div class="menu-icon" style="background:#FFF0F0;font-size:18px;">🚪</div>
       <div class="menu-text"><div class="menu-title" style="color:#e05050;">앱 초기화</div><div class="menu-sub">모든 데이터 및 설정 초기화</div></div>
       <div class="menu-arrow" style="color:#e05050;">›</div>
-    </div>
-    <div class="menu-item ds-tap-card" onclick="toast('카카오톡: @싹싹클린')">
-      <div class="menu-icon amber">💬</div>
-      <div class="menu-text"><div class="menu-title">고객센터</div><div class="menu-sub">문의 및 피드백</div></div>
-      <div class="menu-arrow">›</div>
     </div>
   </div>
 
