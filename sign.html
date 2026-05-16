@@ -174,25 +174,35 @@
   /* 서명란 — 통째로 한 페이지 안에 (한 사람만 분리되면 안 됨) */
   .sig-row{break-inside:avoid;page-break-inside:avoid;}
 
-  /* ═══ PDF 출력 압축 모드 (html2canvas onclone에서 .pdf-mode class 추가) ═══
-   * 화면은 모바일 가독성, PDF는 A4 인쇄용 압축. 9-10pt 본문, line-height 1.5, 여백 축소.
-   * 모바일 CSS를 건드리지 않아 화면 가독성 유지 */
-  .pdf-mode .ct-inner{padding:14px 14px 0;}
-  .pdf-mode .ct-main-title{font-size:18px;margin-bottom:4px;padding-bottom:6px;letter-spacing:2px;}
-  .pdf-mode .ct-subtitle{font-size:10.5px;margin:4px 0 10px;line-height:1.4;}
-  .pdf-mode table{font-size:10.5px;margin-bottom:6px;}
-  .pdf-mode table th, .pdf-mode table td{padding:5px 8px;line-height:1.45;}
-  .pdf-mode .tbl-head{font-size:11.5px !important;padding:6px 9px !important;}
-  .pdf-mode .ct-info-note{font-size:10px;padding:5px 8px;margin-bottom:10px;line-height:1.4;}
-  .pdf-mode .article{margin-bottom:9px;}
-  .pdf-mode .article-title{font-size:12px;margin-bottom:4px;padding-bottom:3px;}
-  .pdf-mode .article-list{font-size:10.5px;line-height:1.55;padding-left:18px;}
-  .pdf-mode .article-list > li{margin-bottom:3px;}
-  .pdf-mode .sub-list{padding-left:18px;margin:2px 0 3px;}
-  .pdf-mode .sub-list > li{font-size:10px;line-height:1.5;}
-  .pdf-mode .ref{font-size:9.5px;}
-  .pdf-mode .ct-date{font-size:10.5px;margin:10px 0;}
-  .pdf-mode .ct-footer-bar{font-size:9.5px;padding:6px 10px;}
+  /* ═══ PDF 출력 압축 모드 — 강화판 (2026-05-16) ═══
+   * 화면은 모바일 가독성 (13px), PDF는 A4 인쇄용 압축 (9-9.5pt).
+   * 4페이지 → 2페이지 압축 목표. !important로 토글 영향 무력화 */
+  .pdf-mode .ct-inner, .contract-paper.pdf-mode .ct-inner{padding:12px 12px 0 !important;}
+  .pdf-mode .ct-main-title, .contract-paper.pdf-mode .ct-main-title{font-size:16px !important;margin-bottom:3px !important;padding-bottom:5px !important;letter-spacing:1.5px !important;}
+  .pdf-mode .ct-subtitle, .contract-paper.pdf-mode .ct-subtitle{font-size:9.5px !important;margin:3px 0 8px !important;line-height:1.35 !important;}
+  .pdf-mode table, .contract-paper.pdf-mode table{font-size:9.5px !important;margin-bottom:5px !important;}
+  .pdf-mode table th, .pdf-mode table td,
+  .contract-paper.pdf-mode table th, .contract-paper.pdf-mode table td{padding:4px 6px !important;line-height:1.4 !important;}
+  .pdf-mode .tbl-head, .contract-paper.pdf-mode .tbl-head{font-size:10.5px !important;padding:5px 7px !important;}
+  .pdf-mode .ct-info-note, .contract-paper.pdf-mode .ct-info-note{font-size:9px !important;padding:4px 7px !important;margin-bottom:8px !important;line-height:1.35 !important;}
+  .pdf-mode .article, .contract-paper.pdf-mode .article{margin-bottom:7px !important;}
+  .pdf-mode .article-title, .contract-paper.pdf-mode .article-title{font-size:11px !important;margin-bottom:3px !important;padding-bottom:2px !important;}
+  .pdf-mode .article-list, .contract-paper.pdf-mode .article-list{font-size:9.5px !important;line-height:1.45 !important;padding-left:16px !important;}
+  .pdf-mode .article-list > li, .contract-paper.pdf-mode .article-list > li{margin-bottom:2px !important;}
+  .pdf-mode .sub-list, .contract-paper.pdf-mode .sub-list{padding-left:16px !important;margin:1px 0 2px !important;}
+  .pdf-mode .sub-list > li, .contract-paper.pdf-mode .sub-list > li{font-size:9px !important;line-height:1.4 !important;margin-bottom:1px !important;}
+  .pdf-mode .ref, .contract-paper.pdf-mode .ref{font-size:8.5px !important;}
+  .pdf-mode .ct-date, .contract-paper.pdf-mode .ct-date{font-size:9.5px !important;margin:8px 0 !important;}
+  .pdf-mode .ct-footer-bar, .contract-paper.pdf-mode .ct-footer-bar{font-size:8.5px !important;padding:5px 9px !important;}
+  .pdf-mode .ct-brand, .contract-paper.pdf-mode .ct-brand{padding:10px 14px !important;}
+  .pdf-mode .ct-brand-name, .contract-paper.pdf-mode .ct-brand-name{font-size:13px !important;}
+  .pdf-mode .ct-brand-num, .contract-paper.pdf-mode .ct-brand-num{font-size:9.5px !important;}
+  /* 서명란도 압축 */
+  .pdf-mode .sig-row, .contract-paper.pdf-mode .sig-row{gap:8px !important;margin-top:10px !important;}
+  .pdf-mode .sig-box, .contract-paper.pdf-mode .sig-box{padding:8px 10px !important;}
+  .pdf-mode .sig-box-label, .contract-paper.pdf-mode .sig-box-label{font-size:10px !important;}
+  .pdf-mode .sig-box-name, .contract-paper.pdf-mode .sig-box-name{font-size:11.5px !important;}
+  .pdf-mode .sig-box-sub, .contract-paper.pdf-mode .sig-box-sub{font-size:9px !important;}
   /* 서명란 */
   .sig-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 0;padding-top:16px;border-top:2px solid var(--ct-lite);}
   .sig-box{border:1px solid var(--ct-border);border-radius:8px;padding:12px;text-align:center;background:#fafffe;}
@@ -1014,8 +1024,11 @@ async function submitSign() {
         clonedDoc.querySelectorAll('.ct-font-toggle-wrap, .ct-font-toggle').forEach(el => el.remove());
         // 2) PDF는 항상 기본 사이즈 (사용자 선택 토글 상태가 PDF에 영향 X)
         clonedDoc.documentElement.style.setProperty('--ct-scale', '1');
-        // 3) PDF 출력 압축 모드 활성화 — A4 인쇄용 9-10pt 본문, 여백 축소, 4페이지 → 2페이지
+        // 3) PDF 출력 압축 모드 활성화 — A4 인쇄용 9-9.5pt 본문, 여백 축소, 4페이지 → 2페이지
+        // body + .contract-paper 양쪽에 클래스 추가 (cascade specificity 안전)
         clonedDoc.body.classList.add('pdf-mode');
+        const cp = clonedDoc.getElementById('contract-paper');
+        if (cp) cp.classList.add('pdf-mode');
       }
     });
 
