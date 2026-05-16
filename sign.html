@@ -8,7 +8,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <!-- 빌드 마커: 사장님 화면에서 새 버전 진입 확인용 -->
-<meta name="ssak-build" content="2026-05-16T20:00-revert-and-debug">
+<meta name="ssak-build" content="2026-05-16T20:30-extreme-compress">
 <title>싹싹 — 계약서 서명</title>
 <link rel="stylesheet" href="design.css">
 <style>
@@ -180,38 +180,37 @@
   /* 서명란 — 통째로 한 페이지 안에 (한 사람만 분리되면 안 됨) */
   .sig-row{break-inside:avoid;page-break-inside:avoid;}
 
-  /* ═══ PDF 출력 압축 모드 — 최종판 (2026-05-16, 4페이지 → 2페이지) ═══
-   * 진단 결과: 9.5px 압축 작동 중이지만 line-height/margin 더 줄여야 2페이지 가능
-   * 47% 추가 압축 필요 (canvas 4752px → 2540px 목표) */
-  .pdf-mode .ct-inner, .contract-paper.pdf-mode .ct-inner{padding:8px 10px 0 !important;}
-  .pdf-mode .ct-main-title, .contract-paper.pdf-mode .ct-main-title{font-size:15px !important;margin-bottom:2px !important;padding-bottom:4px !important;letter-spacing:1.2px !important;}
-  .pdf-mode .ct-subtitle, .contract-paper.pdf-mode .ct-subtitle{font-size:9px !important;margin:2px 0 6px !important;line-height:1.3 !important;}
-  .pdf-mode table, .contract-paper.pdf-mode table{font-size:9px !important;margin-bottom:4px !important;}
+  /* ═══ PDF 출력 압축 모드 — 극압축판 (2026-05-16, 4페이지 → 2페이지) ═══
+   * 진단 결과: 4페이지 (904x4196) → 36% 추가 압축 필요
+   * 본문 9px → 8.5px, line-height/margin 추가 축소 */
+  .pdf-mode .ct-inner, .contract-paper.pdf-mode .ct-inner{padding:6px 8px 0 !important;}
+  .pdf-mode .ct-main-title, .contract-paper.pdf-mode .ct-main-title{font-size:14px !important;margin-bottom:2px !important;padding-bottom:3px !important;letter-spacing:1px !important;}
+  .pdf-mode .ct-subtitle, .contract-paper.pdf-mode .ct-subtitle{font-size:8.5px !important;margin:2px 0 5px !important;line-height:1.25 !important;}
+  .pdf-mode table, .contract-paper.pdf-mode table{font-size:8.5px !important;margin-bottom:3px !important;}
   .pdf-mode table th, .pdf-mode table td,
-  .contract-paper.pdf-mode table th, .contract-paper.pdf-mode table td{padding:3px 5px !important;line-height:1.3 !important;}
-  .pdf-mode .tbl-head, .contract-paper.pdf-mode .tbl-head{font-size:10px !important;padding:4px 6px !important;}
-  .pdf-mode .ct-info-note, .contract-paper.pdf-mode .ct-info-note{font-size:8.5px !important;padding:3px 6px !important;margin-bottom:6px !important;line-height:1.3 !important;}
-  .pdf-mode .article, .contract-paper.pdf-mode .article{margin-bottom:5px !important;}
-  .pdf-mode .article-title, .contract-paper.pdf-mode .article-title{font-size:10.5px !important;margin-bottom:2px !important;padding-bottom:1px !important;}
-  .pdf-mode .article-list, .contract-paper.pdf-mode .article-list{font-size:9px !important;line-height:1.35 !important;padding-left:14px !important;}
-  .pdf-mode .article-list > li, .contract-paper.pdf-mode .article-list > li{margin-bottom:1px !important;}
-  .pdf-mode .sub-list, .contract-paper.pdf-mode .sub-list{padding-left:14px !important;margin:0 0 1px !important;}
-  .pdf-mode .sub-list > li, .contract-paper.pdf-mode .sub-list > li{font-size:8.5px !important;line-height:1.3 !important;margin-bottom:0 !important;}
-  .pdf-mode .ref, .contract-paper.pdf-mode .ref{font-size:8px !important;}
-  .pdf-mode .ct-date, .contract-paper.pdf-mode .ct-date{font-size:9px !important;margin:6px 0 !important;}
-  .pdf-mode .ct-footer-bar, .contract-paper.pdf-mode .ct-footer-bar{font-size:8px !important;padding:4px 8px !important;}
-  .pdf-mode .ct-brand, .contract-paper.pdf-mode .ct-brand{padding:8px 12px !important;}
-  .pdf-mode .ct-brand-name, .contract-paper.pdf-mode .ct-brand-name{font-size:12px !important;}
-  .pdf-mode .ct-brand-num, .contract-paper.pdf-mode .ct-brand-num{font-size:9px !important;}
-  /* 서명란 더 압축 (전체 영역 50% 축소) */
-  .pdf-mode .sig-row, .contract-paper.pdf-mode .sig-row{gap:6px !important;margin-top:6px !important;}
-  .pdf-mode .sig-box, .contract-paper.pdf-mode .sig-box{padding:5px 8px !important;}
-  .pdf-mode .sig-box-label, .contract-paper.pdf-mode .sig-box-label{font-size:9px !important;}
-  .pdf-mode .sig-box-name, .contract-paper.pdf-mode .sig-box-name{font-size:10.5px !important;}
-  .pdf-mode .sig-box-sub, .contract-paper.pdf-mode .sig-box-sub{font-size:8.5px !important;}
-  /* 서명 이미지 — PDF에서는 작게 (서명 자체 가독성은 PDF가 충분) */
-  .pdf-mode .sig-img, .contract-paper.pdf-mode .sig-img{max-height:50px !important;}
-  .pdf-mode .sig-placeholder, .contract-paper.pdf-mode .sig-placeholder{font-size:9px !important;min-height:40px !important;}
+  .contract-paper.pdf-mode table th, .contract-paper.pdf-mode table td{padding:2px 4px !important;line-height:1.25 !important;}
+  .pdf-mode .tbl-head, .contract-paper.pdf-mode .tbl-head{font-size:9.5px !important;padding:3px 5px !important;}
+  .pdf-mode .ct-info-note, .contract-paper.pdf-mode .ct-info-note{font-size:8px !important;padding:3px 5px !important;margin-bottom:5px !important;line-height:1.25 !important;}
+  .pdf-mode .article, .contract-paper.pdf-mode .article{margin-bottom:3px !important;}
+  .pdf-mode .article-title, .contract-paper.pdf-mode .article-title{font-size:10px !important;margin-bottom:1px !important;padding-bottom:1px !important;}
+  .pdf-mode .article-list, .contract-paper.pdf-mode .article-list{font-size:8.5px !important;line-height:1.25 !important;padding-left:12px !important;}
+  .pdf-mode .article-list > li, .contract-paper.pdf-mode .article-list > li{margin-bottom:0 !important;}
+  .pdf-mode .sub-list, .contract-paper.pdf-mode .sub-list{padding-left:12px !important;margin:0 !important;}
+  .pdf-mode .sub-list > li, .contract-paper.pdf-mode .sub-list > li{font-size:8px !important;line-height:1.25 !important;margin-bottom:0 !important;}
+  .pdf-mode .ref, .contract-paper.pdf-mode .ref{font-size:7.5px !important;}
+  .pdf-mode .ct-date, .contract-paper.pdf-mode .ct-date{font-size:8.5px !important;margin:4px 0 !important;}
+  .pdf-mode .ct-footer-bar, .contract-paper.pdf-mode .ct-footer-bar{font-size:7.5px !important;padding:3px 6px !important;}
+  .pdf-mode .ct-brand, .contract-paper.pdf-mode .ct-brand{padding:6px 10px !important;}
+  .pdf-mode .ct-brand-name, .contract-paper.pdf-mode .ct-brand-name{font-size:11px !important;}
+  .pdf-mode .ct-brand-num, .contract-paper.pdf-mode .ct-brand-num{font-size:8.5px !important;}
+  /* 서명란 더 압축 */
+  .pdf-mode .sig-row, .contract-paper.pdf-mode .sig-row{gap:5px !important;margin-top:4px !important;}
+  .pdf-mode .sig-box, .contract-paper.pdf-mode .sig-box{padding:4px 6px !important;}
+  .pdf-mode .sig-box-label, .contract-paper.pdf-mode .sig-box-label{font-size:8.5px !important;}
+  .pdf-mode .sig-box-name, .contract-paper.pdf-mode .sig-box-name{font-size:10px !important;}
+  .pdf-mode .sig-box-sub, .contract-paper.pdf-mode .sig-box-sub{font-size:8px !important;}
+  .pdf-mode .sig-img, .contract-paper.pdf-mode .sig-img{max-height:42px !important;}
+  .pdf-mode .sig-placeholder, .contract-paper.pdf-mode .sig-placeholder{font-size:8.5px !important;min-height:32px !important;}
   /* 서명란 */
   .sig-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0 0;padding-top:16px;border-top:2px solid var(--ct-lite);}
   .sig-box{border:1px solid var(--ct-border);border-radius:8px;padding:12px;text-align:center;background:#fafffe;}
@@ -1123,24 +1122,6 @@ async function submitSign() {
     });
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
     window._lastSignedPdfB64 = pdfBase64;
-
-    // ── 디버그 alert v2: 페이지 수 + 캔버스 + 폰트 + smart break 동작 확인 ──
-    try {
-      var dbgSample = document.querySelector('.contract-paper .article-list');
-      var dbgFontMobile = dbgSample ? window.getComputedStyle(dbgSample).fontSize : '?';
-      var dbgPaperHeight = paper.scrollHeight;
-      var dbgBlockCount = paper.querySelectorAll('.article, .ct-info-table, .sig-row').length;
-      alert(
-        '🔍 PDF v2 디버그\n\n' +
-        '페이지 수: ' + pages.length + '\n' +
-        '캔버스: ' + canvas.width + 'x' + canvas.height + '\n' +
-        '복구 후 화면 폰트: ' + dbgFontMobile + '\n' +
-        'paper.scrollHeight: ' + dbgPaperHeight + 'px\n' +
-        'safeBreaks 후보 블록: ' + dbgBlockCount + '개\n' +
-        '빌드: 2026-05-16T20:00-revert\n\n' +
-        '캡처해서 알려주세요. 페이지 수가 2-3이면 좋음, 5+면 문제.'
-      );
-    } catch(e) {}
 
     btn.textContent = '서버 전송 중...';
     const res = await fetch(`${SERVER}/api/contract/${token}/sign`, {
