@@ -25,6 +25,55 @@ function getCfg(key, fallback = '') {
   return key ? (cfg[key] ?? fallback) : cfg;
 }
 
+// ── JWT 세션 (Phase 2) ─────────────────────────────────────────
+function getJwt() { return localStorage.getItem('ssak_jwt') || ''; }
+function setJwt(t) { if (t) localStorage.setItem('ssak_jwt', t); }
+function clearJwt() { localStorage.removeItem('ssak_jwt'); localStorage.removeItem('ssak_user'); }
+function getCurrentUser() {
+  try { return JSON.parse(localStorage.getItem('ssak_user') || 'null'); } catch (e) { return null; }
+}
+function setCurrentUser(u) { if (u) localStorage.setItem('ssak_user', JSON.stringify(u)); }
+
+// fetch 래퍼 — JWT 자동 첨부 + 401 시 로그인 페이지 리다이렉트
+async function fetchAuth(url, opts = {}) {
+  const tok = getJwt();
+  const headers = Object.assign({}, opts.headers || {});
+  if (tok) headers['Authorization'] = 'Bearer ' + tok;
+  if (!headers['Content-Type'] && opts.body && typeof opts.body === 'string') {
+    headers['Content-Type'] = 'application/json';
+  }
+  const r = await fetch(url, Object.assign({}, opts, { headers }));
+  if (r.status === 401) {
+    clearJwt();
+    if (!location.pathname.endsWith('/login.html')) {
+      const next = encodeURIComponent(location.pathname + location.search);
+      location.replace('/login.html?next=' + next);
+    }
+  }
+  return r;
+}
+
+// JWT 페이로드만 디코드 (검증은 서버 책임)
+function decodeJwt(tok) {
+  try {
+    const parts = (tok || getJwt()).split('.');
+    if (parts.length !== 3) return null;
+    return JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+  } catch (e) { return null; }
+}
+
+// 페이지 진입 가드 — JWT 없으면 login.html로
+function requireAuth() {
+  const p = decodeJwt();
+  if (!p || (p.exp && p.exp < Math.floor(Date.now()/1000))) {
+    clearJwt();
+    const next = encodeURIComponent(location.pathname + location.search);
+    location.replace('/login.html?next=' + next);
+    throw new Error('AUTH_REQUIRED');
+  }
+  return p;
+}
+
 // ── 텍스트 유틸 ────────────────────────────────────────────────
 function esc(t) {
   return (t || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');

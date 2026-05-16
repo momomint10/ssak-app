@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>싹싹 — 관리자</title>
+<meta name="theme-color" content="#FF385C">
+<link rel="stylesheet" href="design.css">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+  background: var(--c-bg, #F7F7F7);
+  color: var(--c-g900, #1A1F36);
+}
+.shell { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 60px; }
+
+.header {
+  background: linear-gradient(160deg, #FFF8F5 0%, #FFFFFF 60%);
+  border-bottom: 0.5px solid #f5e8e4;
+  padding: 14px 16px 12px;
+  position: sticky; top: 0; z-index: 50;
+}
+.header::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: linear-gradient(90deg, #FF385C 0%, #FC8181 100%);
+}
+.h-row { display: flex; align-items: center; justify-content: space-between; }
+.btn-back {
+  background: none; border: none; font-size: 22px;
+  color: #666; cursor: pointer; padding: 4px 8px;
+}
+.h-title { font-size: 22px; font-weight: 700; }
+.h-sub { font-size: 12px; color: #999; margin-top: 2px; }
+
+.tabs {
+  display: flex; gap: 4px; margin-top: 12px;
+}
+.tab {
+  flex: 1; padding: 9px; border-radius: 10px;
+  border: 1.5px solid #E5E7EB; background: #fff;
+  font-size: 13px; font-weight: 700; color: #888;
+  cursor: pointer; font-family: inherit;
+}
+.tab.on { background: #1A1F36; border-color: #1A1F36; color: #fff; }
+
+.section { padding: 14px 16px; }
+.section-title {
+  font-size: 13px; font-weight: 700; color: #888;
+  margin-bottom: 10px; letter-spacing: 0.5px;
+}
+
+.card {
+  background: #fff; border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  display: flex; align-items: center; gap: 12px;
+}
+.user-info { flex: 1; min-width: 0; }
+.user-phone {
+  font-size: 15px; font-weight: 700;
+  font-variant-numeric: tabular-nums; margin-bottom: 2px;
+}
+.user-name { font-size: 13px; color: #666; }
+.user-meta {
+  font-size: 11px; color: #999;
+  margin-top: 4px; display: flex; gap: 8px;
+}
+.badge {
+  display: inline-block; padding: 2px 8px;
+  border-radius: 10px; font-size: 10.5px; font-weight: 700;
+}
+.badge.owner { background: #FFF0F4; color: #C92A4A; }
+.badge.approved { background: #ECFDF5; color: #047857; }
+.badge.disabled { background: #F3F4F6; color: #6B7280; }
+
+.row-actions { display: flex; gap: 4px; }
+.btn-mini {
+  padding: 6px 10px; border-radius: 8px;
+  border: 1.5px solid #E5E7EB; background: #fff;
+  font-size: 12px; font-weight: 600; color: #555;
+  cursor: pointer; font-family: inherit;
+}
+.btn-mini.danger { color: #DC2626; border-color: #FECACA; }
+.btn-mini.danger:active { background: #FEF2F2; }
+.btn-mini:active { background: #F9FAFB; }
+
+.fab {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 56px; height: 56px; border-radius: 28px;
+  background: #FF385C; color: #fff;
+  border: none; font-size: 28px; cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 56, 92, 0.4);
+  z-index: 100;
+}
+
+.ov { display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45); z-index: 200; }
+.ov.on { display: block; }
+.sh {
+  position: fixed; bottom: 0; left: 50%;
+  transform: translateX(-50%); width: 100%; max-width: 480px;
+  background: #fff; border-radius: 20px 20px 0 0; z-index: 201;
+  padding: 20px 20px 24px;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+.sh-hd {
+  width: 32px; height: 3px; background: #E5E7EB;
+  border-radius: 2px; margin: -10px auto 14px;
+}
+.sh-title { font-size: 17px; font-weight: 800; margin-bottom: 14px; }
+
+label { display: block; font-size: 13px; font-weight: 700;
+  color: #444; margin-bottom: 6px; margin-top: 12px; }
+input[type="tel"], input[type="text"] {
+  width: 100%; padding: 13px 12px;
+  font-size: 16px; font-family: inherit;
+  border: 1.5px solid #E5E7EB; border-radius: 10px;
+  background: #fff; outline: none;
+}
+input:focus { border-color: #FF385C; }
+
+.btn {
+  width: 100%; padding: 14px;
+  font-size: 15px; font-weight: 800; font-family: inherit;
+  border: none; border-radius: 12px;
+  background: #FF385C; color: #fff;
+  cursor: pointer; margin-top: 14px;
+}
+.btn.ghost {
+  background: #fff; color: #555;
+  border: 1.5px solid #E5E7EB;
+}
+.btn:disabled { background: #D1D5DB; }
+
+.log-row {
+  background: #fff; border-radius: 10px;
+  padding: 10px 14px; margin-bottom: 6px;
+  font-size: 12.5px; line-height: 1.6;
+  border-left: 3px solid #E5E7EB;
+}
+.log-row.ok { border-left-color: #10B981; }
+.log-row.fail { border-left-color: #EF4444; }
+.log-row.warn { border-left-color: #F59E0B; }
+.log-phone { font-weight: 700; }
+.log-meta { font-size: 11px; color: #999; }
+
+.empty {
+  text-align: center; padding: 48px 16px;
+  font-size: 14px; color: #999;
+}
+
+#toast {
+  position: fixed; bottom: 90px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(26,31,54,0.92); color: #fff;
+  padding: 9px 18px; border-radius: 20px;
+  font-size: 13px; font-weight: 600; z-index: 999;
+  opacity: 0; transition: opacity 0.25s;
+  pointer-events: none; white-space: nowrap;
+}
+</style>
+<script src="utils.js"></script>
+</head>
+<body>
+<div class="shell">
+
+  <div class="header">
+    <div class="h-row">
+      <button class="btn-back" onclick="location.href='/index.html'">←</button>
+      <div style="flex:1;text-align:center;">
+        <div class="h-title">관리자</div>
+        <div class="h-sub" id="me-info"></div>
+      </div>
+      <button class="btn-back" onclick="logout()" title="로그아웃">🚪</button>
+    </div>
+    <div class="tabs">
+      <button class="tab on" data-tab="users" onclick="switchTab('users')">사용자</button>
+      <button class="tab" data-tab="log" onclick="switchTab('log')">로그</button>
+    </div>
+  </div>
+
+  <div class="section" id="tab-users">
+    <div class="section-title">등록된 사용자</div>
+    <div id="user-list"></div>
+  </div>
+
+  <div class="section" id="tab-log" style="display:none;">
+    <div class="section-title">로그인 로그 (최근 50건)</div>
+    <div id="log-list"></div>
+  </div>
+</div>
+
+<button class="fab" id="fab" onclick="openAdd()" title="추가">＋</button>
+
+<div class="ov" id="add-ov" onclick="if(event.target===this)closeAdd()">
+  <div class="sh">
+    <div class="sh-hd"></div>
+    <div class="sh-title">사용자 추가</div>
+    <label>휴대폰 번호</label>
+    <input id="add-phone" type="tel" placeholder="010-1234-5678" inputmode="numeric" maxlength="13">
+    <label>이름 (선택)</label>
+    <input id="add-name" type="text" placeholder="홍길동" maxlength="40">
+    <button class="btn" onclick="addUser()">등록</button>
+    <button class="btn ghost" onclick="closeAdd()">취소</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// 진입 가드 — JWT 검증 + owner 확인
+const me = requireAuth();
+if (me.role !== 'owner') {
+  alert('관리자(owner) 권한이 필요합니다.');
+  location.replace('/index.html');
+}
+document.getElementById('me-info').textContent =
+  (me.name || me.phone) + ' (Owner)';
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.opacity = '1';
+  setTimeout(() => t.style.opacity = '0', 2000);
+}
+
+function fmtPhone(p) {
+  if (!p) return '';
+  if (p.startsWith('+82')) {
+    const n = '0' + p.slice(3);
+    if (n.length === 11) return n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7);
+  }
+  return p;
+}
+
+function fmtTime(ts) {
+  if (!ts) return '';
+  return new Date(ts).toLocaleString('ko-KR', {
+    month: 'numeric', day: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t =>
+    t.classList.toggle('on', t.getAttribute('data-tab') === name));
+  document.getElementById('tab-users').style.display = name === 'users' ? 'block' : 'none';
+  document.getElementById('tab-log').style.display = name === 'log' ? 'block' : 'none';
+  document.getElementById('fab').style.display = name === 'users' ? 'flex' : 'none';
+  if (name === 'log') loadLog();
+}
+
+async function loadUsers() {
+  const list = document.getElementById('user-list');
+  list.innerHTML = '<div class="empty">불러오는 중...</div>';
+  try {
+    const r = await fetchAuth(SERVER + '/api/admin/users');
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error);
+    if (!d.data.length) {
+      list.innerHTML = '<div class="empty">등록된 사용자가 없습니다.</div>';
+      return;
+    }
+    list.innerHTML = d.data.map(u => userCard(u)).join('');
+  } catch (e) {
+    list.innerHTML = '<div class="empty">오류: ' + (e.message || '') + '</div>';
+  }
+}
+
+function userCard(u) {
+  const roleBadge = u.role === 'owner'
+    ? '<span class="badge owner">Owner</span>'
+    : '<span class="badge approved">사용자</span>';
+  const statBadge = u.status === 'disabled'
+    ? '<span class="badge disabled">비활성</span>' : '';
+  const isMe = u.id === me.sub;
+  const actions = isMe ? ''
+    : `<div class="row-actions">
+        ${u.status === 'active'
+          ? `<button class="btn-mini" onclick="toggleStatus('${u.id}','disabled')">비활성</button>`
+          : `<button class="btn-mini" onclick="toggleStatus('${u.id}','active')">재활성</button>`}
+        <button class="btn-mini danger" onclick="delUser('${u.id}','${esc(u.name||fmtPhone(u.phone_e164))}')">삭제</button>
+      </div>`;
+  return `<div class="card">
+    <div class="user-info">
+      <div class="user-phone">${fmtPhone(u.phone_e164)} ${roleBadge} ${statBadge}</div>
+      ${u.name ? `<div class="user-name">${esc(u.name)}${isMe?' (나)':''}</div>` : (isMe?'<div class="user-name">(나)</div>':'')}
+      <div class="user-meta">
+        <span>등록 ${fmtTime(u.approved_at || u.created_at)}</span>
+        ${u.last_login_at ? `<span>최근 ${fmtTime(u.last_login_at)}</span>` : '<span style="color:#bbb;">미접속</span>'}
+      </div>
+    </div>
+    ${actions}
+  </div>`;
+}
+
+function openAdd() {
+  document.getElementById('add-phone').value = '';
+  document.getElementById('add-name').value = '';
+  document.getElementById('add-ov').classList.add('on');
+  setTimeout(() => document.getElementById('add-phone').focus(), 200);
+}
+function closeAdd() {
+  document.getElementById('add-ov').classList.remove('on');
+}
+
+document.getElementById('add-phone').addEventListener('input', (e) => {
+  const n = e.target.value.replace(/\D/g, '').slice(0, 11);
+  if (n.length < 4) e.target.value = n;
+  else if (n.length < 8) e.target.value = n.slice(0,3) + '-' + n.slice(3);
+  else e.target.value = n.slice(0,3) + '-' + n.slice(3,7) + '-' + n.slice(7);
+});
+
+async function addUser() {
+  const phone = document.getElementById('add-phone').value.replace(/\D/g,'');
+  const name = document.getElementById('add-name').value.trim();
+  if (!/^01[016789]\d{7,8}$/.test(phone)) {
+    toast('휴대폰 번호를 정확히 입력해 주세요');
+    return;
+  }
+  try {
+    const r = await fetchAuth(SERVER + '/api/admin/users', {
+      method: 'POST',
+      body: JSON.stringify({ phone, name })
+    });
+    const d = await r.json();
+    if (!d.success) { toast(d.error || '등록 실패'); return; }
+    closeAdd();
+    toast('✅ 등록 완료');
+    loadUsers();
+  } catch (e) {
+    toast('오류: ' + e.message);
+  }
+}
+
+async function toggleStatus(id, status) {
+  const verb = status === 'disabled' ? '비활성화' : '재활성화';
+  if (!confirm(`이 사용자를 ${verb}할까요?`)) return;
+  try {
+    const r = await fetchAuth(SERVER + '/api/admin/users/' + id, {
+      method: 'PATCH',
+      body: JSON.stringify({ status })
+    });
+    const d = await r.json();
+    if (!d.success) { toast(d.error); return; }
+    toast(`✅ ${verb} 완료`);
+    loadUsers();
+  } catch (e) { toast('오류: ' + e.message); }
+}
+
+async function delUser(id, label) {
+  if (!confirm(`${label} 사용자를 삭제할까요?\n삭제 후에는 다시 등록해야 합니다.`)) return;
+  try {
+    const r = await fetchAuth(SERVER + '/api/admin/users/' + id, { method: 'DELETE' });
+    const d = await r.json();
+    if (!d.success) { toast(d.error); return; }
+    toast('✅ 삭제 완료');
+    loadUsers();
+  } catch (e) { toast('오류: ' + e.message); }
+}
+
+async function loadLog() {
+  const list = document.getElementById('log-list');
+  list.innerHTML = '<div class="empty">불러오는 중...</div>';
+  try {
+    const r = await fetchAuth(SERVER + '/api/admin/login-log?limit=50');
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error);
+    if (!d.data.length) {
+      list.innerHTML = '<div class="empty">로그가 없습니다.</div>';
+      return;
+    }
+    list.innerHTML = d.data.map(L => logRow(L)).join('');
+  } catch (e) {
+    list.innerHTML = '<div class="empty">오류: ' + (e.message || '') + '</div>';
+  }
+}
+
+function logRow(L) {
+  const meta = {
+    otp_sent: ['ok', 'OTP 발송'],
+    verify_ok: ['ok', '✅ 로그인 성공'],
+    otp_blocked_whitelist: ['fail', '⛔ 미등록 번호 거부'],
+    otp_blocked_rate: ['warn', '⏸ 빈도 제한'],
+    verify_fail: ['fail', '❌ 인증 실패'],
+    verify_expired: ['warn', '⏱ OTP 만료']
+  }[L.outcome] || ['', L.outcome];
+  return `<div class="log-row ${meta[0]}">
+    <span class="log-phone">${fmtPhone(L.phone_e164)}</span> · ${esc(meta[1])}
+    <div class="log-meta">${fmtTime(L.created_at)} · ${esc((L.ip||'').slice(0,20))}</div>
+  </div>`;
+}
+
+function logout() {
+  if (!confirm('로그아웃할까요?')) return;
+  clearJwt();
+  location.replace('/login.html');
+}
+
+loadUsers();
+</script>
+</body>
+</html>

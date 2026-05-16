@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>싹싹 — 로그인</title>
+<meta name="theme-color" content="#FF385C">
+<link rel="stylesheet" href="design.css">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+  background: linear-gradient(160deg, #FFF8F5 0%, #FFFFFF 60%);
+  color: #1A1F36;
+  min-height: 100vh;
+}
+.shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.brand {
+  text-align: center;
+  margin: 24px 0 28px;
+}
+.brand h1 {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #FF385C 0%, #FC8181 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.brand p { font-size: 14px; color: #888; margin-top: 6px; }
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+.card-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+.card-desc { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px; }
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #444;
+  margin-bottom: 8px;
+}
+input[type="tel"], input[type="text"] {
+  width: 100%;
+  padding: 16px 14px;
+  font-size: 18px;  /* 50대 친화: 큰 글씨 */
+  font-family: inherit;
+  font-weight: 600;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  background: #fff;
+  outline: none;
+  letter-spacing: 1px;
+}
+input:focus { border-color: #FF385C; }
+input[disabled] { background: #F5F5F5; color: #999; }
+
+.btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 17px;  /* 50대 친화: 큰 글씨 */
+  font-weight: 800;
+  font-family: inherit;
+  border: none;
+  border-radius: 12px;
+  background: #FF385C;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 12px;
+  min-height: 56px;  /* 큰 터치 영역 */
+  transition: transform 0.1s;
+}
+.btn:active { transform: scale(0.98); }
+.btn:disabled { background: #D1D5DB; cursor: not-allowed; }
+.btn.ghost { background: #fff; color: #555; border: 2px solid #E5E7EB; }
+.btn-link {
+  background: none;
+  border: none;
+  color: #FF385C;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.hint {
+  font-size: 13px;
+  color: #888;
+  margin-top: 14px;
+  line-height: 1.6;
+  text-align: center;
+}
+.hint b { color: #FF385C; }
+
+.timer {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: #FF385C;
+}
+
+.alert {
+  background: #FFF0F4;
+  color: #C92A4A;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 12px;
+  display: none;
+}
+.alert.on { display: block; }
+.alert.info { background: #EFF6FF; color: #1E40AF; }
+.alert.ok { background: #ECFDF5; color: #047857; }
+
+.bottom {
+  text-align: center;
+  margin-top: auto;
+  padding-top: 24px;
+  font-size: 12px;
+  color: #999;
+}
+.bottom small { display: block; line-height: 1.6; }
+</style>
+<script src="utils.js"></script>
+</head>
+<body>
+<div class="shell">
+
+  <div class="brand">
+    <h1>싹싹</h1>
+    <p>입주청소 사장님 도구</p>
+  </div>
+
+  <!-- Step 1: 휴대폰 번호 -->
+  <div class="card" id="step-phone">
+    <div class="card-title">로그인</div>
+    <div class="card-desc">관리자가 등록한 휴대폰 번호로<br>인증번호를 받습니다.</div>
+
+    <label>휴대폰 번호</label>
+    <input id="inp-phone" type="tel" placeholder="010-1234-5678" autocomplete="tel" inputmode="numeric" maxlength="13">
+    <div class="alert" id="alert-phone"></div>
+    <button class="btn" id="btn-send" onclick="sendOtp()">인증번호 받기</button>
+    <div class="hint">처음 사용하시는 분은<br>관리자(사장님)에게 번호 등록을 요청하세요.</div>
+  </div>
+
+  <!-- Step 2: 인증번호 -->
+  <div class="card" id="step-otp" style="display:none;">
+    <div class="card-title">인증번호 입력</div>
+    <div class="card-desc"><b id="phone-display"></b>로 발송된<br>6자리 번호를 입력해 주세요.</div>
+
+    <label>인증번호 <span class="timer" id="timer"></span></label>
+    <input id="inp-otp" type="tel" placeholder="000000" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+    <div class="alert" id="alert-otp"></div>
+    <button class="btn" id="btn-verify" onclick="verifyOtp()">로그인</button>
+    <button class="btn ghost" onclick="resetForm()" style="margin-top:8px;">번호 다시 입력</button>
+    <div class="hint">
+      인증번호가 오지 않나요?
+      <button class="btn-link" id="btn-resend" onclick="sendOtp()" disabled>재발송 (60초 후)</button>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <small>
+      © 싹싹 2026<br>
+      관리자 문의: 010-3318-1315
+    </small>
+  </div>
+</div>
+
+<script>
+let currentPhone = '';
+let timerId = null;
+let resendCooldown = null;
+
+function normalizePhone(raw) {
+  return (raw || '').replace(/[^\d+]/g, '');
+}
+function formatPhoneInput(v) {
+  const n = v.replace(/\D/g, '').slice(0, 11);
+  if (n.length < 4) return n;
+  if (n.length < 8) return n.slice(0,3) + '-' + n.slice(3);
+  return n.slice(0,3) + '-' + n.slice(3,7) + '-' + n.slice(7);
+}
+
+document.getElementById('inp-phone').addEventListener('input', (e) => {
+  e.target.value = formatPhoneInput(e.target.value);
+});
+document.getElementById('inp-otp').addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+});
+
+function showAlert(id, msg, kind='') {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'alert on' + (kind ? ' ' + kind : '');
+}
+function hideAlert(id) {
+  const el = document.getElementById(id);
+  el.className = 'alert';
+  el.textContent = '';
+}
+
+async function sendOtp() {
+  hideAlert('alert-phone'); hideAlert('alert-otp');
+  const raw = document.getElementById('inp-phone').value;
+  const phone = normalizePhone(raw);
+  if (!/^01[016789]\d{7,8}$/.test(phone)) {
+    showAlert('alert-phone', '휴대폰 번호를 정확히 입력해 주세요');
+    return;
+  }
+  const btn = document.getElementById('btn-send');
+  btn.disabled = true; btn.textContent = '발송 중...';
+  try {
+    const r = await fetch(SERVER + '/api/auth/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone })
+    });
+    const d = await r.json();
+    if (!r.ok || !d.success) {
+      showAlert('alert-phone', d.error || '발송 실패. 다시 시도해 주세요.');
+      btn.disabled = false; btn.textContent = '인증번호 받기';
+      return;
+    }
+    currentPhone = phone;
+    document.getElementById('phone-display').textContent = formatPhoneInput(phone);
+    document.getElementById('step-phone').style.display = 'none';
+    document.getElementById('step-otp').style.display = 'block';
+    document.getElementById('inp-otp').focus();
+    startTimer(180); // 3분
+    startResendCooldown(60);
+  } catch (e) {
+    showAlert('alert-phone', '서버 연결 실패. 잠시 후 다시 시도해 주세요.');
+    btn.disabled = false; btn.textContent = '인증번호 받기';
+  }
+}
+
+async function verifyOtp() {
+  hideAlert('alert-otp');
+  const code = document.getElementById('inp-otp').value;
+  if (!/^\d{6}$/.test(code)) {
+    showAlert('alert-otp', '6자리 숫자를 정확히 입력해 주세요');
+    return;
+  }
+  const btn = document.getElementById('btn-verify');
+  btn.disabled = true; btn.textContent = '확인 중...';
+  try {
+    const r = await fetch(SERVER + '/api/auth/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: currentPhone, code })
+    });
+    const d = await r.json();
+    if (!r.ok || !d.success) {
+      showAlert('alert-otp', d.error || '인증 실패');
+      btn.disabled = false; btn.textContent = '로그인';
+      return;
+    }
+    setJwt(d.token);
+    setCurrentUser(d.user);
+    showAlert('alert-otp', '로그인 성공! 이동 중...', 'ok');
+    // next 파라미터가 있으면 그곳으로, 없으면 홈
+    const params = new URLSearchParams(location.search);
+    const next = params.get('next') || '/index.html';
+    setTimeout(() => location.replace(next), 600);
+  } catch (e) {
+    showAlert('alert-otp', '서버 연결 실패. 잠시 후 다시 시도해 주세요.');
+    btn.disabled = false; btn.textContent = '로그인';
+  }
+}
+
+function resetForm() {
+  document.getElementById('step-otp').style.display = 'none';
+  document.getElementById('step-phone').style.display = 'block';
+  document.getElementById('inp-phone').focus();
+  document.getElementById('btn-send').disabled = false;
+  document.getElementById('btn-send').textContent = '인증번호 받기';
+  hideAlert('alert-phone'); hideAlert('alert-otp');
+  if (timerId) clearInterval(timerId);
+  if (resendCooldown) clearInterval(resendCooldown);
+}
+
+function startTimer(sec) {
+  if (timerId) clearInterval(timerId);
+  const tEl = document.getElementById('timer');
+  let left = sec;
+  const tick = () => {
+    if (left < 0) {
+      tEl.textContent = '(만료됨)';
+      clearInterval(timerId);
+      return;
+    }
+    const m = Math.floor(left / 60), s = left % 60;
+    tEl.textContent = `(${m}:${String(s).padStart(2,'0')} 남음)`;
+    left--;
+  };
+  tick();
+  timerId = setInterval(tick, 1000);
+}
+
+function startResendCooldown(sec) {
+  if (resendCooldown) clearInterval(resendCooldown);
+  const btn = document.getElementById('btn-resend');
+  let left = sec;
+  btn.disabled = true;
+  const tick = () => {
+    if (left <= 0) {
+      btn.disabled = false;
+      btn.textContent = '재발송';
+      clearInterval(resendCooldown);
+      return;
+    }
+    btn.textContent = `재발송 (${left}초 후)`;
+    left--;
+  };
+  tick();
+  resendCooldown = setInterval(tick, 1000);
+}
+
+// 이미 로그인되어 있으면 홈으로
+(function() {
+  const p = decodeJwt();
+  if (p && p.exp && p.exp > Math.floor(Date.now()/1000)) {
+    const params = new URLSearchParams(location.search);
+    const next = params.get('next') || '/index.html';
+    location.replace(next);
+  }
+})();
+</script>
+</body>
+</html>
