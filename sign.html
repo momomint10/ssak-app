@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- 캐시 무력화: PDF 생성 코드가 자주 갱신되므로 브라우저 캐시 우회 -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<!-- 빌드 마커: 사장님 화면에서 새 버전 진입 확인용 -->
+<meta name="ssak-build" content="2026-05-16T19:00-pdf-debug">
 <title>싹싹 — 계약서 서명</title>
 <link rel="stylesheet" href="design.css">
 <style>
@@ -1042,6 +1048,12 @@ async function submitSign() {
           clonedDoc.documentElement.style.setProperty('--ct-scale', '1');
         }
       });
+      // ── 디버그: 캡처 시점 computed font-size 기록 (사장님 alert로 확인) ──
+      var debugSample = document.querySelector('.contract-paper.pdf-mode .article-list');
+      var debugFontSize = debugSample ? window.getComputedStyle(debugSample).fontSize : 'no-element';
+      var debugBuildMarker = document.querySelector('meta[name="ssak-build"]');
+      var debugBuild = debugBuildMarker ? debugBuildMarker.content : 'no-marker';
+      window._lastPdfDebug = { fontSize: debugFontSize, build: debugBuild };
     } finally {
       // 캡처 후 즉시 원상 복구 (사용자 화면 영향 최소화)
       paper.classList.remove('pdf-mode');
@@ -1112,6 +1124,22 @@ async function submitSign() {
     });
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
     window._lastSignedPdfB64 = pdfBase64;
+
+    // ── 디버그 alert (사장님 진단용, PDF 페이지 수와 적용 상태 확인) ──
+    try {
+      var dbg = window._lastPdfDebug || {};
+      var pageCount = pages.length;
+      var canvasSize = canvas.width + 'x' + canvas.height;
+      alert(
+        '🔍 PDF 디버그 정보\n\n' +
+        '페이지 수: ' + pageCount + '\n' +
+        'pdf-mode 본문 크기: ' + dbg.fontSize + '\n' +
+        '(기대: 9.5px / 미작동: 13px)\n' +
+        '빌드: ' + dbg.build + '\n' +
+        '캔버스: ' + canvasSize + '\n\n' +
+        '이 정보를 화면 캡처해서 알려주세요.'
+      );
+    } catch(e) {}
 
     btn.textContent = '서버 전송 중...';
     const res = await fetch(`${SERVER}/api/contract/${token}/sign`, {
