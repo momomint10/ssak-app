@@ -47,6 +47,24 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .search-info{padding:8px 16px 0;font-size:12px;color:var(--gray-400);display:none;}
 .search-info b{color:var(--gray-700);}
 
+/* 카테고리 탭 (Blind 스타일 칩 — 가로 스크롤) */
+.cat-tabs{display:flex;gap:6px;padding:10px 0 4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.cat-tabs::-webkit-scrollbar{display:none;}
+.cat-tab{flex-shrink:0;padding:7px 14px;border-radius:9999px;border:1.5px solid var(--gray-200);background:#fff;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s;min-height:34px;}
+.cat-tab.on{background:var(--gray-900);border-color:var(--gray-900);color:#fff;}
+
+/* 카드 카테고리 뱃지 */
+.card-cat{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;background:#f0f0f0;color:#444;margin-bottom:6px;}
+.card-cat.cat-free{background:#E6F7F1;color:#00A87A;}
+.card-cat.cat-tip{background:#FFF4E0;color:#C97A00;}
+.card-cat.cat-job{background:#E0F2FF;color:#1976D2;}
+.card-cat.cat-qna{background:#F5E6FF;color:#7B1FA2;}
+
+/* 작성 모달 카테고리 칩 */
+.wcat-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--gray-100);}
+.wcat-btn{flex-shrink:0;padding:6px 12px;border-radius:9999px;border:1.5px solid var(--gray-200);background:#fff;font-size:12.5px;font-weight:600;color:var(--gray-500);cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s;}
+.wcat-btn.on{background:var(--gray-900);border-color:var(--gray-900);color:#fff;}
+
 /* 카드 */
 .post-card{background:#fff;margin:8px 12px 0;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;cursor:pointer;transition:transform .1s;}
 .post-card:active{transform:scale(0.98);}
@@ -165,6 +183,14 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
         onkeydown="if(event.key==='Enter') doSearch()">
       <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
     </div>
+    <!-- 카테고리 칩 (Blind 스타일) -->
+    <div class="cat-tabs" id="cat-tabs">
+      <button class="cat-tab on" data-cat="" onclick="onCat('')">전체</button>
+      <button class="cat-tab" data-cat="자유" onclick="onCat('자유')">자유</button>
+      <button class="cat-tab" data-cat="노하우" onclick="onCat('노하우')">노하우</button>
+      <button class="cat-tab" data-cat="구인구직" onclick="onCat('구인구직')">구인구직</button>
+      <button class="cat-tab" data-cat="Q&A" onclick="onCat('Q&A')">Q&A</button>
+    </div>
   </div>
 
   <div class="search-info" id="search-info"></div>
@@ -220,10 +246,15 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <button class="ws-cancel" onclick="closeWrite()">취소</button>
     </div>
     <div class="ws-body">
+      <div class="wcat-row">
+        <button class="wcat-btn on" data-cat="자유" onclick="setWriteCat('자유')">자유</button>
+        <button class="wcat-btn" data-cat="노하우" onclick="setWriteCat('노하우')">노하우</button>
+        <button class="wcat-btn" data-cat="구인구직" onclick="setWriteCat('구인구직')">구인구직</button>
+        <button class="wcat-btn" data-cat="Q&A" onclick="setWriteCat('Q&A')">Q&A</button>
+      </div>
       <input class="w-title-inp" id="w-title" type="text" placeholder="제목을 입력하세요" maxlength="100">
       <textarea class="w-content-inp" id="w-content"
-        placeholder="청소업 관련 정보, 팁, 질문을 자유롭게 나눠보세요.
-익명으로 작성됩니다 🔒"
+        placeholder="청소업 관련 정보, 팁, 질문을 자유롭게 나눠보세요."
         oninput="document.getElementById('ws-char').textContent=this.value.length+'/2000'"></textarea>
       <div class="w-photo-area">
         <div class="w-photo-preview" id="w-preview">
@@ -238,7 +269,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       </div>
     </div>
     <div class="ws-foot">
-      <span class="ws-hint">🔒 익명</span>
+      <span class="ws-hint" id="ws-author-hint">📝 사업장명 미설정</span>
       <span class="ws-char" id="ws-char">0/2000</span>
     </div>
     <button class="btn-post" id="btn-post" onclick="submitPost()">게시하기</button>
@@ -267,8 +298,34 @@ function hl(t, kw) {
 
 // ── 상태 ─────────────────────────────────────────────────────────
 let page=0, hasMore=true, loading=false, searchKw='', searchTimer=null;
-let curId=null, curLiked=false;
+let curId=null, curLiked=false, curCat='';
 let picBase64=null, picMime=null;
+let writeCat='자유';  // 작성 모달 선택 카테고리
+
+// ── 사업장명 (사장님 결정 D2 A: ssak-quote의 cfg.company 사용) ─────
+function getBusinessName(){
+  try {
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+    return (cfg.company || '').trim();
+  } catch(e){ return ''; }
+}
+function setBusinessName(name){
+  try {
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+    cfg.company = name.trim();
+    localStorage.setItem('ssak_cfg', JSON.stringify(cfg));
+  } catch(e){}
+}
+// 사업장명 미설정 시 강제 입력 (사장님 결정 D3 A)
+async function ensureBusinessName(action='글 작성'){
+  let name = getBusinessName();
+  if (name) return name;
+  name = (prompt(`${action}에 표시할 사업장명을 입력하세요.\n(예: 서프로클린)\n\n한 번 입력하면 다음부터 자동 사용됩니다.`) || '').trim();
+  if (!name) return null;
+  if (name.length > 40) { alert('40자 이내로 입력해 주세요.'); return null; }
+  setBusinessName(name);
+  return name;
+}
 
 // ── 피드 ─────────────────────────────────────────────────────────
 async function loadFeed(reset=false) {
@@ -281,6 +338,7 @@ async function loadFeed(reset=false) {
   try {
     let url=SERVER+'/api/community/posts?page='+page+'&limit=20';
     if(searchKw) url+='&search='+encodeURIComponent(searchKw);
+    if(curCat) url+='&category='+encodeURIComponent(curCat);
     const d=await fetch(url).then(r=>r.json());
     if(!d.success) throw new Error(d.error||'서버 오류');
     if(page===0) feed.innerHTML='';
@@ -304,12 +362,17 @@ async function loadFeed(reset=false) {
   loading=false;
 }
 
+function catClass(cat){
+  return cat==='자유'?'cat-free':cat==='노하우'?'cat-tip':cat==='구인구직'?'cat-job':cat==='Q&A'?'cat-qna':'cat-free';
+}
 function card(p){
+  const cat = p.category || '자유';
+  const catBadge = `<span class="card-cat ${catClass(cat)}">${esc(cat)}</span>`;
   const titleHl = p.title ? `<div class="card-title">${hl(p.title,searchKw)}</div>` : '';
   const contentHl = `<div class="card-content">${hl(p.content,searchKw)}</div>`;
   const imgHtml = p.image_url ? `<img class="card-img" src="${esc(p.image_url)}" alt="이미지" loading="lazy">` : '';
   return `<div class="post-card" onclick="openDet('${p.id}')">
-    ${titleHl}${contentHl}${imgHtml}
+    ${catBadge}${titleHl}${contentHl}${imgHtml}
     <div class="card-meta">
       <span class="card-nick">${esc(p.nickname)}</span>
       <span class="card-ago">${ago(p.created_at)}</span>
@@ -319,6 +382,15 @@ function card(p){
       </span>
     </div>
   </div>`;
+}
+
+// 카테고리 필터 (사장님 결정 D1 B: Blind 스타일 카테고리 칩)
+function onCat(cat){
+  curCat = cat;
+  document.querySelectorAll('.cat-tab').forEach(t => {
+    t.classList.toggle('on', (t.getAttribute('data-cat') || '') === cat);
+  });
+  loadFeed(true);
 }
 
 // ── 검색 ─────────────────────────────────────────────────────────
@@ -403,11 +475,14 @@ async function submitCmt(){
   const inp=document.getElementById('cmt-inp');
   const v=inp.value.trim();
   if(!v||!curId) return;
+  // 사업장명 강제 입력 (사장님 결정 D3 A)
+  const authorName = await ensureBusinessName('댓글 작성');
+  if(!authorName){ toast('사업장명이 필요합니다'); return; }
   inp.value=''; inp.style.height='auto';
   try {
     const d=await fetch(SERVER+'/api/community/posts/'+curId+'/comments',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({anon_id:getAnon(),content:v})
+      body:JSON.stringify({anon_id:getAnon(),content:v,author_name:authorName})
     }).then(r=>r.json());
     if(!d.success) throw new Error(d.error);
     const cl=document.getElementById('cmt-list');
@@ -452,8 +527,17 @@ function openWrite(){
   document.getElementById('w-title').value='';
   document.getElementById('w-content').value='';
   document.getElementById('ws-char').textContent='0/2000';
+  setWriteCat('자유');
+  refreshAuthorHint();
   removePhoto();
   setTimeout(()=>document.getElementById('w-title').focus(),300);
+}
+function refreshAuthorHint(){
+  const name = getBusinessName();
+  const el = document.getElementById('ws-author-hint');
+  if(!el) return;
+  el.textContent = name ? `📝 ${name}으로 게시` : '📝 사업장명 미설정';
+  el.style.color = name ? 'var(--gray-700)' : 'var(--gray-400)';
 }
 function closeWrite(){ document.getElementById('write-ov').classList.remove('on'); }
 
@@ -485,10 +569,13 @@ async function submitPost(){
   if(!title){toast('제목을 입력해주세요');return;}
   if(!content){toast('내용을 입력해주세요');return;}
   if(content.length>2000){toast('내용은 2000자 이내로 작성해주세요');return;}
+  // 사업장명 강제 입력 (사장님 결정 D3 A)
+  const authorName = await ensureBusinessName('글 작성');
+  if (!authorName) { toast('사업장명이 필요합니다'); return; }
   const btn=document.getElementById('btn-post');
   btn.disabled=true; btn.textContent='게시 중...';
   try {
-    const body={anon_id:getAnon(),title,content};
+    const body={anon_id:getAnon(),title,content,author_name:authorName,category:writeCat};
     if(picBase64){body.imageBase64=picBase64;body.imageMime=picMime||'image/jpeg';}
     const d=await fetch(SERVER+'/api/community/posts',{
       method:'POST',headers:{'Content-Type':'application/json'},
@@ -501,6 +588,14 @@ async function submitPost(){
   } finally {
     btn.disabled=false; btn.textContent='게시하기';
   }
+}
+
+// 작성 모달 카테고리 선택
+function setWriteCat(c){
+  writeCat = c;
+  document.querySelectorAll('.wcat-btn').forEach(b => {
+    b.classList.toggle('on', b.getAttribute('data-cat') === c);
+  });
 }
 
 // ── Toast ─────────────────────────────────────────────────────────
