@@ -74,6 +74,55 @@ function requireAuth() {
   return p;
 }
 
+// ── 글로벌 fetch monkey-patch (Phase 2) ───────────────────────
+// 싹싹 백엔드 SERVER 요청에 자동으로 JWT 토큰 첨부.
+// 401 응답 시 게스트 페이지가 아니면 login.html로 리다이렉트.
+// 기존 fetch() 호출 코드 변경 없이 전체 페이지가 인증을 따른다.
+(function(){
+  if (window.__ssakFetchPatched) return;
+  window.__ssakFetchPatched = true;
+  const _origFetch = window.fetch.bind(window);
+
+  // 게스트 페이지: 401 자동 리다이렉트 제외
+  function isGuestPath() {
+    const p = location.pathname || '';
+    return p.endsWith('/sign.html') ||
+           p.endsWith('/booking.html') ||
+           p.endsWith('/booking2.html') ||
+           p.endsWith('/login.html') ||
+           p.indexOf('/b/') === 0 ||
+           p.indexOf('/b/') !== -1;
+  }
+
+  window.fetch = function(input, init) {
+    init = init || {};
+    const url = typeof input === 'string' ? input : (input && input.url) || '';
+    // SERVER 도메인 요청에만 토큰 첨부
+    if (typeof url === 'string' && url.indexOf(SERVER) === 0) {
+      const tok = getJwt();
+      if (tok) {
+        const h = Object.assign({}, init.headers || {});
+        if (!h['Authorization'] && !h['authorization']) {
+          h['Authorization'] = 'Bearer ' + tok;
+        }
+        init = Object.assign({}, init, { headers: h });
+      }
+    }
+    return _origFetch(input, init).then(function(r){
+      // 401: 토큰 만료 → 로그인 페이지로 (게스트 페이지 제외)
+      if (r && r.status === 401 && typeof url === 'string' && url.indexOf(SERVER) === 0) {
+        if (!isGuestPath()) {
+          clearJwt();
+          const next = encodeURIComponent(location.pathname + location.search);
+          // 약간 지연 — 호출자가 응답을 처리하도록
+          setTimeout(function(){ location.replace('/login.html?next=' + next); }, 50);
+        }
+      }
+      return r;
+    });
+  };
+})();
+
 // ── 텍스트 유틸 ────────────────────────────────────────────────
 function esc(t) {
   return (t || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
