@@ -1007,7 +1007,41 @@ function isNightTime(){
 }
 
 // 이력 관련
+// localStorage가 1차 (즉시 표시), 페이지 진입 직후 서버 동기로 교체
 let smsHistory=JSON.parse(localStorage.getItem('ssak_history')||'[]');
+
+// 서버 sms_history → 클라이언트 smsHistory 동기 (다중 기기 일관성)
+async function syncServerHistory(){
+  try{
+    const r = await fetch(SERVER + '/api/sms-history?limit=200');
+    if (!r.ok) return;
+    const d = await r.json();
+    if (!d.success || !Array.isArray(d.data)) return;
+    smsHistory = d.data.map(s => ({
+      to: s.to_phone || '',
+      msg: s.msg || '',
+      isNight: false,
+      time: s.sent_at || s.created_at || new Date().toISOString(),
+      type: s.type || 'general',
+      customerName: s.customer_name || '',
+      _serverId: s.id
+    }));
+    try { localStorage.setItem('ssak_history', JSON.stringify(smsHistory.slice(0, 200))); } catch(e){}
+    if (document.getElementById('page-history') &&
+        document.getElementById('page-history').classList.contains('active')) {
+      renderHistory();
+    }
+  } catch(e) {
+    console.warn('sms-history server sync failed:', e.message);
+  }
+}
+// 페이지 진입 시 서버 동기 시도 (실패 시 localStorage 그대로 사용)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => setTimeout(syncServerHistory, 100));
+} else {
+  setTimeout(syncServerHistory, 100);
+}
+
 // 페이지 로드 후 chip count 초기화
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{if(typeof initDraftCounts==='function')initDraftCounts();});else setTimeout(()=>{if(typeof initDraftCounts==='function')initDraftCounts();},0);
 function saveHistory(to,msg,isNight,type,customerName){
@@ -1015,6 +1049,8 @@ function saveHistory(to,msg,isNight,type,customerName){
   if(smsHistory.length>200)smsHistory=smsHistory.slice(0,200);
   localStorage.setItem('ssak_history',JSON.stringify(smsHistory));
   if(document.getElementById('page-history').classList.contains('active'))renderHistory();
+  // 서버 sms_history는 SMS 발송 시 백엔드가 자동 insert → 1초 후 진실 데이터로 교체
+  setTimeout(syncServerHistory, 1000);
 }
 function clearHistory(){if(!confirm('전체 이력을 삭제할까요?'))return;smsHistory=[];localStorage.removeItem('ssak_history');renderHistory();toast('이력 삭제 완료');}
 function deleteSentHistory(time){if(!time)return;if(!confirm('이 항목을 삭제할까요?'))return;smsHistory=smsHistory.filter(h=>h.time!==time);localStorage.setItem('ssak_history',JSON.stringify(smsHistory));renderHistory();toast('삭제됨');}

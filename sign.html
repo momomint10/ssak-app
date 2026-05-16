@@ -1303,20 +1303,8 @@ async function submitOwnerContract() {
       document.getElementById('owner-done-link').textContent = tokenUrl;
       document.getElementById('owner-done-link').href = tokenUrl;
       document.getElementById('owner-done-customer').textContent = custName + ' (' + custPhone + ')님께 SMS 발송 완료';
-      // 발송이력 저장 (ssak-quote.html과 동일 schema)
-      try {
-        const hist = JSON.parse(localStorage.getItem('ssak_history') || '[]');
-        hist.unshift({
-          to: custPhone.replace(/-/g,''),
-          msg: '📋 계약서 서명 링크 발송\n' + tokenUrl,
-          isNight: false,
-          time: new Date().toISOString(),
-          type: 'contract',
-          customerName: custName
-        });
-        if (hist.length > 200) hist.length = 200;
-        localStorage.setItem('ssak_history', JSON.stringify(hist));
-      } catch(e) { /* 발송 자체는 성공했으니 이력 저장 실패는 무시 */ }
+      // sms_history는 서버(contract/create → sendSMSUtil)가 자동 insert.
+      // 클라이언트 localStorage 중복 저장 제거 (ssak-quote 페이지가 서버에서 동기).
     } else {
       toast('전송 실패: ' + (data.error || '오류'));
       btn.disabled=false; btn.innerHTML='📨 고객에게 서명 링크 전송';
