@@ -14,19 +14,20 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');
   :root{
-    --primary:#FF385C;
-    --primary-dark:#D4144E;
+    /* design.css 토큰 alias로 마이그 (2026-05-17) — 변경 시 design.css 한 곳만 수정 */
+    --primary:var(--c-pr, #FF385C);
+    --primary-dark:var(--c-pr-d, #D4144E);
     --primary-light:#FFF0F3;
     --brown:#2e1f0e;
     --brown-mid:#5c3d1e;
     --cream:#fffdf8;
-    --gray-100:#f4f4f4;
-    --gray-200:#e0e0e0;
-    --gray-400:#9e9e9e;
-    --gray-500:#757575;
-    --gray-700:#424242;
-    --gray-900:#212121;
-    /* 계약서 */
+    --gray-100:var(--c-g100, #f4f4f4);
+    --gray-200:var(--c-g200, #e0e0e0);
+    --gray-400:var(--c-g400, #9e9e9e);
+    --gray-500:var(--c-g500, #757575);
+    --gray-700:var(--c-g700, #424242);
+    --gray-900:var(--c-g900, #212121);
+    /* 계약서 (도메인 고유 — design.css 토큰화 미적용) */
     --ct-accent:#00695C;
     --ct-head:#004D40;
     --ct-lite:#E0F2F1;
