@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<script>
+/* 싹싹 임시 접근 게이트 (Phase 1 / 2026-05-17) — Phase 2 SMS OTP 로그인으로 대체 예정 */
+(function(){
+  if (localStorage.getItem('ssak_gate_2026') === 'ok') return;
+  var pw = prompt('🔒 싹싹 — 접근 비밀번호를 입력해 주세요');
+  if (pw === 'ssak2026') { localStorage.setItem('ssak_gate_2026', 'ok'); return; }
+  document.documentElement.innerHTML = '<body style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:-apple-system,sans-serif;color:#999;font-size:14px;text-align:center;padding:20px;">접근 권한이 없습니다.<br><br><small>관리자에게 문의해 주세요.</small></body>';
+  throw new Error('denied');
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — 스케줄</title>
