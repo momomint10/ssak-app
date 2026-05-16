@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>
+/* 싹싹 인증 진입 가드 (Phase 2) — JWT 검증, 미로그인 시 login.html로 */
+(function(){
+  try {
+    var tok = localStorage.getItem('ssak_jwt');
+    if (!tok) throw new Error('no_token');
+    var parts = tok.split('.');
+    if (parts.length !== 3) throw new Error('bad_token');
+    var payload = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+    if (payload.exp && payload.exp < Math.floor(Date.now()/1000)) throw new Error('expired');
+  } catch (e) {
+    localStorage.removeItem('ssak_jwt');
+    localStorage.removeItem('ssak_user');
+    var next = encodeURIComponent(location.pathname + location.search);
+    location.replace('/login.html?next=' + next);
+  }
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>싹싹 — 정밀 견적</title>
+<meta name="theme-color" content="#FF385C">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<link rel="stylesheet" href="design.css">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--c-bg,#F7F7F7);color:var(--c-g900,#1A1F36);min-height:100vh;}
+.shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
+
+/* 헤더 */
+.header{
+  background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
+  border-bottom:0.5px solid #f5e8e4;
+  padding:14px 16px 10px;
+  position:sticky;top:0;z-index:50;
+}
+.header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
+}
+.h-row{display:flex;align-items:center;gap:8px;}
+.back-btn{background:none;border:none;font-size:22px;color:#555;cursor:pointer;padding:4px 6px;}
+.h-title{font-size:20px;font-weight:700;}
+.h-sub{font-size:12px;color:#999;}
+.btn-new{
+  margin-left:auto;
+  background:#FF385C;color:#fff;border:none;
+  padding:9px 14px;border-radius:20px;
+  font-size:13px;font-weight:700;font-family:inherit;
+  cursor:pointer;
+}
+
+/* 탭 (상태별 필터) */
+.status-tabs{display:flex;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none;}
+.status-tabs::-webkit-scrollbar{display:none;}
+.status-tab{
+  flex-shrink:0;padding:7px 14px;border-radius:9999px;
+  border:1.5px solid #E5E7EB;background:#fff;
+  font-size:12.5px;font-weight:700;color:#888;
+  cursor:pointer;font-family:inherit;white-space:nowrap;
+}
+.status-tab.on{background:#1A1F36;border-color:#1A1F36;color:#fff;}
+.status-tab .n{
+  display:inline-block;
+  background:rgba(255,255,255,0.25);
+  margin-left:5px;padding:1px 7px;
+  border-radius:10px;font-size:11px;
+}
+.status-tab:not(.on) .n{
+  background:#F3F4F6;color:#666;
+}
+
+/* 카드 */
+.empty{text-align:center;padding:60px 24px;color:#999;}
+.empty-ico{font-size:48px;margin-bottom:12px;opacity:0.5;}
+
+.req-card{
+  background:#fff;
+  margin:10px 14px 0;
+  border-radius:12px;
+  padding:14px 16px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+  cursor:pointer;
+  transition:transform 0.1s;
+}
+.req-card:active{transform:scale(0.98);}
+.req-card.new{border-left:3px solid #FF385C;}
+
+.rc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.rc-status{
+  display:inline-block;padding:3px 9px;
+  border-radius:10px;font-size:10.5px;font-weight:700;
+}
+.rc-status.pending{background:#FEF3C7;color:#92400E;}
+.rc-status.submitted{background:#DBEAFE;color:#1E40AF;}
+.rc-status.quoted{background:#D1FAE5;color:#065F46;}
+.rc-status.contracted{background:#F5E6FF;color:#7B1FA2;}
+.rc-status.cancelled{background:#F3F4F6;color:#6B7280;}
+.rc-time{font-size:11px;color:#999;margin-left:auto;}
+
+.rc-name{font-size:15px;font-weight:700;margin-bottom:3px;}
+.rc-phone{font-size:13px;color:#666;font-variant-numeric:tabular-nums;}
+
+.rc-info{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;
+}
+.rc-tag{
+  font-size:11.5px;font-weight:600;
+  padding:3px 9px;background:#F3F4F6;
+  color:#444;border-radius:10px;
+}
+.rc-amount{
+  font-size:14px;font-weight:800;
+  color:#FF385C;margin-top:6px;
+}
+
+/* 오버레이/시트 */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;}
+.ov.on{display:block;}
+.sh{
+  position:fixed;bottom:0;left:50%;
+  transform:translateX(-50%);width:100%;max-width:480px;
+  background:#fff;border-radius:20px 20px 0 0;
+  z-index:201;max-height:92vh;display:flex;flex-direction:column;
+}
+.sh-hd{width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:10px auto 4px;}
+.sh-bar{padding:8px 16px 12px;border-bottom:1px solid #f5f5f5;display:flex;align-items:center;}
+.sh-ttl{font-size:17px;font-weight:800;}
+.sh-cancel{margin-left:auto;background:none;border:none;font-size:14px;color:#999;cursor:pointer;font-family:inherit;}
+.sh-body{overflow-y:auto;flex:1;padding:14px 16px;}
+
+label{display:block;font-size:13px;font-weight:700;color:#555;margin:10px 0 6px;}
+input[type="text"],input[type="tel"],input[type="number"],textarea{
+  width:100%;padding:12px 13px;font-size:15px;font-family:inherit;
+  border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;outline:none;
+}
+input:focus,textarea:focus{border-color:#FF385C;}
+textarea{resize:vertical;min-height:90px;line-height:1.6;}
+
+.hint{font-size:12px;color:#888;margin-top:6px;line-height:1.5;}
+
+.btn{
+  width:100%;padding:14px;
+  font-size:15px;font-weight:800;font-family:inherit;
+  border:none;border-radius:12px;cursor:pointer;
+  background:#FF385C;color:#fff;margin-top:12px;
+  min-height:52px;
+}
+.btn:active{transform:scale(0.98);}
+.btn.ghost{background:#fff;color:#555;border:1.5px solid #E5E7EB;margin-top:8px;}
+.btn:disabled{background:#D1D5DB;cursor:not-allowed;}
+
+/* 상세 보기 */
+.detail-section{margin-bottom:14px;}
+.ds-h{font-size:11.5px;font-weight:700;color:#888;margin-bottom:6px;letter-spacing:0.3px;}
+.ds-v{font-size:14px;line-height:1.6;}
+.ds-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.ds-photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;cursor:pointer;}
+.ds-notes{
+  background:#FAFAFA;padding:10px 12px;
+  border-radius:8px;font-size:13.5px;line-height:1.7;
+  white-space:pre-wrap;word-break:break-word;
+}
+
+.amount-quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.amt-btn{
+  flex:1;min-width:0;padding:8px 4px;
+  border:1.5px solid #E5E7EB;border-radius:8px;background:#fff;
+  font-size:12.5px;font-weight:700;color:#555;cursor:pointer;font-family:inherit;
+}
+.amt-btn:active{background:#F9FAFB;}
+
+/* 토스트 */
+#toast{
+  position:fixed;bottom:90px;left:50%;
+  transform:translateX(-50%);
+  background:rgba(26,31,54,0.92);color:#fff;
+  padding:10px 18px;border-radius:20px;
+  font-size:13px;font-weight:600;
+  z-index:999;opacity:0;transition:opacity 0.25s;
+  pointer-events:none;white-space:nowrap;
+}
+</style>
+<script src="utils.js"></script>
+</head>
+<body>
+<div class="shell">
+
+  <div class="header">
+    <div class="h-row">
+      <button class="back-btn" onclick="location.href='ssak-quote.html'">←</button>
+      <div>
+        <div class="h-title">정밀 견적</div>
+        <div class="h-sub">고객 정보 수집 → 정밀 견적 발송</div>
+      </div>
+      <button class="btn-new" onclick="openNew()">＋ 새 요청</button>
+    </div>
+    <div class="status-tabs" id="status-tabs">
+      <button class="status-tab on" data-st="" onclick="onFilter('')">전체 <span class="n" id="n-all">0</span></button>
+      <button class="status-tab" data-st="submitted" onclick="onFilter('submitted')">📥 정보 도착 <span class="n" id="n-submitted">0</span></button>
+      <button class="status-tab" data-st="pending" onclick="onFilter('pending')">⏳ 미입력 <span class="n" id="n-pending">0</span></button>
+      <button class="status-tab" data-st="quoted" onclick="onFilter('quoted')">✅ 견적 완료 <span class="n" id="n-quoted">0</span></button>
+      <button class="status-tab" data-st="cancelled" onclick="onFilter('cancelled')">취소 <span class="n" id="n-cancelled">0</span></button>
+    </div>
+  </div>
+
+  <div id="list">
+    <div class="empty"><div class="empty-ico">📋</div>불러오는 중...</div>
+  </div>
+</div>
+
+<!-- 신규 견적 요청 발송 -->
+<div class="ov" id="new-ov" onclick="if(event.target===this)closeNew()">
+  <div class="sh">
+    <div class="sh-hd"></div>
+    <div class="sh-bar">
+      <div class="sh-ttl">새 견적 요청</div>
+      <button class="sh-cancel" onclick="closeNew()">취소</button>
+    </div>
+    <div class="sh-body">
+      <label>고객 휴대폰 번호 *</label>
+      <input type="tel" id="new-phone" placeholder="010-1234-5678" inputmode="numeric" maxlength="13">
+      <label>고객 이름 (선택)</label>
+      <input type="text" id="new-name" placeholder="홍길동" maxlength="30">
+      <label>안내 SMS 본문</label>
+      <textarea id="new-msg" maxlength="300" placeholder="기본 메시지가 사용됩니다 (비워두면 자동)"></textarea>
+      <div class="hint">
+        링크 <code>{링크}</code>는 자동 삽입됩니다.<br>
+        고객 이름은 <code>{이름}</code> 위치에 자동 치환됩니다.
+      </div>
+      <button class="btn" onclick="sendNew()">
+        📨 정보 입력 링크 발송
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 견적 요청 상세 + 정밀 견적 발송 -->
+<div class="ov" id="detail-ov" onclick="if(event.target===this)closeDetail()">
+  <div class="sh" style="max-height:96vh;">
+    <div class="sh-hd"></div>
+    <div class="sh-bar">
+      <div class="sh-ttl">견적 요청 상세</div>
+      <button class="sh-cancel" onclick="closeDetail()">닫기</button>
+    </div>
+    <div class="sh-body" id="detail-body">
+      <!-- 동적 -->
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const me = requireAuth();
+const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+
+let allList = [];
+let curStatus = '';
+let curDetail = null;
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.opacity = '1';
+  setTimeout(()=> t.style.opacity = '0', 2200);
+}
+
+function fmtPhone(p){
+  const n = (p || '').replace(/\D/g, '');
+  if (n.length === 11) return n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7);
+  return p;
+}
+function fmtAmount(n){ return n ? Number(n).toLocaleString() + '원' : '-'; }
+function fmtDate(s){
+  if (!s) return '-';
+  return new Date(s).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+function fmtDateOnly(s){
+  if (!s) return '';
+  return new Date(s).toLocaleDateString('ko-KR', {month:'short', day:'numeric'});
+}
+
+const statusLabel = {
+  pending:'⏳ 미입력', submitted:'📥 정보 도착',
+  quoted:'✅ 견적 완료', contracted:'🤝 계약', cancelled:'❌ 취소'
+};
+
+// 휴대폰 자동 포맷팅
+document.getElementById('new-phone').addEventListener('input', (e) => {
+  const n = e.target.value.replace(/\D/g, '').slice(0, 11);
+  if (n.length < 4) e.target.value = n;
+  else if (n.length < 8) e.target.value = n.slice(0,3) + '-' + n.slice(3);
+  else e.target.value = n.slice(0,3) + '-' + n.slice(3,7) + '-' + n.slice(7);
+});
+
+async function loadList(){
+  try {
+    const r = await fetch(SERVER + '/api/quote-requests');
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error);
+    allList = d.data || [];
+    // 카운트 갱신
+    const counts = {all: allList.length, submitted:0, pending:0, quoted:0, cancelled:0, contracted:0};
+    allList.forEach(x => { counts[x.status] = (counts[x.status]||0) + 1; });
+    document.getElementById('n-all').textContent = counts.all;
+    document.getElementById('n-submitted').textContent = counts.submitted;
+    document.getElementById('n-pending').textContent = counts.pending;
+    document.getElementById('n-quoted').textContent = counts.quoted;
+    document.getElementById('n-cancelled').textContent = counts.cancelled;
+    renderList();
+  } catch (e) {
+    document.getElementById('list').innerHTML =
+      '<div class="empty"><div class="empty-ico">⚠️</div>불러오기 실패<br><small>' + (e.message||'') + '</small></div>';
+  }
+}
+
+function renderList(){
+  const filtered = curStatus ? allList.filter(x => x.status === curStatus) : allList;
+  if (!filtered.length) {
+    document.getElementById('list').innerHTML =
+      curStatus
+        ? `<div class="empty"><div class="empty-ico">📋</div>${esc(statusLabel[curStatus]||curStatus)} 상태의 요청이 없습니다.</div>`
+        : `<div class="empty"><div class="empty-ico">📋</div>아직 견적 요청이 없습니다.<br><small>＋ 새 요청 버튼으로 시작하세요</small></div>`;
+    return;
+  }
+  document.getElementById('list').innerHTML = filtered.map(card).join('');
+}
+
+function card(r){
+  const isNew = r.status === 'submitted';
+  const tags = [];
+  if (r.clean_type) tags.push(esc(r.clean_type));
+  if (r.area_size)  tags.push(r.area_size + '평');
+  if (r.region)     tags.push(esc(r.region));
+  if (Array.isArray(r.photos) && r.photos.length) tags.push('📸 ' + r.photos.length);
+  return `<div class="req-card${isNew?' new':''}" onclick="openDetail('${r.id}')">
+    <div class="rc-top">
+      <span class="rc-status ${r.status}">${esc(statusLabel[r.status]||r.status)}</span>
+      <span class="rc-time">${fmtDate(r.submitted_at || r.created_at)}</span>
+    </div>
+    <div class="rc-name">${esc(r.customer_name || '(이름 미입력)')}</div>
+    <div class="rc-phone">${fmtPhone(r.customer_phone)}</div>
+    ${tags.length ? `<div class="rc-info">${tags.map(t => `<span class="rc-tag">${t}</span>`).join('')}</div>` : ''}
+    ${r.final_quote_amount ? `<div class="rc-amount">${fmtAmount(r.final_quote_amount)}</div>` : ''}
+  </div>`;
+}
+
+function onFilter(st){
+  curStatus = st;
+  document.querySelectorAll('.status-tab').forEach(t => {
+    t.classList.toggle('on', (t.getAttribute('data-st') || '') === st);
+  });
+  renderList();
+}
+
+// ── 신규 견적 요청 발송 ─────────────────────────────────
+function openNew(){
+  document.getElementById('new-phone').value = '';
+  document.getElementById('new-name').value = '';
+  // SMS 템플릿: 설정 cfg.quoteRequestMsg 우선, 없으면 기본 빈 값 (서버 default 사용)
+  document.getElementById('new-msg').value = cfg.quoteRequestMsg || '';
+  document.getElementById('new-ov').classList.add('on');
+  setTimeout(() => document.getElementById('new-phone').focus(), 200);
+}
+function closeNew(){ document.getElementById('new-ov').classList.remove('on'); }
+
+async function sendNew(){
+  const phone = document.getElementById('new-phone').value.replace(/\D/g,'');
+  const name  = document.getElementById('new-name').value.trim();
+  const msg   = document.getElementById('new-msg').value.trim();
+  if (!/^01[016789]\d{7,8}$/.test(phone)) { toast('휴대폰 번호를 확인해 주세요'); return; }
+
+  try {
+    const r = await fetch(SERVER + '/api/quote-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer_phone: phone,
+        customer_name: name,
+        message: msg,
+        company_name: cfg.company || ''
+      })
+    });
+    const d = await r.json();
+    if (!d.success) { toast(d.error || '발송 실패'); return; }
+    closeNew();
+    if (d.sms_sent) {
+      toast('✅ ' + fmtPhone(phone) + '에 발송됨');
+    } else {
+      toast('⚠ 토큰만 생성 (SMS 실패): ' + (d.sms_error || ''));
+    }
+    loadList();
+  } catch (e) {
+    toast('오류: ' + (e.message||''));
+  }
+}
+
+// ── 견적 요청 상세 + 정밀 견적 발송 ─────────────────────
+async function openDetail(id){
+  document.getElementById('detail-ov').classList.add('on');
+  document.getElementById('detail-body').innerHTML = '<div class="empty">불러오는 중...</div>';
+  try {
+    const r = await fetch(SERVER + '/api/quote-requests/' + id);
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error);
+    curDetail = d.data;
+    renderDetail();
+  } catch (e) {
+    document.getElementById('detail-body').innerHTML = '<div class="empty">오류: ' + esc(e.message||'') + '</div>';
+  }
+}
+function closeDetail(){ document.getElementById('detail-ov').classList.remove('on'); curDetail = null; }
+
+function renderDetail(){
+  const r = curDetail;
+  const isPending  = r.status === 'pending';
+  const isSubmitted= r.status === 'submitted';
+  const isQuoted   = r.status === 'quoted';
+  const photos = Array.isArray(r.photos) ? r.photos : [];
+  const formUrl = `https://ssakapp.co.kr/quote.html?token=${r.token}`;
+
+  const html = `
+    <div class="rc-top" style="margin-bottom:10px;">
+      <span class="rc-status ${r.status}">${esc(statusLabel[r.status]||r.status)}</span>
+      <span class="rc-time">${fmtDate(r.submitted_at || r.created_at)}</span>
+    </div>
+    <div class="detail-section">
+      <div class="ds-h">고객</div>
+      <div class="ds-v">${esc(r.customer_name || '(이름 미입력)')} · ${fmtPhone(r.customer_phone)}</div>
+    </div>
+    ${isPending ? `
+    <div class="detail-section" style="background:#FFF7E6;padding:10px 12px;border-radius:8px;color:#92400E;font-size:13px;">
+      ⏳ 고객이 아직 정보를 입력하지 않았습니다.<br>
+      링크: <a href="${formUrl}" target="_blank" style="color:#FF385C;text-decoration:underline;word-break:break-all;">${formUrl}</a>
+    </div>
+    ` : ''}
+    ${r.clean_type ? `<div class="detail-section"><div class="ds-h">청소 유형</div><div class="ds-v">${esc(r.clean_type)}</div></div>` : ''}
+    ${r.area_size  ? `<div class="detail-section"><div class="ds-h">평수</div><div class="ds-v">${r.area_size}평</div></div>` : ''}
+    ${r.region     ? `<div class="detail-section"><div class="ds-h">지역</div><div class="ds-v">${esc(r.region)}</div></div>` : ''}
+    ${r.desired_date ? `<div class="detail-section"><div class="ds-h">희망 시공일</div><div class="ds-v">${fmtDateOnly(r.desired_date)}</div></div>` : ''}
+    ${photos.length ? `
+      <div class="detail-section">
+        <div class="ds-h">사진 ${photos.length}장</div>
+        <div class="ds-photos">${photos.map(p => `<img src="${esc(p.url)}" onclick="window.open('${esc(p.url)}','_blank')">`).join('')}</div>
+      </div>` : ''}
+    ${r.notes ? `<div class="detail-section"><div class="ds-h">특이사항</div><div class="ds-notes">${esc(r.notes)}</div></div>` : ''}
+
+    ${isQuoted ? `
+      <div class="detail-section" style="background:#D1FAE5;padding:12px 14px;border-radius:10px;">
+        <div class="ds-h" style="color:#065F46;">정밀 견적 (발송 완료)</div>
+        <div style="font-size:18px;font-weight:800;color:#047857;margin-bottom:6px;">${fmtAmount(r.final_quote_amount)}</div>
+        <div style="font-size:11px;color:#065F46;">${fmtDate(r.quoted_at)}</div>
+        ${r.quote_message ? `<div class="ds-notes" style="background:rgba(255,255,255,0.6);margin-top:8px;">${esc(r.quote_message)}</div>` : ''}
+      </div>
+    ` : ''}
+
+    ${isSubmitted ? `
+      <hr style="margin:18px 0;border:none;border-top:1px solid #f0f0f0;">
+      <div style="font-size:15px;font-weight:800;margin-bottom:10px;">💰 정밀 견적 발송</div>
+
+      <label>금액 (원) *</label>
+      <input type="number" id="d-amount" placeholder="예: 350000" inputmode="numeric" oninput="rebuildMsg()">
+      <div class="amount-quick">
+        <button type="button" class="amt-btn" onclick="setAmt(200000)">20만원</button>
+        <button type="button" class="amt-btn" onclick="setAmt(300000)">30만원</button>
+        <button type="button" class="amt-btn" onclick="setAmt(400000)">40만원</button>
+        <button type="button" class="amt-btn" onclick="setAmt(500000)">50만원</button>
+      </div>
+
+      <label>고객에게 보낼 SMS 본문 *</label>
+      <textarea id="d-msg" maxlength="1000" placeholder="자동 생성된 견적 메시지"></textarea>
+      <div class="hint">금액 입력 시 자동 생성됩니다. 직접 수정 가능.</div>
+
+      <button class="btn" onclick="sendQuote()">📨 정밀 견적 SMS 발송</button>
+      <button class="btn ghost" onclick="cancelReq()" style="color:#DC2626;border-color:#FECACA;">❌ 견적 거절/취소</button>
+    ` : ''}
+    ${isPending ? `
+      <button class="btn ghost" onclick="cancelReq()" style="color:#DC2626;border-color:#FECACA;margin-top:14px;">❌ 견적 거절/취소</button>
+    ` : ''}
+  `;
+  document.getElementById('detail-body').innerHTML = html;
+  if (isSubmitted) rebuildMsg();  // 초기 메시지 생성
+}
+
+function setAmt(v){
+  document.getElementById('d-amount').value = v;
+  rebuildMsg();
+}
+
+function rebuildMsg(){
+  const r = curDetail;
+  if (!r) return;
+  const amount = parseInt(document.getElementById('d-amount').value) || 0;
+  const tpl = cfg.quoteFinalMsg || `[싹싹] ${cfg.company || '청소'} 정밀 견적
+
+${r.customer_name || '고객님'}님께서 알려주신 정보 확인했습니다.
+
+📋 ${r.clean_type || '청소'}${r.area_size ? ` · ${r.area_size}평` : ''}${r.region ? ` · ${r.region}` : ''}
+
+💰 견적 금액: {금액}원
+
+위 금액으로 진행 가능하시면 답장 또는 전화 부탁드립니다.
+감사합니다.`;
+
+  const msg = tpl
+    .replace(/\{금액\}/g, amount ? amount.toLocaleString() : '0')
+    .replace(/\{이름\}/g, r.customer_name || '고객님')
+    .replace(/\{평수\}/g, r.area_size ? r.area_size + '평' : '')
+    .replace(/\{유형\}/g, r.clean_type || '청소')
+    .replace(/\{업체명\}/g, cfg.company || '');
+
+  document.getElementById('d-msg').value = msg;
+}
+
+async function sendQuote(){
+  const r = curDetail;
+  if (!r) return;
+  const amount = parseInt(document.getElementById('d-amount').value);
+  const msg    = document.getElementById('d-msg').value.trim();
+  if (!Number.isFinite(amount) || amount < 1) { toast('금액을 입력해 주세요'); return; }
+  if (!msg) { toast('SMS 본문이 필요합니다'); return; }
+  if (!confirm(`${fmtPhone(r.customer_phone)}에 ${amount.toLocaleString()}원으로 정밀 견적을 발송할까요?`)) return;
+
+  try {
+    const res = await fetch(SERVER + '/api/quote-requests/' + r.id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'quote', final_quote_amount: amount, quote_message: msg })
+    });
+    const d = await res.json();
+    if (!d.success) { toast(d.error || '발송 실패'); return; }
+    toast('✅ 정밀 견적 발송 완료');
+    closeDetail();
+    loadList();
+  } catch (e) {
+    toast('오류: ' + (e.message||''));
+  }
+}
+
+async function cancelReq(){
+  const r = curDetail;
+  if (!r) return;
+  if (!confirm(`${fmtPhone(r.customer_phone)} 견적 요청을 취소할까요?\n취소 후에는 같은 토큰으로 진행할 수 없습니다.`)) return;
+  try {
+    const res = await fetch(SERVER + '/api/quote-requests/' + r.id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'cancel' })
+    });
+    const d = await res.json();
+    if (!d.success) { toast(d.error); return; }
+    toast('취소되었습니다');
+    closeDetail();
+    loadList();
+  } catch (e) {
+    toast('오류: ' + (e.message||''));
+  }
+}
+
+loadList();
+</script>
+</body>
+</html>

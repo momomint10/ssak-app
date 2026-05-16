@@ -90,6 +90,7 @@ function requireAuth() {
            p.endsWith('/booking.html') ||
            p.endsWith('/booking2.html') ||
            p.endsWith('/login.html') ||
+           p.endsWith('/quote.html') ||
            p.indexOf('/b/') === 0 ||
            p.indexOf('/b/') !== -1;
   }

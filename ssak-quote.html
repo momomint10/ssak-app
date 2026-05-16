@@ -256,14 +256,32 @@ select.form-input{cursor:pointer;}
 <!-- 견적 -->
 <div id="page-quote" class="page active">
 <div id="q-landing">
-  <div class="card" style="text-align:center;padding:32px 20px 28px;">
-    <div style="font-size:48px;margin-bottom:14px;">📋</div>
-    <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);margin-bottom:8px;">견적 발송</div>
-    <div style="font-size:13px;color:var(--gray-500);line-height:1.7;margin-bottom:24px;">
-      청소 비용을 자동 계산하고<br>고객에게 SMS로 발송합니다
+  <!-- ⭐ NEW: 정밀 견적 (러프 금액 없이 고객 정보 수집 → 정확한 견적) -->
+  <div class="card" style="background:linear-gradient(135deg,#FFF0F4 0%,#FFE5EA 100%);border:1.5px solid #FFD0DC;padding:20px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <div style="font-size:28px;">🎯</div>
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#C92A4A;">정밀 견적 <span style="font-size:10px;background:#FF385C;color:#fff;padding:1px 6px;border-radius:8px;vertical-align:middle;margin-left:4px;">NEW</span></div>
+        <div style="font-size:11.5px;color:#9B1C3A;">고객이 평수·사진을 직접 입력</div>
+      </div>
     </div>
-    <button class="btn-primary" onclick="showQuoteForm()" style="max-width:280px;margin:0 auto;">
-      📋 견적 작성하기
+    <div style="font-size:13px;color:#444;line-height:1.7;margin-bottom:14px;">
+      금액 입력 없이 <b>정보 수집 링크</b>만 SMS 발송 →<br>
+      고객 정보 보고 <b>정확한 견적</b> 발송 (4-5회 → 2회)
+    </div>
+    <button class="btn-primary" onclick="location.href='quote-list.html'" style="width:100%;background:#FF385C;">
+      🎯 정밀 견적 관리 →
+    </button>
+  </div>
+
+  <div class="card" style="text-align:center;padding:24px 20px 22px;">
+    <div style="font-size:36px;margin-bottom:10px;">⚡</div>
+    <div style="font-size:16px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);margin-bottom:6px;">빠른 견적 (기존)</div>
+    <div style="font-size:12px;color:var(--gray-500);line-height:1.6;margin-bottom:18px;">
+      평수·종류 기반 자동 계산 → 즉시 SMS 발송
+    </div>
+    <button class="btn-primary" onclick="showQuoteForm()" style="max-width:280px;margin:0 auto;background:var(--gray-700);">
+      ⚡ 빠른 견적 작성
     </button>
   </div>
   <div class="card" style="margin-top:12px;">
