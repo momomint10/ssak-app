@@ -8,7 +8,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <!-- 빌드 마커: 사장님 화면에서 새 버전 진입 확인용 -->
-<meta name="ssak-build" content="2026-05-16T19:30-pdf-final-2pages">
+<meta name="ssak-build" content="2026-05-16T20:00-revert-and-debug">
 <title>싹싹 — 계약서 서명</title>
 <link rel="stylesheet" href="design.css">
 <style>
@@ -1039,8 +1039,10 @@ async function submitSign() {
     let canvas;
     try {
       canvas = await html2canvas(paper, {
-        scale: 2.5, useCORS: true, backgroundColor: '#ffffff', logging: false,
-        imageTimeout: 0, windowWidth: 760, windowHeight: paper.scrollHeight,
+        scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false,
+        imageTimeout: 0, windowWidth: 680,
+        // windowHeight 명시 제거 → html2canvas가 paper의 실제 content height를 자동 측정
+        // (paper.scrollHeight는 viewport 변경 전 측정되어 .pdf-mode 적용 결과 반영 안 됨)
         onclone: (clonedDoc) => {
           // 안전망: 토글 UI 제거 (.contract-paper 외부에 있지만 혹시 자식에 있을 경우)
           clonedDoc.querySelectorAll('.ct-font-toggle-wrap, .ct-font-toggle').forEach(el => el.remove());
@@ -1121,6 +1123,24 @@ async function submitSign() {
     });
     const pdfBase64 = pdf.output('datauristring').split(',')[1];
     window._lastSignedPdfB64 = pdfBase64;
+
+    // ── 디버그 alert v2: 페이지 수 + 캔버스 + 폰트 + smart break 동작 확인 ──
+    try {
+      var dbgSample = document.querySelector('.contract-paper .article-list');
+      var dbgFontMobile = dbgSample ? window.getComputedStyle(dbgSample).fontSize : '?';
+      var dbgPaperHeight = paper.scrollHeight;
+      var dbgBlockCount = paper.querySelectorAll('.article, .ct-info-table, .sig-row').length;
+      alert(
+        '🔍 PDF v2 디버그\n\n' +
+        '페이지 수: ' + pages.length + '\n' +
+        '캔버스: ' + canvas.width + 'x' + canvas.height + '\n' +
+        '복구 후 화면 폰트: ' + dbgFontMobile + '\n' +
+        'paper.scrollHeight: ' + dbgPaperHeight + 'px\n' +
+        'safeBreaks 후보 블록: ' + dbgBlockCount + '개\n' +
+        '빌드: 2026-05-16T20:00-revert\n\n' +
+        '캡처해서 알려주세요. 페이지 수가 2-3이면 좋음, 5+면 문제.'
+      );
+    } catch(e) {}
 
     btn.textContent = '서버 전송 중...';
     const res = await fetch(`${SERVER}/api/contract/${token}/sign`, {
