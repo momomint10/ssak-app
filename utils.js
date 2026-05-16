@@ -54,11 +54,18 @@ async function fetchAuth(url, opts = {}) {
 }
 
 // JWT 페이로드만 디코드 (검증은 서버 책임)
+// base64url → padding 추가 → atob → UTF-8 decode → JSON
+// 한글 페이로드(예: name='사장님 (Owner)') 안전 처리
 function decodeJwt(tok) {
   try {
     const parts = (tok || getJwt()).split('.');
     if (parts.length !== 3) return null;
-    return JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+    let p64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    while (p64.length % 4) p64 += '=';
+    const bin = atob(p64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return JSON.parse(new TextDecoder('utf-8').decode(bytes));
   } catch (e) { return null; }
 }
 

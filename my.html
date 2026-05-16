@@ -9,7 +9,12 @@
     if (!tok) throw new Error('no_token');
     var parts = tok.split('.');
     if (parts.length !== 3) throw new Error('bad_token');
-    var payload = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+    var p64 = parts[1].replace(/-/g,'+').replace(/_/g,'/');
+    while (p64.length % 4) p64 += '=';
+    var bin = atob(p64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    var payload = JSON.parse(new TextDecoder('utf-8').decode(bytes));
     if (payload.exp && payload.exp < Math.floor(Date.now()/1000)) throw new Error('expired');
   } catch (e) {
     localStorage.removeItem('ssak_jwt');
