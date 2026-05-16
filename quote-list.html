@@ -333,9 +333,12 @@ function renderList(){
 function card(r){
   const isNew = r.status === 'submitted';
   const tags = [];
-  if (r.clean_type) tags.push(esc(r.clean_type));
-  if (r.area_size)  tags.push(r.area_size + '평');
-  if (r.region)     tags.push(esc(r.region));
+  if (r.clean_type)    tags.push(esc(r.clean_type));
+  if (r.housing_type)  tags.push(esc(r.housing_type));
+  if (r.area_size)     tags.push(r.area_size + '평' + (r.area_type ? '(' + esc(r.area_type) + ')' : ''));
+  if (r.region)        tags.push(esc(r.region));
+  if (Array.isArray(r.site_conditions) && r.site_conditions.length) tags.push('⚠️ ' + r.site_conditions.length);
+  if (Array.isArray(r.appliance_options) && r.appliance_options.length) tags.push('🔌 ' + r.appliance_options.length);
   if (Array.isArray(r.photos) && r.photos.length) tags.push('📸 ' + r.photos.length);
   return `<div class="req-card${isNew?' new':''}" onclick="openDetail('${r.id}')">
     <div class="rc-top">
@@ -438,16 +441,42 @@ function renderDetail(){
       링크: <a href="${formUrl}" target="_blank" style="color:#FF385C;text-decoration:underline;word-break:break-all;">${formUrl}</a>
     </div>
     ` : ''}
-    ${r.clean_type ? `<div class="detail-section"><div class="ds-h">청소 유형</div><div class="ds-v">${esc(r.clean_type)}</div></div>` : ''}
-    ${r.area_size  ? `<div class="detail-section"><div class="ds-h">평수</div><div class="ds-v">${r.area_size}평</div></div>` : ''}
-    ${r.region     ? `<div class="detail-section"><div class="ds-h">지역</div><div class="ds-v">${esc(r.region)}</div></div>` : ''}
-    ${r.desired_date ? `<div class="detail-section"><div class="ds-h">희망 시공일</div><div class="ds-v">${fmtDateOnly(r.desired_date)}</div></div>` : ''}
+    ${r.clean_type    ? `<div class="detail-section"><div class="ds-h">청소 유형</div><div class="ds-v">${esc(r.clean_type)}</div></div>` : ''}
+    ${r.housing_type  ? `<div class="detail-section"><div class="ds-h">주거 형태</div><div class="ds-v">${esc(r.housing_type)}</div></div>` : ''}
+    ${r.area_size     ? `<div class="detail-section"><div class="ds-h">평수</div><div class="ds-v">${r.area_size}평${r.area_type ? ` (${esc(r.area_type)})` : ''}</div></div>` : ''}
+    ${(r.room_count !== null && r.room_count !== undefined) || (r.bathroom_count !== null && r.bathroom_count !== undefined) || (r.veranda_count !== null && r.veranda_count !== undefined) ? `
+      <div class="detail-section">
+        <div class="ds-h">방·화장실·베란다</div>
+        <div class="ds-v" style="display:flex;gap:12px;">
+          <span>🛏️ 방 <b>${r.room_count ?? '-'}</b></span>
+          <span>🚽 화장실 <b>${r.bathroom_count ?? '-'}</b></span>
+          <span>🪟 베란다 <b>${r.veranda_count ?? '-'}</b></span>
+        </div>
+      </div>` : ''}
+    ${r.region        ? `<div class="detail-section"><div class="ds-h">지역</div><div class="ds-v">${esc(r.region)}</div></div>` : ''}
+    ${r.desired_date  ? `<div class="detail-section"><div class="ds-h">희망 시공일</div><div class="ds-v">${fmtDateOnly(r.desired_date)}</div></div>` : ''}
+    ${Array.isArray(r.site_conditions) && r.site_conditions.length ? `
+      <div class="detail-section">
+        <div class="ds-h">현장 특이 조건 (${r.site_conditions.length})</div>
+        <div class="ds-v" style="display:flex;flex-wrap:wrap;gap:5px;">
+          ${r.site_conditions.map(s => `<span class="rc-tag" style="background:#FFF0F4;color:#C92A4A;">⚠️ ${esc(s)}</span>`).join('')}
+        </div>
+      </div>` : ''}
+    ${Array.isArray(r.appliance_options) && r.appliance_options.length ? `
+      <div class="detail-section">
+        <div class="ds-h">가전 분해청소 (${r.appliance_options.length}종)</div>
+        <div class="ds-v" style="display:flex;flex-direction:column;gap:4px;">
+          ${r.appliance_options.map(a => `<div style="display:flex;justify-content:space-between;padding:6px 10px;background:#F9FAFB;border-radius:6px;font-size:13px;"><span>${esc(a.name)}</span><b>${a.count}대</b></div>`).join('')}
+        </div>
+      </div>` : ''}
+    ${r.aircon_info ? `<div class="detail-section"><div class="ds-h">에어컨 분해청소</div><div class="ds-v">${esc(r.aircon_info)}</div></div>` : ''}
     ${photos.length ? `
       <div class="detail-section">
         <div class="ds-h">사진 ${photos.length}장</div>
         <div class="ds-photos">${photos.map(p => `<img src="${esc(p.url)}" onclick="window.open('${esc(p.url)}','_blank')">`).join('')}</div>
       </div>` : ''}
     ${r.notes ? `<div class="detail-section"><div class="ds-h">특이사항</div><div class="ds-notes">${esc(r.notes)}</div></div>` : ''}
+    ${r.referral_source ? `<div class="detail-section"><div class="ds-h">유입 경로</div><div class="ds-v" style="color:#888;">📊 ${esc(r.referral_source)}</div></div>` : ''}
 
     ${isQuoted ? `
       <div class="detail-section" style="background:#D1FAE5;padding:12px 14px;border-radius:10px;">
@@ -495,11 +524,24 @@ function rebuildMsg(){
   const r = curDetail;
   if (!r) return;
   const amount = parseInt(document.getElementById('d-amount').value) || 0;
+  // 자동 메시지 본문 — 받은 정보 압축 요약
+  const summaryLines = [];
+  if (r.housing_type)  summaryLines.push(`🏠 ${r.housing_type}`);
+  if (r.area_size)     summaryLines.push(`📐 ${r.area_size}평${r.area_type ? ` (${r.area_type})` : ''}`);
+  if (r.room_count != null || r.bathroom_count != null || r.veranda_count != null)
+    summaryLines.push(`🛏 방${r.room_count ?? '-'} / 🚽 화${r.bathroom_count ?? '-'} / 🪟 베${r.veranda_count ?? '-'}`);
+  if (Array.isArray(r.site_conditions) && r.site_conditions.length)
+    summaryLines.push(`⚠️ 추가: ${r.site_conditions.join(', ')}`);
+  if (Array.isArray(r.appliance_options) && r.appliance_options.length)
+    summaryLines.push(`🔌 가전: ${r.appliance_options.map(a => `${a.name} ${a.count}대`).join(', ')}`);
+  if (r.aircon_info)   summaryLines.push(`❄️ 에어컨: ${r.aircon_info}`);
+
   const tpl = cfg.quoteFinalMsg || `[싹싹] ${cfg.company || '청소'} 정밀 견적
 
 ${r.customer_name || '고객님'}님께서 알려주신 정보 확인했습니다.
 
-📋 ${r.clean_type || '청소'}${r.area_size ? ` · ${r.area_size}평` : ''}${r.region ? ` · ${r.region}` : ''}
+📋 ${r.clean_type || '청소'}${r.region ? ` · ${r.region}` : ''}
+${summaryLines.join('\n')}
 
 💰 견적 금액: {금액}원
 
