@@ -187,6 +187,28 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
   </div>
 
+  <!-- 계정 (Phase 2 인증 — 로그인 정보 + 관리자 진입 + 로그아웃) -->
+  <div class="section">
+    <div class="section-header">🔑 계정</div>
+    <div class="menu-item ds-tap-card" id="acc-info-row">
+      <div class="menu-icon" style="background:#EFF6FF;color:#1E40AF;font-size:18px;">👤</div>
+      <div class="menu-text">
+        <div class="menu-title" id="acc-name">로그인 정보</div>
+        <div class="menu-sub" id="acc-role">—</div>
+      </div>
+    </div>
+    <div class="menu-item ds-tap-card" id="acc-admin-row" style="display:none;" onclick="location.href='admin.html'">
+      <div class="menu-icon" style="background:#FFF0F4;color:#C92A4A;font-size:18px;">🛡️</div>
+      <div class="menu-text"><div class="menu-title">관리자 페이지</div><div class="menu-sub">사용자 등록·로그인 로그</div></div>
+      <div class="menu-arrow">›</div>
+    </div>
+    <div class="menu-item ds-tap-card" onclick="confirmSignOut()">
+      <div class="menu-icon" style="background:#F3F4F6;color:#6B7280;font-size:18px;">🚪</div>
+      <div class="menu-text"><div class="menu-title">로그아웃</div><div class="menu-sub">다시 로그인하려면 SMS 인증 필요</div></div>
+      <div class="menu-arrow">›</div>
+    </div>
+  </div>
+
   <div class="section">
     <div class="section-header">❓ 지원</div>
     <div class="menu-item ds-tap-card" onclick="toast('카카오톡: @싹싹클린')">
@@ -289,6 +311,38 @@ function goSettings() {
   location.href = 'ssak-quote.html';
 }
 
+// ── 계정 섹션 (Phase 2) ─────────────────────────────────────
+function fmtPhoneE164(p){
+  if (!p) return '';
+  if (p.startsWith('+82')) {
+    const n = '0' + p.slice(3);
+    if (n.length === 11) return n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7);
+  }
+  return p;
+}
+function initAccountSection(){
+  const u = getCurrentUser ? getCurrentUser() : null;
+  const nameEl = document.getElementById('acc-name');
+  const roleEl = document.getElementById('acc-role');
+  if (u) {
+    nameEl.textContent = u.name ? u.name : fmtPhoneE164(u.phone || '');
+    const roleLabel = u.role === 'owner' ? '관리자 (Owner)' : '사용자';
+    roleEl.textContent = roleLabel + (u.name ? ' · ' + fmtPhoneE164(u.phone || '') : '');
+    if (u.role === 'owner') {
+      document.getElementById('acc-admin-row').style.display = 'flex';
+    }
+  } else {
+    nameEl.textContent = '로그인 정보 없음';
+    roleEl.textContent = '다시 로그인해 주세요';
+  }
+}
+function confirmSignOut(){
+  if (!confirm('로그아웃하시겠어요?\n다시 사용하려면 SMS 인증으로 로그인해야 합니다.')) return;
+  if (typeof clearJwt === 'function') clearJwt();
+  else { localStorage.removeItem('ssak_jwt'); localStorage.removeItem('ssak_user'); }
+  location.replace('/login.html');
+}
+
 function copyBookingLink() {
   const url = 'https://ssakapp.co.kr/booking.html';
   if (navigator.clipboard) {
@@ -304,6 +358,7 @@ function copyBookingLink() {
 
 init();
 initStickyHeader(); // 스크롤 그림자 헤더
+initAccountSection();
 
 // 초기화 (로그아웃)
 function confirmLogout() {
