@@ -117,14 +117,17 @@ function requireAuth() {
       }
     }
     return _origFetch(input, init).then(function(r){
-      // 401: 토큰 만료 → 로그인 페이지로 (게스트 페이지 제외)
-      if (r && r.status === 401 && typeof url === 'string' && url.indexOf(SERVER) === 0) {
-        if (!isGuestPath()) {
-          clearJwt();
-          const next = encodeURIComponent(location.pathname + location.search);
-          // 약간 지연 — 호출자가 응답을 처리하도록
-          setTimeout(function(){ location.replace('/login.html?next=' + next); }, 50);
-        }
+      // 401: JWT 인증 실패 (code='AUTH_REQUIRED')만 자동 리다이렉트.
+      // ADMIN_KEY 401 등 다른 401은 호출자가 처리 (false-positive 방지).
+      if (r && r.status === 401 && typeof url === 'string' && url.indexOf(SERVER) === 0 && !isGuestPath()) {
+        return r.clone().json().then(function(body){
+          if (body && (body.code === 'AUTH_REQUIRED' || body.code === 'AUTH_USER_GONE' || body.code === 'AUTH_DISABLED')) {
+            clearJwt();
+            const next = encodeURIComponent(location.pathname + location.search);
+            setTimeout(function(){ location.replace('/login.html?next=' + next); }, 50);
+          }
+          return r;
+        }).catch(function(){ return r; });  // body 파싱 실패 시 그냥 응답 반환
       }
       return r;
     });
