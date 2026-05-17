@@ -207,6 +207,14 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <div class="menu-text"><div class="menu-title">관리자 페이지</div><div class="menu-sub">사용자 등록·로그인 로그</div></div>
       <div class="menu-arrow">›</div>
     </div>
+    <div class="menu-item ds-tap-card" id="acc-pin-row" onclick="openPinModal()">
+      <div class="menu-icon" style="background:#E6F7F1;color:#047857;font-size:18px;">🔢</div>
+      <div class="menu-text">
+        <div class="menu-title" id="acc-pin-title">PIN 로그인 설정</div>
+        <div class="menu-sub" id="acc-pin-sub">4자리 PIN으로 빠른 로그인 (SMS 절약)</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
     <div class="menu-item ds-tap-card" onclick="confirmSignOut()">
       <div class="menu-icon" style="background:#F3F4F6;color:#6B7280;font-size:18px;">🚪</div>
       <div class="menu-text"><div class="menu-title">로그아웃</div><div class="menu-sub">다시 로그인하려면 SMS 인증 필요</div></div>
@@ -242,6 +250,29 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   <button class="nav-item ds-tap" onclick="location.href='schedule.html'"><div class="nav-icon">📅</div><div>스케줄</div></button>
   <button class="nav-item ds-tap" onclick="location.href='workforce.html'"><div class="nav-icon">👥</div><div>동료</div></button>
   <button class="nav-item active ds-tap"><div class="nav-icon">👤</div><div>MY</div></button>
+</div>
+
+<!-- PIN 설정 모달 -->
+<div id="pin-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closePinModal()">
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;">
+    <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;"></div>
+    <div style="font-size:17px;font-weight:800;margin-bottom:6px;" id="pin-modal-title">PIN 로그인 설정</div>
+    <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;" id="pin-modal-desc">4자리 PIN을 설정하면 다음부터 SMS 없이 빠르게 로그인할 수 있습니다.</div>
+    <label style="display:block;font-size:13px;font-weight:700;color:#444;margin-bottom:8px;">새 PIN (4자리)</label>
+    <input type="tel" id="pin-input-1" inputmode="numeric" maxlength="4" placeholder="••••"
+           style="width:100%;padding:13px 14px;font-size:24px;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;outline:none;letter-spacing:8px;text-align:center;">
+    <label style="display:block;font-size:13px;font-weight:700;color:#444;margin:12px 0 8px;">PIN 한 번 더 입력</label>
+    <input type="tel" id="pin-input-2" inputmode="numeric" maxlength="4" placeholder="••••"
+           style="width:100%;padding:13px 14px;font-size:24px;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;outline:none;letter-spacing:8px;text-align:center;">
+    <div id="pin-modal-alert" style="display:none;background:#FFF0F4;color:#C92A4A;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:600;margin-top:10px;"></div>
+    <button id="pin-modal-save" onclick="savePin()"
+            style="width:100%;padding:14px;font-size:15px;font-weight:800;font-family:inherit;border:none;border-radius:12px;background:#FF385C;color:#fff;cursor:pointer;margin-top:14px;min-height:52px;">PIN 설정</button>
+    <button id="pin-modal-remove" onclick="removePin()" style="display:none;width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #FECACA;border-radius:12px;background:#fff;color:#DC2626;cursor:pointer;margin-top:8px;">PIN 해제</button>
+    <button onclick="closePinModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:8px;">취소</button>
+    <div style="font-size:11.5px;color:#999;text-align:center;margin-top:10px;line-height:1.5;">
+      🔒 PIN은 안전하게 암호화되어 저장됩니다.<br>5회 실패 시 30분간 잠금 + SMS 강제 인증.
+    </div>
+  </div>
 </div>
 
 <div id="toast"></div>
@@ -325,7 +356,7 @@ function fmtPhoneE164(p){
   }
   return p;
 }
-function initAccountSection(){
+async function initAccountSection(){
   const u = getCurrentUser ? getCurrentUser() : null;
   const nameEl = document.getElementById('acc-name');
   const roleEl = document.getElementById('acc-role');
@@ -336,11 +367,110 @@ function initAccountSection(){
     if (u.role === 'owner') {
       document.getElementById('acc-admin-row').style.display = 'flex';
     }
+    // PIN 상태 확인 → 라벨 갱신
+    try {
+      const r = await fetch(SERVER + '/api/auth/pin-status?phone=' + encodeURIComponent(u.phone || ''));
+      const d = await r.json();
+      if (d.success && d.has_pin) {
+        document.getElementById('acc-pin-title').textContent = 'PIN 로그인 변경';
+        document.getElementById('acc-pin-sub').textContent = '✅ 설정됨 — 다음 로그인부터 PIN 4자리';
+      }
+    } catch (e) {}
   } else {
     nameEl.textContent = '로그인 정보 없음';
     roleEl.textContent = '다시 로그인해 주세요';
   }
 }
+// PIN 설정/변경 모달
+let pinModalMode = 'set';  // 'set' | 'change' | 'remove'
+
+async function openPinModal(){
+  pinModalMode = 'set';
+  document.getElementById('pin-input-1').value = '';
+  document.getElementById('pin-input-2').value = '';
+  document.getElementById('pin-modal-alert').style.display = 'none';
+  document.getElementById('pin-modal-remove').style.display = 'none';
+
+  // 현재 PIN 설정 여부 확인
+  const u = getCurrentUser ? getCurrentUser() : null;
+  if (u && u.phone) {
+    try {
+      const r = await fetch(SERVER + '/api/auth/pin-status?phone=' + encodeURIComponent(u.phone));
+      const d = await r.json();
+      if (d.success && d.has_pin) {
+        document.getElementById('pin-modal-title').textContent = 'PIN 변경';
+        document.getElementById('pin-modal-desc').textContent = '새 PIN을 설정하면 기존 PIN은 사라집니다.';
+        document.getElementById('pin-modal-remove').style.display = 'block';
+        pinModalMode = 'change';
+      } else {
+        document.getElementById('pin-modal-title').textContent = 'PIN 로그인 설정';
+        document.getElementById('pin-modal-desc').textContent = '4자리 PIN을 설정하면 다음부터 SMS 없이 빠르게 로그인할 수 있습니다.';
+      }
+    } catch (e) {}
+  }
+  document.getElementById('pin-ov').style.display = 'block';
+  setTimeout(() => document.getElementById('pin-input-1').focus(), 200);
+}
+function closePinModal(){ document.getElementById('pin-ov').style.display = 'none'; }
+
+['pin-input-1','pin-input-2'].forEach(id => {
+  document.addEventListener('DOMContentLoaded', () => {
+    const inp = document.getElementById(id);
+    if (inp) inp.addEventListener('input', e => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+      document.getElementById('pin-modal-alert').style.display = 'none';
+    });
+  });
+});
+
+function pinAlert(msg){
+  const el = document.getElementById('pin-modal-alert');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+async function savePin(){
+  const p1 = document.getElementById('pin-input-1').value;
+  const p2 = document.getElementById('pin-input-2').value;
+  if (!/^\d{4}$/.test(p1)) { pinAlert('4자리 숫자 PIN'); return; }
+  if (p1 !== p2) { pinAlert('두 번 입력한 PIN이 다릅니다'); return; }
+  if (/^(\d)\1{3}$/.test(p1) || p1 === '1234' || p1 === '0000' || p1 === '1111') {
+    pinAlert('너무 단순한 PIN (1234, 0000, 1111 등 금지)'); return;
+  }
+  const btn = document.getElementById('pin-modal-save');
+  btn.disabled = true; btn.textContent = '저장 중...';
+  try {
+    const r = await fetch(SERVER + '/api/auth/pin/setup', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ pin: p1 })
+    });
+    const d = await r.json();
+    if (!d.success) { pinAlert(d.error); btn.disabled = false; btn.textContent = 'PIN 설정'; return; }
+    closePinModal();
+    toast('✅ PIN 설정 완료');
+    document.getElementById('acc-pin-title').textContent = 'PIN 로그인 변경';
+    document.getElementById('acc-pin-sub').textContent = '✅ 설정됨 — 다음 로그인부터 PIN 4자리';
+  } catch (e) {
+    pinAlert('오류: ' + (e.message||''));
+    btn.disabled = false; btn.textContent = 'PIN 설정';
+  }
+}
+
+async function removePin(){
+  if (!confirm('PIN을 해제할까요?\n다시 SMS로만 로그인하게 됩니다.')) return;
+  try {
+    const r = await fetch(SERVER + '/api/auth/pin', { method: 'DELETE' });
+    const d = await r.json();
+    if (!d.success) { pinAlert(d.error); return; }
+    closePinModal();
+    toast('PIN 해제됨');
+    document.getElementById('acc-pin-title').textContent = 'PIN 로그인 설정';
+    document.getElementById('acc-pin-sub').textContent = '4자리 PIN으로 빠른 로그인 (SMS 절약)';
+  } catch (e) {
+    pinAlert('오류: ' + (e.message||''));
+  }
+}
+
 function confirmSignOut(){
   if (!confirm('로그아웃하시겠어요?\n다시 사용하려면 SMS 인증으로 로그인해야 합니다.')) return;
   if (typeof clearJwt === 'function') clearJwt();

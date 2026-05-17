@@ -149,16 +149,20 @@ input[disabled] { background: #F5F5F5; color: #999; }
   <!-- Step 1: 휴대폰 번호 -->
   <div class="card" id="step-phone">
     <div class="card-title">로그인</div>
-    <div class="card-desc">관리자가 등록한 휴대폰 번호로<br>인증번호를 받습니다.</div>
+    <div class="card-desc">관리자가 등록한 휴대폰 번호로 로그인합니다.</div>
 
     <label>휴대폰 번호</label>
-    <input id="inp-phone" type="tel" placeholder="010-1234-5678" autocomplete="tel" inputmode="numeric" maxlength="13">
+    <input id="inp-phone" type="tel" placeholder="010-1234-5678" autocomplete="tel" inputmode="numeric" maxlength="13"
+           oninput="onPhoneChange(this.value)">
     <div class="alert" id="alert-phone"></div>
     <button class="btn" id="btn-send" onclick="sendOtp()">인증번호 받기</button>
+    <button class="btn ghost" id="btn-pin-mode" onclick="switchToPinMode()" style="display:none;margin-top:8px;">
+      🔢 PIN으로 빠른 로그인
+    </button>
     <div class="hint">처음 사용하시는 분은<br>관리자(사장님)에게 번호 등록을 요청하세요.</div>
   </div>
 
-  <!-- Step 2: 인증번호 -->
+  <!-- Step 2: 인증번호 (SMS) -->
   <div class="card" id="step-otp" style="display:none;">
     <div class="card-title">인증번호 입력</div>
     <div class="card-desc"><b id="phone-display"></b>로 발송된<br>6자리 번호를 입력해 주세요.</div>
@@ -172,6 +176,22 @@ input[disabled] { background: #F5F5F5; color: #999; }
       인증번호가 오지 않나요?
       <button class="btn-link" id="btn-resend" onclick="sendOtp()" disabled>재발송 (60초 후)</button>
     </div>
+  </div>
+
+  <!-- Step 3: PIN 빠른 로그인 -->
+  <div class="card" id="step-pin" style="display:none;">
+    <div class="card-title">🔢 PIN 로그인</div>
+    <div class="card-desc"><b id="pin-phone-display"></b><br>4자리 PIN을 입력해 주세요.</div>
+
+    <label>PIN (4자리 숫자)</label>
+    <input id="inp-pin" type="tel" placeholder="••••" inputmode="numeric" maxlength="4" autocomplete="off"
+           style="letter-spacing:8px;font-size:24px;text-align:center;">
+    <div class="alert" id="alert-pin"></div>
+    <button class="btn" id="btn-pin-verify" onclick="verifyPin()">로그인</button>
+    <button class="btn ghost" onclick="switchToSmsMode()" style="margin-top:8px;">
+      📨 SMS 인증번호로 로그인
+    </button>
+    <div class="hint">PIN을 잊으셨나요?<br>SMS 인증으로 로그인 후 MY 페이지에서 PIN 재설정 가능.</div>
   </div>
 
   <div class="bottom">
@@ -203,6 +223,82 @@ document.getElementById('inp-phone').addEventListener('input', (e) => {
 document.getElementById('inp-otp').addEventListener('input', (e) => {
   e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
 });
+document.getElementById('inp-pin').addEventListener('input', (e) => {
+  e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+});
+
+// 휴대폰 번호 변경 시 PIN 상태 확인 (PIN 옵션 표시 여부)
+let pinCheckTimer = null;
+async function onPhoneChange(v){
+  const phone = normalizePhone(v);
+  document.getElementById('btn-pin-mode').style.display = 'none';
+  if (!/^01[016789]\d{7,8}$/.test(phone)) return;
+  clearTimeout(pinCheckTimer);
+  pinCheckTimer = setTimeout(async () => {
+    try {
+      const r = await fetch(SERVER + '/api/auth/pin-status?phone=' + encodeURIComponent(phone));
+      const d = await r.json();
+      if (d.success && d.has_pin && !d.locked) {
+        document.getElementById('btn-pin-mode').style.display = 'block';
+      }
+    } catch (e) {}
+  }, 400);
+}
+
+function switchToPinMode(){
+  const phone = normalizePhone(document.getElementById('inp-phone').value);
+  if (!/^01[016789]\d{7,8}$/.test(phone)) {
+    showAlert('alert-phone', '휴대폰 번호를 정확히 입력해 주세요');
+    return;
+  }
+  currentPhone = phone;
+  hideAlert('alert-phone');
+  document.getElementById('pin-phone-display').textContent = formatPhoneInput(phone);
+  document.getElementById('inp-pin').value = '';
+  document.getElementById('step-phone').style.display = 'none';
+  document.getElementById('step-pin').style.display = 'block';
+  setTimeout(() => document.getElementById('inp-pin').focus(), 200);
+}
+function switchToSmsMode(){
+  document.getElementById('step-pin').style.display = 'none';
+  document.getElementById('step-phone').style.display = 'block';
+  hideAlert('alert-pin');
+}
+
+async function verifyPin(){
+  hideAlert('alert-pin');
+  const pin = document.getElementById('inp-pin').value;
+  if (!/^\d{4}$/.test(pin)) {
+    showAlert('alert-pin', '4자리 숫자를 입력해 주세요');
+    return;
+  }
+  const btn = document.getElementById('btn-pin-verify');
+  btn.disabled = true; btn.textContent = '확인 중...';
+  try {
+    const r = await fetch(SERVER + '/api/auth/pin/verify', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ phone: currentPhone, pin })
+    });
+    const d = await r.json();
+    if (!r.ok || !d.success) {
+      showAlert('alert-pin', d.error || 'PIN 불일치');
+      btn.disabled = false; btn.textContent = '로그인';
+      // 5회 잠금 — SMS 모드로 강제 전환
+      if (d.code === 'PIN_LOCKED' || d.code === 'PIN_LOCKED_NOW') {
+        setTimeout(() => switchToSmsMode(), 1500);
+      }
+      return;
+    }
+    setJwt(d.token); setCurrentUser(d.user);
+    showAlert('alert-pin', '✅ 로그인 성공! 이동 중...', 'ok');
+    const params = new URLSearchParams(location.search);
+    const next = params.get('next') || '/index.html';
+    setTimeout(() => location.replace(next), 500);
+  } catch (e) {
+    showAlert('alert-pin', '서버 연결 실패');
+    btn.disabled = false; btn.textContent = '로그인';
+  }
+}
 
 function showAlert(id, msg, kind='') {
   const el = document.getElementById(id);
