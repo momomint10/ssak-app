@@ -452,7 +452,7 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
       <input type="date" id="date-input" class="input-field" oninput="onDateChange(this.value)" onchange="onDateChange(this.value)">
     </div>
 
-    <!-- 6. 방·화장실·베란다 -->
+    <!-- 6. 방·화장실·베란다 + 평면도 (통합) -->
     <div class="q-card">
       <div class="q-title">
         <span class="star">*</span><span class="num">6.</span><span class="text">방·화장실·베란다 갯수</span>
@@ -465,38 +465,28 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
         </ul>
       </div>
 
-      <!-- 평면도 예시 SVG (저작권 안전 자체 일러스트) -->
+      <!-- 평면도 예시 SVG (베란다 세는 법 시각 가이드) -->
       <div class="floor-example">
         <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
-          <!-- 외곽 -->
           <rect x="10" y="10" width="340" height="220" fill="#FFF8DC" stroke="#333" stroke-width="2"/>
-          <!-- 침실1 (좌상) -->
           <rect x="10" y="10" width="100" height="90" fill="#FFEFB5" stroke="#333"/>
           <text x="60" y="58" text-anchor="middle" font-size="11" fill="#444" font-weight="700">침실1</text>
-          <!-- 거실 (중앙) -->
           <rect x="110" y="40" width="140" height="130" fill="#D4A574" stroke="#333"/>
           <text x="180" y="110" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">거실</text>
-          <!-- 주방 (상중앙) -->
           <rect x="110" y="10" width="140" height="30" fill="#F0E68C" stroke="#333"/>
           <text x="180" y="30" text-anchor="middle" font-size="10" fill="#444" font-weight="600">주방·식당</text>
-          <!-- 침실2 (우상) -->
           <rect x="250" y="10" width="100" height="90" fill="#FFEFB5" stroke="#333"/>
           <text x="300" y="58" text-anchor="middle" font-size="11" fill="#444" font-weight="700">침실2</text>
-          <!-- 침실3 (좌하) -->
           <rect x="10" y="100" width="100" height="80" fill="#FFEFB5" stroke="#333"/>
           <text x="60" y="145" text-anchor="middle" font-size="11" fill="#444" font-weight="700">침실3</text>
-          <!-- 화장실 (우하) -->
           <rect x="250" y="100" width="100" height="50" fill="#E0F7FA" stroke="#333"/>
           <text x="300" y="130" text-anchor="middle" font-size="11" fill="#444" font-weight="700">화장실</text>
-          <!-- 베란다 1 (안방) -->
           <rect x="10" y="180" width="100" height="48" fill="none" stroke="#E31C5F" stroke-width="3"/>
           <circle cx="55" cy="204" r="11" fill="#1A1F33"/>
           <text x="55" y="208" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">1</text>
-          <!-- 베란다 2 (거실) -->
           <rect x="110" y="170" width="140" height="40" fill="none" stroke="#E31C5F" stroke-width="3"/>
           <circle cx="180" cy="190" r="11" fill="#1A1F33"/>
           <text x="180" y="194" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">2</text>
-          <!-- 베란다 3 (작은방) -->
           <rect x="250" y="150" width="100" height="58" fill="none" stroke="#E31C5F" stroke-width="3"/>
           <circle cx="300" cy="178" r="11" fill="#1A1F33"/>
           <text x="300" y="182" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">3</text>
@@ -504,41 +494,45 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
         <div class="caption">📍 빨간 박스 = 베란다 / 연결되어 있어도 구역별 카운트 (예시: 3개)</div>
       </div>
 
-      <div class="num-row" style="margin-top:8px;">
-        <div class="num-cell">
-          <label>🛏️ 방</label>
-          <input type="number" id="room-count" class="input-field" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('roomCount', this.value)">
+      <!-- 본인 평면도 첨부 (선택) -->
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:6px;">
+          🏠 본인 집 평면도 첨부 <span style="font-weight:500;color:var(--text-mute);">(선택, 최대 3장)</span>
         </div>
-        <div class="num-cell">
-          <label>🚽 화장실</label>
-          <input type="number" id="bathroom-count" class="input-field" min="0" max="10" placeholder="0" inputmode="numeric" oninput="onNumChange('bathroomCount', this.value)">
+        <div style="font-size:12.5px;color:var(--text-sub);margin-bottom:10px;line-height:1.6;">
+          네이버 부동산·분양 자료 등에서 평면도를 첨부하시면<br>
+          사장님이 구조를 정확히 파악해 <b>더 정밀한 견적</b>이 가능합니다.
         </div>
-        <div class="num-cell">
-          <label>🪟 베란다</label>
-          <input type="number" id="veranda-count" class="input-field" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('verandaCount', this.value)">
+        <div class="photo-grid" id="plan-grid"></div>
+        <input type="file" id="plan-input" accept="image/*" style="display:none" multiple onchange="onPlanSelect(this)">
+      </div>
+
+      <!-- 갯수 입력 -->
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:10px;">
+          ▼ 갯수 입력
+        </div>
+        <div class="num-row">
+          <div class="num-cell">
+            <label>🛏️ 방</label>
+            <input type="number" id="room-count" class="input-field" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('roomCount', this.value)">
+          </div>
+          <div class="num-cell">
+            <label>🚽 화장실</label>
+            <input type="number" id="bathroom-count" class="input-field" min="0" max="10" placeholder="0" inputmode="numeric" oninput="onNumChange('bathroomCount', this.value)">
+          </div>
+          <div class="num-cell">
+            <label>🪟 베란다</label>
+            <input type="number" id="veranda-count" class="input-field" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('verandaCount', this.value)">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 7. 아파트 평면도 (선택) -->
+    <!-- 7. 현장 특이 조건 (다중 선택) -->
     <div class="q-card">
       <div class="q-title">
-        <span class="num">7.</span><span class="text">아파트 평면도 (선택)</span>
-      </div>
-      <div class="q-hint">
-        <ul>
-          <li>본인 집 평면도 사진 1~3장 (네이버 부동산·분양 자료 등)</li>
-          <li>사장님이 구조를 정확히 파악하면 더 정밀한 견적이 가능합니다</li>
-        </ul>
-      </div>
-      <div class="photo-grid" id="plan-grid"></div>
-      <input type="file" id="plan-input" accept="image/*" style="display:none" multiple onchange="onPlanSelect(this)">
-    </div>
-
-    <!-- 8. 현장 특이 조건 (다중 선택) -->
-    <div class="q-card">
-      <div class="q-title">
-        <span class="num">8.</span><span class="text">아래 내용 중 해당사항이 있을까요?</span>
+        <span class="num">7.</span><span class="text">아래 내용 중 해당사항이 있을까요?</span>
       </div>
       <div class="q-hint">
         정확한 견적과 인원배치를 위해 필요합니다.<br>
@@ -556,10 +550,10 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
       </div>
     </div>
 
-    <!-- 9. 가전 분해청소 -->
+    <!-- 8. 가전 분해청소 -->
     <div class="q-card">
       <div class="q-title">
-        <span class="num">9.</span><span class="text">가전 분해청소 (선택)</span>
+        <span class="num">8.</span><span class="text">가전 분해청소 (선택)</span>
       </div>
       <div class="q-hint">
         냉장고, 세탁기 등<br>
@@ -568,10 +562,10 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
       <div class="app-list" id="app-list"></div>
     </div>
 
-    <!-- 10. 에어컨 -->
+    <!-- 9. 에어컨 -->
     <div class="q-card">
       <div class="q-title">
-        <span class="num">10.</span><span class="text">에어컨 완전 분해청소 (선택)</span>
+        <span class="num">9.</span><span class="text">에어컨 완전 분해청소 (선택)</span>
       </div>
       <div class="q-hint">
         원하시는 형태(1way, 벽걸이, 스탠드 등)와 대수
@@ -579,10 +573,10 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
       <input type="text" id="aircon-input" class="input-field" placeholder="답변을 입력해주세요. (예: 벽걸이 2대, 스탠드 1대)" maxlength="200" oninput="state.airconInfo=this.value.trim()">
     </div>
 
-    <!-- 11. 현재 상태 사진 -->
+    <!-- 10. 현재 상태 사진 -->
     <div class="q-card">
       <div class="q-title">
-        <span class="num">11.</span><span class="text">현재 상태 사진 (선택)</span>
+        <span class="num">10.</span><span class="text">현재 상태 사진 (선택)</span>
       </div>
       <div class="q-hint">
         욕실·주방·거실 사진 1~5장 권장.<br>
@@ -592,20 +586,20 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
       <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" multiple onchange="onPhotoSelect(this)">
     </div>
 
-    <!-- 12. 특이사항 -->
+    <!-- 11. 특이사항 -->
     <div class="q-card">
       <div class="q-title">
-        <span class="num">12.</span><span class="text">특이사항 (선택)</span>
+        <span class="num">11.</span><span class="text">특이사항 (선택)</span>
       </div>
       <div class="q-hint">반려동물·입주 직전·추가 요청 등 알려주실 내용</div>
       <textarea id="notes-input" class="input-field" placeholder="답변을 입력해주세요." maxlength="1000" oninput="onNotesChange(this.value)"></textarea>
       <div style="text-align:right;font-size:11.5px;color:var(--text-mute);margin-top:4px;"><span id="notes-count">0</span>/1000</div>
     </div>
 
-    <!-- 13. 요청 플랫폼 -->
+    <!-- 12. 요청 플랫폼 -->
     <div class="q-card">
       <div class="q-title">
-        <span class="num">13.</span><span class="text">어디서 보고 오셨나요? (선택)</span>
+        <span class="num">12.</span><span class="text">어디서 보고 오셨나요? (선택)</span>
       </div>
       <div class="opt-list" id="referral-list">
         <button type="button" class="opt-row" data-val="블로그"     onclick="setReferral('블로그')"><span class="opt-radio"></span>블로그</button>
