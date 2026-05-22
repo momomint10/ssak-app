@@ -4,244 +4,368 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — 견적 정보 입력</title>
-<meta name="theme-color" content="#FF385C">
+<meta name="theme-color" content="#0E1421">
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
-<link rel="stylesheet" href="design.css">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
+/* ────────────────────────────────────────────────────────
+   네이버 폼 스타일 (다크 모드 우선)
+   참조: /Users/mr.kim/Claude Code_260515/Obs_260515/4_보관/naver 양식/HandOff*.png
+   ──────────────────────────────────────────────────────── */
+:root{
+  --bg:        #0E1421;
+  --card:      #1A1F33;
+  --row:       #1F2640;
+  --row-on:    #2A3253;
+  --border:    rgba(255,255,255,0.06);
+  --text:      #E8EAF0;
+  --text-sub:  #9CA3AF;
+  --text-mute: #6B7280;
+  --accent:    #5BC8E0;   /* 시안 (번호/제출 버튼) */
+  --accent-d:  #3AA8C0;
+  --red:       #FF5C5C;
+  --radio-off: #4B5563;
+  --radio-on:  #5BC8E0;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:        #F5F7FA;
+    --card:      #FFFFFF;
+    --row:       #F9FAFB;
+    --row-on:    #E0F7FB;
+    --border:    rgba(0,0,0,0.06);
+    --text:      #1A1F36;
+    --text-sub:  #4B5563;
+    --text-mute: #9CA3AF;
+    --accent:    #00A8C0;
+    --accent-d:  #00859A;
+    --red:       #DC2626;
+    --radio-off: #D1D5DB;
+    --radio-on:  #00A8C0;
+  }
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--c-bg,#F7F7F7);color:var(--c-g900,#1A1F36);min-height:100vh;}
-.shell{max-width:520px;margin:0 auto;min-height:100vh;padding-bottom:140px;}
+html,body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  font-size:15px;
+  line-height:1.5;
+}
+.shell{max-width:560px;margin:0 auto;min-height:100vh;padding:0 14px 120px;}
 
-/* 헤더 */
-.header{
-  background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 70%);
-  padding:28px 20px 18px;text-align:center;
-  border-bottom:0.5px solid #f5e8e4;position:relative;
-}
-.header::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;
-  height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
-}
-.brand{
-  font-size:28px;font-weight:800;
-  background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:6px;
-}
-.subtitle{font-size:14px;color:#666;font-weight:500;}
-.owner-name{font-size:12px;color:#999;margin-top:4px;}
-
-/* 진행률 */
-.progress-wrap{
-  position:sticky;top:0;z-index:50;
-  background:#fff;padding:10px 16px;
-  border-bottom:1px solid #f5f5f5;
-  box-shadow:0 1px 3px rgba(0,0,0,0.03);
-}
-.progress-bar{height:5px;background:#F3F4F6;border-radius:3px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,#FF385C,#FC8181);width:0%;transition:width 0.3s;}
-.progress-info{font-size:11.5px;color:#888;margin-top:5px;display:flex;justify-content:space-between;}
-
-/* 안내 카드 */
-.intro{
-  margin:16px 16px 0;padding:14px 16px;
-  background:#EFF6FF;border-radius:12px;
-  font-size:13.5px;line-height:1.7;color:#1E40AF;
-}
-.intro b{color:#1E3A8A;}
-
-/* 폼 카드 */
-.card{
-  background:#fff;margin:12px 16px 0;
-  border-radius:14px;padding:18px;
-  box-shadow:0 1px 4px rgba(0,0,0,0.04);
-}
-.card.muted{background:#FAFAFA;border:1px dashed #E5E7EB;box-shadow:none;}
-.card-title{
-  font-size:15px;font-weight:800;margin-bottom:6px;
+/* ── 헤더 ── */
+.brand-bar{
   display:flex;align-items:center;gap:8px;
+  padding:14px 4px 10px;
 }
-.card-title .num{
-  display:inline-flex;width:22px;height:22px;
-  align-items:center;justify-content:center;
-  background:#FF385C;color:#fff;
-  border-radius:50%;font-size:11px;font-weight:800;
+.brand-logo{
+  width:28px;height:28px;background:#1FCC4A;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:900;font-size:16px;letter-spacing:-1px;
 }
-.card-title .req{color:#FF385C;font-size:13px;}
-.card-hint{font-size:12px;color:#999;line-height:1.6;margin-bottom:12px;margin-top:-2px;}
+.brand-name{font-size:18px;font-weight:700;color:var(--text);}
 
-/* 입력 */
-label{display:block;font-size:13px;font-weight:700;color:#555;margin:12px 0 6px;}
-input[type="text"],input[type="tel"],input[type="number"],input[type="date"],textarea{
-  width:100%;padding:13px 14px;font-size:15px;font-family:inherit;
-  border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;outline:none;
+.title-card{
+  background:var(--card);
+  border-radius:12px;
+  padding:18px 18px 16px;
+  margin-bottom:18px;
+  border:1px solid var(--border);
 }
-input:focus,textarea:focus{border-color:#FF385C;}
-textarea{resize:vertical;min-height:80px;line-height:1.6;}
-
-/* 가로 입력 그룹 (방·화장실·베란다) */
-.num-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
-.num-cell{}
-.num-cell label{margin:0 0 5px;font-size:12px;}
-.num-cell input{padding:11px 10px;text-align:center;font-size:16px;font-variant-numeric:tabular-nums;}
-
-/* 칩 (라디오 단일) */
-.chip-row{display:flex;gap:6px;flex-wrap:wrap;}
-.chip{
-  padding:10px 14px;border:1.5px solid #E5E7EB;border-radius:9999px;
-  background:#fff;font-size:13.5px;font-weight:700;color:#555;
-  cursor:pointer;font-family:inherit;transition:0.15s;
-  min-height:42px;display:inline-flex;align-items:center;gap:5px;
+.title-card h1{
+  font-size:18px;font-weight:700;color:var(--text);margin-bottom:10px;
 }
-.chip:active{transform:scale(0.97);}
-.chip.on{background:#FFF0F4;border-color:#FF385C;color:#FF385C;}
-.chip-ico{font-size:15px;}
-
-/* 큰 칩 (청소 유형) */
-.chip-big{
-  flex:1;min-width:calc(33% - 6px);
-  padding:14px 6px;border:1.5px solid #E5E7EB;border-radius:12px;
-  background:#fff;font-size:13px;font-weight:700;color:#555;
-  cursor:pointer;font-family:inherit;transition:0.15s;
-  min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+.title-card .date-pill{
+  display:inline-block;
+  padding:8px 14px;border-radius:9999px;
+  background:var(--row);
+  font-size:12px;color:var(--text-sub);
+  font-variant-numeric:tabular-nums;
 }
-.chip-big.on{background:#FFF0F4;border-color:#FF385C;color:#FF385C;}
-.chip-big .chip-ico{font-size:20px;}
+.required-note{
+  text-align:right;
+  font-size:13px;color:var(--red);
+  font-weight:600;
+  margin-bottom:10px;
+}
+.required-note::before{content:'* ';}
 
-/* 토글 칩 (다중 선택) */
-.chip-multi{
-  padding:9px 13px;border:1.5px solid #E5E7EB;border-radius:9999px;
-  background:#fff;font-size:13px;font-weight:600;color:#555;
+/* ── 진행률 ── */
+.progress-wrap{
+  background:var(--card);
+  border-radius:12px;
+  padding:12px 16px;
+  margin-bottom:14px;
+  border:1px solid var(--border);
+}
+.progress-bar{height:5px;background:var(--row);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent) 0%,var(--accent-d) 100%);width:0%;transition:width .3s;}
+.progress-info{font-size:12px;color:var(--text-sub);margin-top:6px;display:flex;justify-content:space-between;}
+.progress-info b{color:var(--accent);}
+
+/* ── 질문 카드 ── */
+.q-card{
+  background:var(--card);
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:14px;
+  border:1px solid var(--border);
+}
+.q-title{
+  display:flex;align-items:baseline;gap:8px;
+  margin-bottom:6px;
+}
+.q-title .star{color:var(--red);font-weight:700;font-size:15px;line-height:1;}
+.q-title .num{color:var(--accent);font-weight:700;font-size:17px;}
+.q-title .text{color:var(--text);font-weight:700;font-size:17px;}
+.q-hint{
+  font-size:13.5px;color:var(--text-sub);line-height:1.7;
+  margin:6px 0 14px;
+}
+.q-hint ul{padding-left:18px;margin:4px 0;}
+.q-hint li{margin-bottom:3px;}
+.q-hint b{color:var(--text);}
+
+/* ── 라디오/체크박스 옵션 (네이버 폼 핵심 패턴) ── */
+.opt-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.opt-row{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 18px;
+  background:var(--row);
+  border-radius:10px;
+  border:1.5px solid transparent;
+  cursor:pointer;
+  font-size:15px;font-weight:500;color:var(--text);
+  transition:.15s;
+  min-height:56px;  /* 50대 친화 큰 터치 영역 */
+  font-family:inherit;
+  text-align:left;
+  width:100%;
+}
+.opt-row:active{transform:scale(0.99);}
+.opt-row.on{
+  background:var(--row-on);
+  border-color:var(--accent);
+}
+.opt-radio{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid var(--radio-off);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  transition:.15s;
+}
+.opt-row.on .opt-radio{
+  border-color:var(--radio-on);
+}
+.opt-row.on .opt-radio::after{
+  content:'';
+  width:10px;height:10px;border-radius:50%;
+  background:var(--radio-on);
+}
+.opt-check{
+  width:22px;height:22px;border-radius:5px;
+  border:2px solid var(--radio-off);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:transparent;font-weight:900;font-size:13px;
+  transition:.15s;
+}
+.opt-row.on .opt-check{
+  background:var(--radio-on);
+  border-color:var(--radio-on);
+  color:#fff;
+}
+.opt-row.on .opt-check::after{content:'✓';}
+
+/* ── 텍스트/숫자 입력 ── */
+.input-field{
+  width:100%;
+  padding:14px 16px;
+  font-size:15px;
+  font-family:inherit;
+  font-weight:500;
+  color:var(--text);
+  background:var(--row);
+  border:1.5px solid transparent;
+  border-radius:10px;
+  outline:none;
+  transition:border-color .15s;
+}
+.input-field:focus{border-color:var(--accent);}
+.input-field::placeholder{color:var(--text-mute);}
+textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
+
+/* 평수 입력 — area-type 토글 + 평수 */
+.area-type-row{display:flex;gap:8px;margin-bottom:10px;}
+.area-type-btn{
+  flex:1;padding:12px;
+  border-radius:10px;
+  background:var(--row);border:1.5px solid transparent;
+  font-size:14px;font-weight:700;color:var(--text-sub);
   cursor:pointer;font-family:inherit;
-  min-height:38px;display:inline-flex;align-items:center;gap:4px;
+  min-height:48px;
 }
-.chip-multi.on{background:#E6F7F1;border-color:#10B981;color:#047857;}
-.chip-multi:active{transform:scale(0.97);}
+.area-type-btn.on{
+  background:var(--row-on);border-color:var(--accent);color:var(--accent);
+}
 
 /* 평수 빠른 선택 */
 .area-quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
 .area-btn{
-  flex:1;min-width:0;padding:9px 4px;
-  border:1.5px solid #E5E7EB;border-radius:8px;background:#fff;
-  font-size:12.5px;font-weight:700;color:#555;cursor:pointer;font-family:inherit;
+  flex:1;min-width:0;padding:10px 4px;
+  border-radius:8px;background:var(--row);border:1.5px solid transparent;
+  font-size:12.5px;font-weight:700;color:var(--text-sub);cursor:pointer;font-family:inherit;
 }
-.area-btn.on{background:#FFF0F4;border-color:#FF385C;color:#FF385C;}
+.area-btn.on{background:var(--row-on);border-color:var(--accent);color:var(--accent);}
 
-/* 평수 유형 토글 (전용/공급) */
-.area-type-row{display:flex;gap:6px;margin-bottom:8px;}
-.area-type-btn{
-  flex:1;padding:9px;border:1.5px solid #E5E7EB;border-radius:8px;background:#fff;
-  font-size:13px;font-weight:700;color:#555;cursor:pointer;font-family:inherit;
+/* 방·화장실·베란다 3-grid */
+.num-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.num-cell label{
+  display:block;font-size:12.5px;font-weight:700;color:var(--text-sub);
+  margin-bottom:5px;text-align:center;
 }
-.area-type-btn.on{background:#1A1F36;border-color:#1A1F36;color:#fff;}
+.num-cell .input-field{
+  text-align:center;font-size:18px;font-variant-numeric:tabular-nums;
+  padding:11px 8px;
+}
 
-/* 가전 옵션 (체크박스 + 대수) */
-.app-list{display:flex;flex-direction:column;gap:6px;}
+/* 평면도 예시 SVG */
+.floor-example{
+  background:#FFFFFF;
+  border-radius:12px;
+  padding:12px;
+  margin:14px 0 6px;
+  text-align:center;
+}
+.floor-example svg{width:100%;max-width:380px;height:auto;}
+.floor-example .caption{
+  font-size:11.5px;color:#666;margin-top:6px;
+}
+
+/* 가전 분해청소 */
+.app-list{display:flex;flex-direction:column;gap:8px;}
 .app-row{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;
+  background:var(--row);
+  border-radius:10px;
+  border:1.5px solid transparent;
   cursor:pointer;
-  transition:0.1s;
+  transition:.15s;
+  min-height:56px;
 }
-.app-row.on{background:#FFF0F4;border-color:#FF385C;}
-.app-row .app-chk{
-  width:20px;height:20px;border-radius:50%;
-  border:2px solid #D1D5DB;background:#fff;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;color:transparent;font-size:13px;font-weight:800;
+.app-row.on{
+  background:var(--row-on);
+  border-color:var(--accent);
 }
-.app-row.on .app-chk{background:#FF385C;border-color:#FF385C;color:#fff;}
-.app-row .app-name{flex:1;font-size:13.5px;font-weight:600;color:#333;}
+.app-row .opt-check{margin-right:0;}
+.app-row .app-name{flex:1;font-size:14.5px;font-weight:500;color:var(--text);}
+.app-row .app-name b{color:var(--text-mute);font-weight:400;font-size:12px;}
 .app-row .app-count{
-  display:flex;align-items:center;gap:4px;
+  display:flex;align-items:center;gap:6px;
   opacity:0;pointer-events:none;
-  transition:opacity 0.15s;
+  transition:opacity .15s;
 }
 .app-row.on .app-count{opacity:1;pointer-events:auto;}
 .cnt-btn{
-  width:28px;height:28px;border-radius:6px;
-  border:1.5px solid #E5E7EB;background:#fff;
-  font-size:14px;font-weight:800;color:#666;
-  cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border-radius:6px;
+  border:1.5px solid var(--border);
+  background:var(--card);
+  font-size:15px;font-weight:800;color:var(--text-sub);
+  cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
 }
-.cnt-btn:active{background:#F3F4F6;}
+.cnt-btn:active{background:var(--bg);}
 .cnt-val{
   min-width:24px;text-align:center;
-  font-size:14px;font-weight:800;color:#1A1F36;
+  font-size:15px;font-weight:800;color:var(--text);
   font-variant-numeric:tabular-nums;
 }
 
-/* 사진 업로드 */
-.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
-.photo-thumb{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#f5f5f5;border:1.5px solid #E5E7EB;}
+/* 사진 + 평면도 업로드 */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.photo-thumb{
+  position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;
+  background:var(--row);border:1px solid var(--border);
+}
 .photo-thumb img{width:100%;height:100%;object-fit:cover;}
 .photo-thumb .rm{
   position:absolute;top:4px;right:4px;
-  background:rgba(0,0,0,0.6);color:#fff;
-  border:none;border-radius:50%;width:22px;height:22px;
-  font-size:12px;cursor:pointer;
+  background:rgba(0,0,0,0.7);color:#fff;
+  border:none;border-radius:50%;width:24px;height:24px;
+  font-size:13px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
 }
 .photo-add{
-  aspect-ratio:1;border:2px dashed #D1D5DB;
-  border-radius:10px;background:#FAFAFA;
+  aspect-ratio:1;border:2px dashed var(--border);
+  border-radius:10px;background:var(--row);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;cursor:pointer;color:#999;font-size:11px;font-weight:600;
+  gap:4px;cursor:pointer;color:var(--text-mute);font-size:11px;font-weight:600;
 }
-.photo-add:active{background:#F3F4F6;}
+.photo-add:active{opacity:0.7;}
 .photo-ico{font-size:24px;}
 
-/* 제출 바 */
+/* 제출 버튼 (네이버 폼: 시안 풀너비) */
 .submit-bar{
   position:fixed;bottom:0;left:50%;
-  transform:translateX(-50%);width:100%;max-width:520px;
-  background:#fff;padding:12px 16px;
-  padding-bottom:max(12px,env(safe-area-inset-bottom));
-  border-top:1px solid #E5E7EB;box-shadow:0 -2px 12px rgba(0,0,0,0.05);
+  transform:translateX(-50%);width:100%;max-width:560px;
+  background:var(--bg);
+  padding:10px 14px;
+  padding-bottom:max(10px,env(safe-area-inset-bottom));
+  border-top:1px solid var(--border);
   z-index:100;
 }
 .btn-submit{
-  width:100%;padding:16px;font-size:16px;font-weight:800;font-family:inherit;
-  border:none;border-radius:12px;background:#FF385C;color:#fff;
-  cursor:pointer;min-height:56px;
+  width:100%;padding:18px;
+  font-size:17px;font-weight:700;font-family:inherit;
+  border:none;border-radius:12px;
+  background:var(--accent);color:#fff;
+  cursor:pointer;min-height:58px;
+  letter-spacing:0.5px;
 }
-.btn-submit:active{transform:scale(0.98);}
-.btn-submit:disabled{background:#D1D5DB;cursor:not-allowed;}
+.btn-submit:active{transform:scale(0.99);background:var(--accent-d);}
+.btn-submit:disabled{background:var(--radio-off);cursor:not-allowed;}
 
 /* 완료/에러 */
-.done-screen{text-align:center;padding:60px 24px;}
-.done-ico{font-size:64px;margin-bottom:18px;}
-.done-title{font-size:22px;font-weight:800;margin-bottom:10px;}
-.done-desc{font-size:14px;color:#666;line-height:1.7;}
-
-.error-screen{text-align:center;padding:60px 24px;}
-.error-ico{font-size:56px;margin-bottom:18px;opacity:0.5;}
-.error-title{font-size:18px;font-weight:800;margin-bottom:8px;color:#DC2626;}
-.error-desc{font-size:14px;color:#666;line-height:1.7;}
+.done-screen,.error-screen{text-align:center;padding:60px 24px;}
+.done-ico,.error-ico{font-size:64px;margin-bottom:18px;}
+.done-title{font-size:22px;font-weight:800;margin-bottom:10px;color:var(--text);}
+.done-desc{font-size:14px;color:var(--text-sub);line-height:1.7;}
+.done-desc b{color:var(--accent);}
+.error-title{font-size:18px;font-weight:800;margin-bottom:8px;color:var(--red);}
+.error-desc{font-size:14px;color:var(--text-sub);line-height:1.7;}
 
 #toast{
-  position:fixed;top:60px;left:50%;
-  transform:translateX(-50%);
-  background:rgba(26,31,54,0.92);color:#fff;
+  position:fixed;top:60px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,0.9);color:#fff;
   padding:11px 20px;border-radius:22px;
   font-size:13.5px;font-weight:600;
-  z-index:999;opacity:0;transition:opacity 0.25s;
+  z-index:999;opacity:0;transition:opacity .25s;
   pointer-events:none;white-space:nowrap;
 }
 </style>
 </head>
 <body>
 <div class="shell" id="app-shell">
-  <div id="loading" style="text-align:center;padding:80px 20px;color:#999;">
+  <div id="loading" style="text-align:center;padding:80px 20px;color:var(--text-mute);">
     <div style="font-size:14px;">불러오는 중...</div>
   </div>
 
   <div id="form-main" style="display:none;">
-    <div class="header">
-      <div class="brand">싹싹</div>
-      <div class="subtitle">청소 견적 정보 입력</div>
-      <div class="owner-name" id="owner-name"></div>
+
+    <!-- 헤더 (네이버 폼 스타일) -->
+    <div class="brand-bar">
+      <div class="brand-logo">싹</div>
+      <div class="brand-name">싹싹 견적요청서</div>
     </div>
+
+    <div class="title-card">
+      <h1 id="owner-title">정밀 견적 요청</h1>
+      <div class="date-pill" id="owner-name">접수일 자동</div>
+    </div>
+
+    <div class="required-note">답변 필수</div>
 
     <!-- 진행률 -->
     <div class="progress-wrap">
@@ -252,46 +376,47 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
       </div>
     </div>
 
-    <div class="intro">
-      <b>📋 정확한 견적을 위해</b> 아래 정보를 알려주세요.<br>
-      입력하신 정보를 보고 사장님이 곧 정밀 견적을 보내드립니다. (약 2분 소요)
-    </div>
-
-    <!-- 1. 청소 유형 -->
-    <div class="card">
-      <div class="card-title"><span class="num">1</span>청소 유형 <span class="req">*</span></div>
-      <div class="chip-row" style="margin-top:8px;">
-        <button type="button" class="chip-big" data-val="신축입주청소" onclick="setCleanType('신축입주청소')"><span class="chip-ico">🆕</span>신축입주청소</button>
-        <button type="button" class="chip-big" data-val="구축이사청소" onclick="setCleanType('구축이사청소')"><span class="chip-ico">📦</span>구축이사청소</button>
-        <button type="button" class="chip-big" data-val="거주청소" onclick="setCleanType('거주청소')"><span class="chip-ico">✨</span>거주청소</button>
-        <button type="button" class="chip-big" data-val="사이청소" onclick="setCleanType('사이청소')"><span class="chip-ico">🔄</span>사이청소</button>
-        <button type="button" class="chip-big" data-val="인테리어 후 청소" onclick="setCleanType('인테리어 후 청소')"><span class="chip-ico">🔨</span>인테리어후</button>
+    <!-- 1. 주거형태 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="star">*</span><span class="num">1.</span><span class="text">주거형태</span>
+      </div>
+      <div class="opt-list" id="housing-list">
+        <button type="button" class="opt-row" data-val="원룸"     onclick="setHousing('원룸')"><span class="opt-radio"></span>원룸</button>
+        <button type="button" class="opt-row" data-val="투룸"     onclick="setHousing('투룸')"><span class="opt-radio"></span>투룸</button>
+        <button type="button" class="opt-row" data-val="아파트"   onclick="setHousing('아파트')"><span class="opt-radio"></span>아파트</button>
+        <button type="button" class="opt-row" data-val="오피스텔" onclick="setHousing('오피스텔')"><span class="opt-radio"></span>오피스텔</button>
+        <button type="button" class="opt-row" data-val="빌라"     onclick="setHousing('빌라')"><span class="opt-radio"></span>빌라</button>
+        <button type="button" class="opt-row" data-val="주택"     onclick="setHousing('주택')"><span class="opt-radio"></span>주택</button>
+        <button type="button" class="opt-row" data-val="사무실"   onclick="setHousing('사무실')"><span class="opt-radio"></span>사무실</button>
       </div>
     </div>
 
-    <!-- 2. 주거 형태 -->
-    <div class="card">
-      <div class="card-title"><span class="num">2</span>주거 형태 <span class="req">*</span></div>
-      <div class="chip-row" id="housing-row" style="margin-top:8px;">
-        <button type="button" class="chip" data-val="원룸" onclick="setHousing('원룸')"><span class="chip-ico">🏠</span>원룸</button>
-        <button type="button" class="chip" data-val="투룸" onclick="setHousing('투룸')"><span class="chip-ico">🏡</span>투룸</button>
-        <button type="button" class="chip" data-val="아파트" onclick="setHousing('아파트')"><span class="chip-ico">🏢</span>아파트</button>
-        <button type="button" class="chip" data-val="오피스텔" onclick="setHousing('오피스텔')"><span class="chip-ico">🏨</span>오피스텔</button>
-        <button type="button" class="chip" data-val="빌라" onclick="setHousing('빌라')"><span class="chip-ico">🏘️</span>빌라</button>
-        <button type="button" class="chip" data-val="주택" onclick="setHousing('주택')"><span class="chip-ico">🏚️</span>주택</button>
-        <button type="button" class="chip" data-val="사무실" onclick="setHousing('사무실')"><span class="chip-ico">🏬</span>사무실</button>
+    <!-- 2. 청소 유형 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="star">*</span><span class="num">2.</span><span class="text">맡기고 싶은 청소</span>
+      </div>
+      <div class="opt-list" id="clean-list">
+        <button type="button" class="opt-row" data-val="신축입주청소"   onclick="setCleanType('신축입주청소')"><span class="opt-radio"></span>신축입주청소</button>
+        <button type="button" class="opt-row" data-val="구축이사청소"   onclick="setCleanType('구축이사청소')"><span class="opt-radio"></span>구축이사청소</button>
+        <button type="button" class="opt-row" data-val="거주청소"       onclick="setCleanType('거주청소')"><span class="opt-radio"></span>거주청소</button>
+        <button type="button" class="opt-row" data-val="사이청소"       onclick="setCleanType('사이청소')"><span class="opt-radio"></span>사이청소</button>
+        <button type="button" class="opt-row" data-val="인테리어 후 청소" onclick="setCleanType('인테리어 후 청소')"><span class="opt-radio"></span>인테리어 후 청소</button>
       </div>
     </div>
 
     <!-- 3. 평수 -->
-    <div class="card">
-      <div class="card-title"><span class="num">3</span>평수 <span class="req">*</span></div>
-      <div class="card-hint">전용 / 공급 둘 중 선택해 주세요</div>
+    <div class="q-card">
+      <div class="q-title">
+        <span class="star">*</span><span class="num">3.</span><span class="text">평수</span>
+      </div>
+      <div class="q-hint">전용인지 공급인지 꼭 기입해 주세요</div>
       <div class="area-type-row">
         <button type="button" class="area-type-btn" data-val="전용" onclick="setAreaType('전용')">전용면적</button>
         <button type="button" class="area-type-btn" data-val="공급" onclick="setAreaType('공급')">공급면적</button>
       </div>
-      <input type="number" id="area-input" placeholder="평수 (예: 25)" min="1" max="999" inputmode="numeric" oninput="onAreaInput(this.value)">
+      <input type="number" id="area-input" class="input-field" placeholder="답변을 입력해주세요. (예: 25)" min="1" max="999" inputmode="numeric" oninput="onAreaInput(this.value)">
       <div class="area-quick">
         <button type="button" class="area-btn" data-val="10" onclick="setArea(10)">~10평</button>
         <button type="button" class="area-btn" data-val="20" onclick="setArea(20)">11~20</button>
@@ -301,110 +426,196 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
       </div>
     </div>
 
-    <!-- 4. 방·화장실·베란다 -->
-    <div class="card">
-      <div class="card-title"><span class="num">4</span>방·화장실·베란다 <span class="req">*</span></div>
-      <div class="card-hint">
-        <b>방</b>: 알파룸·베타룸 포함 총 갯수<br>
-        <b>베란다</b>: 연결되어 있어도 구역별로 (예: 안방·거실·작은방 = 3개).<br>
-        실외기실·대피실은 제외해 주세요.
+    <!-- 4. 시·군·구 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="star">*</span><span class="num">4.</span><span class="text">시·군·구</span>
       </div>
-      <div class="num-row">
+      <div class="q-hint">
+        <ul>
+          <li>서비스 가능 지역인지 확인 후 진행됩니다.</li>
+          <li>상세 주소(건물명·동·호수)는 계약 시 알려주세요.</li>
+        </ul>
+      </div>
+      <input type="text" id="region-input" class="input-field" placeholder="답변을 입력해주세요. (예: 서울 강남구)" maxlength="50" oninput="onRegionChange(this.value)">
+    </div>
+
+    <!-- 5. 청소희망일 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="star">*</span><span class="num">5.</span><span class="text">청소희망일</span>
+      </div>
+      <div class="q-hint">
+        예약마감률이 높아<br>
+        선호하는 날짜와 후보 날짜를 모두 적어주시면 좋습니다
+      </div>
+      <input type="date" id="date-input" class="input-field" oninput="onDateChange(this.value)" onchange="onDateChange(this.value)">
+    </div>
+
+    <!-- 6. 방·화장실·베란다 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="star">*</span><span class="num">6.</span><span class="text">방·화장실·베란다 갯수</span>
+      </div>
+      <div class="q-hint">
+        <ul>
+          <li><b>방</b>: 알파룸·베타룸 포함 총 방 갯수</li>
+          <li><b>베란다</b>: 연결되어 있어도 구역별로 구분 (예: 안방·거실·작은방이 연결되어도 <b>3개</b>)</li>
+          <li>실외기실·대피실은 갯수에서 제외</li>
+        </ul>
+      </div>
+
+      <!-- 평면도 예시 SVG (저작권 안전 자체 일러스트) -->
+      <div class="floor-example">
+        <svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg">
+          <!-- 외곽 -->
+          <rect x="10" y="10" width="340" height="220" fill="#FFF8DC" stroke="#333" stroke-width="2"/>
+          <!-- 침실1 (좌상) -->
+          <rect x="10" y="10" width="100" height="90" fill="#FFEFB5" stroke="#333"/>
+          <text x="60" y="58" text-anchor="middle" font-size="11" fill="#444" font-weight="700">침실1</text>
+          <!-- 거실 (중앙) -->
+          <rect x="110" y="40" width="140" height="130" fill="#D4A574" stroke="#333"/>
+          <text x="180" y="110" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">거실</text>
+          <!-- 주방 (상중앙) -->
+          <rect x="110" y="10" width="140" height="30" fill="#F0E68C" stroke="#333"/>
+          <text x="180" y="30" text-anchor="middle" font-size="10" fill="#444" font-weight="600">주방·식당</text>
+          <!-- 침실2 (우상) -->
+          <rect x="250" y="10" width="100" height="90" fill="#FFEFB5" stroke="#333"/>
+          <text x="300" y="58" text-anchor="middle" font-size="11" fill="#444" font-weight="700">침실2</text>
+          <!-- 침실3 (좌하) -->
+          <rect x="10" y="100" width="100" height="80" fill="#FFEFB5" stroke="#333"/>
+          <text x="60" y="145" text-anchor="middle" font-size="11" fill="#444" font-weight="700">침실3</text>
+          <!-- 화장실 (우하) -->
+          <rect x="250" y="100" width="100" height="50" fill="#E0F7FA" stroke="#333"/>
+          <text x="300" y="130" text-anchor="middle" font-size="11" fill="#444" font-weight="700">화장실</text>
+          <!-- 베란다 1 (안방) -->
+          <rect x="10" y="180" width="100" height="48" fill="none" stroke="#E31C5F" stroke-width="3"/>
+          <circle cx="55" cy="204" r="11" fill="#1A1F33"/>
+          <text x="55" y="208" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">1</text>
+          <!-- 베란다 2 (거실) -->
+          <rect x="110" y="170" width="140" height="40" fill="none" stroke="#E31C5F" stroke-width="3"/>
+          <circle cx="180" cy="190" r="11" fill="#1A1F33"/>
+          <text x="180" y="194" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">2</text>
+          <!-- 베란다 3 (작은방) -->
+          <rect x="250" y="150" width="100" height="58" fill="none" stroke="#E31C5F" stroke-width="3"/>
+          <circle cx="300" cy="178" r="11" fill="#1A1F33"/>
+          <text x="300" y="182" text-anchor="middle" font-size="11" fill="#fff" font-weight="800">3</text>
+        </svg>
+        <div class="caption">📍 빨간 박스 = 베란다 / 연결되어 있어도 구역별 카운트 (예시: 3개)</div>
+      </div>
+
+      <div class="num-row" style="margin-top:8px;">
         <div class="num-cell">
           <label>🛏️ 방</label>
-          <input type="number" id="room-count" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('roomCount', this.value)">
+          <input type="number" id="room-count" class="input-field" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('roomCount', this.value)">
         </div>
         <div class="num-cell">
           <label>🚽 화장실</label>
-          <input type="number" id="bathroom-count" min="0" max="10" placeholder="0" inputmode="numeric" oninput="onNumChange('bathroomCount', this.value)">
+          <input type="number" id="bathroom-count" class="input-field" min="0" max="10" placeholder="0" inputmode="numeric" oninput="onNumChange('bathroomCount', this.value)">
         </div>
         <div class="num-cell">
           <label>🪟 베란다</label>
-          <input type="number" id="veranda-count" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('verandaCount', this.value)">
+          <input type="number" id="veranda-count" class="input-field" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('verandaCount', this.value)">
         </div>
       </div>
     </div>
 
-    <!-- 5. 지역 -->
-    <div class="card">
-      <div class="card-title"><span class="num">5</span>시·군·구 <span class="req">*</span></div>
-      <input type="text" id="region-input" placeholder="예: 서울 강남구, 인천 부평구" maxlength="50" oninput="onRegionChange(this.value)">
-      <div class="card-hint">상세 주소(건물명·동·호수)는 계약 시 알려주시면 됩니다.</div>
+    <!-- 7. 아파트 평면도 (선택) -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="num">7.</span><span class="text">아파트 평면도 (선택)</span>
+      </div>
+      <div class="q-hint">
+        <ul>
+          <li>본인 집 평면도 사진 1~3장 (네이버 부동산·분양 자료 등)</li>
+          <li>사장님이 구조를 정확히 파악하면 더 정밀한 견적이 가능합니다</li>
+        </ul>
+      </div>
+      <div class="photo-grid" id="plan-grid"></div>
+      <input type="file" id="plan-input" accept="image/*" style="display:none" multiple onchange="onPlanSelect(this)">
     </div>
 
-    <!-- 6. 시공일 -->
-    <div class="card">
-      <div class="card-title"><span class="num">6</span>희망 시공일 <span class="req">*</span></div>
-      <input type="date" id="date-input" oninput="onDateChange(this.value)" onchange="onDateChange(this.value)">
-      <div class="card-hint">대략적인 일정도 좋습니다. 예약 마감률이 높으니 선호 + 후보일 함께 알려주시면 더 좋습니다.</div>
-    </div>
-
-    <!-- 7. 현장 조건 -->
-    <div class="card">
-      <div class="card-title"><span class="num">7</span>현장 특이 조건</div>
-      <div class="card-hint">해당되는 항목을 모두 선택해 주세요. 추가 요금이 발생할 수 있습니다.</div>
-      <div class="chip-row" id="cond-row" style="margin-top:8px;">
-        <button type="button" class="chip-multi" data-val="보조주방" onclick="toggleCond('보조주방')" title="주방이 2개 이상">보조주방</button>
-        <button type="button" class="chip-multi" data-val="광폭거실" onclick="toggleCond('광폭거실')" title="작은방 확장 후 거실로 사용">광폭거실</button>
-        <button type="button" class="chip-multi" data-val="거실 추가창문" onclick="toggleCond('거실 추가창문')">거실 추가창문</button>
-        <button type="button" class="chip-multi" data-val="엘리베이터 없음" onclick="toggleCond('엘리베이터 없음')" title="5층 건물의 3층 이상 세대">엘리베이터 없음</button>
-        <button type="button" class="chip-multi" data-val="베란다 곰팡이" onclick="toggleCond('베란다 곰팡이')">베란다 곰팡이</button>
-        <button type="button" class="chip-multi" data-val="시트지 자국" onclick="toggleCond('시트지 자국')" title="스티커·시트지·뽁뽁이 자국">스티커·시트지 자국</button>
-        <button type="button" class="chip-multi" data-val="안전고리" onclick="toggleCond('안전고리')">안전고리 제거</button>
-        <button type="button" class="chip-multi" data-val="니코틴 제거" onclick="toggleCond('니코틴 제거')">니코틴 제거</button>
+    <!-- 8. 현장 특이 조건 (다중 선택) -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="num">8.</span><span class="text">아래 내용 중 해당사항이 있을까요?</span>
       </div>
-      <div class="card-hint" style="margin-top:10px;font-size:11.5px;color:#999;">
-        💡 광폭거실 = 작은방 확장 후 거실로 사용 / 엘리베이터 없음 = 5층 건물의 3층 이상 세대
+      <div class="q-hint">
+        정확한 견적과 인원배치를 위해 필요합니다.<br>
+        <b>추가요금이 발생할 수 있습니다.</b>
       </div>
-    </div>
-
-    <!-- 8. 가전 분해청소 -->
-    <div class="card">
-      <div class="card-title"><span class="num">8</span>가전 분해청소</div>
-      <div class="card-hint">
-        청소를 원하시는 가전을 체크하고 대수를 선택하세요.<br>
-        ※ 세탁기는 <b>드럼만 분해청소 가능</b>합니다 (일반 세탁기 X).
-      </div>
-      <div class="app-list" id="app-list">
-        <!-- 동적 -->
+      <div class="opt-list" id="cond-list">
+        <button type="button" class="opt-row" data-val="보조주방"        onclick="toggleCond('보조주방')"><span class="opt-check"></span>보조주방</button>
+        <button type="button" class="opt-row" data-val="광폭거실"        onclick="toggleCond('광폭거실')"><span class="opt-check"></span>광폭거실(작은방 확장 후 거실로 사용)</button>
+        <button type="button" class="opt-row" data-val="거실 추가창문"   onclick="toggleCond('거실 추가창문')"><span class="opt-check"></span>거실 추가창문</button>
+        <button type="button" class="opt-row" data-val="엘리베이터 없음" onclick="toggleCond('엘리베이터 없음')"><span class="opt-check"></span>엘리베이터 없는 5층 건물의 3층 이상 세대</button>
+        <button type="button" class="opt-row" data-val="베란다 곰팡이"   onclick="toggleCond('베란다 곰팡이')"><span class="opt-check"></span>베란다 곰팡이 제거</button>
+        <button type="button" class="opt-row" data-val="시트지 자국"     onclick="toggleCond('시트지 자국')"><span class="opt-check"></span>스티커·시트지·뽁뽁이자국</button>
+        <button type="button" class="opt-row" data-val="안전고리"        onclick="toggleCond('안전고리')"><span class="opt-check"></span>안전고리 제거</button>
+        <button type="button" class="opt-row" data-val="니코틴 제거"     onclick="toggleCond('니코틴 제거')"><span class="opt-check"></span>니코틴 제거</button>
       </div>
     </div>
 
-    <!-- 9. 에어컨 분해청소 -->
-    <div class="card">
-      <div class="card-title"><span class="num">9</span>에어컨 분해청소</div>
-      <input type="text" id="aircon-input" placeholder="예: 벽걸이 2대, 스탠드 1대" maxlength="200" oninput="state.airconInfo=this.value.trim()">
-      <div class="card-hint">형태(1way / 벽걸이 / 스탠드 / 천정형 등)와 대수를 적어주세요.</div>
+    <!-- 9. 가전 분해청소 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="num">9.</span><span class="text">가전 분해청소 (선택)</span>
+      </div>
+      <div class="q-hint">
+        냉장고, 세탁기 등<br>
+        ※ 세탁기는 <b>드럼만 분해청소 가능</b>합니다 (일반 세탁기 X)
+      </div>
+      <div class="app-list" id="app-list"></div>
     </div>
 
-    <!-- 10. 사진 -->
-    <div class="card">
-      <div class="card-title"><span class="num">10</span>현재 상태 사진</div>
-      <div class="card-hint">욕실·주방·거실 사진 1~5장 (권장). 더 정확한 견적이 가능합니다.</div>
+    <!-- 10. 에어컨 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="num">10.</span><span class="text">에어컨 완전 분해청소 (선택)</span>
+      </div>
+      <div class="q-hint">
+        원하시는 형태(1way, 벽걸이, 스탠드 등)와 대수
+      </div>
+      <input type="text" id="aircon-input" class="input-field" placeholder="답변을 입력해주세요. (예: 벽걸이 2대, 스탠드 1대)" maxlength="200" oninput="state.airconInfo=this.value.trim()">
+    </div>
+
+    <!-- 11. 현재 상태 사진 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="num">11.</span><span class="text">현재 상태 사진 (선택)</span>
+      </div>
+      <div class="q-hint">
+        욕실·주방·거실 사진 1~5장 권장.<br>
+        사진이 있을수록 정밀 견적이 가능합니다.
+      </div>
       <div class="photo-grid" id="photo-grid"></div>
       <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" multiple onchange="onPhotoSelect(this)">
     </div>
 
-    <!-- 11. 특이사항 -->
-    <div class="card">
-      <div class="card-title"><span class="num">11</span>특이사항</div>
-      <textarea id="notes-input" placeholder="반려동물, 입주 직전, 추가 요청 등 알려주실 내용" maxlength="1000" oninput="onNotesChange(this.value)"></textarea>
-      <div class="card-hint" style="text-align:right;"><span id="notes-count">0</span>/1000</div>
+    <!-- 12. 특이사항 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="num">12.</span><span class="text">특이사항 (선택)</span>
+      </div>
+      <div class="q-hint">반려동물·입주 직전·추가 요청 등 알려주실 내용</div>
+      <textarea id="notes-input" class="input-field" placeholder="답변을 입력해주세요." maxlength="1000" oninput="onNotesChange(this.value)"></textarea>
+      <div style="text-align:right;font-size:11.5px;color:var(--text-mute);margin-top:4px;"><span id="notes-count">0</span>/1000</div>
     </div>
 
-    <!-- 12. 유입 경로 -->
-    <div class="card muted">
-      <div class="card-title"><span class="num">12</span>어디서 보고 오셨나요?</div>
-      <div class="card-hint">선택 사항 — 사장님이 더 좋은 서비스를 만드는 데 도움됩니다.</div>
-      <div class="chip-row" id="referral-row" style="margin-top:8px;">
-        <button type="button" class="chip" data-val="블로그" onclick="setReferral('블로그')">📝 블로그</button>
-        <button type="button" class="chip" data-val="인스타그램" onclick="setReferral('인스타그램')">📷 인스타</button>
-        <button type="button" class="chip" data-val="스레드" onclick="setReferral('스레드')">🧵 스레드</button>
-        <button type="button" class="chip" data-val="유튜브" onclick="setReferral('유튜브')">▶️ 유튜브</button>
-        <button type="button" class="chip" data-val="부동산소개" onclick="setReferral('부동산소개')">🏘️ 부동산</button>
-        <button type="button" class="chip" data-val="지인추천" onclick="setReferral('지인추천')">👥 지인</button>
-        <button type="button" class="chip" data-val="카페" onclick="setReferral('카페')">☕ 카페</button>
-        <button type="button" class="chip" data-val="기타" onclick="setReferral('기타')">기타</button>
+    <!-- 13. 요청 플랫폼 -->
+    <div class="q-card">
+      <div class="q-title">
+        <span class="num">13.</span><span class="text">어디서 보고 오셨나요? (선택)</span>
+      </div>
+      <div class="opt-list" id="referral-list">
+        <button type="button" class="opt-row" data-val="블로그"     onclick="setReferral('블로그')"><span class="opt-radio"></span>블로그</button>
+        <button type="button" class="opt-row" data-val="인스타그램" onclick="setReferral('인스타그램')"><span class="opt-radio"></span>인스타그램</button>
+        <button type="button" class="opt-row" data-val="스레드"     onclick="setReferral('스레드')"><span class="opt-radio"></span>스레드</button>
+        <button type="button" class="opt-row" data-val="유튜브"     onclick="setReferral('유튜브')"><span class="opt-radio"></span>유튜브</button>
+        <button type="button" class="opt-row" data-val="부동산소개" onclick="setReferral('부동산소개')"><span class="opt-radio"></span>부동산소개</button>
+        <button type="button" class="opt-row" data-val="지인추천"   onclick="setReferral('지인추천')"><span class="opt-radio"></span>지인추천</button>
+        <button type="button" class="opt-row" data-val="카페"       onclick="setReferral('카페')"><span class="opt-radio"></span>카페(맘카페·지역카페 등)</button>
+        <button type="button" class="opt-row" data-val="기타"       onclick="setReferral('기타')"><span class="opt-radio"></span>기타</button>
       </div>
     </div>
   </div>
@@ -416,7 +627,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
       사장님이 확인 후 정밀 견적을<br>
       <b id="done-phone-display"></b>로<br>
       문자로 보내드립니다.<br><br>
-      <span style="color:#999;font-size:13px;">잠시만 기다려 주세요.</span>
+      <span style="color:var(--text-mute);font-size:13px;">잠시만 기다려 주세요.</span>
     </div>
   </div>
 
@@ -428,7 +639,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
 </div>
 
 <div class="submit-bar" id="submit-bar" style="display:none;">
-  <button class="btn-submit" id="btn-submit" onclick="submit()">정보 보내기</button>
+  <button class="btn-submit" id="btn-submit" onclick="submit()">제출</button>
 </div>
 
 <div id="toast"></div>
@@ -438,7 +649,6 @@ const SERVER = 'https://ssakssak-server-production.up.railway.app';
 const params = new URLSearchParams(location.search);
 const TOKEN = params.get('token') || '';
 
-// 가전 옵션 정의
 const APPLIANCES = [
   { name: '단문형 냉장고',     ico: '❄️' },
   { name: '양문형 냉장고',     ico: '❄️' },
@@ -450,26 +660,16 @@ const APPLIANCES = [
 ];
 
 const state = {
-  cleanType: null,
-  housingType: null,
-  areaType: null,
-  areaSize: null,
-  roomCount: null,
-  bathroomCount: null,
-  verandaCount: null,
-  region: '',
-  desiredDate: '',
-  notes: '',
-  siteConditions: [],
-  applianceOptions: [],  // [{name, count}]
-  airconInfo: '',
-  referralSource: null,
-  photos: [],
-  customerPhone: '',
-  ownerName: '',
+  cleanType: null, housingType: null, areaType: null, areaSize: null,
+  roomCount: null, bathroomCount: null, verandaCount: null,
+  region: '', desiredDate: '', notes: '',
+  siteConditions: [], applianceOptions: [],
+  airconInfo: '', referralSource: null,
+  photos: [],      // [{url, type:'photo'}]
+  floorPlans: [],  // [{url, type:'plan'}]
+  customerPhone: '', ownerName: '',
 };
 
-// ── 유틸 ───────────────────────────────────────────────────
 function toast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.style.opacity = '1';
@@ -489,7 +689,7 @@ function fmtPhone(p){
   return p;
 }
 
-// ── 필수 9개 진행률 ─────────────────────────────────────
+// 필수 9개
 const REQUIRED = ['cleanType','housingType','areaType','areaSize','roomCount','bathroomCount','verandaCount','region','desiredDate'];
 function updateProgress(){
   let done = 0;
@@ -505,23 +705,19 @@ function updateProgress(){
   document.getElementById('progress-total').textContent = total;
 }
 
-// ── 1. 청소 유형 ──────────────────────────────────────
-function setCleanType(t){
-  state.cleanType = t;
-  document.querySelectorAll('.chip-big').forEach(c => c.classList.toggle('on', c.getAttribute('data-val') === t));
-  updateProgress();
-}
-
-// ── 2. 주거 형태 ──────────────────────────────────────
+// 1. 주거형태
 function setHousing(t){
   state.housingType = t;
-  document.querySelectorAll('#housing-row .chip').forEach(c =>
-    c.classList.toggle('on', c.getAttribute('data-val') === t)
-  );
+  document.querySelectorAll('#housing-list .opt-row').forEach(c => c.classList.toggle('on', c.getAttribute('data-val') === t));
   updateProgress();
 }
-
-// ── 3. 평수 ──────────────────────────────────────────
+// 2. 청소 유형
+function setCleanType(t){
+  state.cleanType = t;
+  document.querySelectorAll('#clean-list .opt-row').forEach(c => c.classList.toggle('on', c.getAttribute('data-val') === t));
+  updateProgress();
+}
+// 3. 평수
 function setAreaType(t){
   state.areaType = t;
   document.querySelectorAll('.area-type-btn').forEach(b => b.classList.toggle('on', b.getAttribute('data-val') === t));
@@ -539,33 +735,29 @@ function onAreaInput(v){
   document.querySelectorAll('.area-btn').forEach(b => b.classList.remove('on'));
   updateProgress();
 }
-
-// ── 4. 방·화장실·베란다 (inline oninput으로 호출) ──
+// 6. 방·화장실·베란다
 function onNumChange(key, v){
   const n = parseInt(v);
   state[key] = Number.isFinite(n) ? n : null;
   updateProgress();
 }
-
-// ── 5. 지역 + 6. 시공일 + 11. 특이사항 (inline oninput으로 호출) ──
+// 4·5·12. 지역/시공일/특이사항
 function onRegionChange(v){ state.region = v.trim(); updateProgress(); }
 function onDateChange(v){ state.desiredDate = v; updateProgress(); }
 function onNotesChange(v){
   state.notes = v.trim();
   document.getElementById('notes-count').textContent = v.length;
 }
-
-// ── 7. 현장 조건 (다중 선택) ─────────────────────────
+// 8. 현장 조건 (다중)
 function toggleCond(c){
   const idx = state.siteConditions.indexOf(c);
   if (idx >= 0) state.siteConditions.splice(idx, 1);
   else state.siteConditions.push(c);
-  document.querySelectorAll('#cond-row .chip-multi').forEach(b => {
+  document.querySelectorAll('#cond-list .opt-row').forEach(b => {
     b.classList.toggle('on', state.siteConditions.includes(b.getAttribute('data-val')));
   });
 }
-
-// ── 8. 가전 옵션 ─────────────────────────────────────
+// 9. 가전
 function renderAppList(){
   const list = document.getElementById('app-list');
   list.innerHTML = APPLIANCES.map((a, i) => {
@@ -573,7 +765,7 @@ function renderAppList(){
     const count = cur ? cur.count : 0;
     const on = !!cur;
     return `<div class="app-row${on?' on':''}" id="app-row-${i}">
-      <div class="app-chk" onclick="toggleApp(${i})">${on?'✓':''}</div>
+      <div class="opt-check" onclick="toggleApp(${i})"></div>
       <div class="app-name" onclick="toggleApp(${i})">${a.ico} ${a.name}</div>
       <div class="app-count">
         <button type="button" class="cnt-btn" onclick="changeCount(${i},-1)">−</button>
@@ -599,59 +791,58 @@ function changeCount(idx, delta){
   document.getElementById('app-cnt-' + idx).textContent = newCount;
 }
 
-// ── 10. 사진 ────────────────────────────────────────
-function renderPhotos(){
-  const grid = document.getElementById('photo-grid');
+// 사진/평면도 — 공통 렌더 함수
+function renderPhotos(){ renderPhotoGrid('photo-grid', state.photos, 5, 'onPhotoSelect'); }
+function renderPlans() { renderPhotoGrid('plan-grid', state.floorPlans, 3, 'onPlanSelect'); }
+function renderPhotoGrid(gridId, arr, max, onInputName){
+  const grid = document.getElementById(gridId);
   grid.innerHTML = '';
-  state.photos.forEach((p, idx) => {
+  arr.forEach((p, idx) => {
     const div = document.createElement('div');
     div.className = 'photo-thumb';
-    div.innerHTML = `<img src="${p.url}" alt="사진${idx+1}"><button class="rm" onclick="removePhoto(${idx})">×</button>`;
+    const rmFn = gridId === 'photo-grid' ? `removePhoto(${idx})` : `removePlan(${idx})`;
+    div.innerHTML = `<img src="${p.url}" alt="${idx+1}"><button class="rm" onclick="${rmFn}">×</button>`;
     grid.appendChild(div);
   });
-  if (state.photos.length < 5) {
+  if (arr.length < max) {
     const add = document.createElement('div');
     add.className = 'photo-add';
-    add.onclick = () => document.getElementById('photo-input').click();
-    add.innerHTML = `<div class="photo-ico">📸</div><div>사진 추가</div><div style="font-size:10px;color:#bbb;">${state.photos.length}/5</div>`;
+    const inputId = gridId === 'photo-grid' ? 'photo-input' : 'plan-input';
+    add.onclick = () => document.getElementById(inputId).click();
+    add.innerHTML = `<div class="photo-ico">📸</div><div>사진 추가</div><div style="font-size:10px;opacity:0.6;">${arr.length}/${max}</div>`;
     grid.appendChild(add);
   }
 }
+function removePhoto(i){ state.photos.splice(i,1); renderPhotos(); }
+function removePlan(i){  state.floorPlans.splice(i,1); renderPlans(); }
 
-async function onPhotoSelect(inp){
+async function onPhotoSelect(inp){ await handleFileSelect(inp, state.photos, 5, 'photo'); renderPhotos(); }
+async function onPlanSelect(inp) { await handleFileSelect(inp, state.floorPlans, 3, 'plan');  renderPlans();  }
+
+async function handleFileSelect(inp, arr, max, type){
   const files = Array.from(inp.files || []);
   inp.value = '';
   if (!files.length) return;
-  const remaining = 5 - state.photos.length;
+  const remaining = max - arr.length;
   if (files.length > remaining) toast(`최대 ${remaining}장만 추가됩니다`);
   for (const f of files.slice(0, remaining)) {
     if (f.size > 10 * 1024 * 1024) { toast(`${f.name}: 10MB 초과`); continue; }
-    await uploadPhoto(f);
+    await uploadImage(f, arr, type);
   }
-  renderPhotos();
 }
-
-async function uploadPhoto(file){
+async function uploadImage(file, arr, type){
   const blob = await resizeImage(file, 1600);
   const base64 = await blobToBase64(blob);
-  toast('사진 업로드 중...');
+  toast(type === 'plan' ? '평면도 업로드 중...' : '사진 업로드 중...');
   try {
     const r = await fetch(`${SERVER}/api/quote-requests/by-token/${TOKEN}/photos`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ imageBase64: base64, imageMime: blob.type || 'image/jpeg' })
     });
     const d = await r.json();
     if (!d.success) { toast(d.error || '업로드 실패'); return; }
-    state.photos.push({ url: d.url });
-    renderPhotos();
-  } catch (e) {
-    toast('업로드 오류');
-  }
-}
-function removePhoto(idx){
-  state.photos.splice(idx, 1);
-  renderPhotos();
+    arr.push({ url: d.url, type });
+  } catch (e) { toast('업로드 오류'); }
 }
 function resizeImage(file, maxSide){
   return new Promise((resolve) => {
@@ -660,8 +851,7 @@ function resizeImage(file, maxSide){
       const img = new Image();
       img.onload = () => {
         const ratio = Math.min(1, maxSide / Math.max(img.width, img.height));
-        const w = Math.round(img.width * ratio);
-        const h = Math.round(img.height * ratio);
+        const w = Math.round(img.width * ratio), h = Math.round(img.height * ratio);
         const canvas = document.createElement('canvas');
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
@@ -680,33 +870,34 @@ function blobToBase64(blob){
   });
 }
 
-// ── 12. 유입 채널 ──────────────────────────────────
+// 13. 유입
 function setReferral(r){
   state.referralSource = state.referralSource === r ? null : r;
-  document.querySelectorAll('#referral-row .chip').forEach(b =>
+  document.querySelectorAll('#referral-list .opt-row').forEach(b =>
     b.classList.toggle('on', b.getAttribute('data-val') === state.referralSource)
   );
 }
 
-// ── 제출 ───────────────────────────────────────────
+// 제출
 async function submit(){
   if (!state.cleanType)    return toast('청소 유형을 선택해 주세요');
   if (!state.housingType)  return toast('주거 형태를 선택해 주세요');
   if (!state.areaType)     return toast('전용/공급을 선택해 주세요');
   if (!state.areaSize)     return toast('평수를 입력해 주세요');
-  if (state.roomCount === null     || state.roomCount === undefined)     return toast('방 갯수를 입력해 주세요');
-  if (state.bathroomCount === null || state.bathroomCount === undefined) return toast('화장실 갯수를 입력해 주세요');
-  if (state.verandaCount === null  || state.verandaCount === undefined)  return toast('베란다 갯수를 입력해 주세요');
-  if (!state.region)       return toast('지역을 입력해 주세요');
+  if (state.roomCount == null)     return toast('방 갯수를 입력해 주세요');
+  if (state.bathroomCount == null) return toast('화장실 갯수를 입력해 주세요');
+  if (state.verandaCount == null)  return toast('베란다 갯수를 입력해 주세요');
+  if (!state.region)       return toast('시·군·구를 입력해 주세요');
   if (!state.desiredDate)  return toast('희망 시공일을 선택해 주세요');
 
   const btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = '전송 중...';
 
   try {
+    // photos + floorPlans 합쳐서 보냄 (type 메타로 구분, 서버는 photos 컬럼만)
+    const allPhotos = [...state.photos, ...state.floorPlans];
     const r = await fetch(`${SERVER}/api/quote-requests/by-token/${TOKEN}`, {
-      method: 'PUT',
-      headers: {'Content-Type':'application/json'},
+      method: 'PUT', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         clean_type:        state.cleanType,
         housing_type:      state.housingType,
@@ -722,11 +913,11 @@ async function submit(){
         appliance_options: state.applianceOptions,
         aircon_info:       state.airconInfo,
         referral_source:   state.referralSource,
-        photos:            state.photos
+        photos:            allPhotos
       })
     });
     const d = await r.json();
-    if (!d.success) { toast(d.error || '전송 실패'); btn.disabled = false; btn.textContent = '정보 보내기'; return; }
+    if (!d.success) { toast(d.error || '전송 실패'); btn.disabled = false; btn.textContent = '제출'; return; }
     document.getElementById('form-main').style.display = 'none';
     document.getElementById('submit-bar').style.display = 'none';
     document.getElementById('done-phone-display').textContent = fmtPhone(state.customerPhone);
@@ -734,11 +925,11 @@ async function submit(){
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (e) {
     toast('네트워크 오류');
-    btn.disabled = false; btn.textContent = '정보 보내기';
+    btn.disabled = false; btn.textContent = '제출';
   }
 }
 
-// ── 초기 로드 ────────────────────────────────────
+// 초기 로드
 async function init(){
   if (!TOKEN || !/^[a-f0-9]{32}$/.test(TOKEN)) {
     showError('잘못된 링크입니다', '받으신 SMS의 링크를 다시 확인해 주세요.');
@@ -760,28 +951,32 @@ async function init(){
     }
     state.customerPhone = d.data.customer_phone || '';
     state.ownerName = d.owner_name || '';
-    document.getElementById('owner-name').textContent = d.owner_name ? d.owner_name + ' 사장님' : '';
+    if (d.owner_name) document.getElementById('owner-title').textContent = d.owner_name + ' 견적요청서';
+    document.getElementById('owner-name').textContent = new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) + ' ~ 제한 없음';
 
-    // 기존 데이터 복원
     const x = d.data;
     if (x.clean_type)     setCleanType(x.clean_type);
     if (x.housing_type)   setHousing(x.housing_type);
     if (x.area_type)      setAreaType(x.area_type);
     if (x.area_size)      { document.getElementById('area-input').value = x.area_size; state.areaSize = x.area_size; }
-    if (x.room_count !== null && x.room_count !== undefined)     { document.getElementById('room-count').value = x.room_count; state.roomCount = x.room_count; }
-    if (x.bathroom_count !== null && x.bathroom_count !== undefined) { document.getElementById('bathroom-count').value = x.bathroom_count; state.bathroomCount = x.bathroom_count; }
-    if (x.veranda_count !== null && x.veranda_count !== undefined)   { document.getElementById('veranda-count').value = x.veranda_count; state.verandaCount = x.veranda_count; }
+    if (x.room_count != null)     { document.getElementById('room-count').value = x.room_count; state.roomCount = x.room_count; }
+    if (x.bathroom_count != null) { document.getElementById('bathroom-count').value = x.bathroom_count; state.bathroomCount = x.bathroom_count; }
+    if (x.veranda_count != null)  { document.getElementById('veranda-count').value = x.veranda_count; state.verandaCount = x.veranda_count; }
     if (x.region)         { document.getElementById('region-input').value = x.region; state.region = x.region; }
     if (x.desired_date)   { document.getElementById('date-input').value = x.desired_date; state.desiredDate = x.desired_date; }
     if (x.notes)          { document.getElementById('notes-input').value = x.notes; state.notes = x.notes; document.getElementById('notes-count').textContent = x.notes.length; }
     if (x.aircon_info)    { document.getElementById('aircon-input').value = x.aircon_info; state.airconInfo = x.aircon_info; }
-    if (Array.isArray(x.site_conditions))   { state.siteConditions = x.site_conditions; document.querySelectorAll('#cond-row .chip-multi').forEach(b => b.classList.toggle('on', state.siteConditions.includes(b.getAttribute('data-val')))); }
+    if (Array.isArray(x.site_conditions))   { state.siteConditions = x.site_conditions; document.querySelectorAll('#cond-list .opt-row').forEach(b => b.classList.toggle('on', state.siteConditions.includes(b.getAttribute('data-val')))); }
     if (Array.isArray(x.appliance_options)) state.applianceOptions = x.appliance_options;
     if (x.referral_source) setReferral(x.referral_source);
-    if (Array.isArray(x.photos))           state.photos = x.photos;
+    if (Array.isArray(x.photos)) {
+      state.photos = x.photos.filter(p => p.type !== 'plan');
+      state.floorPlans = x.photos.filter(p => p.type === 'plan');
+    }
 
     renderAppList();
     renderPhotos();
+    renderPlans();
     updateProgress();
 
     document.getElementById('loading').style.display = 'none';

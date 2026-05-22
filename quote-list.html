@@ -428,7 +428,9 @@ function renderDetail(){
   const isPending  = r.status === 'pending';
   const isSubmitted= r.status === 'submitted';
   const isQuoted   = r.status === 'quoted';
-  const photos = Array.isArray(r.photos) ? r.photos : [];
+  const allPhotos = Array.isArray(r.photos) ? r.photos : [];
+  const photos = allPhotos.filter(p => p.type !== 'plan');
+  const plans  = allPhotos.filter(p => p.type === 'plan');
   const formUrl = `https://ssakapp.co.kr/quote.html?token=${r.token}`;
 
   const html = `
@@ -475,9 +477,14 @@ function renderDetail(){
         </div>
       </div>` : ''}
     ${r.aircon_info ? `<div class="detail-section"><div class="ds-h">에어컨 분해청소</div><div class="ds-v">${esc(r.aircon_info)}</div></div>` : ''}
+    ${plans.length ? `
+      <div class="detail-section">
+        <div class="ds-h">🏠 아파트 평면도 ${plans.length}장</div>
+        <div class="ds-photos">${plans.map(p => `<img src="${esc(p.url)}" onclick="window.open('${esc(p.url)}','_blank')">`).join('')}</div>
+      </div>` : ''}
     ${photos.length ? `
       <div class="detail-section">
-        <div class="ds-h">사진 ${photos.length}장</div>
+        <div class="ds-h">📸 현장 사진 ${photos.length}장</div>
         <div class="ds-photos">${photos.map(p => `<img src="${esc(p.url)}" onclick="window.open('${esc(p.url)}','_blank')">`).join('')}</div>
       </div>` : ''}
     ${r.notes ? `<div class="detail-section"><div class="ds-h">특이사항</div><div class="ds-notes">${esc(r.notes)}</div></div>` : ''}
