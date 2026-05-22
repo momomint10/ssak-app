@@ -140,9 +140,11 @@
   .ct-ft-btn.active{background:#fff;color:var(--ct-head);box-shadow:0 1px 3px rgba(0,0,0,.08);}
   .ct-ft-btn:active{transform:scale(.94);}
   .contract-paper{position:relative;background:#fff;border:1px solid #ccc;border-radius:8px;padding:0;margin-bottom:14px;font-family:'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic','Pretendard Variable',Pretendard,-apple-system,sans-serif;overflow:hidden;}
-  .ct-brand{background:var(--ct-head);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
-  .ct-brand-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:0.3px;}
-  .ct-brand-num{font-size:11px;color:rgba(255,255,255,.7);letter-spacing:0.3px;margin-top:2px;}
+  /* 싹싹 브랜드 헤더 (앱과 동일 톤 — D3 A 결정) */
+  .ct-brand{background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:relative;border-bottom:0.5px solid #f5e8e4;}
+  .ct-brand::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);}
+  .ct-brand-name{font-size:15px;font-weight:800;color:#FF385C;letter-spacing:0.3px;}
+  .ct-brand-num{font-size:11px;color:#888;letter-spacing:0.3px;margin-top:2px;}
   .ct-inner{padding:20px 18px 0;}
   .ct-main-title{text-align:center;font-size:calc(17px * var(--ct-scale));font-weight:700;letter-spacing:3px;color:#111;margin-bottom:4px;padding-bottom:10px;border-bottom:2.5px solid var(--ct-accent);}
   .ct-subtitle{text-align:center;font-size:calc(12px * var(--ct-scale));color:#6a8060;line-height:1.5;margin:8px 0 18px;}
@@ -220,7 +222,9 @@
   .sig-box-sub{font-size:10px;color:#888;margin-bottom:8px;}
   .sig-img{width:100%;height:80px;object-fit:contain;border-radius:6px;background:#f8f8f8;border:0.5px solid #eee;}
   .sig-placeholder{width:100%;height:80px;background:#f8f8f8;border:0.5px dashed #ccc;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#ccc;}
-  .ct-footer-bar{background:var(--ct-head);color:rgba(255,255,255,.9);text-align:center;font-size:9.5px;padding:10px 14px;margin-top:16px;letter-spacing:0.3px;}
+  /* 싹싹 브랜드 푸터 (앱과 동일 톤) */
+  .ct-footer-bar{background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);color:#767676;text-align:center;font-size:9.5px;padding:10px 14px;margin-top:16px;letter-spacing:0.3px;position:relative;border-top:0.5px solid #f5e8e4;}
+  .ct-footer-bar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);}
 
   /* 전송 완료 화면 */
   .done-card{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:24px;margin-bottom:14px;text-align:center;}
