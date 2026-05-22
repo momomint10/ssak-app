@@ -237,7 +237,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.6;}
         💡 직접 작성 시 <b>본문 안에 정보 입력 링크가 자동으로 들어갑니다</b>.<br>
         고객 이름·업체명·전화번호도 자동으로 채워집니다.
       </div>
-      <button class="btn" onclick="sendNew()">
+      <button class="btn" id="btn-send-new" onclick="sendNew()">
         📨 정보 입력 링크 발송
       </button>
     </div>
@@ -376,11 +376,24 @@ function openNew(){
 }
 function closeNew(){ document.getElementById('new-ov').classList.remove('on'); }
 
+let isSendingNew = false;  // 중복 발송 방어 (이중 안전망)
 async function sendNew(){
+  if (isSendingNew) return;  // 이미 처리 중이면 무시 (방어 1)
   const phone = document.getElementById('new-phone').value.replace(/\D/g,'');
   const name  = document.getElementById('new-name').value.trim();
   const msg   = document.getElementById('new-msg').value.trim();
   if (!/^01[016789]\d{7,8}$/.test(phone)) { toast('휴대폰 번호를 확인해 주세요'); return; }
+
+  const btn = document.getElementById('btn-send-new');
+  const originalText = btn ? btn.innerHTML : '';
+  isSendingNew = true;
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    btn.style.cursor = 'not-allowed';
+    btn.innerHTML = '⏳ 발송 중...';
+  }
+  toast('📨 발송 중...');
 
   try {
     const r = await fetch(SERVER + '/api/quote-requests', {
@@ -394,7 +407,10 @@ async function sendNew(){
       })
     });
     const d = await r.json();
-    if (!d.success) { toast(d.error || '발송 실패'); return; }
+    if (!d.success) {
+      toast(d.error || '발송 실패');
+      return;
+    }
     closeNew();
     if (d.sms_sent) {
       toast('✅ ' + fmtPhone(phone) + '에 발송됨');
@@ -404,6 +420,14 @@ async function sendNew(){
     loadList();
   } catch (e) {
     toast('오류: ' + (e.message||''));
+  } finally {
+    isSendingNew = false;
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+      btn.innerHTML = originalText;
+    }
   }
 }
 
@@ -516,7 +540,7 @@ function renderDetail(){
       <textarea id="d-msg" maxlength="1000" placeholder="자동 생성된 견적 메시지"></textarea>
       <div class="hint">금액 입력 시 자동 생성됩니다. 직접 수정 가능.</div>
 
-      <button class="btn" onclick="sendQuote()">📨 정밀 견적 SMS 발송</button>
+      <button class="btn" id="btn-send-quote" onclick="sendQuote()">📨 정밀 견적 SMS 발송</button>
       <button class="btn ghost" onclick="cancelReq()" style="color:#DC2626;border-color:#FECACA;">❌ 견적 거절/취소</button>
     ` : ''}
     ${isPending ? `
@@ -569,7 +593,9 @@ ${summaryLines.join('\n')}
   document.getElementById('d-msg').value = msg;
 }
 
+let isSendingQuote = false;  // 중복 발송 방어 (이중 안전망)
 async function sendQuote(){
+  if (isSendingQuote) return;
   const r = curDetail;
   if (!r) return;
   const amount = parseInt(document.getElementById('d-amount').value);
@@ -577,6 +603,17 @@ async function sendQuote(){
   if (!Number.isFinite(amount) || amount < 1) { toast('금액을 입력해 주세요'); return; }
   if (!msg) { toast('SMS 본문이 필요합니다'); return; }
   if (!confirm(`${fmtPhone(r.customer_phone)}에 ${amount.toLocaleString()}원으로 정밀 견적을 발송할까요?`)) return;
+
+  const btn = document.getElementById('btn-send-quote');
+  const originalText = btn ? btn.innerHTML : '';
+  isSendingQuote = true;
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    btn.style.cursor = 'not-allowed';
+    btn.innerHTML = '⏳ 발송 중...';
+  }
+  toast('📨 발송 중...');
 
   try {
     const res = await fetch(SERVER + '/api/quote-requests/' + r.id, {
@@ -591,6 +628,14 @@ async function sendQuote(){
     loadList();
   } catch (e) {
     toast('오류: ' + (e.message||''));
+  } finally {
+    isSendingQuote = false;
+    if (btn) {
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+      btn.innerHTML = originalText;
+    }
   }
 }
 
