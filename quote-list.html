@@ -45,15 +45,15 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 .header::after{
   content:'';position:absolute;bottom:0;left:0;right:0;
-  height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
+  height:3px;background:linear-gradient(90deg,var(--c-pr, #FF385C) 0%,#FC8181 100%);
 }
 .h-row{display:flex;align-items:center;gap:8px;}
 .back-btn{background:none;border:none;font-size:22px;color:#555;cursor:pointer;padding:4px 6px;}
-.h-title{font-size:20px;font-weight:700;}
-.h-sub{font-size:12px;color:#999;}
+.h-title{font-size:22px;font-weight:600;letter-spacing:-0.5px;color:var(--c-g900,#222);}
+.h-sub{font-size:12px;color:var(--c-g500,#767676);font-weight:500;}
 .btn-new{
   margin-left:auto;
-  background:#FF385C;color:#fff;border:none;
+  background:var(--c-pr, #FF385C);color:#fff;border:none;
   padding:9px 14px;border-radius:20px;
   font-size:13px;font-weight:700;font-family:inherit;
   cursor:pointer;
@@ -93,7 +93,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   transition:transform 0.1s;
 }
 .req-card:active{transform:scale(0.98);}
-.req-card.new{border-left:3px solid #FF385C;}
+.req-card.new{border-left:3px solid var(--c-pr, #FF385C);}
 
 .rc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .rc-status{
@@ -120,7 +120,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 .rc-amount{
   font-size:14px;font-weight:800;
-  color:#FF385C;margin-top:6px;
+  color:var(--c-pr, #FF385C);margin-top:6px;
 }
 
 /* 오버레이/시트 */
@@ -143,7 +143,7 @@ input[type="text"],input[type="tel"],input[type="number"],textarea{
   width:100%;padding:12px 13px;font-size:15px;font-family:inherit;
   border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;outline:none;
 }
-input:focus,textarea:focus{border-color:#FF385C;}
+input:focus,textarea:focus{border-color:var(--c-pr, #FF385C);}
 textarea{resize:vertical;min-height:90px;line-height:1.6;}
 
 .hint{font-size:12px;color:#888;margin-top:6px;line-height:1.5;}
@@ -152,7 +152,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.6;}
   width:100%;padding:14px;
   font-size:15px;font-weight:800;font-family:inherit;
   border:none;border-radius:12px;cursor:pointer;
-  background:#FF385C;color:#fff;margin-top:12px;
+  background:var(--c-pr, #FF385C);color:#fff;margin-top:12px;
   min-height:52px;
 }
 .btn:active{transform:scale(0.98);}
@@ -445,7 +445,7 @@ function renderDetail(){
     ${isPending ? `
     <div class="detail-section" style="background:#FFF7E6;padding:10px 12px;border-radius:8px;color:#92400E;font-size:13px;">
       ⏳ 고객이 아직 정보를 입력하지 않았습니다.<br>
-      링크: <a href="${formUrl}" target="_blank" style="color:#FF385C;text-decoration:underline;word-break:break-all;">${formUrl}</a>
+      링크: <a href="${formUrl}" target="_blank" style="color:var(--c-pr, #FF385C);text-decoration:underline;word-break:break-all;">${formUrl}</a>
     </div>
     ` : ''}
     ${r.clean_type    ? `<div class="detail-section"><div class="ds-h">청소 유형</div><div class="ds-v">${esc(r.clean_type)}</div></div>` : ''}

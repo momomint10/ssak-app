@@ -63,11 +63,11 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 .hd::after{
   content:'';position:absolute;bottom:0;left:0;right:0;
-  height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
+  height:3px;background:linear-gradient(90deg,var(--c-pr, #FF385C) 0%,#FC8181 100%);
 }
 .hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 /* .hd-title / .hd-sub 페이지 인라인 정의 삭제 → design.css의 .ds-page-title (22px 600) / .ds-page-subtitle 이 시각 결정 */
-.btn-hd{background:#FF385C;color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-hd{background:var(--c-pr, #FF385C);color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
 .tab-row{padding:10px 16px;background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);border-bottom:0.5px solid #f5e8e4;}
 /* Segmented Control 탭 */
 .tabs-seg{display:flex;background:var(--g100,#F3F4F6);border-radius:12px;padding:3px;gap:2px;}
@@ -78,7 +78,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   transition:background .18s,color .18s,box-shadow .18s;
   -webkit-tap-highlight-color:transparent;
 }
-.tab.on{background:#fff;color:var(--pr,#FF385C);box-shadow:0 1px 6px rgba(0,0,0,.10);}
+.tab.on{background:#fff;color:var(--pr,var(--c-pr, #FF385C));box-shadow:0 1px 6px rgba(0,0,0,.10);}
 /* ── 필터 ── */
 .filter-bar{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;scrollbar-width:none;}
 .filter-bar::-webkit-scrollbar{display:none;}
@@ -102,7 +102,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .wcard-body{flex:1;min-width:0;}
 .wcard-top{display:flex;align-items:flex-start;justify-content:space-between;}
 .wcard-name{font-size:15px;font-weight:600;}
-.wcard-rate{font-size:13px;font-weight:600;color:#FF385C;}
+.wcard-rate{font-size:13px;font-weight:600;color:var(--c-pr, #FF385C);}
 .wcard-meta{font-size:12px;color:var(--g500);margin:3px 0;}
 .skill-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
 .skill-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:9999px;background:#f7f7f7;color:#222;}
@@ -115,7 +115,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .jcard:active{transform:scale(.98);}
 .jcard-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
 .jcard-title{font-size:15px;font-weight:800;flex:1;padding-right:8px;line-height:1.3;}
-.jcard-rate{font-size:14px;font-weight:900;color:#FF385C;flex-shrink:0;}
+.jcard-rate{font-size:14px;font-weight:900;color:var(--c-pr, #FF385C);flex-shrink:0;}
 .jcard-meta{font-size:12px;color:var(--g500);margin-bottom:6px;}
 .jcard-meta span{font-weight:700;color:var(--g700);}
 .jcard-skills{display:flex;flex-wrap:wrap;gap:4px;}
@@ -129,7 +129,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .empty-ico{font-size:44px;margin-bottom:10px;}
 .empty-ttl{font-size:15px;font-weight:700;color:var(--g700);margin-bottom:4px;}
 .empty-sub{font-size:13px;color:var(--g400);}
-.sp{width:24px;height:24px;border:2.5px solid var(--g200);border-top-color:#FF385C;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto;}
+.sp{width:24px;height:24px;border:2.5px solid var(--g200);border-top-color:var(--c-pr, #FF385C);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto;}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* ── MY 프로필 ── */
 .my-section{padding:16px 12px;}
@@ -141,13 +141,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .my-status{font-size:12px;color:var(--g400);margin-top:2px;}
 .my-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0;}
 .my-stat{text-align:center;background:var(--g50);border-radius:12px;padding:10px 6px;}
-.my-stat-val{font-size:16px;font-weight:900;color:#FF385C;}
+.my-stat-val{font-size:16px;font-weight:900;color:var(--c-pr, #FF385C);}
 .my-stat-lbl{font-size:10px;color:var(--g400);margin-top:2px;}
 .section-title{font-size:13px;font-weight:700;color:var(--g500);margin-bottom:8px;}
 .btn-full{width:100%;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;margin-bottom:8px;}
-.btn-pr{background:#FF385C;color:#fff;}
+.btn-pr{background:var(--c-pr, #FF385C);color:#fff;}
 .btn-pr:active{opacity:.8;}
-.btn-outline{background:#fff;border:1.5px solid var(--pr) !important;color:#FF385C;}
+.btn-outline{background:#fff;border:1.5px solid var(--pr) !important;color:var(--c-pr, #FF385C);}
 .btn-gray{background:var(--g100);color:var(--g500);}
 .btn-danger{background:#FEE2E2;color:var(--red);}
 /* ── 공통 시트 ── */
@@ -163,14 +163,14 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .det-avatar-wrap{display:flex;justify-content:center;margin-bottom:14px;}
 .det-avatar{width:72px;height:72px;border-radius:50%;background:var(--pr-l);display:flex;align-items:center;justify-content:center;font-size:34px;overflow:hidden;}
 .det-name{text-align:center;font-size:20px;font-weight:900;margin-bottom:4px;}
-.det-rate{text-align:center;font-size:17px;font-weight:700;color:#FF385C;margin-bottom:14px;}
+.det-rate{text-align:center;font-size:17px;font-weight:700;color:var(--c-pr, #FF385C);margin-bottom:14px;}
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
 .info-cell{background:var(--g50);border-radius:12px;padding:12px;}
 .info-lbl{font-size:10px;font-weight:700;color:var(--g400);margin-bottom:4px;}
 .info-val{font-size:13px;font-weight:700;}
 .det-bio{font-size:13px;color:var(--g700);line-height:1.7;background:var(--g50);border-radius:12px;padding:12px;margin-bottom:14px;white-space:pre-wrap;}
 .sh-foot{padding:12px 16px;border-top:1px solid var(--g100);}
-.btn-chat{width:100%;padding:13px;background:#FF385C;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-chat{width:100%;padding:13px;background:var(--c-pr, #FF385C);color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
 /* ── 채용 상세 ── */
 .job-detail-head{background:var(--pr-l);border-radius:14px;padding:16px;margin-bottom:14px;}
 .job-detail-title{font-size:18px;font-weight:900;margin-bottom:6px;}
@@ -204,13 +204,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .msg-row{display:flex;align-items:flex-end;gap:6px;}
 .msg-row.me{flex-direction:row-reverse;}
 .msg-bubble{max-width:72%;padding:9px 12px;border-radius:16px;font-size:14px;line-height:1.5;word-break:break-word;}
-.msg-row.me .msg-bubble{background:#FF385C;color:#fff;border-bottom-right-radius:4px;}
+.msg-row.me .msg-bubble{background:var(--c-pr, #FF385C);color:#fff;border-bottom-right-radius:4px;}
 .msg-row:not(.me) .msg-bubble{background:var(--g100);color:var(--g900);border-bottom-left-radius:4px;}
 .msg-time{font-size:10px;color:var(--g300);flex-shrink:0;margin-bottom:2px;}
 .ch-bar{padding:8px 12px;padding-bottom:max(8px,env(safe-area-inset-bottom));border-top:1px solid var(--g200);display:flex;align-items:flex-end;gap:8px;background:#fff;}
 .ch-inp{flex:1;border:1.5px solid var(--g200);border-radius:18px;padding:9px 13px;font-size:14px;font-family:inherit;resize:none;max-height:80px;outline:none;background:#fafafa;}
-.ch-inp:focus{border-color:#FF385C;background:#fff;}
-.ch-send{background:#FF385C;color:#fff;border:none;border-radius:50%;width:36px;height:36px;flex-shrink:0;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.ch-inp:focus{border-color:var(--c-pr, #FF385C);background:#fff;}
+.ch-send{background:var(--c-pr, #FF385C);color:#fff;border:none;border-radius:50%;width:36px;height:36px;flex-shrink:0;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
 .ch-send:disabled{background:var(--g300);}
 
 /* ── 메신저 UI 개선 (날짜·읽음·상태) ── */
@@ -220,7 +220,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .msg-meta{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0;margin-bottom:2px;}
 .msg-row:not(.me) .msg-meta{align-items:flex-start;}
 .msg-state{font-size:10px;color:var(--g300);font-weight:600;}
-.msg-state.read{color:#FF385C;}
+.msg-state.read{color:var(--c-pr, #FF385C);}
 .msg-state.sending{color:var(--g300);font-style:italic;}
 .msg-state.failed{color:#DC2626;cursor:pointer;font-weight:700;}
 .ch-conn{display:none;text-align:center;font-size:11px;padding:5px 12px;background:#FEF2F2;color:#DC2626;font-weight:600;}
@@ -237,7 +237,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .f-sec{margin-bottom:14px;}
 .f-lbl{font-size:11.5px;font-weight:700;color:var(--g500);margin-bottom:5px;display:block;}
 .f-inp{width:100%;padding:11px 12px;border:1.5px solid var(--g200);border-radius:9px;font-size:14px;font-family:inherit;outline:none;background:var(--g50);}
-.f-inp:focus{border-color:#FF385C;background:#fff;}
+.f-inp:focus{border-color:var(--c-pr, #FF385C);background:#fff;}
 .f-inp::placeholder{color:var(--g300);}
 textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 .f-pw{position:relative;}
@@ -259,13 +259,13 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 }
 .fs-foot{padding:10px 16px;border-top:1px solid var(--g100);}
 /* ── 매칭 완료 카드 ── */
-.match-card{background:linear-gradient(135deg,#FF385C,#FF6B8A);border-radius:14px;padding:16px;margin-bottom:12px;color:#fff;}
+.match-card{background:linear-gradient(135deg,var(--c-pr, #FF385C),#FF6B8A);border-radius:14px;padding:16px;margin-bottom:12px;color:#fff;}
 .match-title{font-size:14px;font-weight:900;margin-bottom:8px;}
 .match-info{font-size:12px;line-height:1.8;background:rgba(255,255,255,.15);border-radius:8px;padding:10px;}
 /* ── 네비 ── */
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,.96);border-top:1px solid var(--g200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--g400);cursor:pointer;}
-.ni.on{color:#FF385C;font-weight:700;}
+.ni.on{color:var(--c-pr, #FF385C);font-weight:700;}
 .ni-ico{font-size:20px;line-height:1;}
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.92);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:85vw;}
 
@@ -384,7 +384,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
           <img id="f-photo-img" alt="" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--pr);display:block;margin:0 auto;">
           <button onclick="removePhoto()" style="position:absolute;top:0;right:calc(50% - 62px);background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:13px;">×</button>
         </div>
-        <div style="text-align:center;"><button class="chip" style="background:var(--pr-l);border-color:#FF385C;color:var(--pr-d);" onclick="document.getElementById('f-photo-file').click()">📷 사진 선택</button></div>
+        <div style="text-align:center;"><button class="chip" style="background:var(--pr-l);border-color:var(--c-pr, #FF385C);color:var(--pr-d);" onclick="document.getElementById('f-photo-file').click()">📷 사진 선택</button></div>
         <input type="file" id="f-photo-file" accept="image/*" style="display:none" onchange="onPhotoSelect(this)">
         <div style="font-size:11px;color:var(--g400);text-align:center;margin-top:6px;">상반신이 잘 보이는 사진을 등록해주세요</div>
       </div>
@@ -452,7 +452,7 @@ const statusBadge = (status, openTxt='모집중', closeTxt='마감') =>
   `<span style="font-size:11px;padding:2px 8px;border-radius:12px;background:${status==='open'?'#DCFCE7':'#F3F4F6'};color:${status==='open'?'#16A34A':'#6B7280'};">${status==='open'?openTxt:closeTxt}</span>`;
 
 const matchBadge = (isMatch, isMine) =>
-  (isMatch && !isMine ? '<span style="font-size:10px;background:#f7f7f7;color:#FF385C;padding:2px 7px;border-radius:12px;font-weight:700;">✨ 매칭</span>' : '') +
+  (isMatch && !isMine ? '<span style="font-size:10px;background:#f7f7f7;color:var(--c-pr, #FF385C);padding:2px 7px;border-radius:12px;font-weight:700;">✨ 매칭</span>' : '') +
   (isMine ? '<span style="font-size:10px;background:#FEF3C7;color:#D97706;padding:2px 7px;border-radius:12px;font-weight:700;">내 공고</span>' : '');
 
 const skillChips = (skills) =>
@@ -671,7 +671,7 @@ async function openJobDet(id){
               <div style="font-size:12px;color:var(--g700);margin-bottom:4px;">📞 ${esc(ap.applicant_contact)}</div>
               ${ap.message?`<div style="font-size:12px;color:var(--g500);">"${esc(ap.message)}"</div>`:''}
               ${ap.status!=='matched'?`<button class="btn-match" onclick="confirmMatch('${ap.id}','${esc(ap.worker_nickname||'지원자')}')"
-                style="width:100%;margin-top:8px;padding:9px;background:#FF385C;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
+                style="width:100%;margin-top:8px;padding:9px;background:var(--c-pr, #FF385C);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">
                 🤝 매칭 확정
               </button>`:'<div style="margin-top:6px;font-size:12px;color:#16A34A;">📞 구직자 연락처: <strong>'+esc(ap.applicant_contact)+'</strong></div>'}
             </div>`).join('');

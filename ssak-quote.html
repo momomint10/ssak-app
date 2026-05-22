@@ -64,7 +64,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 .tab-wrap::after{
   content:'';position:absolute;bottom:0;left:0;right:0;
-  height:3px;background:linear-gradient(90deg,#FF385C 0%,#FC8181 100%);
+  height:3px;background:linear-gradient(90deg,var(--c-pr, #FF385C) 0%,#FC8181 100%);
 }
 /* Segmented Control 탭 */
 .tabs-seg{display:flex;background:var(--c-g100,#F3F4F6);border-radius:12px;padding:3px;gap:2px;}
@@ -75,7 +75,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   transition:background .18s,color .18s,box-shadow .18s;
   -webkit-tap-highlight-color:transparent;
 }
-.tab.active{background:#fff;color:var(--primary,#FF385C);box-shadow:0 1px 6px rgba(0,0,0,.10);}
+.tab.active{background:#fff;color:var(--primary,var(--c-pr, #FF385C));box-shadow:0 1px 6px rgba(0,0,0,.10);}
 .content{padding:20px;}
 .page{display:none;padding:14px 16px 24px;}
 .page.active{display:block;}
@@ -266,7 +266,7 @@ select.form-input{cursor:pointer;}
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
       <div style="font-size:28px;">🎯</div>
       <div>
-        <div style="font-size:16px;font-weight:800;color:#C92A4A;">정밀 견적 <span style="font-size:10px;background:#FF385C;color:#fff;padding:1px 6px;border-radius:8px;vertical-align:middle;margin-left:4px;">NEW</span></div>
+        <div style="font-size:16px;font-weight:800;color:#C92A4A;">정밀 견적 <span style="font-size:10px;background:var(--c-pr, #FF385C);color:#fff;padding:1px 6px;border-radius:8px;vertical-align:middle;margin-left:4px;">NEW</span></div>
         <div style="font-size:11.5px;color:#9B1C3A;">고객이 평수·사진을 직접 입력</div>
       </div>
     </div>
@@ -274,7 +274,7 @@ select.form-input{cursor:pointer;}
       금액 입력 없이 <b>정보 수집 링크</b>만 SMS 발송 →<br>
       고객 정보 보고 <b>정확한 견적</b> 발송 (4-5회 → 2회)
     </div>
-    <button class="btn-primary" onclick="location.href='quote-list.html'" style="width:100%;background:#FF385C;">
+    <button class="btn-primary" onclick="location.href='quote-list.html'" style="width:100%;background:var(--c-pr, #FF385C);">
       🎯 정밀 견적 관리 →
     </button>
   </div>
@@ -993,7 +993,7 @@ async function sendSMS(){
 }
 
 let nextInqId=3;
-const avatarColors=['#FF385C','#3B82F6','#8B5CF6','#F59E0B','#EF4444'];
+const avatarColors=['var(--c-pr, #FF385C)','#3B82F6','#8B5CF6','#F59E0B','#EF4444'];
 const statusBadge={'답변 대기':'badge-wait','견적 발송':'badge-sent','신규':'badge-new'};
 
 function quickQuote(name,phone,size){switchTab('quote',document.querySelectorAll('.tab')[0]);document.getElementById('q-name').value=name;document.getElementById('q-phone').value=phone;document.getElementById('q-size').value=size;calcQuote();window.scrollTo({top:0,behavior:'smooth'});}

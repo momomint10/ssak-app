@@ -11,10 +11,10 @@
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
   :root{
     /* design.css 토큰 alias로 마이그 (2026-05-17) — 변경 시 design.css 한 곳만 수정 */
-    --g-dark:var(--c-pr-d, #E31C5F);
-    --g-mid:var(--c-pr, #FF385C);
+    --g-dark:var(--c-pr-d, var(--c-pr-d, #E31C5F));
+    --g-mid:var(--c-pr, var(--c-pr, #FF385C));
     --g-lite:#E6FAF5;
-    --g-ftr:var(--c-pr-d, #E31C5F);
+    --g-ftr:var(--c-pr-d, var(--c-pr-d, #E31C5F));
     --g-border:#E6FAF5;
     --cream:#fdfff9;
   }

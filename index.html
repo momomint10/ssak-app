@@ -49,14 +49,14 @@
 .home-header::after {
   content:''; position:absolute; bottom:0; left:0; right:0;
   height:3px;
-  background:linear-gradient(90deg, #FF385C 0%, #FC8181 100%);
+  background:linear-gradient(90deg, var(--c-pr, #FF385C) 0%, #FC8181 100%);
 }
 .home-header::before {
   content:''; position:absolute; top:-50px; right:-50px;
   width:180px; height:180px; background:rgba(255,56,92,.04); border-radius:50%;
 }
 .hd-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.hd-greeting { font-size:13px; color:#FF385C; font-weight:600; margin-bottom:3px; letter-spacing:-.1px; font-size:12px;
+.hd-greeting { font-size:13px; color:var(--c-pr, #FF385C); font-weight:600; margin-bottom:3px; letter-spacing:-.1px; font-size:12px;
   /* 스크롤 시 페이드아웃 */
   max-height:24px; overflow:hidden;
   transition: opacity .18s ease, max-height .28s ease, margin .28s ease; }

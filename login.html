@@ -30,7 +30,7 @@ html, body {
 .brand h1 {
   font-size: 32px;
   font-weight: 800;
-  background: linear-gradient(90deg, #FF385C 0%, #FC8181 100%);
+  background: linear-gradient(90deg, var(--c-pr, #FF385C) 0%, #FC8181 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -65,7 +65,7 @@ input[type="tel"], input[type="text"] {
   outline: none;
   letter-spacing: 1px;
 }
-input:focus { border-color: #FF385C; }
+input:focus { border-color: var(--c-pr, #FF385C); }
 input[disabled] { background: #F5F5F5; color: #999; }
 
 .btn {
@@ -76,7 +76,7 @@ input[disabled] { background: #F5F5F5; color: #999; }
   font-family: inherit;
   border: none;
   border-radius: 12px;
-  background: #FF385C;
+  background: var(--c-pr, #FF385C);
   color: #fff;
   cursor: pointer;
   margin-top: 12px;
@@ -89,7 +89,7 @@ input[disabled] { background: #F5F5F5; color: #999; }
 .btn-link {
   background: none;
   border: none;
-  color: #FF385C;
+  color: var(--c-pr, #FF385C);
   font-size: 14px;
   font-weight: 700;
   padding: 8px;
@@ -104,13 +104,13 @@ input[disabled] { background: #F5F5F5; color: #999; }
   line-height: 1.6;
   text-align: center;
 }
-.hint b { color: #FF385C; }
+.hint b { color: var(--c-pr, #FF385C); }
 
 .timer {
   display: inline-block;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
-  color: #FF385C;
+  color: var(--c-pr, #FF385C);
 }
 
 .alert {
