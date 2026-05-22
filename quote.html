@@ -272,7 +272,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
     <!-- 2. 주거 형태 -->
     <div class="card">
       <div class="card-title"><span class="num">2</span>주거 형태 <span class="req">*</span></div>
-      <div class="chip-row" style="margin-top:8px;">
+      <div class="chip-row" id="housing-row" style="margin-top:8px;">
         <button type="button" class="chip" data-val="원룸" onclick="setHousing('원룸')"><span class="chip-ico">🏠</span>원룸</button>
         <button type="button" class="chip" data-val="투룸" onclick="setHousing('투룸')"><span class="chip-ico">🏡</span>투룸</button>
         <button type="button" class="chip" data-val="아파트" onclick="setHousing('아파트')"><span class="chip-ico">🏢</span>아파트</button>
@@ -304,57 +304,67 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
     <!-- 4. 방·화장실·베란다 -->
     <div class="card">
       <div class="card-title"><span class="num">4</span>방·화장실·베란다 <span class="req">*</span></div>
-      <div class="card-hint">알파룸·베타룸 포함. 연결 베란다는 구역별로 (실외기실/대피실 제외).</div>
+      <div class="card-hint">
+        <b>방</b>: 알파룸·베타룸 포함 총 갯수<br>
+        <b>베란다</b>: 연결되어 있어도 구역별로 (예: 안방·거실·작은방 = 3개).<br>
+        실외기실·대피실은 제외해 주세요.
+      </div>
       <div class="num-row">
         <div class="num-cell">
           <label>🛏️ 방</label>
-          <input type="number" id="room-count" min="0" max="20" placeholder="0" inputmode="numeric">
+          <input type="number" id="room-count" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('roomCount', this.value)">
         </div>
         <div class="num-cell">
           <label>🚽 화장실</label>
-          <input type="number" id="bathroom-count" min="0" max="10" placeholder="0" inputmode="numeric">
+          <input type="number" id="bathroom-count" min="0" max="10" placeholder="0" inputmode="numeric" oninput="onNumChange('bathroomCount', this.value)">
         </div>
         <div class="num-cell">
           <label>🪟 베란다</label>
-          <input type="number" id="veranda-count" min="0" max="20" placeholder="0" inputmode="numeric">
+          <input type="number" id="veranda-count" min="0" max="20" placeholder="0" inputmode="numeric" oninput="onNumChange('verandaCount', this.value)">
         </div>
       </div>
     </div>
 
     <!-- 5. 지역 -->
     <div class="card">
-      <div class="card-title"><span class="num">5</span>지역</div>
-      <input type="text" id="region-input" placeholder="예: 서울 강남구, 인천 부평구" maxlength="50">
-      <div class="card-hint">상세 주소는 계약 시 알려주시면 됩니다.</div>
+      <div class="card-title"><span class="num">5</span>시·군·구 <span class="req">*</span></div>
+      <input type="text" id="region-input" placeholder="예: 서울 강남구, 인천 부평구" maxlength="50" oninput="onRegionChange(this.value)">
+      <div class="card-hint">상세 주소(건물명·동·호수)는 계약 시 알려주시면 됩니다.</div>
     </div>
 
     <!-- 6. 시공일 -->
     <div class="card">
-      <div class="card-title"><span class="num">6</span>희망 시공일</div>
-      <input type="date" id="date-input">
-      <div class="card-hint">대략적인 일정만 알려주셔도 됩니다.</div>
+      <div class="card-title"><span class="num">6</span>희망 시공일 <span class="req">*</span></div>
+      <input type="date" id="date-input" oninput="onDateChange(this.value)" onchange="onDateChange(this.value)">
+      <div class="card-hint">대략적인 일정도 좋습니다. 예약 마감률이 높으니 선호 + 후보일 함께 알려주시면 더 좋습니다.</div>
     </div>
 
     <!-- 7. 현장 조건 -->
     <div class="card">
       <div class="card-title"><span class="num">7</span>현장 특이 조건</div>
-      <div class="card-hint">해당되는 항목 모두 선택. 정확한 견적·인원 배치에 도움됩니다.</div>
+      <div class="card-hint">해당되는 항목을 모두 선택해 주세요. 추가 요금이 발생할 수 있습니다.</div>
       <div class="chip-row" id="cond-row" style="margin-top:8px;">
-        <button type="button" class="chip-multi" data-val="보조주방" onclick="toggleCond('보조주방')">보조주방</button>
-        <button type="button" class="chip-multi" data-val="광폭거실" onclick="toggleCond('광폭거실')">광폭거실</button>
+        <button type="button" class="chip-multi" data-val="보조주방" onclick="toggleCond('보조주방')" title="주방이 2개 이상">보조주방</button>
+        <button type="button" class="chip-multi" data-val="광폭거실" onclick="toggleCond('광폭거실')" title="작은방 확장 후 거실로 사용">광폭거실</button>
         <button type="button" class="chip-multi" data-val="거실 추가창문" onclick="toggleCond('거실 추가창문')">거실 추가창문</button>
-        <button type="button" class="chip-multi" data-val="엘리베이터 없음" onclick="toggleCond('엘리베이터 없음')">엘리베이터 없음</button>
+        <button type="button" class="chip-multi" data-val="엘리베이터 없음" onclick="toggleCond('엘리베이터 없음')" title="5층 건물의 3층 이상 세대">엘리베이터 없음</button>
         <button type="button" class="chip-multi" data-val="베란다 곰팡이" onclick="toggleCond('베란다 곰팡이')">베란다 곰팡이</button>
-        <button type="button" class="chip-multi" data-val="시트지 자국" onclick="toggleCond('시트지 자국')">시트지 자국</button>
+        <button type="button" class="chip-multi" data-val="시트지 자국" onclick="toggleCond('시트지 자국')" title="스티커·시트지·뽁뽁이 자국">스티커·시트지 자국</button>
         <button type="button" class="chip-multi" data-val="안전고리" onclick="toggleCond('안전고리')">안전고리 제거</button>
         <button type="button" class="chip-multi" data-val="니코틴 제거" onclick="toggleCond('니코틴 제거')">니코틴 제거</button>
+      </div>
+      <div class="card-hint" style="margin-top:10px;font-size:11.5px;color:#999;">
+        💡 광폭거실 = 작은방 확장 후 거실로 사용 / 엘리베이터 없음 = 5층 건물의 3층 이상 세대
       </div>
     </div>
 
     <!-- 8. 가전 분해청소 -->
     <div class="card">
       <div class="card-title"><span class="num">8</span>가전 분해청소</div>
-      <div class="card-hint">청소를 원하시는 가전을 체크하고 대수를 선택하세요.</div>
+      <div class="card-hint">
+        청소를 원하시는 가전을 체크하고 대수를 선택하세요.<br>
+        ※ 세탁기는 <b>드럼만 분해청소 가능</b>합니다 (일반 세탁기 X).
+      </div>
       <div class="app-list" id="app-list">
         <!-- 동적 -->
       </div>
@@ -363,8 +373,8 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
     <!-- 9. 에어컨 분해청소 -->
     <div class="card">
       <div class="card-title"><span class="num">9</span>에어컨 분해청소</div>
-      <input type="text" id="aircon-input" placeholder="예: 벽걸이 2대, 스탠드 1대" maxlength="200">
-      <div class="card-hint">형태(1way / 벽걸이 / 스탠드 등)와 대수를 적어주세요.</div>
+      <input type="text" id="aircon-input" placeholder="예: 벽걸이 2대, 스탠드 1대" maxlength="200" oninput="state.airconInfo=this.value.trim()">
+      <div class="card-hint">형태(1way / 벽걸이 / 스탠드 / 천정형 등)와 대수를 적어주세요.</div>
     </div>
 
     <!-- 10. 사진 -->
@@ -378,7 +388,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
     <!-- 11. 특이사항 -->
     <div class="card">
       <div class="card-title"><span class="num">11</span>특이사항</div>
-      <textarea id="notes-input" placeholder="반려동물, 입주 직전, 추가 요청 등 알려주실 내용" maxlength="1000"></textarea>
+      <textarea id="notes-input" placeholder="반려동물, 입주 직전, 추가 요청 등 알려주실 내용" maxlength="1000" oninput="onNotesChange(this.value)"></textarea>
       <div class="card-hint" style="text-align:right;"><span id="notes-count">0</span>/1000</div>
     </div>
 
@@ -386,7 +396,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.6;}
     <div class="card muted">
       <div class="card-title"><span class="num">12</span>어디서 보고 오셨나요?</div>
       <div class="card-hint">선택 사항 — 사장님이 더 좋은 서비스를 만드는 데 도움됩니다.</div>
-      <div class="chip-row" style="margin-top:8px;">
+      <div class="chip-row" id="referral-row" style="margin-top:8px;">
         <button type="button" class="chip" data-val="블로그" onclick="setReferral('블로그')">📝 블로그</button>
         <button type="button" class="chip" data-val="인스타그램" onclick="setReferral('인스타그램')">📷 인스타</button>
         <button type="button" class="chip" data-val="스레드" onclick="setReferral('스레드')">🧵 스레드</button>
@@ -505,7 +515,7 @@ function setCleanType(t){
 // ── 2. 주거 형태 ──────────────────────────────────────
 function setHousing(t){
   state.housingType = t;
-  document.querySelectorAll('.card:nth-child(3) .chip').forEach(c =>
+  document.querySelectorAll('#housing-row .chip').forEach(c =>
     c.classList.toggle('on', c.getAttribute('data-val') === t)
   );
   updateProgress();
@@ -530,39 +540,20 @@ function onAreaInput(v){
   updateProgress();
 }
 
-// ── 4. 방·화장실·베란다 ─────────────────────────────
-['room-count','bathroom-count','veranda-count'].forEach(id => {
-  document.addEventListener('DOMContentLoaded', () => {
-    const inp = document.getElementById(id);
-    if (!inp) return;
-    inp.addEventListener('input', e => {
-      const n = parseInt(e.target.value);
-      const key = id === 'room-count' ? 'roomCount' : id === 'bathroom-count' ? 'bathroomCount' : 'verandaCount';
-      state[key] = Number.isFinite(n) ? n : null;
-      updateProgress();
-    });
-  });
-});
+// ── 4. 방·화장실·베란다 (inline oninput으로 호출) ──
+function onNumChange(key, v){
+  const n = parseInt(v);
+  state[key] = Number.isFinite(n) ? n : null;
+  updateProgress();
+}
 
-// ── 5. 지역 + 6. 시공일 ────────────────────────────────
-// (input 이벤트는 DOMContentLoaded 후 한 번에)
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('region-input').addEventListener('input', e => {
-    state.region = e.target.value.trim();
-    updateProgress();
-  });
-  document.getElementById('date-input').addEventListener('change', e => {
-    state.desiredDate = e.target.value;
-    updateProgress();
-  });
-  document.getElementById('notes-input').addEventListener('input', e => {
-    state.notes = e.target.value.trim();
-    document.getElementById('notes-count').textContent = e.target.value.length;
-  });
-  document.getElementById('aircon-input').addEventListener('input', e => {
-    state.airconInfo = e.target.value.trim();
-  });
-});
+// ── 5. 지역 + 6. 시공일 + 11. 특이사항 (inline oninput으로 호출) ──
+function onRegionChange(v){ state.region = v.trim(); updateProgress(); }
+function onDateChange(v){ state.desiredDate = v; updateProgress(); }
+function onNotesChange(v){
+  state.notes = v.trim();
+  document.getElementById('notes-count').textContent = v.length;
+}
 
 // ── 7. 현장 조건 (다중 선택) ─────────────────────────
 function toggleCond(c){
@@ -692,7 +683,7 @@ function blobToBase64(blob){
 // ── 12. 유입 채널 ──────────────────────────────────
 function setReferral(r){
   state.referralSource = state.referralSource === r ? null : r;
-  document.querySelectorAll('.card.muted .chip').forEach(b =>
+  document.querySelectorAll('#referral-row .chip').forEach(b =>
     b.classList.toggle('on', b.getAttribute('data-val') === state.referralSource)
   );
 }
