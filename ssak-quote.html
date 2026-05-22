@@ -261,14 +261,14 @@ select.form-input{cursor:pointer;}
 <!-- 견적 -->
 <div id="page-quote" class="page active">
 <div id="q-landing">
-  <!-- 정밀 견적 진입 카드 (계약서·완료보고서와 동일 패턴 통일 2026-05-23) -->
-  <div class="card" style="text-align:center;padding:32px 20px 28px;">
-    <div style="font-size:48px;margin-bottom:14px;">🎯</div>
-    <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);margin-bottom:8px;">정밀 견적</div>
-    <div style="font-size:13px;color:var(--gray-500);line-height:1.7;margin-bottom:24px;">
+  <!-- 정밀 견적 진입 카드 (design.css .ds-entry-card 컴포넌트 사용) -->
+  <div class="ds-entry-card">
+    <div class="ds-entry-ico">🎯</div>
+    <div class="ds-entry-title">정밀 견적</div>
+    <div class="ds-entry-desc">
       고객이 평수·사진을 직접 입력하면<br>받은 정보 보고 맞춤 견적을 발송합니다
     </div>
-    <button class="btn-primary" onclick="location.href='quote-list.html'" style="max-width:280px;margin:0 auto;">
+    <button class="ds-entry-btn" onclick="location.href='quote-list.html'">
       🎯 정밀 견적 관리 →
     </button>
   </div>
@@ -341,13 +341,13 @@ select.form-input{cursor:pointer;}
 
 <!-- 계약서 -->
 <div id="page-contract" class="page">
-  <div class="card" style="text-align:center;padding:32px 20px 28px;">
-    <div style="font-size:48px;margin-bottom:14px;">✍️</div>
-    <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);margin-bottom:8px;">계약서 작성</div>
-    <div style="font-size:13px;color:var(--gray-500);line-height:1.7;margin-bottom:24px;">
+  <div class="ds-entry-card">
+    <div class="ds-entry-ico">✍️</div>
+    <div class="ds-entry-title">계약서 작성</div>
+    <div class="ds-entry-desc">
       업주가 먼저 서명 후 고객에게<br>서명 링크를 SMS로 발송합니다
     </div>
-    <button class="btn-primary" onclick="location.href='sign.html'" style="max-width:280px;margin:0 auto;">
+    <button class="ds-entry-btn" onclick="location.href='sign.html'">
       📄 계약서 작성하기
     </button>
   </div>
@@ -380,13 +380,13 @@ select.form-input{cursor:pointer;}
 <!-- 완료보고서 -->
 <div id="page-report" class="page">
 <div id="rp-landing">
-  <div class="card" style="text-align:center;padding:32px 20px 28px;">
-    <div style="font-size:48px;margin-bottom:14px;">📸</div>
-    <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);margin-bottom:8px;">완료 보고서</div>
-    <div style="font-size:13px;color:var(--gray-500);line-height:1.7;margin-bottom:24px;">
+  <div class="ds-entry-card">
+    <div class="ds-entry-ico">📸</div>
+    <div class="ds-entry-title">완료 보고서</div>
+    <div class="ds-entry-desc">
       시공 전/후 사진과 함께<br>완료 보고서를 PDF로 발송합니다
     </div>
-    <button class="btn-primary" onclick="showReportForm()" style="max-width:280px;margin:0 auto;">
+    <button class="ds-entry-btn" onclick="showReportForm()">
       📸 보고서 작성하기
     </button>
   </div>

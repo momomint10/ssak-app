@@ -81,6 +81,52 @@ html, body {
 }
 .ds-card + .ds-card { margin-top: 10px; }
 
+/* ── 진입 카드 (탭 메인 액션 — 정밀견적/계약서/완료보고서 통일) ─── */
+.ds-entry-card {
+  background: var(--c-white);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+  padding: 32px 20px 28px;
+  text-align: center;
+}
+.ds-entry-card + .ds-card { margin-top: 12px; }
+.ds-entry-ico {
+  font-size: 48px;
+  margin-bottom: 14px;
+  line-height: 1;
+}
+.ds-entry-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--c-g900);
+  margin-bottom: 8px;
+}
+.ds-entry-desc {
+  font-size: 13px;
+  color: var(--c-g500);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.ds-entry-btn {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  background: var(--c-pr);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-md);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 50px;
+  transition: 0.15s;
+}
+.ds-entry-btn:active { transform: scale(0.98); background: var(--c-pr-d); }
+
 /* ── 버튼 시스템 ──────────────────────────────────────────────── */
 /* Primary */
 .ds-btn {
