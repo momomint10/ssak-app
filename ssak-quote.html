@@ -2518,6 +2518,7 @@ async function generateReport(){
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
         pdfBase64,
+        type: 'report',                                   // 서버가 '완료보고서 안내'로 SMS 분기
         customerPhone: phone.replace(/-/g,''),
         ownerPhone: ownerPhone?.replace(/-/g,''),
         customerName: name,
