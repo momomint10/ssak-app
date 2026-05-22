@@ -302,7 +302,7 @@ async function init() {
 
   try {
     // ── 이달 통계 (서버 연동) ────────────────────────────────
-    const r = await fetch(SERVER + '/api/stats/monthly?adminKey=' + encodeURIComponent(adminKey));
+    const r = await fetch(SERVER + '/api/stats/monthly');
     const d = await r.json();
 
     if (d.success) {

@@ -416,7 +416,7 @@ loadUser();
     try {
       const today = new Date().toISOString().slice(0,10);
       const adminKey = (JSON.parse(localStorage.getItem('ssak_cfg')||'{}').adminKey)||'';
-      const r = await fetch(SERVER + '/api/bookings?date=' + today + '&adminKey=' + encodeURIComponent(adminKey));
+      const r = await fetch(SERVER + '/api/bookings?date=' + today + '');
       const d = await r.json();
       if (d.data && d.data.length > 0) {
         const b = document.getElementById('sched-badge');
@@ -515,7 +515,7 @@ async function loadHomeStats() {
 
   // 오늘 할 일 (대기 예약 우선)
   try {
-    const r = await fetch(SERVER + '/api/bookings?status=pending&adminKey=' + encodeURIComponent(adminKey));
+    const r = await fetch(SERVER + '/api/bookings?status=pending');
     const d = await r.json();
     const pending = d.data || [];
     const todayText = document.getElementById('today-text');
@@ -550,7 +550,7 @@ async function loadHomeStats() {
 
   // 이달 실적 (토스 시그니처: 큰 숫자 + 작은 단위)
   try {
-    const r2 = await fetch(SERVER + '/api/stats/monthly?adminKey=' + encodeURIComponent(adminKey));
+    const r2 = await fetch(SERVER + '/api/stats/monthly');
     const d2 = await r2.json();
     if (d2.success) {
       const perfDone    = document.getElementById('perf-done');

@@ -1087,7 +1087,7 @@ async function fetchPendingBookings() {
     const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
     const ak = cfg.adminKey || '';
     if (!ak) return;
-    const res = await fetch(SERVER + '/api/bookings?status=pending&adminKey=' + encodeURIComponent(ak));
+    const res = await fetch(SERVER + '/api/bookings?status=pending');
     const data = await res.json();
     if (!data.success || !data.data || !data.data.length) return;
     document.getElementById('pending-banner').style.display = 'block';
@@ -1139,7 +1139,7 @@ async function approveBooking(id, bStr) {
 
   try {
     const ak2 = JSON.parse(localStorage.getItem('ssak_cfg') || '{}').adminKey || '';
-    await fetch(SERVER + '/api/bookings/' + id + '/status?adminKey=' + encodeURIComponent(ak2), {
+    await fetch(SERVER + '/api/bookings/' + id + '/status', {
       method: 'PUT', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({status: 'confirmed'})
     });
@@ -1166,7 +1166,7 @@ async function rejectBooking(id) {
   if (!confirm('이 예약신청을 거절하시겠습니까?')) return;
   try {
     const ak3 = JSON.parse(localStorage.getItem('ssak_cfg') || '{}').adminKey || '';
-    await fetch(SERVER + '/api/bookings/' + id + '/status?adminKey=' + encodeURIComponent(ak3), {
+    await fetch(SERVER + '/api/bookings/' + id + '/status', {
       method: 'PUT', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({status: 'rejected'})
     });

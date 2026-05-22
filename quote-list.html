@@ -231,11 +231,11 @@ textarea{resize:vertical;min-height:90px;line-height:1.6;}
       <input type="tel" id="new-phone" placeholder="010-1234-5678" inputmode="numeric" maxlength="13">
       <label>고객 이름 (선택)</label>
       <input type="text" id="new-name" placeholder="홍길동" maxlength="30">
-      <label>안내 SMS 본문</label>
-      <textarea id="new-msg" maxlength="300" placeholder="기본 메시지가 사용됩니다 (비워두면 자동)"></textarea>
+      <label>안내 SMS 본문 (선택)</label>
+      <textarea id="new-msg" maxlength="300" placeholder="비워두면 자동 안내 메시지가 발송됩니다"></textarea>
       <div class="hint">
-        링크 <code>{링크}</code>는 자동 삽입됩니다.<br>
-        고객 이름은 <code>{이름}</code> 위치에 자동 치환됩니다.
+        💡 직접 작성 시 <b>본문 안에 정보 입력 링크가 자동으로 들어갑니다</b>.<br>
+        고객 이름·업체명·전화번호도 자동으로 채워집니다.
       </div>
       <button class="btn" onclick="sendNew()">
         📨 정보 입력 링크 발송
@@ -548,8 +548,7 @@ function rebuildMsg(){
     summaryLines.push(`🔌 가전: ${r.appliance_options.map(a => `${a.name} ${a.count}대`).join(', ')}`);
   if (r.aircon_info)   summaryLines.push(`❄️ 에어컨: ${r.aircon_info}`);
 
-  const tpl = cfg.quoteFinalMsg || `[싹싹] ${cfg.company || '청소'} 정밀 견적
-
+  const tpl = cfg.quoteFinalMsg || `안녕하세요, ${cfg.company || '청소'}입니다.
 ${r.customer_name || '고객님'}님께서 알려주신 정보 확인했습니다.
 
 📋 ${r.clean_type || '청소'}${r.region ? ` · ${r.region}` : ''}

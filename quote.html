@@ -339,12 +339,16 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
     <!-- 헤더 (네이버 폼 스타일) -->
     <div class="brand-bar">
       <div class="brand-logo">싹</div>
-      <div class="brand-name">싹싹 견적요청서</div>
+      <div class="brand-name">싹싹</div>
     </div>
 
     <div class="title-card">
-      <h1 id="owner-title">정밀 견적 요청</h1>
-      <div class="date-pill" id="owner-name">접수일 자동</div>
+      <h1 id="owner-title">청소 견적요청서</h1>
+      <div style="font-size:13.5px;color:var(--text-sub);line-height:1.7;margin-top:8px;">
+        평수·사진·특이사항을 알려주시면<br>
+        사장님이 확인 후 <b style="color:var(--accent);">맞춤 견적</b>을 문자로 보내드립니다.
+      </div>
+      <div class="date-pill" id="owner-name" style="margin-top:10px;">접수일 자동</div>
     </div>
 
     <div class="required-note">답변 필수</div>
@@ -353,8 +357,8 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
     <div class="progress-wrap">
       <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
       <div class="progress-info">
-        <span><b id="progress-percent">0%</b> 완료</span>
-        <span><span id="progress-done">0</span> / <span id="progress-total">9</span> 필수 항목</span>
+        <span><b id="progress-percent">0%</b> 작성됨</span>
+        <span>필수 <span id="progress-done">0</span>/<span id="progress-total">9</span></span>
       </div>
     </div>
 
@@ -562,7 +566,7 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
       </div>
       <div class="q-hint">
         욕실·주방·거실 사진 1~5장 권장.<br>
-        사진이 있을수록 정밀 견적이 가능합니다.
+        사진이 있을수록 정확한 견적이 가능합니다.
       </div>
       <div class="photo-grid" id="photo-grid"></div>
       <input type="file" id="photo-input" accept="image/*" capture="environment" style="display:none" multiple onchange="onPhotoSelect(this)">
@@ -600,7 +604,7 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
     <div class="done-ico">✅</div>
     <div class="done-title">정보를 받았습니다</div>
     <div class="done-desc">
-      사장님이 확인 후 정밀 견적을<br>
+      사장님이 확인 후 맞춤 견적을<br>
       <b id="done-phone-display"></b>로<br>
       문자로 보내드립니다.<br><br>
       <span style="color:var(--text-mute);font-size:13px;">잠시만 기다려 주세요.</span>
