@@ -1124,28 +1124,28 @@ function renderBookingList() {
     return `<div style="border:1px solid #e8edf2;border-radius:12px;padding:14px;margin-bottom:10px;background:#fff;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
         <div>
-          <span style="font-size:15px;font-weight:700;color:#1a1f36;">${b.name}</span>
-          <span style="font-size:12px;color:#888;margin-left:8px;">${b.phone}</span>
+          <span style="font-size:15px;font-weight:700;color:#1a1f36;">${esc(b.name||'')}</span>
+          <span style="font-size:12px;color:#888;margin-left:8px;">${esc(b.phone||'')}</span>
         </div>
         <span style="background:${statusColor}20;color:${statusColor};font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;">${statusLabel}</span>
       </div>
       <div style="font-size:12px;color:#555;line-height:1.8;">
-        📍 ${b.address || '—'}<br>
-        🏠 ${b.size ? b.size+'평 ' : ''}${typeLabel}
+        📍 ${esc(b.address||'—')}<br>
+        🏠 ${b.size ? esc(String(b.size))+'평 ' : ''}${typeLabel}
         ${b.price ? ' · ' + parseInt(b.price).toLocaleString() + '원' : ''}
-        ${b.preferred_date ? '<br>📅 ' + b.preferred_date + (b.preferred_time ? ' ' + b.preferred_time : '') : ''}
-        ${b.notes ? '<br>💬 ' + b.notes : ''}
+        ${b.preferred_date ? '<br>📅 ' + esc(b.preferred_date) + (b.preferred_time ? ' ' + esc(b.preferred_time) : '') : ''}
+        ${b.notes ? '<br>💬 ' + esc(b.notes) : ''}
       </div>
       <div style="display:flex;gap:6px;margin-top:10px;align-items:center;">
         <span style="font-size:11px;color:#bbb;flex:1;">${date} 접수</span>
-        <select onchange="updateBookingStatus('${b.id}',this.value,this)"
+        <select onchange="updateBookingStatus('${esc(b.id)}',this.value,this)"
           style="font-size:11px;padding:4px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-family:inherit;">
           <option value="pending"   ${b.status==='pending'   ?'selected':''}>대기중</option>
           <option value="confirmed" ${b.status==='confirmed' ?'selected':''}>확정</option>
           <option value="completed" ${b.status==='completed' ?'selected':''}>완료</option>
           <option value="cancelled" ${b.status==='cancelled' ?'selected':''}>취소</option>
         </select>
-        <a href="tel:${b.phone}" style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;text-decoration:none;">📞 전화</a>
+        <a href="tel:${encodeURIComponent(b.phone||'')}" style="background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;text-decoration:none;">📞 전화</a>
       </div>
     </div>`;
   }).join('');
