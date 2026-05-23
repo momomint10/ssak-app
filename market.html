@@ -384,8 +384,7 @@ const CAT_EMOJI  = {'전체':'🔍','청소기':'🧹','걸레/대걸레':'🫧'
 const STATUS_TXT = { available:'판매중', reserved:'예약중', sold:'판매완료', deleted:'삭제' };
 
 // ── 익명 ID ─────────────────────────────────────────────────
-// ── 유틸 ─────────────────────────────────────────────────────
-function fmtPrice(n){ return Number(n).toLocaleString()+'원'; }
+// fmtPrice removed — utils.js 사용 (2026-05-23)
 
 // ── 상태 ─────────────────────────────────────────────────────
 let page=0, hasMore=true, loading=false, searchKw='', curCat='전체', searchTimer=null;

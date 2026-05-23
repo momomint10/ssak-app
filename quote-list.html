@@ -268,12 +268,7 @@ let allList = [];
 let curStatus = '';
 let curDetail = null;
 
-function toast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.style.opacity = '1';
-  setTimeout(()=> t.style.opacity = '0', 2200);
-}
-
+// toast removed — utils.js 사용 (자동 success/error/info 분류, 2026-05-23)
 // fmtPhone removed — utils.js 사용 (2026-05-23)
 function fmtAmount(n){ return n ? Number(n).toLocaleString() + '원' : '-'; }
 function fmtDate(s){
