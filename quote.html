@@ -663,7 +663,16 @@ function showError(title, desc){
   document.getElementById('error-desc').textContent = desc;
   document.getElementById('error-screen').style.display = 'block';
 }
-// fmtPhone removed — utils.js 사용 (2026-05-23)
+// fmtPhone — quote.html은 게스트 페이지라 utils.js 미로딩 → 자체 정의 유지 필요
+function fmtPhone(p){
+  if (!p) return '';
+  let s = String(p);
+  if (s.startsWith('+82')) s = '0' + s.slice(3);
+  const n = s.replace(/\D/g, '');
+  if (n.length === 11) return n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7);
+  if (n.length === 10) return n.slice(0,3)+'-'+n.slice(3,6)+'-'+n.slice(6);
+  return p;
+}
 // 필수 9개
 const REQUIRED = ['cleanType','housingType','areaType','areaSize','roomCount','bathroomCount','verandaCount','region','desiredDate'];
 function updateProgress(){
