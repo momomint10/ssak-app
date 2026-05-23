@@ -348,14 +348,7 @@ function goSettings() {
 }
 
 // ── 계정 섹션 (Phase 2) ─────────────────────────────────────
-function fmtPhoneE164(p){
-  if (!p) return '';
-  if (p.startsWith('+82')) {
-    const n = '0' + p.slice(3);
-    if (n.length === 11) return n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7);
-  }
-  return p;
-}
+// fmtPhoneE164 removed — utils.js fmtPhone alias 사용
 async function initAccountSection(){
   const u = getCurrentUser ? getCurrentUser() : null;
   const nameEl = document.getElementById('acc-name');

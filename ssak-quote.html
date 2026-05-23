@@ -2537,7 +2537,7 @@ async function generateReport(){
       // 완료 모달 표시
       const modal = document.getElementById('rp-complete-modal');
       const info  = document.getElementById('rp-complete-info');
-      if(info) info.innerHTML = `<b>${name}</b> 고객님께<br>완료 보고서가 발송되었습니다`;
+      if(info) info.innerHTML = `<b>${esc(name)}</b> 고객님께<br>완료 보고서가 발송되었습니다`;
       if(modal){ modal.style.display='flex'; }
     } else {
       toast('❌ 발송 실패: '+(data.error||'오류'));

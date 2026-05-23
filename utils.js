@@ -161,6 +161,22 @@ function fmtDate(str) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
+// ── 전화번호 포맷 (5개 페이지 중복 제거 — 2026-05-23) ────────
+// 입력: '+821012345678' / '01012345678' / '010-1234-5678' / null
+// 출력: '010-1234-5678' (11자) or '010-123-4567' (10자) or 원본
+function fmtPhone(p) {
+  if (!p) return '';
+  let s = String(p);
+  // E.164 +82 → 0
+  if (s.startsWith('+82')) s = '0' + s.slice(3);
+  const n = s.replace(/\D/g, '');
+  if (n.length === 11) return n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7);
+  if (n.length === 10) return n.slice(0,3)+'-'+n.slice(3,6)+'-'+n.slice(6);
+  return p;
+}
+// 호환 alias (my.html 등에서 fmtPhoneE164 사용)
+const fmtPhoneE164 = fmtPhone;
+
 // ── UI 유틸 ────────────────────────────────────────────────────
 let _toastTimer;
 function toast(msg, duration = 2500, kind) {

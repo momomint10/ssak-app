@@ -663,12 +663,7 @@ function showError(title, desc){
   document.getElementById('error-desc').textContent = desc;
   document.getElementById('error-screen').style.display = 'block';
 }
-function fmtPhone(p){
-  const n = (p || '').replace(/\D/g, '');
-  if (n.length === 11) return n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7);
-  return p;
-}
-
+// fmtPhone removed — utils.js 사용 (2026-05-23)
 // 필수 9개
 const REQUIRED = ['cleanType','housingType','areaType','areaSize','roomCount','bathroomCount','verandaCount','region','desiredDate'];
 function updateProgress(){

@@ -225,15 +225,7 @@ function toast(msg) {
   setTimeout(() => t.style.opacity = '0', 2000);
 }
 
-function fmtPhone(p) {
-  if (!p) return '';
-  if (p.startsWith('+82')) {
-    const n = '0' + p.slice(3);
-    if (n.length === 11) return n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7);
-  }
-  return p;
-}
-
+// fmtPhone removed — utils.js 사용 (2026-05-23)
 function fmtTime(ts) {
   if (!ts) return '';
   return new Date(ts).toLocaleString('ko-KR', {

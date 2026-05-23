@@ -274,11 +274,7 @@ function toast(msg){
   setTimeout(()=> t.style.opacity = '0', 2200);
 }
 
-function fmtPhone(p){
-  const n = (p || '').replace(/\D/g, '');
-  if (n.length === 11) return n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7);
-  return p;
-}
+// fmtPhone removed — utils.js 사용 (2026-05-23)
 function fmtAmount(n){ return n ? Number(n).toLocaleString() + '원' : '-'; }
 function fmtDate(s){
   if (!s) return '-';
