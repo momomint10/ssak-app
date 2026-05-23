@@ -671,17 +671,18 @@ select.form-input{cursor:pointer;}
     <div style="margin-bottom:10px;">
       <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);">📋 발송이력 <span id="history-count" style="font-size:13px;color:var(--gray-500);font-weight:400;">(0)</span></div>
     </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-      <button class="chip on" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;">견적요청</button>
-      <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;">계약서</button>
-      <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;">완료보고서</button>
-      <button class="chip" id="hist-filter-drafts" onclick="setHistFilter('drafts')" style="font-size:12px;">임시저장</button>
-      <button class="chip" id="hist-filter-reminders" onclick="setHistFilter('reminders')" style="font-size:12px;">⏰ 예약 발송</button>
-      <span style="margin-left:auto;display:inline-flex;gap:0;border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;">
-        <button class="hist-mode on" id="hist-mode-flat" onclick="setHistMode('flat')" style="padding:5px 10px;background:var(--primary);color:#fff;border:0;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">📋 목록</button>
-        <button class="hist-mode" id="hist-mode-customer" onclick="setHistMode('customer')" style="padding:5px 10px;background:#fff;color:var(--gray-500);border:0;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">👥 고객별</button>
+    <div style="display:flex;gap:6px;flex-wrap:nowrap;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;" id="hist-chip-row">
+      <button class="chip on" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;white-space:nowrap;flex-shrink:0;">견적요청</button>
+      <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;white-space:nowrap;flex-shrink:0;">계약서</button>
+      <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;white-space:nowrap;flex-shrink:0;">완료보고서</button>
+      <button class="chip" id="hist-filter-drafts" onclick="setHistFilter('drafts')" style="font-size:12px;white-space:nowrap;flex-shrink:0;">임시저장</button>
+      <button class="chip" id="hist-filter-reminders" onclick="setHistFilter('reminders')" style="font-size:12px;white-space:nowrap;flex-shrink:0;">⏰ 예약</button>
+      <span style="display:inline-flex;gap:0;border:1px solid var(--gray-200);border-radius:8px;overflow:hidden;flex-shrink:0;margin-left:4px;">
+        <button class="hist-mode on" id="hist-mode-flat" onclick="setHistMode('flat')" style="padding:5px 10px;background:var(--primary);color:#fff;border:0;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;">📋 목록</button>
+        <button class="hist-mode" id="hist-mode-customer" onclick="setHistMode('customer')" style="padding:5px 10px;background:#fff;color:var(--gray-500);border:0;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;">👥 고객별</button>
       </span>
     </div>
+    <style>#hist-chip-row::-webkit-scrollbar{display:none}</style>
   </div>
 
   <div class="card">
