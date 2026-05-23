@@ -250,7 +250,7 @@ select.form-input{cursor:pointer;}
   </div>
   <div class="tab-wrap">
     <div class="tabs-seg">
-      <button class="tab active" id="tab-quote"    onclick="switchTab('quote',this)">견적발송</button>
+      <button class="tab active" id="tab-quote"    onclick="switchTab('quote',this)">견적요청</button>
       <button class="tab"        id="tab-contract" onclick="switchTab('contract',this)">계약서</button>
       <button class="tab"        id="tab-report"   onclick="switchTab('report',this)">완료보고서</button>
       <button class="tab"        id="tab-history"  onclick="switchTab('history',this)">발송이력</button>
@@ -261,20 +261,20 @@ select.form-input{cursor:pointer;}
 <!-- 견적 -->
 <div id="page-quote" class="page active">
 <div id="q-landing">
-  <!-- 정밀 견적 진입 카드 (design.css .ds-entry-card 컴포넌트 사용) -->
+  <!-- 견적요청서 진입 카드 (design.css .ds-entry-card 컴포넌트 사용) -->
   <div class="ds-entry-card">
-    <div class="ds-entry-ico">🎯</div>
-    <div class="ds-entry-title">정밀 견적</div>
+    <div class="ds-entry-ico">📝</div>
+    <div class="ds-entry-title">견적요청서</div>
     <div class="ds-entry-desc">
       고객이 평수·사진을 직접 입력하면<br>받은 정보 보고 맞춤 견적을 발송합니다
     </div>
     <button class="ds-entry-btn" onclick="location.href='quote-list.html'">
-      🎯 정밀 견적 관리 →
+      📝 견적요청서 관리 →
     </button>
   </div>
 
   <div class="card" style="margin-top:12px;">
-    <div class="card-title" style="margin-bottom:12px;">📋 정밀 견적 흐름</div>
+    <div class="card-title" style="margin-bottom:12px;">📋 견적요청서 흐름</div>
     <div style="display:flex;flex-direction:column;gap:12px;">
       <div style="display:flex;align-items:flex-start;gap:12px;">
         <div style="width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
@@ -672,7 +672,7 @@ select.form-input{cursor:pointer;}
       <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;color:var(--gray-900);">📋 발송이력 <span id="history-count" style="font-size:13px;color:var(--gray-500);font-weight:400;">(0)</span></div>
     </div>
     <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-      <button class="chip on" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;">견적발송</button>
+      <button class="chip on" id="hist-filter-quote" onclick="setHistFilter('quote')" style="font-size:12px;">견적요청</button>
       <button class="chip" id="hist-filter-contract" onclick="setHistFilter('contract')" style="font-size:12px;">계약서</button>
       <button class="chip" id="hist-filter-report" onclick="setHistFilter('report')" style="font-size:12px;">완료보고서</button>
       <button class="chip" id="hist-filter-drafts" onclick="setHistFilter('drafts')" style="font-size:12px;">임시저장</button>
@@ -755,7 +755,7 @@ function switchTab(name,btn){
   if(pageEl) pageEl.classList.add('active');
   if(name==='settings') loadSettingsForm();
   if(name==='history') renderHistory();
-  // 견적발송: 탭 전환 시 항상 랜딩 화면으로
+  // 견적요청: 탭 전환 시 항상 랜딩 화면으로
   if(name==='quote'){
     document.getElementById('q-landing').style.display='';
     document.getElementById('q-form-body').style.display='none';
@@ -770,7 +770,7 @@ function switchTab(name,btn){
 }
 
 // ── 랜딩 → 폼 전환 ───────────────────────────────────────────
-// 빠른 견적 기능 제거 (2026-05-17) — 모든 호출을 정밀 견적으로 redirect
+// 빠른 견적 기능 제거 (2026-05-17) — 모든 호출을 견적요청서 흐름으로 redirect
 function showQuoteForm(){
   location.href = 'quote-list.html';
 }
