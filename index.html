@@ -297,6 +297,33 @@
   </button>
 </nav>
 
+<!-- 알림 설정 모달 (Phase 1 리마인더) -->
+<div id="reminder-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:16px;max-width:360px;width:100%;padding:24px;">
+    <div style="font-size:18px;font-weight:900;margin-bottom:4px;">🔔 일정 리마인더</div>
+    <div style="font-size:13px;color:#6B7684;margin-bottom:20px;">매일 설정 시간에 당일 일정 알림을 받습니다</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #F1F4F6;">
+      <div style="font-size:15px;font-weight:600;">알림 받기</div>
+      <label style="position:relative;display:inline-block;width:50px;height:28px;">
+        <input type="checkbox" id="reminder-enabled" style="opacity:0;width:0;height:0;">
+        <span id="reminder-slider" style="position:absolute;cursor:pointer;inset:0;background:#C8D0DA;border-radius:28px;transition:0.2s;"></span>
+        <span id="reminder-knob" style="position:absolute;content:'';height:22px;width:22px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:0.2s;"></span>
+      </label>
+    </div>
+    <div id="reminder-time-row" style="display:flex;align-items:center;justify-content:space-between;padding:16px 0;">
+      <div>
+        <div style="font-size:15px;font-weight:600;">발송 시각</div>
+        <div style="font-size:12px;color:#9AA5B4;margin-top:2px;">06:00 ~ 11:00 · 15분 단위</div>
+      </div>
+      <select id="reminder-time" style="font-size:15px;font-weight:600;padding:8px 12px;border:1px solid #E4E9EE;border-radius:8px;background:#fff;"></select>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:20px;">
+      <button onclick="closeReminderModal()" style="flex:1;padding:12px;border:1px solid #E4E9EE;background:#fff;border-radius:10px;font-size:14px;font-weight:600;color:#6B7684;cursor:pointer;">닫기</button>
+      <button onclick="saveReminderSettings()" style="flex:2;padding:12px;border:none;background:#FF385C;color:#fff;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">저장</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 <script src="utils.js"></script>
 <script>
@@ -432,54 +459,109 @@ loadUser();
       });
     }
   
-// ── 푸시 알림 ───────────────────────────────────────────────
+// ── 푸시 알림 + 일정 리마인더 (Phase 1) ─────────────────────
+// 06:00 ~ 11:00, 15분 단위 시간 옵션 채우기
+function fillReminderTimes() {
+  const sel = document.getElementById('reminder-time');
+  if (!sel || sel.options.length) return;
+  for (let h = 6; h <= 11; h++) {
+    for (let m = 0; m < 60; m += 15) {
+      if (h === 11 && m > 0) break;
+      const v = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+      const o = document.createElement('option');
+      o.value = v; o.textContent = v;
+      sel.appendChild(o);
+    }
+  }
+}
+function syncEnabledUI(on) {
+  const slider = document.getElementById('reminder-slider');
+  const knob = document.getElementById('reminder-knob');
+  if (slider) slider.style.background = on ? '#FF385C' : '#C8D0DA';
+  if (knob) knob.style.transform = on ? 'translateX(22px)' : 'translateX(0)';
+  const timeRow = document.getElementById('reminder-time-row');
+  if (timeRow) timeRow.style.opacity = on ? '1' : '0.4';
+  const sel = document.getElementById('reminder-time');
+  if (sel) sel.disabled = !on;
+}
+function closeReminderModal() {
+  const m = document.getElementById('reminder-modal');
+  if (m) m.style.display = 'none';
+}
+
+// 🔔 버튼 클릭 → 모달 열기 (필요 시 구독 먼저 생성)
 async function togglePushNotification() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     toast('이 브라우저는 푸시 알림을 지원하지 않습니다');
     return;
   }
-
-  const perm = Notification.permission;
-
-  // 이미 거부된 경우
-  if (perm === 'denied') {
+  if (Notification.permission === 'denied') {
     toast('브라우저 설정에서 알림을 허용해 주세요 🔔');
     return;
   }
 
+  fillReminderTimes();
+  const enabledEl = document.getElementById('reminder-enabled');
+  const timeEl = document.getElementById('reminder-time');
   const reg = await navigator.serviceWorker.ready;
-  const existing = await reg.pushManager.getSubscription();
+  const sub = await reg.pushManager.getSubscription();
 
-  if (existing) {
-    // 이미 구독 중 → 해제 확인
-    if (!confirm('푸시 알림을 해제할까요?')) return;
-    await existing.unsubscribe();
-    await fetch(SERVER + '/api/push/subscribe', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ endpoint: existing.endpoint })
-    }).catch(() => {});
-    updateBellState(false);
-    toast('🔕 알림이 해제됐습니다');
-    return;
+  if (sub) {
+    try {
+      const r = await fetch(SERVER + '/api/push/reminder?endpoint=' + encodeURIComponent(sub.endpoint));
+      const d = await r.json();
+      const cfg = (d && d.data) || { reminder_hour: 8, reminder_minute: 0, reminder_enabled: true };
+      enabledEl.checked = cfg.reminder_enabled !== false;
+      const hh = String(cfg.reminder_hour ?? 8).padStart(2,'0');
+      const mm = String(cfg.reminder_minute ?? 0).padStart(2,'0');
+      timeEl.value = `${hh}:${mm}`;
+    } catch(e) {
+      enabledEl.checked = true;
+      timeEl.value = '08:00';
+    }
+  } else {
+    enabledEl.checked = true;
+    timeEl.value = '08:00';
   }
 
-  // 권한 요청
-  const permission = await Notification.requestPermission();
-  if (permission !== 'granted') {
-    toast('알림 권한이 거부됐습니다');
-    return;
-  }
+  syncEnabledUI(enabledEl.checked);
+  enabledEl.onchange = () => syncEnabledUI(enabledEl.checked);
+  document.getElementById('reminder-modal').style.display = 'flex';
+}
 
-  // VAPID 공개키 가져오기
+// 모달 [저장] 클릭
+async function saveReminderSettings() {
+  const enabled = document.getElementById('reminder-enabled').checked;
+  const [hhStr, mmStr] = document.getElementById('reminder-time').value.split(':');
+  const reminder_hour = parseInt(hhStr, 10);
+  const reminder_minute = parseInt(mmStr, 10);
+
   try {
-    const keyRes = await fetch(SERVER + '/api/push/vapid-key').then(r => r.json());
-    const vapidKey = urlBase64ToUint8Array(keyRes.publicKey);
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
 
-    const sub = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: vapidKey
-    });
+    if (!enabled) {
+      // 구독 자체는 유지, 서버에서 reminder_enabled=false
+      if (sub) {
+        await fetch(SERVER + '/api/push/reminder', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ endpoint: sub.endpoint, reminder_enabled: false })
+        });
+      }
+      updateBellState(false);
+      closeReminderModal();
+      toast('🔕 리마인더가 꺼졌습니다');
+      return;
+    }
+
+    if (!sub) {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') { toast('알림 권한이 거부됐습니다'); return; }
+      const keyRes = await fetch(SERVER + '/api/push/vapid-key').then(r => r.json());
+      const vapidKey = urlBase64ToUint8Array(keyRes.publicKey);
+      sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: vapidKey });
+    }
 
     const { endpoint } = sub;
     const keys = sub.toJSON().keys;
@@ -491,15 +573,22 @@ async function togglePushNotification() {
       body: JSON.stringify({
         endpoint, p256dh: keys.p256dh, auth: keys.auth,
         anon_id: getAnon(),
-        deviceId: cfg.company || 'unknown'
+        deviceId: cfg.company || 'unknown',
+        reminder_hour, reminder_minute
       })
+    });
+    await fetch(SERVER + '/api/push/reminder', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint, reminder_enabled: true, reminder_hour, reminder_minute })
     });
 
     updateBellState(true);
-    toast('🔔 알림이 설정됐습니다! 신규 예약·계약 완료 시 알림을 받습니다');
+    closeReminderModal();
+    toast(`🔔 매일 ${String(reminder_hour).padStart(2,'0')}:${String(reminder_minute).padStart(2,'0')}에 알림을 받습니다`);
   } catch(e) {
-    console.error('Push 구독 오류:', e);
-    toast('알림 설정 중 오류가 발생했습니다: ' + e.message);
+    console.error('Reminder save error:', e);
+    toast('저장 중 오류: ' + e.message);
   }
 }
 
