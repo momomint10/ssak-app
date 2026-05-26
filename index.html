@@ -460,13 +460,12 @@ loadUser();
     }
   
 // ── 푸시 알림 + 일정 리마인더 (Phase 1) ─────────────────────
-// 06:00 ~ 11:00, 15분 단위 시간 옵션 채우기
+// 00:00 ~ 23:45, 15분 단위 시간 옵션 채우기 (24시간 전체)
 function fillReminderTimes() {
   const sel = document.getElementById('reminder-time');
   if (!sel || sel.options.length) return;
-  for (let h = 6; h <= 11; h++) {
+  for (let h = 0; h <= 23; h++) {
     for (let m = 0; m < 60; m += 15) {
-      if (h === 11 && m > 0) break;
       const v = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
       const o = document.createElement('option');
       o.value = v; o.textContent = v;

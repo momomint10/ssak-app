@@ -189,6 +189,23 @@ textarea{resize:vertical;min-height:90px;line-height:1.6;}
   z-index:999;opacity:0;transition:opacity 0.25s;
   pointer-events:none;white-space:nowrap;
 }
+
+/* === 카드 스와이프 삭제 (schedule.html Phase 7 패턴) === */
+.req-card-wrap{position:relative;overflow:hidden;border-radius:12px;margin:10px 14px 0;}
+.req-card-wrap .req-card{margin:0;transition:transform 0.18s ease;will-change:transform;touch-action:pan-y;}
+.swipe-action{position:absolute;top:0;right:0;height:100%;width:90px;display:flex;align-items:center;justify-content:center;background:#DC2626;color:#fff;font-size:13px;font-weight:700;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer;font-family:inherit;border:none;}
+
+/* 휴지통 아이콘 (헤더) */
+.btn-trash{background:none;border:none;font-size:20px;cursor:pointer;padding:6px 8px;position:relative;color:#888;margin-left:auto;font-family:inherit;}
+.btn-trash:active{color:#DC2626;}
+.btn-trash .trash-badge{position:absolute;top:-2px;right:-2px;background:#DC2626;color:#fff;font-size:9px;font-weight:800;border-radius:8px;min-width:14px;padding:1px 4px;line-height:1.1;}
+
+/* 휴지통 모달 카드 (단순 행) */
+.trash-row{display:flex;align-items:center;gap:10px;background:#fff;margin:8px 0;padding:12px 14px;border-radius:10px;border:1px solid #F3F4F6;}
+.trash-row-info{flex:1;min-width:0;}
+.trash-empty-hint{font-size:11.5px;color:#999;padding:4px 4px 8px;line-height:1.5;}
+.btn-restore{background:#fff;color:#0369A1;border:1.5px solid #BAE6FD;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.btn-restore:active{background:#F0F9FF;}
 </style>
 <script src="utils.js"></script>
 </head>
@@ -202,6 +219,7 @@ textarea{resize:vertical;min-height:90px;line-height:1.6;}
         <div class="h-title">견적요청서</div>
         <div class="h-sub">고객 정보 수집 → 견적 발송</div>
       </div>
+      <button class="btn-trash" id="btn-trash" onclick="openTrash()" title="휴지통" style="display:none;">🗑<span class="trash-badge" id="trash-badge">0</span></button>
       <button class="btn-new" onclick="openNew()">＋ 새 요청</button>
     </div>
     <div class="status-tabs" id="status-tabs">
@@ -258,6 +276,20 @@ textarea{resize:vertical;min-height:90px;line-height:1.6;}
   </div>
 </div>
 
+<!-- 휴지통 -->
+<div class="ov" id="trash-ov" onclick="if(event.target===this)closeTrash()">
+  <div class="sh" style="max-height:80vh;">
+    <div class="sh-hd"></div>
+    <div class="sh-bar">
+      <div class="sh-ttl">🗑 휴지통</div>
+      <button class="sh-cancel" onclick="closeTrash()">닫기</button>
+    </div>
+    <div class="sh-body" id="trash-body">
+      <div class="empty">불러오는 중...</div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -293,21 +325,25 @@ document.getElementById('new-phone').addEventListener('input', (e) => {
   else e.target.value = n.slice(0,3) + '-' + n.slice(3,7) + '-' + n.slice(7);
 });
 
+function refreshCounts(){
+  const counts = {all: allList.length, submitted:0, pending:0, quoted:0, cancelled:0, contracted:0};
+  allList.forEach(x => { counts[x.status] = (counts[x.status]||0) + 1; });
+  document.getElementById('n-all').textContent = counts.all;
+  document.getElementById('n-submitted').textContent = counts.submitted;
+  document.getElementById('n-pending').textContent = counts.pending;
+  document.getElementById('n-quoted').textContent = counts.quoted;
+  document.getElementById('n-cancelled').textContent = counts.cancelled;
+}
+
 async function loadList(){
   try {
     const r = await fetch(SERVER + '/api/quote-requests');
     const d = await r.json();
     if (!d.success) throw new Error(d.error);
     allList = d.data || [];
-    // 카운트 갱신
-    const counts = {all: allList.length, submitted:0, pending:0, quoted:0, cancelled:0, contracted:0};
-    allList.forEach(x => { counts[x.status] = (counts[x.status]||0) + 1; });
-    document.getElementById('n-all').textContent = counts.all;
-    document.getElementById('n-submitted').textContent = counts.submitted;
-    document.getElementById('n-pending').textContent = counts.pending;
-    document.getElementById('n-quoted').textContent = counts.quoted;
-    document.getElementById('n-cancelled').textContent = counts.cancelled;
+    refreshCounts();
     renderList();
+    updateTrashBadge();
   } catch (e) {
     document.getElementById('list').innerHTML =
       '<div class="empty"><div class="empty-ico">⚠️</div>불러오기 실패<br><small>' + (e.message||'') + '</small></div>';
@@ -324,6 +360,7 @@ function renderList(){
     return;
   }
   document.getElementById('list').innerHTML = filtered.map(card).join('');
+  bindSwipeHandlers();
 }
 
 function card(r){
@@ -336,15 +373,18 @@ function card(r){
   if (Array.isArray(r.site_conditions) && r.site_conditions.length) tags.push('⚠️ ' + r.site_conditions.length);
   if (Array.isArray(r.appliance_options) && r.appliance_options.length) tags.push('🔌 ' + r.appliance_options.length);
   if (Array.isArray(r.photos) && r.photos.length) tags.push('📸 ' + r.photos.length);
-  return `<div class="req-card${isNew?' new':''}" onclick="openDetail('${r.id}')">
-    <div class="rc-top">
-      <span class="rc-status ${r.status}">${esc(statusLabel[r.status]||r.status)}</span>
-      <span class="rc-time">${fmtDate(r.submitted_at || r.created_at)}</span>
+  return `<div class="req-card-wrap" data-id="${esc(r.id)}">
+    <div class="req-card${isNew?' new':''}" onclick="openDetail('${esc(r.id)}')">
+      <div class="rc-top">
+        <span class="rc-status ${r.status}">${esc(statusLabel[r.status]||r.status)}</span>
+        <span class="rc-time">${fmtDate(r.submitted_at || r.created_at)}</span>
+      </div>
+      <div class="rc-name">${esc(r.customer_name || '(이름 미입력)')}</div>
+      <div class="rc-phone">${fmtPhone(r.customer_phone)}</div>
+      ${tags.length ? `<div class="rc-info">${tags.map(t => `<span class="rc-tag">${t}</span>`).join('')}</div>` : ''}
+      ${r.final_quote_amount ? `<div class="rc-amount">${fmtAmount(r.final_quote_amount)}</div>` : ''}
     </div>
-    <div class="rc-name">${esc(r.customer_name || '(이름 미입력)')}</div>
-    <div class="rc-phone">${fmtPhone(r.customer_phone)}</div>
-    ${tags.length ? `<div class="rc-info">${tags.map(t => `<span class="rc-tag">${t}</span>`).join('')}</div>` : ''}
-    ${r.final_quote_amount ? `<div class="rc-amount">${fmtAmount(r.final_quote_amount)}</div>` : ''}
+    <button class="swipe-action" type="button" onclick="event.stopPropagation();swipeDelete('${esc(r.id)}')">🗑 삭제</button>
   </div>`;
 }
 
@@ -648,6 +688,157 @@ async function cancelReq(){
   } catch (e) {
     toast('오류: ' + (e.message||''));
   }
+}
+
+// ── 카드 스와이프 → 빠른 삭제 (schedule.html Phase 7 패턴) ─────
+function bindSwipeHandlers() {
+  const wraps = document.querySelectorAll('.req-card-wrap');
+  wraps.forEach(wrap => {
+    const cardEl = wrap.querySelector('.req-card');
+    if (!cardEl) return;
+    let startX = 0, currentX = 0, dragging = false;
+    const openOffset = -90;
+    const reset = () => { cardEl.style.transform = 'translateX(0)'; wrap._open = false; };
+
+    cardEl.addEventListener('touchstart', (e) => {
+      // 다른 열린 카드 닫기
+      document.querySelectorAll('.req-card-wrap').forEach(w => {
+        if (w !== wrap && w._open) {
+          const c = w.querySelector('.req-card');
+          if (c) c.style.transform = 'translateX(0)';
+          w._open = false;
+        }
+      });
+      startX = e.touches[0].clientX;
+      currentX = startX;
+      dragging = true;
+    }, { passive: true });
+
+    cardEl.addEventListener('touchmove', (e) => {
+      if (!dragging) return;
+      currentX = e.touches[0].clientX;
+      const dx = Math.min(0, Math.max(currentX - startX, openOffset));
+      cardEl.style.transform = `translateX(${dx}px)`;
+    }, { passive: true });
+
+    cardEl.addEventListener('touchend', () => {
+      if (!dragging) return;
+      dragging = false;
+      const dx = currentX - startX;
+      if (dx < -45) {
+        cardEl.style.transform = `translateX(${openOffset}px)`;
+        wrap._open = true;
+      } else {
+        reset();
+      }
+    });
+
+    // 열린 상태에서 카드 클릭 시 닫기 (상세 진입 방지)
+    cardEl.addEventListener('click', (e) => {
+      if (wrap._open) { e.stopPropagation(); e.preventDefault(); reset(); }
+    }, true);
+  });
+}
+
+async function swipeDelete(id){
+  if (!confirm('이 견적 요청을 삭제할까요?\n(7일간 휴지통에 보관 후 자동 영구 삭제)')) return;
+  try {
+    const res = await fetch(SERVER + '/api/quote-requests/' + id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete' })
+    });
+    const d = await res.json();
+    if (!d.success) { toast(d.error || '삭제 실패'); return; }
+    toast('🗑 휴지통으로 이동');
+    // 낙관적 업데이트: 화면에서 즉시 제거
+    allList = allList.filter(x => x.id !== id);
+    refreshCounts();
+    renderList();
+    updateTrashBadge();
+  } catch (e) {
+    toast('오류: ' + (e.message||''));
+  }
+}
+
+// ── 휴지통 ─────
+let trashList = [];
+
+async function updateTrashBadge(){
+  try {
+    const r = await fetch(SERVER + '/api/quote-requests/trash');
+    const d = await r.json();
+    if (!d.success) return;
+    const n = (d.data || []).length;
+    const btn = document.getElementById('btn-trash');
+    const badge = document.getElementById('trash-badge');
+    if (!btn || !badge) return;
+    if (n > 0) {
+      btn.style.display = 'inline-block';
+      badge.textContent = n;
+    } else {
+      btn.style.display = 'none';
+    }
+  } catch (e) { /* silent */ }
+}
+
+async function openTrash(){
+  document.getElementById('trash-ov').classList.add('on');
+  document.getElementById('trash-body').innerHTML = '<div class="empty">불러오는 중...</div>';
+  try {
+    const r = await fetch(SERVER + '/api/quote-requests/trash');
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error);
+    trashList = d.data || [];
+    renderTrash();
+  } catch (e) {
+    document.getElementById('trash-body').innerHTML = '<div class="empty">오류: ' + esc(e.message || '') + '</div>';
+  }
+}
+
+function closeTrash(){ document.getElementById('trash-ov').classList.remove('on'); }
+
+function renderTrash(){
+  if (!trashList.length) {
+    document.getElementById('trash-body').innerHTML = '<div class="empty"><div class="empty-ico">🗑</div>휴지통이 비어 있습니다</div>';
+    return;
+  }
+  const html = '<div class="trash-empty-hint">💡 7일 후 자동 영구 삭제됩니다. 그 전에 ⤴ 복구 가능.</div>' +
+    trashList.map(trashRow).join('');
+  document.getElementById('trash-body').innerHTML = html;
+}
+
+function trashRow(r){
+  const deletedAt = r.deleted_at
+    ? new Date(r.deleted_at).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : '';
+  const amount = r.final_quote_amount ? ` · ${fmtAmount(r.final_quote_amount)}` : '';
+  return `<div class="trash-row">
+    <div class="trash-row-info">
+      <div style="font-size:14px;font-weight:700;color:#1A1F36;">${esc(r.customer_name || '(이름 미입력)')}</div>
+      <div style="font-size:12.5px;color:#666;margin-top:2px;">${fmtPhone(r.customer_phone)}${amount}</div>
+      <div style="font-size:10.5px;color:#999;margin-top:4px;">🗑 ${deletedAt} 삭제</div>
+    </div>
+    <button class="btn-restore" onclick="restoreItem('${esc(r.id)}')">⤴ 복구</button>
+  </div>`;
+}
+
+async function restoreItem(id){
+  if (!confirm('이 견적 요청을 복구할까요?')) return;
+  try {
+    const res = await fetch(SERVER + '/api/quote-requests/' + id, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'restore' })
+    });
+    const d = await res.json();
+    if (!d.success) { toast(d.error || '복구 실패'); return; }
+    toast('⤴ 복구되었습니다');
+    trashList = trashList.filter(x => x.id !== id);
+    renderTrash();
+    updateTrashBadge();
+    loadList();  // 본 목록 갱신
+  } catch (e) { toast('오류: ' + (e.message || '')); }
 }
 
 loadList();
