@@ -46,23 +46,24 @@
   --sp-md: 16px;
   --sp-lg: 24px;
 
-  /* ── 3. Elevation 시스템 (5단계, 다층 그림자) ──────────────────
-   * Toss·카카오뱅크 스타일: 부드러운 ambient + 살짝의 directional
+  /* ── 3. Elevation 시스템 (5단계, 강조된 다층 그림자) ───────────
+   * Toss·카카오뱅크 스타일 + 입체감 강조
    * 카드 상단 highlight와 함께 쓰면 광원이 위에서 비치는 효과 */
-  --sh-xs: 0 1px 2px rgba(20, 30, 50, 0.04), 0 1px 1px rgba(20, 30, 50, 0.03);
-  --sh-sm: 0 2px 4px rgba(20, 30, 50, 0.04), 0 4px 8px rgba(20, 30, 50, 0.06), 0 0 0 1px rgba(20, 30, 50, 0.02);
-  --sh-md: 0 4px 8px rgba(20, 30, 50, 0.05), 0 8px 16px rgba(20, 30, 50, 0.08), 0 0 0 1px rgba(20, 30, 50, 0.02);
-  --sh-lg: 0 8px 16px rgba(20, 30, 50, 0.06), 0 16px 32px rgba(20, 30, 50, 0.12), 0 0 0 1px rgba(20, 30, 50, 0.02);
-  --sh-xl: 0 16px 32px rgba(20, 30, 50, 0.10), 0 32px 64px rgba(20, 30, 50, 0.18), 0 0 0 1px rgba(20, 30, 50, 0.02);
+  --sh-xs: 0 1px 2px rgba(20, 30, 50, 0.06), 0 1px 1px rgba(20, 30, 50, 0.04);
+  --sh-sm: 0 2px 6px rgba(20, 30, 50, 0.07), 0 6px 12px rgba(20, 30, 50, 0.09), 0 0 0 1px rgba(20, 30, 50, 0.03);
+  --sh-md: 0 4px 12px rgba(20, 30, 50, 0.09), 0 12px 24px rgba(20, 30, 50, 0.13), 0 0 0 1px rgba(20, 30, 50, 0.03);
+  --sh-lg: 0 8px 20px rgba(20, 30, 50, 0.10), 0 20px 40px rgba(20, 30, 50, 0.17), 0 0 0 1px rgba(20, 30, 50, 0.03);
+  --sh-xl: 0 16px 36px rgba(20, 30, 50, 0.14), 0 32px 64px rgba(20, 30, 50, 0.22), 0 0 0 1px rgba(20, 30, 50, 0.03);
 
   /* 컬러 그림자 — CTA·강조 카드용 (브랜드 색을 자체 발광하는 효과) */
-  --sh-pr:   0 4px 12px rgba(255, 56, 92, 0.22), 0 8px 24px rgba(255, 56, 92, 0.12);
-  --sh-pr-sm: 0 2px 8px rgba(255, 56, 92, 0.18);
-  --sh-teal: 0 4px 12px rgba(0, 200, 150, 0.22), 0 8px 24px rgba(0, 200, 150, 0.12);
+  --sh-pr:   0 4px 14px rgba(255, 56, 92, 0.32), 0 10px 28px rgba(255, 56, 92, 0.20), 0 1px 2px rgba(255, 56, 92, 0.18);
+  --sh-pr-sm: 0 2px 8px rgba(255, 56, 92, 0.25), 0 4px 12px rgba(255, 56, 92, 0.12);
+  --sh-pr-lg: 0 8px 24px rgba(255, 56, 92, 0.40), 0 16px 40px rgba(255, 56, 92, 0.24);
+  --sh-teal: 0 4px 14px rgba(0, 200, 150, 0.32), 0 10px 28px rgba(0, 200, 150, 0.20);
 
   /* 카드 상단 highlight — inset 1px 흰색으로 광원 시뮬레이션 */
-  --hl-top:  inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  --hl-top-strong: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --hl-top:  inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --hl-top-strong: inset 0 1px 0 rgba(255, 255, 255, 1.0);
 
   /* 입력 필드 inset (살짝 들어간 느낌) */
   --sh-inset-sm: inset 0 1px 2px rgba(20, 30, 50, 0.04);
@@ -963,4 +964,123 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-swipe-wrap.is-new .ds-swipe-card {
   border-left: 3px solid var(--c-pr);
   padding-left: 13px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+ * 2026-05-26 추가: 글로벌 입체감 HOOK
+ * 마이그레이션 안 된 페이지(인라인 .btn, .header, .card 등)도
+ * 자동으로 입체감을 갖도록 글로벌 셀렉터로 box-shadow + transition 부여.
+ * 페이지에서 명시적으로 override하지 않으면 자동 적용됨.
+ * ════════════════════════════════════════════════════════════════ */
+
+/* ── 페이지 공통 헤더 hook (.header, .home-header, .page-header) ─── */
+:where(.header, .home-header, .page-header):not(.ds-page-header) {
+  box-shadow: 0 1px 0 rgba(20, 30, 50, 0.03), 0 4px 14px rgba(20, 30, 50, 0.05);
+  backdrop-filter: saturate(180%) blur(8px);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  position: relative;
+}
+
+/* ── 페이지 공통 카드 hook (페이지별 자체 카드 클래스도 포함) ───── */
+:where(
+  .card,
+  .req-card,
+  .booking-card,
+  .mockup-card,
+  .menu-item,
+  .stat-card,
+  .today-card,
+  .quick-btn,
+  .post-card,
+  .listing-card,
+  .item-card,
+  .worker-card,
+  .job-card,
+  .chat-card,
+  .chat-item,
+  .sign-card,
+  .contract-card,
+  .amount-card,
+  .month-cell,
+  .day-cell
+):not(.ds-card):not(.ds-swipe-card) {
+  box-shadow: var(--sh-sm), var(--hl-top);
+  transition: box-shadow var(--dur-normal, 180ms) var(--ease-out, ease-out),
+              transform var(--dur-fast, 120ms) var(--ease-spring, ease-out);
+}
+:where(
+  .card,
+  .req-card,
+  .booking-card,
+  .today-card,
+  .quick-btn,
+  .post-card,
+  .listing-card,
+  .worker-card,
+  .job-card,
+  .menu-item
+):active {
+  transform: translateY(1px);
+  box-shadow: var(--sh-xs), var(--hl-top);
+}
+
+/* 강조 카드 (오늘 할 일·CTA 카드) — md 강도 + hl-top-strong */
+:where(.today-card, .amount-card, .stat-card.primary):not(.ds-card) {
+  box-shadow: var(--sh-md), var(--hl-top-strong);
+}
+
+/* ── 페이지 공통 Primary 버튼 hook (코랄 색 사용 + 일정 크기) ──── */
+:where(button.btn, .btn-primary, .btn-new, .btn-add, .btn-send, .btn-pr):not(.ghost):not(.ds-btn-ghost):not(.ds-btn-secondary):not([disabled]) {
+  background: linear-gradient(180deg, #FF5070 0%, var(--c-pr) 100%) !important;
+  box-shadow: var(--sh-pr), var(--hl-top-strong);
+  transition: box-shadow var(--dur-normal, 180ms) var(--ease-out, ease-out),
+              transform var(--dur-fast, 120ms) var(--ease-spring, ease-out),
+              opacity var(--dur-fast, 120ms);
+}
+:where(button.btn, .btn-primary, .btn-new):not(.ghost):not(.ds-btn-ghost):active {
+  transform: translateY(1px);
+  box-shadow: var(--sh-pr-sm), var(--hl-top);
+}
+
+/* ── Ghost/Secondary 버튼은 컬러 그림자 제외 ───────────────────── */
+:where(.btn.ghost, .btn-ghost, .btn-secondary, .btn-cancel) {
+  box-shadow: var(--sh-xs);
+  transition: box-shadow var(--dur-normal, 180ms) var(--ease-out, ease-out),
+              transform var(--dur-fast, 120ms) var(--ease-spring, ease-out);
+}
+
+/* ── 입력 필드 hook (input/textarea — 모든 페이지) ────────────── */
+:where(input[type="text"], input[type="tel"], input[type="number"], input[type="email"], input[type="password"], textarea):not(.ds-input):not([readonly]) {
+  box-shadow: var(--sh-inset-sm);
+  transition: border-color var(--dur-normal, 180ms) var(--ease-out, ease-out),
+              background var(--dur-normal, 180ms) var(--ease-out, ease-out),
+              box-shadow var(--dur-normal, 180ms) var(--ease-out, ease-out);
+}
+:where(input:focus, textarea:focus):not(.ds-input) {
+  box-shadow: var(--sh-inset-sm), 0 0 0 4px rgba(255, 56, 92, 0.10);
+}
+
+/* ── 오버레이 hook (모든 페이지의 .ov / .overlay / .modal-overlay) ─ */
+:where(.ov, .overlay, .modal-overlay):not(.ds-overlay) {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ── 바텀시트 hook (모든 페이지의 .sh / .sheet / .bottom-sheet) ── */
+:where(.sh, .sheet, .bottom-sheet):not(.ds-sheet) {
+  box-shadow: var(--sh-xl), var(--hl-top-strong);
+}
+
+/* ── 하단 네비 글래스모피즘 강화 (.ds-nav 이미 정의됨, 보강) ───── */
+.ds-nav {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 -1px 0 rgba(20, 30, 50, 0.04), 0 -4px 14px rgba(20, 30, 50, 0.06);
+}
+
+/* ── 카드 active feedback (전 페이지 공통) ─────────────────────── */
+.ds-card:active,
+.ds-swipe-wrap:active .ds-swipe-card:not(:has(.swipe-action.open)) {
+  /* 카드가 살짝 함몰 */
 }
