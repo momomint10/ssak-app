@@ -191,9 +191,10 @@ textarea{resize:vertical;min-height:90px;line-height:1.6;}
 }
 
 /* === 카드 스와이프 삭제 (schedule.html Phase 7 패턴) === */
-.req-card-wrap{position:relative;overflow:hidden;border-radius:12px;margin:10px 14px 0;}
-.req-card-wrap .req-card{margin:0;transition:transform 0.18s ease;will-change:transform;touch-action:pan-y;}
-.swipe-action{position:absolute;top:0;right:0;height:100%;width:90px;display:flex;align-items:center;justify-content:center;background:#DC2626;color:#fff;font-size:13px;font-weight:700;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer;font-family:inherit;border:none;}
+.req-card-wrap{position:relative;overflow:hidden;border-radius:12px;margin:10px 14px 0;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
+.req-card-wrap .req-card{margin:0;box-shadow:none;transition:transform 0.18s ease;will-change:transform;touch-action:pan-y;position:relative;z-index:1;}
+.swipe-action{position:absolute;top:0;right:0;height:100%;width:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:#DC2626;color:#fff;font-size:11.5px;font-weight:700;border:none;cursor:pointer;font-family:inherit;z-index:0;}
+.swipe-action::before{content:'🗑';font-size:18px;}
 
 /* 휴지통 아이콘 (헤더) */
 .btn-trash{background:none;border:none;font-size:20px;cursor:pointer;padding:6px 8px;position:relative;color:#888;margin-left:auto;font-family:inherit;}
@@ -374,6 +375,7 @@ function card(r){
   if (Array.isArray(r.appliance_options) && r.appliance_options.length) tags.push('🔌 ' + r.appliance_options.length);
   if (Array.isArray(r.photos) && r.photos.length) tags.push('📸 ' + r.photos.length);
   return `<div class="req-card-wrap" data-id="${esc(r.id)}">
+    <button class="swipe-action" type="button" onclick="event.stopPropagation();swipeDelete('${esc(r.id)}')" aria-label="삭제">삭제</button>
     <div class="req-card${isNew?' new':''}" onclick="openDetail('${esc(r.id)}')">
       <div class="rc-top">
         <span class="rc-status ${r.status}">${esc(statusLabel[r.status]||r.status)}</span>
@@ -384,7 +386,6 @@ function card(r){
       ${tags.length ? `<div class="rc-info">${tags.map(t => `<span class="rc-tag">${t}</span>`).join('')}</div>` : ''}
       ${r.final_quote_amount ? `<div class="rc-amount">${fmtAmount(r.final_quote_amount)}</div>` : ''}
     </div>
-    <button class="swipe-action" type="button" onclick="event.stopPropagation();swipeDelete('${esc(r.id)}')">🗑 삭제</button>
   </div>`;
 }
 
