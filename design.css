@@ -46,10 +46,34 @@
   --sp-md: 16px;
   --sp-lg: 24px;
 
-  /* ── 3. 그림자 — 부드러운 3레이어 ──────────────────────────── */
-  --sh-sm: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 8px;
-  --sh-md: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.05) 0px 4px 12px, rgba(0,0,0,0.12) 0px 8px 16px;
-  --sh-lg: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 8px 20px, rgba(0,0,0,0.14) 0px 16px 32px;
+  /* ── 3. Elevation 시스템 (5단계, 다층 그림자) ──────────────────
+   * Toss·카카오뱅크 스타일: 부드러운 ambient + 살짝의 directional
+   * 카드 상단 highlight와 함께 쓰면 광원이 위에서 비치는 효과 */
+  --sh-xs: 0 1px 2px rgba(20, 30, 50, 0.04), 0 1px 1px rgba(20, 30, 50, 0.03);
+  --sh-sm: 0 2px 4px rgba(20, 30, 50, 0.04), 0 4px 8px rgba(20, 30, 50, 0.06), 0 0 0 1px rgba(20, 30, 50, 0.02);
+  --sh-md: 0 4px 8px rgba(20, 30, 50, 0.05), 0 8px 16px rgba(20, 30, 50, 0.08), 0 0 0 1px rgba(20, 30, 50, 0.02);
+  --sh-lg: 0 8px 16px rgba(20, 30, 50, 0.06), 0 16px 32px rgba(20, 30, 50, 0.12), 0 0 0 1px rgba(20, 30, 50, 0.02);
+  --sh-xl: 0 16px 32px rgba(20, 30, 50, 0.10), 0 32px 64px rgba(20, 30, 50, 0.18), 0 0 0 1px rgba(20, 30, 50, 0.02);
+
+  /* 컬러 그림자 — CTA·강조 카드용 (브랜드 색을 자체 발광하는 효과) */
+  --sh-pr:   0 4px 12px rgba(255, 56, 92, 0.22), 0 8px 24px rgba(255, 56, 92, 0.12);
+  --sh-pr-sm: 0 2px 8px rgba(255, 56, 92, 0.18);
+  --sh-teal: 0 4px 12px rgba(0, 200, 150, 0.22), 0 8px 24px rgba(0, 200, 150, 0.12);
+
+  /* 카드 상단 highlight — inset 1px 흰색으로 광원 시뮬레이션 */
+  --hl-top:  inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --hl-top-strong: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  /* 입력 필드 inset (살짝 들어간 느낌) */
+  --sh-inset-sm: inset 0 1px 2px rgba(20, 30, 50, 0.04);
+
+  /* ── 3-1. Transition 토큰 (spring easing — Toss 시그니처) ───── */
+  --ease-spring:  cubic-bezier(0.16, 1, 0.3, 1);   /* 빠르게 도달 후 부드럽게 정착 */
+  --ease-out:     cubic-bezier(0.22, 1, 0.36, 1);  /* 일반 ease-out */
+  --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);  /* symmetric */
+  --dur-fast:     120ms;
+  --dur-normal:   180ms;
+  --dur-slow:     280ms;
 
   /* ── 4. 타이포 (한국 모바일 표준 — 토스/카뱅 트렌드) ────────── */
   --f-xs:    11.5px;   /* meta, label, badge */
@@ -100,8 +124,9 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-card {
   background: var(--c-white);
   border-radius: var(--r-lg);
-  box-shadow: var(--sh-sm);
+  box-shadow: var(--sh-sm), var(--hl-top);
   padding: var(--sp-md);
+  transition: box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-fast) var(--ease-spring);
 }
 .ds-card + .ds-card { margin-top: 10px; }
 
@@ -138,7 +163,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   max-width: 280px;
   margin: 0 auto;
   padding: 14px 20px;
-  background: var(--c-pr);
+  background: linear-gradient(180deg, #FF5070 0%, var(--c-pr) 100%);
   color: #fff;
   border: none;
   border-radius: var(--r-md);
@@ -147,25 +172,39 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   font-family: inherit;
   cursor: pointer;
   min-height: 50px;
-  transition: 0.15s;
+  box-shadow: var(--sh-pr), var(--hl-top-strong);
+  transition: box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-fast) var(--ease-spring);
 }
-.ds-entry-btn:active { transform: scale(0.98); background: var(--c-pr-d); }
+.ds-entry-btn:active {
+  transform: translateY(1px);
+  box-shadow: var(--sh-pr-sm), var(--hl-top);
+}
 
 /* ── 버튼 시스템 ──────────────────────────────────────────────── */
 /* Primary */
 .ds-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   border: none; border-radius: var(--r-md); cursor: pointer;
-  font-family: inherit; font-weight: 700; transition: opacity .15s, transform .1s;
+  font-family: inherit; font-weight: 700;
+  transition: opacity var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-spring),
+              box-shadow var(--dur-normal) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
 }
 .ds-btn:active { transform: scale(.97); opacity: .85; }
 .ds-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 
 .ds-btn-primary {
-  background: var(--c-pr); color: #fff;
+  background: linear-gradient(180deg, #FF5070 0%, var(--c-pr) 100%);
+  color: #fff;
   padding: 14px 20px; font-size: var(--f-lg); width: 100%; border-radius: var(--r-md);
   font-weight: var(--fw-semibold); letter-spacing: var(--ls-normal);
+  box-shadow: var(--sh-pr), var(--hl-top-strong);
+  transition: box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-fast) var(--ease-spring);
+}
+.ds-btn-primary:active {
+  transform: translateY(1px);
+  box-shadow: var(--sh-pr-sm), var(--hl-top);
 }
 .ds-btn-secondary {
   background: var(--c-g100); color: var(--c-g700);
@@ -193,9 +232,14 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   border: 1.5px solid var(--c-g200); border-radius: var(--r-md);
   background: var(--c-g100); color: var(--c-g900);
   font-size: var(--f-md); font-family: inherit;
-  outline: none; transition: border-color .15s, background .15s;
+  outline: none;
+  box-shadow: var(--sh-inset-sm);
+  transition: border-color var(--dur-normal) var(--ease-out), background var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
 }
-.ds-input:focus { border-color: var(--c-pr); background: var(--c-white); }
+.ds-input:focus {
+  border-color: var(--c-pr); background: var(--c-white);
+  box-shadow: var(--sh-inset-sm), 0 0 0 4px rgba(255, 56, 92, 0.08);
+}
 .ds-input::placeholder { color: var(--c-g400); }
 
 /* ── 배지 ─────────────────────────────────────────────────────── */
@@ -343,15 +387,23 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 /* ── 시트 (바텀시트 공통) ─────────────────────────────────────── */
 .ds-overlay {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,.45); z-index: 200;
+  background: rgba(20, 30, 50, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  animation: ds-fade-in var(--dur-normal) var(--ease-out);
 }
 .ds-overlay.on { display: block; }
+@keyframes ds-fade-in { from { opacity: 0; } to { opacity: 1; } }
 .ds-sheet {
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 100%; max-width: 480px;
   background: var(--c-white); border-radius: var(--r-xl) var(--r-xl) 0 0;
   z-index: 201; max-height: 90vh; display: flex; flex-direction: column;
+  box-shadow: var(--sh-xl), var(--hl-top-strong);
+  animation: ds-sheet-up var(--dur-slow) var(--ease-spring);
 }
+@keyframes ds-sheet-up { from { transform: translate(-50%, 100%); } to { transform: translate(-50%, 0); } }
 .ds-sheet-handle {
   width: 36px; height: 4px; background: var(--c-g200);
   border-radius: 2px; margin: 12px auto 4px;
@@ -754,6 +806,9 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   border-bottom: 0.5px solid #F5E8E4;
   padding: 14px var(--sp-md) 12px;
   position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 1px 0 rgba(20, 30, 50, 0.02), 0 4px 12px rgba(20, 30, 50, 0.03);
+  backdrop-filter: saturate(180%) blur(8px);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
 }
 .ds-page-header::after {
   content: ''; position: absolute; bottom: 0; left: 0; right: 0;
@@ -794,12 +849,18 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 
 /* 헤더 우측 primary 액션 버튼 (예: + 새 요청) */
 .ds-header-cta {
-  background: var(--c-pr); color: #fff; border: none;
+  background: linear-gradient(180deg, #FF5070 0%, var(--c-pr) 100%);
+  color: #fff; border: none;
   padding: 9px 14px; border-radius: var(--r-full);
   font-size: 13px; font-weight: 700; font-family: inherit;
   cursor: pointer; white-space: nowrap;
+  box-shadow: var(--sh-pr-sm), var(--hl-top-strong);
+  transition: box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-fast) var(--ease-spring);
 }
-.ds-header-cta:active { transform: scale(.97); }
+.ds-header-cta:active {
+  transform: translateY(1px) scale(.98);
+  box-shadow: 0 1px 4px rgba(255,56,92,0.15), var(--hl-top);
+}
 
 /* ── 상태 탭 (가로 스크롤 + 우측 fade) ──────────────────────────── */
 .ds-status-tabs-wrap {
@@ -842,14 +903,16 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   position: relative; overflow: hidden;
   border-radius: var(--r-md);
   background: var(--c-white);
-  box-shadow: var(--sh-sm);
+  box-shadow: var(--sh-sm), var(--hl-top);
   margin: 10px var(--sp-md) 0;
+  transition: box-shadow var(--dur-normal) var(--ease-out);
 }
+.ds-swipe-wrap:active { box-shadow: var(--sh-xs), var(--hl-top); }
 .ds-swipe-wrap .ds-swipe-card {
   position: relative; z-index: 1;
   background: var(--c-white);
   padding: 14px 16px;
-  transition: transform .18s ease;
+  transition: transform var(--dur-slow) var(--ease-spring);
   will-change: transform;
   touch-action: pan-y;
   cursor: pointer;
