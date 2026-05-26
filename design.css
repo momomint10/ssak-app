@@ -6,32 +6,32 @@
  * 언제든 backup-before-ux-redesign 태그로 복구 가능
  */
 
-/* ── 1. 색상 토큰 ──────────────────────────────────────────────── */
+/* ── 1. 색상 토큰 (2026-05-26 modernized — 토스/카뱅 톤) ───────── */
 :root {
-  /* Primary — Airbnb Rausch (따뜻한 코랄) */
+  /* Primary — 코랄 (브랜드 액센트) */
   --c-pr:    #FF385C;
   --c-pr-d:  #E31C5F;
   --c-pr-l:  #FFF0F3;
   --c-pr-xl: #FFF8F9;
-  /* Secondary — Babu (기존 그린 유지, 완료/성공 상태) */
+  /* Secondary — Teal (성공/완료) */
   --c-teal:  #00C896;
   --c-teal-d:#00A87A;
   --c-teal-l:#E6FAF5;
 
-  /* Neutral */
-  --c-bg:    #F7F7F7;   /* 앱 배경 - Airbnb cream */
+  /* Neutral — 토스 색상 톤 (살짝 푸르스름한 짙은 회색 계열) */
+  --c-bg:    #F7F8FA;   /* 앱 배경 */
   --c-white: #FFFFFF;
-  --c-g100:  #F1F4F6;
-  --c-g200:  #E4E9EE;
-  --c-g300:  #C8D0DA;
-  --c-g400:  #9AA5B4;   /* placeholder, 비활성 */
-  --c-g500:  #767676;   /* secondary text - Airbnb Foggy */
-  --c-g700:  #484848;   /* body text - Airbnb Hof */
-  --c-g900:  #222222;   /* title text - Airbnb Hof */
+  --c-g100:  #F2F4F6;   /* divider, chip bg */
+  --c-g200:  #E5E8EB;   /* border, input border */
+  --c-g300:  #D1D6DB;   /* disabled border */
+  --c-g400:  #B0B8C1;   /* placeholder, 비활성 */
+  --c-g500:  #8B95A1;   /* secondary text — Toss style */
+  --c-g700:  #4E5968;   /* body text */
+  --c-g900:  #191F28;   /* title text */
 
   /* Semantic */
-  --c-red:   #FF3B30;
-  --c-amber: #F59E0B;
+  --c-red:   #F04438;
+  --c-amber: #F79009;
   --c-blue:  #3B82F6;
 
   /* ── 2. 간격 & 반경 ─────────────────────────────────────────── */
@@ -46,30 +46,54 @@
   --sp-md: 16px;
   --sp-lg: 24px;
 
-  /* ── 3. 그림자 — Airbnb 3레이어 시스템 ──────────────────────── */
+  /* ── 3. 그림자 — 부드러운 3레이어 ──────────────────────────── */
   --sh-sm: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.08) 0px 4px 8px;
   --sh-md: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.05) 0px 4px 12px, rgba(0,0,0,0.12) 0px 8px 16px;
   --sh-lg: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 8px 20px, rgba(0,0,0,0.14) 0px 16px 32px;
 
-  /* ── 4. 타이포 ───────────────────────────────────────────────── */
-  --f-xs:  11px;
-  --f-sm:  12px;
-  --f-md:  14px;
-  --f-lg:  16px;
-  --f-xl:  20px;
-  --f-2xl: 24px;
-  --f-3xl: 28px;
+  /* ── 4. 타이포 (한국 모바일 표준 — 토스/카뱅 트렌드) ────────── */
+  --f-xs:    11.5px;   /* meta, label, badge */
+  --f-sm:    12.5px;   /* caption, tab, helper */
+  --f-md:    14px;     /* body (default) */
+  --f-lg:    15px;     /* body-emphasis, button */
+  --f-xl:    17px;     /* subtitle, card title */
+  --f-2xl:   19px;     /* section title */
+  --f-3xl:   22px;     /* page title */
+  --f-4xl:   26px;     /* hero (rare) */
+
+  /* font-weight — 800/900 회피, 700이 최상 */
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  /* line-height (한글 가독성) */
+  --lh-tight:    1.25;  /* title */
+  --lh-normal:   1.5;   /* body */
+  --lh-loose:    1.7;   /* description */
+
+  /* letter-spacing (Pretendard 한글 권장) */
+  --ls-tight:    -0.025em;  /* title */
+  --ls-normal:   -0.015em;  /* body */
+  --ls-loose:    0;          /* small caps */
 }
 
-/* ── 글로벌 리셋 ──────────────────────────────────────────────── */
+/* ── 글로벌 리셋 + base 타이포 ────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
   font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Noto Sans KR", sans-serif;
+  font-size: var(--f-md);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+  letter-spacing: var(--ls-normal);
   background: var(--c-bg);
   color: var(--c-g900);
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls-normal); }
+
 .shell { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 80px; }
 
 /* ── 카드 (전 페이지 통일 스펙) ─────────────────────────────────── */
@@ -96,9 +120,9 @@ html, body {
   line-height: 1;
 }
 .ds-entry-title {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+  font-size: var(--f-xl);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
   color: var(--c-g900);
   margin-bottom: 8px;
 }
@@ -140,8 +164,8 @@ html, body {
 
 .ds-btn-primary {
   background: var(--c-pr); color: #fff;
-  padding: 14px 20px; font-size: var(--f-md); width: 100%; border-radius: var(--r-md);
-  font-weight: 600; letter-spacing: -0.2px;
+  padding: 14px 20px; font-size: var(--f-lg); width: 100%; border-radius: var(--r-md);
+  font-weight: var(--fw-semibold); letter-spacing: var(--ls-normal);
 }
 .ds-btn-secondary {
   background: var(--c-g100); color: var(--c-g700);
@@ -267,12 +291,12 @@ html, body {
 /* 사용: <h1 class="ds-page-title">동료</h1> + <p class="ds-page-subtitle">Coworkers</p> */
 /* 헤더 컨텍스트 스케일 (Airbnb host-card 톤, 너무 크지 않음) */
 .ds-page-title {
-  font-size: 22px;            /* 18px → 22px 살짝 키움 (페이지 헤더용) */
-  font-weight: 600;            /* modest, not 800/900 */
+  font-size: var(--f-3xl);     /* 22px */
+  font-weight: var(--fw-bold);
   color: var(--c-g900);
-  letter-spacing: -0.02em;     /* Airbnb 정통 */
-  line-height: 1.2;
-  margin: 0;                   /* 페이지 헤더의 자체 padding 사용 */
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+  margin: 0;
 }
 .ds-page-subtitle {
   font-size: var(--f-xs);      /* 11px */
@@ -338,7 +362,7 @@ html, body {
   border-bottom: 1px solid var(--c-g100);
   display: flex; align-items: center;
 }
-.ds-sheet-title { font-size: var(--f-lg); font-weight: 800; }
+.ds-sheet-title { font-size: var(--f-lg); font-weight: 700; }
 .ds-sheet-close {
   margin-left: auto; background: none; border: none;
   font-size: 24px; color: var(--c-g300); cursor: pointer; line-height: 1;
@@ -367,10 +391,10 @@ html, body {
 .ds-num-display {
   display: inline-flex; align-items: baseline; gap: 2px;
   font-feature-settings: 'tnum' 1; /* tabular numbers — 자릿수 정렬 */
-  letter-spacing: -1px;
+  letter-spacing: var(--ls-tight);
 }
 .ds-num-display .num {
-  font-size: 32px; font-weight: 800;
+  font-size: 32px; font-weight: 700;
   color: var(--c-g900); line-height: 1;
 }
 .ds-num-display .unit {
@@ -431,7 +455,7 @@ html, body {
   box-shadow: 0 4px 20px rgba(255,56,92,.25);
 }
 .ds-stat-card-label { font-size: 13px; font-weight: 700; opacity: .9; margin-bottom: 8px; }
-.ds-stat-card-num { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+.ds-stat-card-num { font-size: 36px; font-weight: 700; letter-spacing: var(--ls-tight); line-height: 1.1; }
 .ds-stat-card-sub { font-size: 12px; font-weight: 600; opacity: .85; margin-top: 8px; }
 .ds-stat-card-deco {
   position: absolute; right: -20px; top: -20px;
@@ -500,7 +524,7 @@ html, body {
   transition: background .12s;
 }
 .ds-hd-back:active { background: var(--c-g100); }
-.ds-hd-title { flex: 1; font-size: 17px; font-weight: 800; color: var(--c-g900); }
+.ds-hd-title { flex: 1; font-size: 17px; font-weight: 700; color: var(--c-g900); }
 .ds-hd-action {
   width: 36px; height: 36px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -521,7 +545,7 @@ html, body {
   width: 100%; padding: 16px;
   background: var(--c-pr); color: #fff;
   border: none; border-radius: var(--r-md);
-  font-family: inherit; font-size: 15px; font-weight: 800;
+  font-family: inherit; font-size: 15px; font-weight: 700;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(255,56,92,.3);
   transition: transform .12s, box-shadow .12s;
@@ -763,7 +787,7 @@ html, body {
 .ds-icon-btn-badge {
   position: absolute; top: 2px; right: 0;
   background: var(--c-pr); color: #fff;
-  font-size: 9px; font-weight: 800;
+  font-size: 9px; font-weight: 700;
   border-radius: var(--r-full);
   min-width: 14px; padding: 1px 4px; line-height: 1.2;
 }
@@ -868,7 +892,7 @@ html, body {
   color: var(--c-g700); border-radius: var(--r-full);
 }
 .ds-list-amount {
-  font-size: 15px; font-weight: 800;
+  font-size: 15px; font-weight: 700;
   color: var(--c-g900); margin-top: 8px;
 }
 
