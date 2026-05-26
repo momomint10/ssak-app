@@ -809,38 +809,38 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
    4) 하단 라인 글로우 ::after */
 .ds-page-header {
   background:
-    radial-gradient(ellipse at 80% 0%, rgba(255, 56, 92, 0.10), transparent 55%),
-    radial-gradient(ellipse at 0% 100%, rgba(252, 129, 129, 0.06), transparent 55%),
-    linear-gradient(180deg, #FFF8F5 0%, #FFFFFF 100%);
+    radial-gradient(ellipse at 80% 0%, rgba(255, 56, 92, 0.16), transparent 55%),
+    radial-gradient(ellipse at 0% 100%, rgba(252, 129, 129, 0.10), transparent 55%),
+    linear-gradient(180deg, #FFF6F2 0%, #FFFFFF 100%);
   border-bottom: 0.5px solid #F5E8E4;
   padding: 14px var(--sp-md) 12px;
   position: sticky; top: 0; z-index: 50;
   overflow: hidden;
   box-shadow:
     0 1px 0 rgba(20, 30, 50, 0.02),
-    0 4px 16px rgba(255, 56, 92, 0.08),
-    0 8px 32px rgba(255, 56, 92, 0.06);
-  backdrop-filter: saturate(200%) blur(10px);
-  -webkit-backdrop-filter: saturate(200%) blur(10px);
+    0 6px 20px rgba(255, 56, 92, 0.14),
+    0 12px 40px rgba(255, 56, 92, 0.10);
+  backdrop-filter: saturate(220%) blur(12px);
+  -webkit-backdrop-filter: saturate(220%) blur(12px);
 }
 .ds-page-header::before {
-  /* 앰비언트 오브 — 우상단 흐릿한 코랄 빛 */
+  /* 앰비언트 오브 — 우상단 흐릿한 코랄 빛 (강화) */
   content: '';
   position: absolute;
-  top: -70px; right: -50px;
-  width: 220px; height: 220px;
-  background: radial-gradient(circle, rgba(255, 56, 92, 0.22), transparent 70%);
-  filter: blur(24px);
+  top: -80px; right: -60px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(255, 56, 92, 0.32), transparent 70%);
+  filter: blur(22px);
   pointer-events: none;
   z-index: 0;
 }
 .ds-page-header > * { position: relative; z-index: 1; }
 .ds-page-header::after {
-  /* 하단 코랄 라인 + 발광 효과 */
+  /* 하단 코랄 라인 + 발광 효과 (강화) */
   content: ''; position: absolute; bottom: 0; left: 0; right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--c-pr) 0%, #FC8181 50%, var(--c-pr) 100%);
-  box-shadow: 0 0 12px rgba(255, 56, 92, 0.5), 0 0 24px rgba(255, 56, 92, 0.3);
+  box-shadow: 0 0 16px rgba(255, 56, 92, 0.7), 0 0 32px rgba(255, 56, 92, 0.45);
   z-index: 2;
 }
 .ds-page-header-row {
@@ -1001,52 +1001,53 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
  * ════════════════════════════════════════════════════════════════ */
 
 /* ── 페이지 공통 헤더 hook (.header, .home-header, .page-header) ─── */
-/* 헤더 입체감 A안: 앰비언트 오브 + 컬러 그림자 + 메쉬 + 라인 글로우 */
+/* 헤더 입체감 A안 (강화 톤): 앰비언트 오브 + 컬러 그림자 + 메쉬 + 라인 글로우 */
 :where(.header, .home-header, .page-header):not(.ds-page-header) {
   position: relative;
   overflow: hidden;
   box-shadow:
     0 1px 0 rgba(20, 30, 50, 0.02),
-    0 4px 16px rgba(255, 56, 92, 0.08),
-    0 8px 32px rgba(255, 56, 92, 0.06);
-  backdrop-filter: saturate(200%) blur(10px);
-  -webkit-backdrop-filter: saturate(200%) blur(10px);
+    0 6px 20px rgba(255, 56, 92, 0.14),
+    0 12px 40px rgba(255, 56, 92, 0.10);
+  backdrop-filter: saturate(220%) blur(12px);
+  -webkit-backdrop-filter: saturate(220%) blur(12px);
 }
-/* 글로벌 헤더에도 앰비언트 오브 추가 (인라인 ::before가 없는 경우만 — .home-header는 이미 있음) */
+/* 글로벌 헤더에도 앰비언트 오브 추가 (강화) */
 :where(.header, .page-header):not(.ds-page-header):not(.home-header)::before {
   content: '';
   position: absolute;
-  top: -70px; right: -50px;
-  width: 220px; height: 220px;
-  background: radial-gradient(circle, rgba(255, 56, 92, 0.18), transparent 70%);
-  filter: blur(24px);
+  top: -80px; right: -60px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(255, 56, 92, 0.28), transparent 70%);
+  filter: blur(22px);
   pointer-events: none;
   z-index: 0;
 }
-/* .home-header 기존 ::before 강화 (인라인은 rgba 0.04 흐릿 → 더 진하게 override) */
+/* .home-header 기존 ::before 강화 (rgba 0.04 → 0.28 진하게 override) */
 .home-header::before {
-  background: radial-gradient(circle, rgba(255, 56, 92, 0.18), transparent 70%) !important;
-  filter: blur(24px) !important;
-  width: 220px !important; height: 220px !important;
+  background: radial-gradient(circle, rgba(255, 56, 92, 0.28), transparent 70%) !important;
+  filter: blur(22px) !important;
+  width: 240px !important; height: 240px !important;
+  top: -80px !important; right: -60px !important;
 }
-/* 헤더 직계 자식은 z-index 위로 (앰비언트 오브가 콘텐츠 가리지 않게) */
+/* 헤더 직계 자식은 z-index 위로 */
 :where(.header, .home-header, .page-header):not(.ds-page-header) > * {
   position: relative;
   z-index: 1;
 }
-/* 글로벌 헤더 하단 라인 글로우 추가 (인라인 ::after가 없는 경우만) */
+/* 글로벌 헤더 하단 라인 글로우 추가 (강화) */
 :where(.header, .page-header):not(.ds-page-header):not(.home-header)::after {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--c-pr) 0%, #FC8181 50%, var(--c-pr) 100%);
-  box-shadow: 0 0 12px rgba(255, 56, 92, 0.5), 0 0 24px rgba(255, 56, 92, 0.3);
+  box-shadow: 0 0 16px rgba(255, 56, 92, 0.7), 0 0 32px rgba(255, 56, 92, 0.45);
   z-index: 2;
 }
-/* .home-header 기존 ::after 강화 (글로우 추가) */
+/* .home-header 기존 ::after 강화 (글로우 강) */
 .home-header::after {
   background: linear-gradient(90deg, var(--c-pr) 0%, #FC8181 50%, var(--c-pr) 100%) !important;
-  box-shadow: 0 0 12px rgba(255, 56, 92, 0.5), 0 0 24px rgba(255, 56, 92, 0.3) !important;
+  box-shadow: 0 0 16px rgba(255, 56, 92, 0.7), 0 0 32px rgba(255, 56, 92, 0.45) !important;
 }
 
 /* ── 페이지 공통 카드 hook (페이지별 자체 카드 클래스도 포함) ───── */
