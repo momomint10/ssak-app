@@ -32,220 +32,89 @@
 <link rel="stylesheet" href="design.css">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--c-bg,#F7F7F7);color:var(--c-g900,#1A1F36);min-height:100vh;}
-.shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
+/* design.css의 .ds-* 컴포넌트를 우선 사용. 페이지 특화만 인라인 유지 */
+.shell { padding-bottom: 100px; }
 
-/* 헤더 */
-.header{
-  background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
-  border-bottom:0.5px solid #f5e8e4;
-  padding:14px 16px 10px;
-  position:sticky;top:0;z-index:50;
+/* 폼 (모달 안) */
+label { display:block; font-size:13px; font-weight:700; color:var(--c-g700); margin:10px 0 6px; }
+input[type="text"], input[type="tel"], input[type="number"], textarea {
+  width:100%; padding:12px 13px; font-size:15px; font-family:inherit;
+  border:1.5px solid var(--c-g200); border-radius:var(--r-sm); background:#fff; outline:none;
 }
-.header::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;
-  height:3px;background:linear-gradient(90deg,var(--c-pr, #FF385C) 0%,#FC8181 100%);
-}
-.h-row{display:flex;align-items:center;gap:8px;}
-.back-btn{background:none;border:none;font-size:22px;color:#555;cursor:pointer;padding:4px 6px;}
-.h-title{font-size:22px;font-weight:600;letter-spacing:-0.5px;color:var(--c-g900,#222);}
-.h-sub{font-size:12px;color:var(--c-g500,#767676);font-weight:500;}
-.btn-new{
-  margin-left:auto;
-  background:var(--c-pr, #FF385C);color:#fff;border:none;
-  padding:9px 14px;border-radius:20px;
-  font-size:13px;font-weight:700;font-family:inherit;
-  cursor:pointer;
-}
+input:focus, textarea:focus { border-color: var(--c-pr); }
+textarea { resize:vertical; min-height:90px; line-height:1.6; }
+.hint { font-size:12px; color:var(--c-g500); margin-top:6px; line-height:1.5; }
 
-/* 탭 (상태별 필터) */
-.status-tabs{display:flex;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none;}
-.status-tabs::-webkit-scrollbar{display:none;}
-.status-tab{
-  flex-shrink:0;padding:7px 14px;border-radius:9999px;
-  border:1.5px solid #E5E7EB;background:#fff;
-  font-size:12.5px;font-weight:700;color:#888;
-  cursor:pointer;font-family:inherit;white-space:nowrap;
-}
-.status-tab.on{background:#1A1F36;border-color:#1A1F36;color:#fff;}
-.status-tab .n{
-  display:inline-block;
-  background:rgba(255,255,255,0.25);
-  margin-left:5px;padding:1px 7px;
-  border-radius:10px;font-size:11px;
-}
-.status-tab:not(.on) .n{
-  background:#F3F4F6;color:#666;
-}
+/* 모달 안의 primary/ghost 버튼 (design.css .ds-btn 패밀리 사용 권장이지만 페이지 호환 위해 유지) */
+.btn { width:100%; padding:14px; font-size:15px; font-weight:800; font-family:inherit; border:none; border-radius:var(--r-md); cursor:pointer; background:var(--c-pr); color:#fff; margin-top:12px; min-height:52px; }
+.btn:active { transform:scale(.98); }
+.btn.ghost { background:#fff; color:var(--c-g700); border:1.5px solid var(--c-g200); margin-top:8px; }
+.btn:disabled { background:var(--c-g300); cursor:not-allowed; }
 
-/* 카드 */
-.empty{text-align:center;padding:60px 24px;color:#999;}
-.empty-ico{font-size:48px;margin-bottom:12px;opacity:0.5;}
+/* 견적 상세 모달 */
+.detail-section { margin-bottom:14px; }
+.detail-h { font-size:11.5px; font-weight:700; color:var(--c-g500); margin-bottom:6px; letter-spacing:.3px; }
+.detail-v { font-size:14px; line-height:1.6; }
+.detail-photos { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.detail-photos img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:var(--r-sm); cursor:pointer; }
+.detail-notes { background:#FAFAFA; padding:10px 12px; border-radius:var(--r-sm); font-size:13.5px; line-height:1.7; white-space:pre-wrap; word-break:break-word; }
 
-.req-card{
-  background:#fff;
-  margin:10px 14px 0;
-  border-radius:12px;
-  padding:14px 16px;
-  box-shadow:0 1px 3px rgba(0,0,0,0.05);
-  cursor:pointer;
-  transition:transform 0.1s;
-}
-.req-card:active{transform:scale(0.98);}
-.req-card.new{border-left:3px solid var(--c-pr, #FF385C);}
+/* 금액 빠른 입력 */
+.amount-quick { display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; }
+.amt-btn { flex:1; min-width:0; padding:8px 4px; border:1.5px solid var(--c-g200); border-radius:var(--r-sm); background:#fff; font-size:12.5px; font-weight:700; color:var(--c-g700); cursor:pointer; font-family:inherit; }
+.amt-btn:active { background:#F9FAFB; }
 
-.rc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.rc-status{
-  display:inline-block;padding:3px 9px;
-  border-radius:10px;font-size:10.5px;font-weight:700;
-}
-.rc-status.pending{background:#FEF3C7;color:#92400E;}
-.rc-status.submitted{background:#DBEAFE;color:#1E40AF;}
-.rc-status.quoted{background:#D1FAE5;color:#065F46;}
-.rc-status.contracted{background:#F5E6FF;color:#7B1FA2;}
-.rc-status.cancelled{background:#F3F4F6;color:#6B7280;}
-.rc-time{font-size:11px;color:#999;margin-left:auto;}
-
-.rc-name{font-size:15px;font-weight:700;margin-bottom:3px;}
-.rc-phone{font-size:13px;color:#666;font-variant-numeric:tabular-nums;}
-
-.rc-info{
-  display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;
-}
-.rc-tag{
-  font-size:11.5px;font-weight:600;
-  padding:3px 9px;background:#F3F4F6;
-  color:#444;border-radius:10px;
-}
-.rc-amount{
-  font-size:14px;font-weight:800;
-  color:var(--c-pr, #FF385C);margin-top:6px;
-}
-
-/* 오버레이/시트 */
-.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;}
-.ov.on{display:block;}
-.sh{
-  position:fixed;bottom:0;left:50%;
-  transform:translateX(-50%);width:100%;max-width:480px;
-  background:#fff;border-radius:20px 20px 0 0;
-  z-index:201;max-height:92vh;display:flex;flex-direction:column;
-}
-.sh-hd{width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:10px auto 4px;}
-.sh-bar{padding:8px 16px 12px;border-bottom:1px solid #f5f5f5;display:flex;align-items:center;}
-.sh-ttl{font-size:17px;font-weight:800;}
-.sh-cancel{margin-left:auto;background:none;border:none;font-size:14px;color:#999;cursor:pointer;font-family:inherit;}
-.sh-body{overflow-y:auto;flex:1;padding:14px 16px;}
-
-label{display:block;font-size:13px;font-weight:700;color:#555;margin:10px 0 6px;}
-input[type="text"],input[type="tel"],input[type="number"],textarea{
-  width:100%;padding:12px 13px;font-size:15px;font-family:inherit;
-  border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;outline:none;
-}
-input:focus,textarea:focus{border-color:var(--c-pr, #FF385C);}
-textarea{resize:vertical;min-height:90px;line-height:1.6;}
-
-.hint{font-size:12px;color:#888;margin-top:6px;line-height:1.5;}
-
-.btn{
-  width:100%;padding:14px;
-  font-size:15px;font-weight:800;font-family:inherit;
-  border:none;border-radius:12px;cursor:pointer;
-  background:var(--c-pr, #FF385C);color:#fff;margin-top:12px;
-  min-height:52px;
-}
-.btn:active{transform:scale(0.98);}
-.btn.ghost{background:#fff;color:#555;border:1.5px solid #E5E7EB;margin-top:8px;}
-.btn:disabled{background:#D1D5DB;cursor:not-allowed;}
-
-/* 상세 보기 */
-.detail-section{margin-bottom:14px;}
-.ds-h{font-size:11.5px;font-weight:700;color:#888;margin-bottom:6px;letter-spacing:0.3px;}
-.ds-v{font-size:14px;line-height:1.6;}
-.ds-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
-.ds-photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;cursor:pointer;}
-.ds-notes{
-  background:#FAFAFA;padding:10px 12px;
-  border-radius:8px;font-size:13.5px;line-height:1.7;
-  white-space:pre-wrap;word-break:break-word;
-}
-
-.amount-quick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
-.amt-btn{
-  flex:1;min-width:0;padding:8px 4px;
-  border:1.5px solid #E5E7EB;border-radius:8px;background:#fff;
-  font-size:12.5px;font-weight:700;color:#555;cursor:pointer;font-family:inherit;
-}
-.amt-btn:active{background:#F9FAFB;}
+/* 휴지통 모달 row */
+.trash-row { display:flex; align-items:center; gap:10px; background:#fff; margin:8px 0; padding:12px 14px; border-radius:var(--r-sm); border:1px solid #F3F4F6; }
+.trash-empty-hint { font-size:11.5px; color:var(--c-g500); padding:4px 4px 8px; line-height:1.5; }
+.btn-restore { background:#fff; color:#0369A1; border:1.5px solid #BAE6FD; padding:8px 14px; border-radius:var(--r-sm); font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap; }
+.btn-restore:active { background:#F0F9FF; }
 
 /* 토스트 */
-#toast{
-  position:fixed;bottom:90px;left:50%;
-  transform:translateX(-50%);
-  background:rgba(26,31,54,0.92);color:#fff;
-  padding:10px 18px;border-radius:20px;
-  font-size:13px;font-weight:600;
-  z-index:999;opacity:0;transition:opacity 0.25s;
-  pointer-events:none;white-space:nowrap;
-}
-
-/* === 카드 스와이프 삭제 (schedule.html Phase 7 패턴) === */
-.req-card-wrap{position:relative;overflow:hidden;border-radius:12px;margin:10px 14px 0;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.req-card-wrap .req-card{margin:0;box-shadow:none;transition:transform 0.18s ease;will-change:transform;touch-action:pan-y;position:relative;z-index:1;}
-.swipe-action{position:absolute;top:0;right:0;height:100%;width:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:#DC2626;color:#fff;font-size:11.5px;font-weight:700;border:none;cursor:pointer;font-family:inherit;z-index:0;}
-.swipe-action::before{content:'🗑';font-size:18px;}
-
-/* 휴지통 아이콘 (헤더) */
-.btn-trash{background:none;border:none;font-size:20px;cursor:pointer;padding:6px 8px;position:relative;color:#888;margin-left:auto;font-family:inherit;}
-.btn-trash:active{color:#DC2626;}
-.btn-trash .trash-badge{position:absolute;top:-2px;right:-2px;background:#DC2626;color:#fff;font-size:9px;font-weight:800;border-radius:8px;min-width:14px;padding:1px 4px;line-height:1.1;}
-
-/* 휴지통 모달 카드 (단순 행) */
-.trash-row{display:flex;align-items:center;gap:10px;background:#fff;margin:8px 0;padding:12px 14px;border-radius:10px;border:1px solid #F3F4F6;}
-.trash-row-info{flex:1;min-width:0;}
-.trash-empty-hint{font-size:11.5px;color:#999;padding:4px 4px 8px;line-height:1.5;}
-.btn-restore{background:#fff;color:#0369A1;border:1.5px solid #BAE6FD;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
-.btn-restore:active{background:#F0F9FF;}
+#toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:rgba(26,31,54,.92); color:#fff; padding:10px 18px; border-radius:var(--r-full); font-size:13px; font-weight:600; z-index:999; opacity:0; transition:opacity .25s; pointer-events:none; white-space:nowrap; }
 </style>
 <script src="utils.js"></script>
 </head>
 <body>
 <div class="shell">
 
-  <div class="header">
-    <div class="h-row">
-      <button class="back-btn" onclick="location.href='ssak-quote.html'">←</button>
-      <div>
-        <div class="h-title">견적요청서</div>
-        <div class="h-sub">고객 정보 수집 → 견적 발송</div>
+  <div class="ds-page-header">
+    <div class="ds-page-header-row">
+      <button class="ds-page-back" onclick="location.href='ssak-quote.html'" aria-label="뒤로">←</button>
+      <div class="ds-page-titles">
+        <div class="ds-page-title">견적요청서</div>
+        <div class="ds-page-h-sub">고객 정보 수집 → 견적 발송</div>
       </div>
-      <button class="btn-trash" id="btn-trash" onclick="openTrash()" title="휴지통" style="display:none;">🗑<span class="trash-badge" id="trash-badge">0</span></button>
-      <button class="btn-new" onclick="openNew()">＋ 새 요청</button>
+      <div class="ds-page-actions">
+        <button class="ds-icon-btn" id="btn-trash" onclick="openTrash()" title="휴지통" style="display:none;">🗑<span class="ds-icon-btn-badge" id="trash-badge">0</span></button>
+        <button class="ds-header-cta" onclick="openNew()">＋ 새 요청</button>
+      </div>
     </div>
-    <div class="status-tabs" id="status-tabs">
-      <button class="status-tab on" data-st="" onclick="onFilter('')">전체 <span class="n" id="n-all">0</span></button>
-      <button class="status-tab" data-st="submitted" onclick="onFilter('submitted')">📥 정보 도착 <span class="n" id="n-submitted">0</span></button>
-      <button class="status-tab" data-st="pending" onclick="onFilter('pending')">⏳ 미입력 <span class="n" id="n-pending">0</span></button>
-      <button class="status-tab" data-st="quoted" onclick="onFilter('quoted')">✅ 견적 완료 <span class="n" id="n-quoted">0</span></button>
-      <button class="status-tab" data-st="cancelled" onclick="onFilter('cancelled')">취소 <span class="n" id="n-cancelled">0</span></button>
+    <div class="ds-status-tabs-wrap">
+      <div class="ds-status-tabs" id="status-tabs">
+        <button class="ds-status-tab on" data-st="" onclick="onFilter('')">전체<span class="ds-status-tab-count" id="n-all">0</span></button>
+        <button class="ds-status-tab" data-st="submitted" onclick="onFilter('submitted')">📥 정보 도착<span class="ds-status-tab-count" id="n-submitted">0</span></button>
+        <button class="ds-status-tab" data-st="pending" onclick="onFilter('pending')">⏳ 미입력<span class="ds-status-tab-count" id="n-pending">0</span></button>
+        <button class="ds-status-tab" data-st="quoted" onclick="onFilter('quoted')">✅ 견적 완료<span class="ds-status-tab-count" id="n-quoted">0</span></button>
+        <button class="ds-status-tab" data-st="cancelled" onclick="onFilter('cancelled')">취소<span class="ds-status-tab-count" id="n-cancelled">0</span></button>
+      </div>
     </div>
   </div>
 
   <div id="list">
-    <div class="empty"><div class="empty-ico">📋</div>불러오는 중...</div>
+    <div class="ds-empty"><div class="ds-empty-ico">📋</div><div class="ds-empty-title">불러오는 중...</div></div>
   </div>
 </div>
 
 <!-- 신규 견적 요청 발송 -->
-<div class="ov" id="new-ov" onclick="if(event.target===this)closeNew()">
-  <div class="sh">
-    <div class="sh-hd"></div>
-    <div class="sh-bar">
-      <div class="sh-ttl">새 견적 요청</div>
-      <button class="sh-cancel" onclick="closeNew()">취소</button>
+<div class="ds-overlay" id="new-ov" onclick="if(event.target===this)closeNew()">
+  <div class="ds-sheet">
+    <div class="ds-sheet-handle"></div>
+    <div class="ds-sheet-head">
+      <div class="ds-sheet-title">새 견적 요청</div>
+      <button class="ds-sheet-close" onclick="closeNew()" aria-label="닫기">×</button>
     </div>
-    <div class="sh-body">
+    <div class="ds-sheet-body">
       <label>고객 휴대폰 번호 *</label>
       <input type="tel" id="new-phone" placeholder="010-1234-5678" inputmode="numeric" maxlength="13">
       <label>고객 이름 (선택)</label>
@@ -264,29 +133,29 @@ textarea{resize:vertical;min-height:90px;line-height:1.6;}
 </div>
 
 <!-- 견적요청서 상세 + 견적 발송 -->
-<div class="ov" id="detail-ov" onclick="if(event.target===this)closeDetail()">
-  <div class="sh" style="max-height:96vh;">
-    <div class="sh-hd"></div>
-    <div class="sh-bar">
-      <div class="sh-ttl">견적 요청 상세</div>
-      <button class="sh-cancel" onclick="closeDetail()">닫기</button>
+<div class="ds-overlay" id="detail-ov" onclick="if(event.target===this)closeDetail()">
+  <div class="ds-sheet" style="max-height:96vh;">
+    <div class="ds-sheet-handle"></div>
+    <div class="ds-sheet-head">
+      <div class="ds-sheet-title">견적 요청 상세</div>
+      <button class="ds-sheet-close" onclick="closeDetail()" aria-label="닫기">×</button>
     </div>
-    <div class="sh-body" id="detail-body">
+    <div class="ds-sheet-body" id="detail-body">
       <!-- 동적 -->
     </div>
   </div>
 </div>
 
 <!-- 휴지통 -->
-<div class="ov" id="trash-ov" onclick="if(event.target===this)closeTrash()">
-  <div class="sh" style="max-height:80vh;">
-    <div class="sh-hd"></div>
-    <div class="sh-bar">
-      <div class="sh-ttl">🗑 휴지통</div>
-      <button class="sh-cancel" onclick="closeTrash()">닫기</button>
+<div class="ds-overlay" id="trash-ov" onclick="if(event.target===this)closeTrash()">
+  <div class="ds-sheet" style="max-height:80vh;">
+    <div class="ds-sheet-handle"></div>
+    <div class="ds-sheet-head">
+      <div class="ds-sheet-title">🗑 휴지통</div>
+      <button class="ds-sheet-close" onclick="closeTrash()" aria-label="닫기">×</button>
     </div>
-    <div class="sh-body" id="trash-body">
-      <div class="empty">불러오는 중...</div>
+    <div class="ds-sheet-body" id="trash-body">
+      <div class="ds-empty"><div class="ds-empty-title">불러오는 중...</div></div>
     </div>
   </div>
 </div>
@@ -316,6 +185,14 @@ function fmtDateOnly(s){
 const statusLabel = {
   pending:'⏳ 미입력', submitted:'📥 정보 도착',
   quoted:'✅ 견적 완료', contracted:'🤝 계약', cancelled:'❌ 취소'
+};
+// 상태별 배지 색상 (design.css .ds-badge-*)
+const statusBadgeCls = {
+  pending: 'ds-badge-amber',
+  submitted: 'ds-badge-blue',
+  quoted: 'ds-badge-teal',
+  contracted: 'ds-badge-pr',
+  cancelled: 'ds-badge-gray'
 };
 
 // 휴대폰 자동 포맷팅
@@ -356,8 +233,8 @@ function renderList(){
   if (!filtered.length) {
     document.getElementById('list').innerHTML =
       curStatus
-        ? `<div class="empty"><div class="empty-ico">📋</div>${esc(statusLabel[curStatus]||curStatus)} 상태의 요청이 없습니다.</div>`
-        : `<div class="empty"><div class="empty-ico">📋</div>아직 견적 요청이 없습니다.<br><small>＋ 새 요청 버튼으로 시작하세요</small></div>`;
+        ? `<div class="ds-empty"><div class="ds-empty-ico">📋</div><div class="ds-empty-title">${esc(statusLabel[curStatus]||curStatus)} 상태가 없습니다</div></div>`
+        : `<div class="ds-empty"><div class="ds-empty-ico">📋</div><div class="ds-empty-title">아직 견적 요청이 없습니다</div><div class="ds-empty-sub">＋ 새 요청 버튼으로 시작하세요</div></div>`;
     return;
   }
   document.getElementById('list').innerHTML = filtered.map(card).join('');
@@ -366,25 +243,28 @@ function renderList(){
 
 function card(r){
   const isNew = r.status === 'submitted';
+  // 카드에는 핵심 태그만 (지역 + 평수 + 청소유형). 나머지는 상세에서.
   const tags = [];
-  if (r.clean_type)    tags.push(esc(r.clean_type));
-  if (r.housing_type)  tags.push(esc(r.housing_type));
-  if (r.area_size)     tags.push(r.area_size + '평' + (r.area_type ? '(' + esc(r.area_type) + ')' : ''));
   if (r.region)        tags.push(esc(r.region));
-  if (Array.isArray(r.site_conditions) && r.site_conditions.length) tags.push('⚠️ ' + r.site_conditions.length);
-  if (Array.isArray(r.appliance_options) && r.appliance_options.length) tags.push('🔌 ' + r.appliance_options.length);
-  if (Array.isArray(r.photos) && r.photos.length) tags.push('📸 ' + r.photos.length);
-  return `<div class="req-card-wrap" data-id="${esc(r.id)}">
-    <button class="swipe-action" type="button" onclick="event.stopPropagation();swipeDelete('${esc(r.id)}')" aria-label="삭제">삭제</button>
-    <div class="req-card${isNew?' new':''}" onclick="openDetail('${esc(r.id)}')">
-      <div class="rc-top">
-        <span class="rc-status ${r.status}">${esc(statusLabel[r.status]||r.status)}</span>
-        <span class="rc-time">${fmtDate(r.submitted_at || r.created_at)}</span>
+  if (r.area_size)     tags.push(r.area_size + '평' + (r.area_type ? '(' + esc(r.area_type) + ')' : ''));
+  if (r.clean_type)    tags.push(esc(r.clean_type));
+  // 부가 정보는 dot indicator로 압축
+  const extras = [];
+  if (Array.isArray(r.site_conditions) && r.site_conditions.length) extras.push('⚠️' + r.site_conditions.length);
+  if (Array.isArray(r.appliance_options) && r.appliance_options.length) extras.push('🔌' + r.appliance_options.length);
+  if (Array.isArray(r.photos) && r.photos.length) extras.push('📸' + r.photos.length);
+  const badgeCls = statusBadgeCls[r.status] || 'ds-badge-gray';
+  return `<div class="ds-swipe-wrap${isNew?' is-new':''}" data-id="${esc(r.id)}">
+    <button class="ds-swipe-action" type="button" onclick="event.stopPropagation();swipeDelete('${esc(r.id)}')" aria-label="삭제">삭제</button>
+    <div class="ds-swipe-card" onclick="openDetail('${esc(r.id)}')">
+      <div class="ds-list-row">
+        <span class="ds-badge ${badgeCls}">${esc(statusLabel[r.status]||r.status)}</span>
+        <span class="ds-list-time">${fmtDate(r.submitted_at || r.created_at)}</span>
       </div>
-      <div class="rc-name">${esc(r.customer_name || '(이름 미입력)')}</div>
-      <div class="rc-phone">${fmtPhone(r.customer_phone)}</div>
-      ${tags.length ? `<div class="rc-info">${tags.map(t => `<span class="rc-tag">${t}</span>`).join('')}</div>` : ''}
-      ${r.final_quote_amount ? `<div class="rc-amount">${fmtAmount(r.final_quote_amount)}</div>` : ''}
+      <div class="ds-list-name">${esc(r.customer_name || '(이름 미입력)')}</div>
+      <div class="ds-list-sub">${fmtPhone(r.customer_phone)}${extras.length ? ` · ${extras.join(' ')}` : ''}</div>
+      ${tags.length ? `<div class="ds-list-tags">${tags.map(t => `<span class="ds-list-tag">${t}</span>`).join('')}</div>` : ''}
+      ${r.final_quote_amount ? `<div class="ds-list-amount">${fmtAmount(r.final_quote_amount)}</div>` : ''}
     </div>
   </div>`;
 }
@@ -490,13 +370,13 @@ function renderDetail(){
   const formUrl = `https://ssakapp.co.kr/quote.html?token=${r.token}`;
 
   const html = `
-    <div class="rc-top" style="margin-bottom:10px;">
-      <span class="rc-status ${r.status}">${esc(statusLabel[r.status]||r.status)}</span>
-      <span class="rc-time">${fmtDate(r.submitted_at || r.created_at)}</span>
+    <div class="ds-list-row" style="margin-bottom:10px;">
+      <span class="ds-badge ${statusBadgeCls[r.status]||'ds-badge-gray'}">${esc(statusLabel[r.status]||r.status)}</span>
+      <span class="ds-list-time">${fmtDate(r.submitted_at || r.created_at)}</span>
     </div>
     <div class="detail-section">
-      <div class="ds-h">고객</div>
-      <div class="ds-v">${esc(r.customer_name || '(이름 미입력)')} · ${fmtPhone(r.customer_phone)}</div>
+      <div class="detail-h">고객</div>
+      <div class="detail-v">${esc(r.customer_name || '(이름 미입력)')} · ${fmtPhone(r.customer_phone)}</div>
     </div>
     ${isPending ? `
     <div class="detail-section" style="background:#FFF7E6;padding:10px 12px;border-radius:8px;color:#92400E;font-size:13px;">
@@ -504,54 +384,54 @@ function renderDetail(){
       링크: <a href="${formUrl}" target="_blank" style="color:var(--c-pr, #FF385C);text-decoration:underline;word-break:break-all;">${formUrl}</a>
     </div>
     ` : ''}
-    ${r.clean_type    ? `<div class="detail-section"><div class="ds-h">청소 유형</div><div class="ds-v">${esc(r.clean_type)}</div></div>` : ''}
-    ${r.housing_type  ? `<div class="detail-section"><div class="ds-h">주거 형태</div><div class="ds-v">${esc(r.housing_type)}</div></div>` : ''}
-    ${r.area_size     ? `<div class="detail-section"><div class="ds-h">평수</div><div class="ds-v">${r.area_size}평${r.area_type ? ` (${esc(r.area_type)})` : ''}</div></div>` : ''}
+    ${r.clean_type    ? `<div class="detail-section"><div class="detail-h">청소 유형</div><div class="detail-v">${esc(r.clean_type)}</div></div>` : ''}
+    ${r.housing_type  ? `<div class="detail-section"><div class="detail-h">주거 형태</div><div class="detail-v">${esc(r.housing_type)}</div></div>` : ''}
+    ${r.area_size     ? `<div class="detail-section"><div class="detail-h">평수</div><div class="detail-v">${r.area_size}평${r.area_type ? ` (${esc(r.area_type)})` : ''}</div></div>` : ''}
     ${(r.room_count !== null && r.room_count !== undefined) || (r.bathroom_count !== null && r.bathroom_count !== undefined) || (r.veranda_count !== null && r.veranda_count !== undefined) ? `
       <div class="detail-section">
-        <div class="ds-h">방·화장실·베란다</div>
-        <div class="ds-v" style="display:flex;gap:12px;">
+        <div class="detail-h">방·화장실·베란다</div>
+        <div class="detail-v" style="display:flex;gap:12px;">
           <span>🛏️ 방 <b>${r.room_count ?? '-'}</b></span>
           <span>🚽 화장실 <b>${r.bathroom_count ?? '-'}</b></span>
           <span>🪟 베란다 <b>${r.veranda_count ?? '-'}</b></span>
         </div>
       </div>` : ''}
-    ${r.region        ? `<div class="detail-section"><div class="ds-h">지역</div><div class="ds-v">${esc(r.region)}</div></div>` : ''}
-    ${r.desired_date  ? `<div class="detail-section"><div class="ds-h">희망 시공일</div><div class="ds-v">${fmtDateOnly(r.desired_date)}</div></div>` : ''}
+    ${r.region        ? `<div class="detail-section"><div class="detail-h">지역</div><div class="detail-v">${esc(r.region)}</div></div>` : ''}
+    ${r.desired_date  ? `<div class="detail-section"><div class="detail-h">희망 시공일</div><div class="detail-v">${fmtDateOnly(r.desired_date)}</div></div>` : ''}
     ${Array.isArray(r.site_conditions) && r.site_conditions.length ? `
       <div class="detail-section">
-        <div class="ds-h">현장 특이 조건 (${r.site_conditions.length})</div>
-        <div class="ds-v" style="display:flex;flex-wrap:wrap;gap:5px;">
-          ${r.site_conditions.map(s => `<span class="rc-tag" style="background:#FFF0F4;color:#C92A4A;">⚠️ ${esc(s)}</span>`).join('')}
+        <div class="detail-h">현장 특이 조건 (${r.site_conditions.length})</div>
+        <div class="detail-v" style="display:flex;flex-wrap:wrap;gap:5px;">
+          ${r.site_conditions.map(s => `<span class="ds-list-tag" style="background:#FFF0F4;color:#C92A4A;">⚠️ ${esc(s)}</span>`).join('')}
         </div>
       </div>` : ''}
     ${Array.isArray(r.appliance_options) && r.appliance_options.length ? `
       <div class="detail-section">
-        <div class="ds-h">가전 분해청소 (${r.appliance_options.length}종)</div>
-        <div class="ds-v" style="display:flex;flex-direction:column;gap:4px;">
+        <div class="detail-h">가전 분해청소 (${r.appliance_options.length}종)</div>
+        <div class="detail-v" style="display:flex;flex-direction:column;gap:4px;">
           ${r.appliance_options.map(a => `<div style="display:flex;justify-content:space-between;padding:6px 10px;background:#F9FAFB;border-radius:6px;font-size:13px;"><span>${esc(a.name)}</span><b>${a.count}대</b></div>`).join('')}
         </div>
       </div>` : ''}
-    ${r.aircon_info ? `<div class="detail-section"><div class="ds-h">에어컨 분해청소</div><div class="ds-v">${esc(r.aircon_info)}</div></div>` : ''}
+    ${r.aircon_info ? `<div class="detail-section"><div class="detail-h">에어컨 분해청소</div><div class="detail-v">${esc(r.aircon_info)}</div></div>` : ''}
     ${plans.length ? `
       <div class="detail-section">
-        <div class="ds-h">🏠 아파트 평면도 ${plans.length}장</div>
-        <div class="ds-photos">${plans.map(p => `<img src="${esc(p.url)}" onclick="window.open('${esc(p.url)}','_blank')">`).join('')}</div>
+        <div class="detail-h">🏠 아파트 평면도 ${plans.length}장</div>
+        <div class="detail-photos">${plans.map(p => `<img src="${esc(p.url)}" onclick="window.open('${esc(p.url)}','_blank')">`).join('')}</div>
       </div>` : ''}
     ${photos.length ? `
       <div class="detail-section">
-        <div class="ds-h">📸 현장 사진 ${photos.length}장</div>
-        <div class="ds-photos">${photos.map(p => `<img src="${esc(p.url)}" onclick="window.open('${esc(p.url)}','_blank')">`).join('')}</div>
+        <div class="detail-h">📸 현장 사진 ${photos.length}장</div>
+        <div class="detail-photos">${photos.map(p => `<img src="${esc(p.url)}" onclick="window.open('${esc(p.url)}','_blank')">`).join('')}</div>
       </div>` : ''}
-    ${r.notes ? `<div class="detail-section"><div class="ds-h">특이사항</div><div class="ds-notes">${esc(r.notes)}</div></div>` : ''}
-    ${r.referral_source ? `<div class="detail-section"><div class="ds-h">유입 경로</div><div class="ds-v" style="color:#888;">📊 ${esc(r.referral_source)}</div></div>` : ''}
+    ${r.notes ? `<div class="detail-section"><div class="detail-h">특이사항</div><div class="detail-notes">${esc(r.notes)}</div></div>` : ''}
+    ${r.referral_source ? `<div class="detail-section"><div class="detail-h">유입 경로</div><div class="detail-v" style="color:#888;">📊 ${esc(r.referral_source)}</div></div>` : ''}
 
     ${isQuoted ? `
       <div class="detail-section" style="background:#D1FAE5;padding:12px 14px;border-radius:10px;">
-        <div class="ds-h" style="color:#065F46;">견적 (발송 완료)</div>
+        <div class="detail-h" style="color:#065F46;">견적 (발송 완료)</div>
         <div style="font-size:18px;font-weight:800;color:#047857;margin-bottom:6px;">${fmtAmount(r.final_quote_amount)}</div>
         <div style="font-size:11px;color:#065F46;">${fmtDate(r.quoted_at)}</div>
-        ${r.quote_message ? `<div class="ds-notes" style="background:rgba(255,255,255,0.6);margin-top:8px;">${esc(r.quote_message)}</div>` : ''}
+        ${r.quote_message ? `<div class="detail-notes" style="background:rgba(255,255,255,0.6);margin-top:8px;">${esc(r.quote_message)}</div>` : ''}
       </div>
     ` : ''}
 
@@ -691,21 +571,20 @@ async function cancelReq(){
   }
 }
 
-// ── 카드 스와이프 → 빠른 삭제 (schedule.html Phase 7 패턴) ─────
+// ── 카드 스와이프 → 빠른 삭제 (design.css .ds-swipe-* 패턴) ─────
 function bindSwipeHandlers() {
-  const wraps = document.querySelectorAll('.req-card-wrap');
+  const wraps = document.querySelectorAll('.ds-swipe-wrap');
   wraps.forEach(wrap => {
-    const cardEl = wrap.querySelector('.req-card');
+    const cardEl = wrap.querySelector('.ds-swipe-card');
     if (!cardEl) return;
     let startX = 0, currentX = 0, dragging = false;
-    const openOffset = -90;
+    const openOffset = -76;  // .ds-swipe-action width와 동일
     const reset = () => { cardEl.style.transform = 'translateX(0)'; wrap._open = false; };
 
     cardEl.addEventListener('touchstart', (e) => {
-      // 다른 열린 카드 닫기
-      document.querySelectorAll('.req-card-wrap').forEach(w => {
+      document.querySelectorAll('.ds-swipe-wrap').forEach(w => {
         if (w !== wrap && w._open) {
-          const c = w.querySelector('.req-card');
+          const c = w.querySelector('.ds-swipe-card');
           if (c) c.style.transform = 'translateX(0)';
           w._open = false;
         }
@@ -726,7 +605,7 @@ function bindSwipeHandlers() {
       if (!dragging) return;
       dragging = false;
       const dx = currentX - startX;
-      if (dx < -45) {
+      if (dx < -38) {
         cardEl.style.transform = `translateX(${openOffset}px)`;
         wrap._open = true;
       } else {
@@ -734,7 +613,6 @@ function bindSwipeHandlers() {
       }
     });
 
-    // 열린 상태에서 카드 클릭 시 닫기 (상세 진입 방지)
     cardEl.addEventListener('click', (e) => {
       if (wrap._open) { e.stopPropagation(); e.preventDefault(); reset(); }
     }, true);

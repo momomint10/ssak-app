@@ -718,3 +718,162 @@ html, body {
   color: #fff;
 }
 .ds-check-item.on .ds-check-box::after { content: '✓'; }
+
+/* ════════════════════════════════════════════════════════════════
+ * 2026-05-26 추가: 공통 헤더 / 상태 탭 / 스와이프 카드
+ * 페이지 인라인 CSS 중복 제거 위함. 기존 클래스는 그대로 둠.
+ * ════════════════════════════════════════════════════════════════ */
+
+/* ── 페이지 헤더 (그라데이션 + sticky + 우측 액션 슬롯) ──────────────── */
+.ds-page-header {
+  background: linear-gradient(160deg, var(--c-pr-xl) 0%, var(--c-white) 60%);
+  border-bottom: 0.5px solid #F5E8E4;
+  padding: 14px var(--sp-md) 12px;
+  position: sticky; top: 0; z-index: 50;
+}
+.ds-page-header::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--c-pr) 0%, #FC8181 100%);
+}
+.ds-page-header-row {
+  display: flex; align-items: center; gap: var(--sp-sm);
+}
+.ds-page-back {
+  background: none; border: none; font-size: 22px; color: var(--c-g500);
+  cursor: pointer; padding: 4px 6px; font-family: inherit; line-height: 1;
+}
+.ds-page-titles { flex: 1; min-width: 0; }
+.ds-page-titles .ds-page-title { font-size: 21px; font-weight: 700; }
+.ds-page-h-sub {
+  font-size: var(--f-sm); color: var(--c-g500); font-weight: 500; margin-top: 2px;
+}
+.ds-page-actions {
+  display: flex; align-items: center; gap: 4px; margin-left: auto;
+}
+
+/* 헤더 우측 아이콘 버튼 (예: 휴지통 배지) */
+.ds-icon-btn {
+  background: none; border: none; cursor: pointer; padding: 8px;
+  position: relative; color: var(--c-g500);
+  font-size: 18px; font-family: inherit; line-height: 1;
+  border-radius: var(--r-sm);
+}
+.ds-icon-btn:active { background: var(--c-g100); }
+.ds-icon-btn-badge {
+  position: absolute; top: 2px; right: 0;
+  background: var(--c-pr); color: #fff;
+  font-size: 9px; font-weight: 800;
+  border-radius: var(--r-full);
+  min-width: 14px; padding: 1px 4px; line-height: 1.2;
+}
+
+/* 헤더 우측 primary 액션 버튼 (예: + 새 요청) */
+.ds-header-cta {
+  background: var(--c-pr); color: #fff; border: none;
+  padding: 9px 14px; border-radius: var(--r-full);
+  font-size: 13px; font-weight: 700; font-family: inherit;
+  cursor: pointer; white-space: nowrap;
+}
+.ds-header-cta:active { transform: scale(.97); }
+
+/* ── 상태 탭 (가로 스크롤 + 우측 fade) ──────────────────────────── */
+.ds-status-tabs-wrap {
+  position: relative; margin-top: 10px;
+}
+.ds-status-tabs-wrap::after {
+  /* 우측 fade — 더 있는 탭 hint */
+  content: ''; position: absolute; right: 0; top: 0; bottom: 0;
+  width: 24px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--c-white));
+}
+.ds-status-tabs {
+  display: flex; gap: 6px; overflow-x: auto;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  padding-right: 24px;
+}
+.ds-status-tabs::-webkit-scrollbar { display: none; }
+.ds-status-tab {
+  flex-shrink: 0; padding: 7px 14px; border-radius: var(--r-full);
+  border: 1.5px solid var(--c-g200); background: var(--c-white);
+  font-size: 12.5px; font-weight: 700; color: var(--c-g500);
+  cursor: pointer; font-family: inherit; white-space: nowrap;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.ds-status-tab.on {
+  background: var(--c-g900); border-color: var(--c-g900); color: #fff;
+}
+.ds-status-tab-count {
+  display: inline-block;
+  background: var(--c-g100); color: var(--c-g500);
+  margin-left: 5px; padding: 1px 7px;
+  border-radius: var(--r-full); font-size: 11px; font-weight: 700;
+}
+.ds-status-tab.on .ds-status-tab-count {
+  background: rgba(255,255,255,0.22); color: #fff;
+}
+
+/* ── 스와이프 카드 (좌측 슬라이드 → 우측 액션 노출) ──────────────── */
+.ds-swipe-wrap {
+  position: relative; overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--c-white);
+  box-shadow: var(--sh-sm);
+  margin: 10px var(--sp-md) 0;
+}
+.ds-swipe-wrap .ds-swipe-card {
+  position: relative; z-index: 1;
+  background: var(--c-white);
+  padding: 14px 16px;
+  transition: transform .18s ease;
+  will-change: transform;
+  touch-action: pan-y;
+  cursor: pointer;
+}
+.ds-swipe-action {
+  position: absolute; top: 0; right: 0;
+  height: 100%; width: 76px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2px;
+  background: #DC2626; color: #fff;
+  font-size: 11.5px; font-weight: 700;
+  border: none; cursor: pointer;
+  font-family: inherit; z-index: 0;
+}
+.ds-swipe-action::before { content: '🗑'; font-size: 18px; }
+
+/* ── 리스트 카드 콘텐츠 (스와이프 카드 안에 들어가는 표준 구조) ─── */
+.ds-list-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 6px;
+}
+.ds-list-time {
+  font-size: var(--f-xs); color: var(--c-g400);
+  margin-left: auto; flex-shrink: 0;
+}
+.ds-list-name {
+  font-size: 15px; font-weight: 700; color: var(--c-g900);
+  margin-bottom: 2px;
+}
+.ds-list-sub {
+  font-size: 13px; color: var(--c-g500);
+  font-variant-numeric: tabular-nums;
+}
+.ds-list-tags {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;
+}
+.ds-list-tag {
+  font-size: 11.5px; font-weight: 600;
+  padding: 3px 9px; background: var(--c-g100);
+  color: var(--c-g700); border-radius: var(--r-full);
+}
+.ds-list-amount {
+  font-size: 15px; font-weight: 800;
+  color: var(--c-g900); margin-top: 8px;
+}
+
+/* 새 항목 강조: 좌측 컬러 바 */
+.ds-swipe-wrap.is-new .ds-swipe-card {
+  border-left: 3px solid var(--c-pr);
+  padding-left: 13px;
+}
