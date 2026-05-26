@@ -215,6 +215,14 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       </div>
       <div class="menu-arrow">›</div>
     </div>
+    <div class="menu-item ds-tap-card" id="acc-trust-row" onclick="openTrustDevicesModal()">
+      <div class="menu-icon" style="background:#EEF2FF;color:#4338CA;font-size:18px;">🔒</div>
+      <div class="menu-text">
+        <div class="menu-title">자동 로그인 기기 관리</div>
+        <div class="menu-sub" id="acc-trust-sub">30일 동안 인증 없이 자동 로그인 (기기 분실 시 즉시 해제)</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
     <div class="menu-item ds-tap-card" onclick="confirmSignOut()">
       <div class="menu-icon" style="background:#F3F4F6;color:#6B7280;font-size:18px;">🚪</div>
       <div class="menu-text"><div class="menu-title">로그아웃</div><div class="menu-sub">다시 로그인하려면 SMS 인증 필요</div></div>
@@ -271,6 +279,25 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     <button onclick="closePinModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:8px;">취소</button>
     <div style="font-size:11.5px;color:#999;text-align:center;margin-top:10px;line-height:1.5;">
       🔒 PIN은 안전하게 암호화되어 저장됩니다.<br>5회 실패 시 30분간 잠금 + SMS 강제 인증.
+    </div>
+  </div>
+</div>
+
+<!-- 자동 로그인 기기 관리 모달 -->
+<div id="trust-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closeTrustDevicesModal()">
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;max-height:80vh;display:flex;flex-direction:column;">
+    <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;flex-shrink:0;"></div>
+    <div style="font-size:17px;font-weight:800;margin-bottom:6px;flex-shrink:0;">🔒 자동 로그인 기기</div>
+    <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;flex-shrink:0;">
+      등록된 기기는 30일 동안 인증번호 없이 자동 로그인됩니다.<br>
+      <b style="color:#DC2626;">기기 분실 시 즉시 삭제</b>해 보안을 지키세요.
+    </div>
+    <div id="trust-list" style="overflow-y:auto;flex:1;margin:0 -4px;">
+      <div style="text-align:center;color:#999;padding:24px;">불러오는 중...</div>
+    </div>
+    <button onclick="closeTrustDevicesModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:12px;flex-shrink:0;">닫기</button>
+    <div style="font-size:11.5px;color:#999;text-align:center;margin-top:10px;line-height:1.5;flex-shrink:0;">
+      💡 새 기기 등록은 <b>로그인 화면에서 인증 후</b> "이 기기 자동 로그인" 선택.
     </div>
   </div>
 </div>
@@ -468,7 +495,66 @@ function confirmSignOut(){
   if (!confirm('로그아웃하시겠어요?\n다시 사용하려면 SMS 인증으로 로그인해야 합니다.')) return;
   if (typeof clearJwt === 'function') clearJwt();
   else { localStorage.removeItem('ssak_jwt'); localStorage.removeItem('ssak_user'); }
+  // 자동 로그인 토큰도 함께 제거 (다음 로그인부터 인증 필요)
+  localStorage.removeItem('ssak_device_token');
+  localStorage.removeItem('ssak_device_expires');
   location.replace('/login.html');
+}
+
+// ── 자동 로그인 기기 관리 ─────────────────────────────────
+async function openTrustDevicesModal(){
+  document.getElementById('trust-ov').style.display = 'block';
+  document.getElementById('trust-list').innerHTML = '<div style="text-align:center;color:#999;padding:24px;">불러오는 중...</div>';
+  try {
+    const r = await fetch(SERVER + '/api/auth/trust-devices', {
+      headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('ssak_jwt') || '') }
+    });
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error || '불러오기 실패');
+    renderTrustDevices(d.data || []);
+  } catch (e) {
+    document.getElementById('trust-list').innerHTML =
+      '<div style="text-align:center;color:#DC2626;padding:24px;font-size:13px;">오류: ' + (e.message || '') + '</div>';
+  }
+}
+function closeTrustDevicesModal(){ document.getElementById('trust-ov').style.display = 'none'; }
+
+function renderTrustDevices(list){
+  if (!list.length) {
+    document.getElementById('trust-list').innerHTML =
+      '<div style="text-align:center;color:#999;padding:30px 20px;font-size:13px;line-height:1.7;">등록된 자동 로그인 기기가 없습니다.<br><small>다음 로그인 시 "자동 로그인 (30일)" 선택</small></div>';
+    return;
+  }
+  const fmt = (s) => {
+    if (!s) return '';
+    const d = new Date(s);
+    return d.toLocaleString('ko-KR', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+  };
+  const daysLeft = (s) => Math.max(0, Math.ceil((new Date(s).getTime() - Date.now()) / 86400000));
+  document.getElementById('trust-list').innerHTML = list.map(t => `
+    <div style="background:#fff;margin:8px 4px;padding:12px 14px;border-radius:10px;border:1px solid #F3F4F6;display:flex;align-items:center;gap:10px;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:14px;font-weight:700;color:#1A1F36;">${(t.device_name||'기기').replace(/[<>]/g,'')}</div>
+        <div style="font-size:12px;color:#666;margin-top:3px;">마지막 사용: ${fmt(t.last_used_at)}</div>
+        <div style="font-size:11px;color:#999;margin-top:2px;">자동 로그인 ${daysLeft(t.expires_at)}일 남음</div>
+      </div>
+      <button onclick="removeTrustDevice('${t.id}')" style="background:#fff;color:#DC2626;border:1.5px solid #FECACA;padding:8px 12px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">삭제</button>
+    </div>
+  `).join('');
+}
+
+async function removeTrustDevice(id){
+  if (!confirm('이 기기의 자동 로그인을 해제할까요?\n그 기기는 다음 접속 시 인증번호를 받아야 합니다.')) return;
+  try {
+    const r = await fetch(SERVER + '/api/auth/trust-devices/' + id, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('ssak_jwt') || '') }
+    });
+    const d = await r.json();
+    if (!d.success) { toast(d.error || '삭제 실패'); return; }
+    toast('🔒 자동 로그인 해제됨');
+    openTrustDevicesModal();  // 새로고침
+  } catch (e) { toast('오류: ' + (e.message||'')); }
 }
 
 function copyBookingLink() {

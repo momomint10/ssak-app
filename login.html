@@ -207,6 +207,83 @@ let currentPhone = '';
 let timerId = null;
 let resendCooldown = null;
 
+// ── 자동 로그인 시도 (이전에 "이 기기 자동 로그인" 체크한 경우) ─────
+(async () => {
+  const deviceToken = localStorage.getItem('ssak_device_token');
+  if (!deviceToken) return;
+  try {
+    const r = await fetch(SERVER + '/api/auth/auto-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ device_token: deviceToken })
+    });
+    const d = await r.json();
+    if (r.ok && d.success) {
+      setJwt(d.token);
+      setCurrentUser(d.user);
+      const params = new URLSearchParams(location.search);
+      const next = params.get('next') || '/index.html';
+      location.replace(next);
+    } else {
+      // 만료/무효 → 토큰 삭제 후 일반 로그인 흐름
+      localStorage.removeItem('ssak_device_token');
+      localStorage.removeItem('ssak_device_expires');
+    }
+  } catch (e) {
+    // 네트워크 오류 — 일반 로그인 흐름 진행
+  }
+})();
+
+// ── "이 기기 자동 로그인" 모달 ─────
+function offerTrustDevice() {
+  if (localStorage.getItem('ssak_device_token')) return Promise.resolve(false);
+  return new Promise((resolve) => {
+    const html = `
+      <div id="trust-ov" style="display:flex;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+        <div style="background:#fff;border-radius:16px;padding:24px 20px;max-width:380px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,0.2);">
+          <div style="font-size:20px;font-weight:800;margin-bottom:8px;">🔒 이 기기를 기억할까요?</div>
+          <div style="font-size:14px;color:#666;line-height:1.7;margin-bottom:18px;">
+            30일 동안 <b>인증번호 없이 자동 로그인</b>합니다.<br>
+            <b style="color:#DC2626;">⚠️ 본인 휴대폰에서만</b> 사용하세요.<br>
+            공용 기기면 "매번 인증"을 누르세요.
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button onclick="__trustResolve(false)" style="flex:1;padding:13px;border:1.5px solid #E5E7EB;background:#fff;border-radius:10px;font-size:14px;font-weight:700;color:#666;cursor:pointer;font-family:inherit;">매번 인증</button>
+            <button onclick="__trustResolve(true)" style="flex:1.5;padding:13px;border:none;background:#FF385C;color:#fff;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;">자동 로그인 (30일)</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', html);
+    window.__trustResolve = (yes) => {
+      const ov = document.getElementById('trust-ov');
+      if (ov) ov.remove();
+      delete window.__trustResolve;
+      resolve(yes);
+    };
+  });
+}
+
+async function registerTrustDevice(jwt) {
+  try {
+    const r = await fetch(SERVER + '/api/auth/trust-device', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + jwt }
+    });
+    const d = await r.json();
+    if (d.success) {
+      localStorage.setItem('ssak_device_token', d.device_token);
+      localStorage.setItem('ssak_device_expires', d.expires_at);
+    }
+  } catch (e) { /* silent */ }
+}
+
+// 인증 성공 후 redirect 직전 트러스트 옵션 묻기
+async function finalizeLogin(token, nextUrl) {
+  const trust = await offerTrustDevice();
+  if (trust) await registerTrustDevice(token);
+  location.replace(nextUrl);
+}
+
 function normalizePhone(raw) {
   return (raw || '').replace(/[^\d+]/g, '');
 }
@@ -293,7 +370,7 @@ async function verifyPin(){
     showAlert('alert-pin', '✅ 로그인 성공! 이동 중...', 'ok');
     const params = new URLSearchParams(location.search);
     const next = params.get('next') || '/index.html';
-    setTimeout(() => location.replace(next), 500);
+    setTimeout(() => finalizeLogin(d.token, next), 500);
   } catch (e) {
     showAlert('alert-pin', '서버 연결 실패');
     btn.disabled = false; btn.textContent = '로그인';
@@ -373,7 +450,7 @@ async function verifyOtp() {
     // next 파라미터가 있으면 그곳으로, 없으면 홈
     const params = new URLSearchParams(location.search);
     const next = params.get('next') || '/index.html';
-    setTimeout(() => location.replace(next), 600);
+    setTimeout(() => finalizeLogin(d.token, next), 600);
   } catch (e) {
     showAlert('alert-otp', '서버 연결 실패. 잠시 후 다시 시도해 주세요.');
     btn.disabled = false; btn.textContent = '로그인';

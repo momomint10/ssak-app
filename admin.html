@@ -202,6 +202,13 @@ input:focus { border-color: var(--c-pr, #FF385C); }
     <input id="add-phone" type="tel" placeholder="010-1234-5678" inputmode="numeric" maxlength="13">
     <label>이름 (선택)</label>
     <input id="add-name" type="text" placeholder="홍길동" maxlength="40">
+    <label style="display:flex;align-items:center;gap:10px;background:#FFF8F5;padding:12px 14px;border-radius:10px;margin-top:14px;cursor:pointer;font-weight:600;">
+      <input id="add-notify" type="checkbox" checked style="width:18px;height:18px;accent-color:#FF385C;">
+      <span style="flex:1;font-size:14px;color:#1A1F36;">📨 등록 즉시 안내 SMS 발송</span>
+    </label>
+    <div style="font-size:11.5px;color:#888;line-height:1.6;margin-top:6px;padding:0 4px;">
+      해당 번호로 접속 링크 + 첫 로그인 안내 문자가 자동 발송됩니다.
+    </div>
     <button class="btn" onclick="addUser()">등록</button>
     <button class="btn ghost" onclick="closeAdd()">취소</button>
   </div>
@@ -302,6 +309,7 @@ document.getElementById('add-phone').addEventListener('input', (e) => {
 async function addUser() {
   const phone = document.getElementById('add-phone').value.replace(/\D/g,'');
   const name = document.getElementById('add-name').value.trim();
+  const notify = document.getElementById('add-notify').checked;
   if (!/^01[016789]\d{7,8}$/.test(phone)) {
     toast('휴대폰 번호를 정확히 입력해 주세요');
     return;
@@ -309,12 +317,12 @@ async function addUser() {
   try {
     const r = await fetchAuth(SERVER + '/api/admin/users', {
       method: 'POST',
-      body: JSON.stringify({ phone, name })
+      body: JSON.stringify({ phone, name, notify })
     });
     const d = await r.json();
     if (!d.success) { toast(d.error || '등록 실패'); return; }
     closeAdd();
-    toast('✅ 등록 완료');
+    toast(notify && d.sms_sent ? '✅ 등록 + 안내 SMS 발송 완료' : '✅ 등록 완료');
     loadUsers();
   } catch (e) {
     toast('오류: ' + e.message);
