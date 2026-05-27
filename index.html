@@ -42,10 +42,32 @@
   overflow: hidden;  /* ::before 장식 원 클리핑용 */
   border-bottom: 0.5px solid #f5e8e4;
 }
-/* 스크롤 시 헤더 축소 */
+/* 사진 배경 레이어 (260527 글라스 톤 확장 — 헤더에만 은은하게) */
+.hd-bg-photo {
+  position: absolute; inset: 0;
+  background-image: url('img/hero-mascot.png');
+  background-size: cover;
+  background-position: center 35%;
+  opacity: 0.32;
+  filter: saturate(1.05);
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity .24s ease;
+}
+/* 사진 위에 따뜻한 페이드 (코랄 → 투명 위쪽, 크림 → 진해짐 아래쪽 — 카드 영역 가독성 ↑) */
+.hd-bg-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(255, 234, 232, 0.20) 0%,
+    rgba(255, 240, 244, 0.55) 65%,
+    rgba(255, 248, 245, 0.92) 100%);
+}
+/* 스크롤 시 헤더 축소 — 사진도 더 옅게 */
 .home-header.scrolled {
   padding: 10px 20px 8px;
 }
+.home-header.scrolled .hd-bg-photo { opacity: 0.18; }
 /* .home-header::after는 design.css 글로벌 hook으로 라인 글로우 적용됨 */
 /* .home-header::before/::after는 design.css 글로벌 hook이 override함 (입체감 통일) */
 .hd-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
@@ -172,6 +194,7 @@
 
   <!-- 헤더 -->
   <div class="home-header ds-app-header">
+    <div class="hd-bg-photo" aria-hidden="true"></div>
     <div class="hd-top">
       <div>
         <div class="hd-greeting" id="greeting">좋은 아침이에요 ☀️</div>
