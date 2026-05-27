@@ -175,7 +175,7 @@
     <div class="hd-top">
       <div>
         <div class="hd-greeting" id="greeting">좋은 아침이에요 ☀️</div>
-        <h1 class="hd-name ds-page-title"><span id="user-name">사장님</span><span id="hd-decor" aria-hidden="true" style="display:inline-block;width:22px;height:22px;margin-left:8px;vertical-align:-3px;color:var(--c-pr);opacity:.65;"></span></h1>
+        <h1 class="hd-name ds-page-title"><span id="user-name">사장님</span></h1>
       </div>
       <div class="hd-actions">
         <button class="hd-icon-btn ds-tap" onclick="togglePushNotification()" title="알림 설정">
@@ -680,11 +680,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadUser();
   loadHomeStats();
   initStickyHeader(); // 스크롤 그림자 헤더
-  // 헤더 데코: 사장님 이름 옆에 미니 분무기 SVG (Botanical 영감)
-  const decor = document.getElementById('hd-decor');
-  if (decor && typeof svgIcon === 'function') {
-    decor.innerHTML = svgIcon('spray', { size: 22, color: 'var(--c-pr)' });
-  }
   // SW 구독 상태
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     navigator.serviceWorker.ready.then(reg =>

@@ -241,30 +241,15 @@ function emptyHtml(icon, title, sub = '') {
  *       또는 직접: SVG_ICONS.spray, SVG_ICONS.bucket 등
  * ════════════════════════════════════════════════════════════════ */
 const SVG_ICONS = {
-  // 분무기 (Spray bottle) — 견적요청서 빈 상태
-  spray: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- 분사 미스트 -->
-    <circle cx="78" cy="22" r="2" fill="currentColor" opacity=".5"/>
-    <circle cx="86" cy="28" r="1.5" fill="currentColor" opacity=".4"/>
-    <circle cx="84" cy="18" r="1.5" fill="currentColor" opacity=".4"/>
-    <circle cx="92" cy="22" r="1.2" fill="currentColor" opacity=".3"/>
-    <!-- 트리거 -->
-    <path d="M30 30 L48 30 L50 36 L42 40 L30 40 Z" fill="currentColor" opacity=".18"/>
-    <path d="M30 30 L48 30 L50 36 L42 40 L30 40 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
-    <!-- 노즐 -->
-    <path d="M50 32 L72 28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-    <!-- 병 본체 -->
-    <path d="M28 40 L52 40 L56 50 Q58 54 58 60 L58 82 Q58 88 52 88 L32 88 Q26 88 26 82 L26 60 Q26 54 28 50 Z"
-          fill="currentColor" opacity=".10"/>
-    <path d="M28 40 L52 40 L56 50 Q58 54 58 60 L58 82 Q58 88 52 88 L32 88 Q26 88 26 82 L26 60 Q26 54 28 50 Z"
-          stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
-    <!-- 액체 레벨 -->
-    <path d="M28 70 L56 70 L56 82 Q56 86 52 86 L32 86 Q28 86 28 82 Z"
-          fill="currentColor" opacity=".22"/>
-    <!-- 라벨 -->
-    <circle cx="42" cy="64" r="6" fill="currentColor" opacity=".15"/>
-    <path d="M42 60 L42 64 M42 64 L44 66 M42 64 L40 66" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+  // 종이 비행기 (Paper plane) — 견적요청서 빈 상태 (메시지 발송 메타포)
+  paperplane: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M88 14 L12 46 L42 58 L88 14 Z" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="3"/>
+    <path d="M42 58 L52 86 L66 62 L42 58 Z" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="3"/>
+    <path d="M88 14 L42 58 L66 62" stroke="currentColor" stroke-width="3" fill="none"/>
+    <path d="M14 76 L24 70 M18 86 L30 80 M30 92 L40 84" stroke="currentColor" stroke-width="2.5" opacity=".5"/>
   </svg>`,
+  // spray는 paperplane의 alias (하위 호환, 새 코드는 paperplane 사용)
+  get spray() { return this.paperplane; },
 
   // 마이크로파이버 천 (Microfiber cloth) — 완료보고서 빈 상태
   microfiber: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">

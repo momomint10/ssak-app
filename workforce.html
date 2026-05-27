@@ -34,9 +34,9 @@
 /* design.css 토큰으로 마이그레이션됨 (TOP 1 시범 적용 2026-05-15) */
 /* 페이지 로컬 변수는 design.css 토큰의 alias로만 작동 - 시각 거의 동일, 시스템 통합 */
 :root{
-  --pr: var(--c-pr);          /* Rausch */
-  --pr-d: var(--c-g900);      /* ink #222 */
-  --pr-l: var(--c-g100);      /* surface-soft */
+  --pr: var(--c-pr);          /* 코랄 */
+  --pr-d: var(--c-pr-d);      /* 진한 코랄 (was: 잉크 검정 — chip 색 통일) */
+  --pr-l: var(--c-pr-l);      /* 옅은 코랄 (was: 회색 — chip 색 통일) */
   --green: var(--c-teal);     /* Babu teal */
   --orange: #F97316;          /* market sub-brand 외엔 미사용 */
   --red: var(--c-red);
@@ -384,7 +384,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
           <img id="f-photo-img" alt="" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--pr);display:block;margin:0 auto;">
           <button onclick="removePhoto()" style="position:absolute;top:0;right:calc(50% - 62px);background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:13px;">×</button>
         </div>
-        <div style="text-align:center;"><button class="chip" style="background:var(--pr-l);border-color:var(--c-pr, #FF385C);color:var(--pr-d);" onclick="document.getElementById('f-photo-file').click()">📷 사진 선택</button></div>
+        <div style="text-align:center;"><button class="chip on" onclick="document.getElementById('f-photo-file').click()">📷 사진 선택</button></div>
         <input type="file" id="f-photo-file" accept="image/*" style="display:none" onchange="onPhotoSelect(this)">
         <div style="font-size:11px;color:var(--g400);text-align:center;margin-top:6px;">상반신이 잘 보이는 사진을 등록해주세요</div>
       </div>

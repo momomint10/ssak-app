@@ -234,8 +234,8 @@ function renderList(){
   if (!filtered.length) {
     document.getElementById('list').innerHTML =
       curStatus
-        ? emptySvg('spray', (statusLabel[curStatus]||curStatus) + ' 상태가 없습니다', '', { color: 'var(--c-pr)' })
-        : emptySvg('spray', '아직 견적 요청이 없습니다', '＋ 새 요청 버튼으로 시작하세요', { color: 'var(--c-pr)' });
+        ? emptySvg('paperplane', (statusLabel[curStatus]||curStatus) + ' 상태가 없습니다', '', { color: 'var(--c-pr)' })
+        : emptySvg('paperplane', '아직 견적 요청이 없습니다', '＋ 새 요청 버튼으로 시작하세요', { color: 'var(--c-pr)' });
     return;
   }
   document.getElementById('list').innerHTML = filtered.map(card).join('');
