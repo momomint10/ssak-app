@@ -62,16 +62,18 @@
   --sh-xl: 0 16px 36px rgba(20, 30, 50, 0.14), 0 32px 64px rgba(20, 30, 50, 0.22), 0 0 0 1px rgba(20, 30, 50, 0.03);
 
   /* 컬러 그림자 — CTA·강조 카드용 (브랜드 색을 자체 발광하는 효과) */
-  --sh-pr:   0 4px 14px rgba(255, 56, 92, 0.32), 0 10px 28px rgba(255, 56, 92, 0.20), 0 1px 2px rgba(255, 56, 92, 0.18);
-  --sh-pr-sm: 0 2px 8px rgba(255, 56, 92, 0.25), 0 4px 12px rgba(255, 56, 92, 0.12);
-  --sh-pr-lg: 0 8px 24px rgba(255, 56, 92, 0.40), 0 16px 40px rgba(255, 56, 92, 0.24);
-  --sh-teal: 0 4px 14px rgba(0, 200, 150, 0.32), 0 10px 28px rgba(0, 200, 150, 0.20);
-  --sh-mint: 0 4px 14px rgba(94, 234, 212, 0.32), 0 10px 28px rgba(20, 184, 166, 0.18);
-  --sh-mint-sm: 0 2px 8px rgba(94, 234, 212, 0.25), 0 4px 12px rgba(20, 184, 166, 0.10);
+  /* 2026-05-27 A안 톤다운: 코랄/민트 그림자 alpha 30% 축소, 3겹 → 2겹 */
+  --sh-pr:   0 3px 10px rgba(255, 56, 92, 0.20), 0 8px 22px rgba(255, 56, 92, 0.12);
+  --sh-pr-sm: 0 2px 6px rgba(255, 56, 92, 0.18), 0 4px 10px rgba(255, 56, 92, 0.08);
+  --sh-pr-lg: 0 6px 18px rgba(255, 56, 92, 0.28), 0 14px 32px rgba(255, 56, 92, 0.16);
+  --sh-teal: 0 3px 10px rgba(0, 200, 150, 0.22), 0 8px 22px rgba(0, 200, 150, 0.12);
+  --sh-mint: 0 3px 10px rgba(94, 234, 212, 0.22), 0 8px 22px rgba(20, 184, 166, 0.12);
+  --sh-mint-sm: 0 2px 6px rgba(94, 234, 212, 0.18), 0 4px 10px rgba(20, 184, 166, 0.08);
 
   /* 카드 상단 highlight — inset 1px 흰색으로 광원 시뮬레이션 */
-  --hl-top:  inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  --hl-top-strong: inset 0 1px 0 rgba(255, 255, 255, 1.0);
+  /* 톤다운: 상단 highlight 미세화 */
+  --hl-top:  inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --hl-top-strong: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 
   /* 입력 필드 inset (살짝 들어간 느낌) */
   --sh-inset-sm: inset 0 1px 2px rgba(20, 30, 50, 0.04);
@@ -314,8 +316,8 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   width: 100%; max-width: 480px;
   background: rgba(255,255,255,.85);
   border-top: 1px solid var(--c-g200);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(160%) blur(16px);
+  -webkit-backdrop-filter: saturate(160%) blur(16px);
   display: flex;
   padding: 8px 0 max(8px, env(safe-area-inset-bottom));
   z-index: 100;
@@ -868,8 +870,8 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
     0 1px 0 rgba(20, 30, 50, 0.02),
     0 3px 12px rgba(255, 56, 92, 0.05),
     0 8px 24px rgba(255, 56, 92, 0.03);
-  backdrop-filter: saturate(180%) blur(8px);
-  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  backdrop-filter: saturate(160%) blur(5px);
+  -webkit-backdrop-filter: saturate(160%) blur(5px);
 }
 .ds-page-header::before {
   /* 앰비언트 오브 — 우상단 흐릿한 코랄 빛 (낮은 톤) */
@@ -1065,8 +1067,8 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
     0 1px 0 rgba(20, 30, 50, 0.02),
     0 3px 12px rgba(255, 56, 92, 0.05),
     0 8px 24px rgba(255, 56, 92, 0.03);
-  backdrop-filter: saturate(180%) blur(8px);
-  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  backdrop-filter: saturate(160%) blur(5px);
+  -webkit-backdrop-filter: saturate(160%) blur(5px);
 }
 /* 글로벌 헤더에도 앰비언트 오브 추가 (낮은 톤) */
 :where(.header, .page-header):not(.ds-page-header):not(.home-header)::before {
@@ -1262,33 +1264,38 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   color: var(--c-g500);
   font-weight: var(--fw-semibold);
 }
+/* 2026-05-27 A안: 활성 탭은 흰 배경 + 진한 컬러 글씨 (segmented control과 통일, 가독성 ↑) */
 .ds-status-tab.is-blob.on {
-  background: var(--c-pr-l);
+  background: var(--c-white);
   border-color: transparent;
   color: var(--c-pr-d);
-  box-shadow: 0 2px 8px rgba(255, 56, 92, 0.18);
+  box-shadow:
+    var(--sh-sm),
+    0 2px 6px rgba(255, 56, 92, 0.12);
 }
 .ds-status-tab.is-blob.on::after {
-  /* 활성 탭 아래 작은 점 indicator (Botanical 영감) */
+  /* 활성 탭 아래 작은 점 indicator */
   content: '';
   position: absolute;
-  bottom: -8px; left: 50%;
+  bottom: -7px; left: 50%;
   transform: translateX(-50%);
   width: 4px; height: 4px;
   border-radius: 50%;
   background: var(--c-pr);
-  box-shadow: 0 0 6px rgba(255, 56, 92, 0.5);
+  box-shadow: 0 0 4px rgba(255, 56, 92, 0.35);
 }
 
 /* 민트 variant (완료/긍정 카테고리용) */
 .ds-status-tab.is-blob.is-mint.on {
-  background: var(--c-mint-l);
+  background: var(--c-white);
   color: var(--c-mint-d);
-  box-shadow: 0 2px 8px rgba(94, 234, 212, 0.25);
+  box-shadow:
+    var(--sh-sm),
+    0 2px 6px rgba(94, 234, 212, 0.14);
 }
 .ds-status-tab.is-blob.is-mint.on::after {
   background: var(--c-mint-d);
-  box-shadow: 0 0 6px rgba(20, 184, 166, 0.5);
+  box-shadow: 0 0 4px rgba(20, 184, 166, 0.35);
 }
 
 /* ── 민트 배지 (.ds-badge-mint) — Botanical 톤 ─────────────────── */
@@ -1397,7 +1404,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-empty-svg svg {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 2px 6px rgba(255, 56, 92, 0.18));
+  filter: drop-shadow(0 1px 3px rgba(255, 56, 92, 0.08));
 }
 
 /* 민트 variant (휴지통 빈 상태 = 깨끗함 메타포) */
@@ -1408,7 +1415,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   background: radial-gradient(circle, rgba(94, 234, 212, 0.14), transparent 65%);
 }
 .ds-empty-svg.is-mint svg {
-  filter: drop-shadow(0 2px 6px rgba(94, 234, 212, 0.22));
+  filter: drop-shadow(0 1px 3px rgba(94, 234, 212, 0.10));
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -1437,7 +1444,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-nav-item.on .nav-icon.nav-icon-svg {
   color: var(--c-pr);
   transform: scale(1.05);
-  filter: drop-shadow(0 2px 6px rgba(255, 56, 92, 0.30));
+  filter: drop-shadow(0 1px 3px rgba(255, 56, 92, 0.12));
 }
 /* 누를 때 살짝 함몰 */
 .nav-item:active .nav-icon.nav-icon-svg {
