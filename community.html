@@ -89,7 +89,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .wcat-btn.on{background:var(--gray-900);border-color:var(--gray-900);color:#fff;}
 
 /* 카드 */
-.post-card{background:#fff;margin:8px 12px 0;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;cursor:pointer;transition:transform .1s;}
+.post-card{background:#fff;margin:8px 12px 0;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;cursor:pointer;transition:transform var(--dur-fast, 120ms) var(--ease-spring, cubic-bezier(.16,1,.3,1));}
 .post-card:active{transform:scale(0.98);}
 .card-title{font-size:15px;font-weight:700;margin-bottom:5px;line-height:1.4;}
 .card-content{font-size:13px;line-height:1.6;color:var(--gray-500);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px;}

@@ -78,7 +78,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   transition:background .18s,color .18s,box-shadow .18s;
   -webkit-tap-highlight-color:transparent;
 }
-.tab.on{background:#fff;color:var(--pr,var(--c-pr, #FF385C));box-shadow:0 1px 6px rgba(0,0,0,.10);}
+.tab.on{background:#fff;color:var(--pr,var(--c-pr, #FF385C));box-shadow:var(--sh-sm, 0 2px 6px rgba(20,30,50,.07)), inset 0 1px 0 rgba(255,255,255,.7), 0 4px 14px rgba(255,56,92,.07);}
 /* ── 필터 ── */
 .filter-bar{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;scrollbar-width:none;}
 .filter-bar::-webkit-scrollbar{display:none;}
@@ -95,8 +95,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 /* ── 인력 카드 ── */
 .list{padding:4px 12px 0;}
-.wcard{background:#fff;border-radius:var(--radius);border:1px solid #ebebeb;box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:10px;padding:14px;display:flex;gap:12px;cursor:pointer;transition:transform .1s,box-shadow .15s;}
-.wcard:active{transform:scale(.98);box-shadow:0 2px 6px rgba(0,0,0,.04),0 4px 8px rgba(0,0,0,.08);}
+.wcard{background:#fff;border-radius:var(--radius);border:1px solid #ebebeb;box-shadow:var(--sh-xs, 0 1px 2px rgba(20,30,50,.05)), inset 0 1px 0 rgba(255,255,255,.5);margin-bottom:10px;padding:14px;display:flex;gap:12px;cursor:pointer;transition:transform var(--dur-fast, 120ms) var(--ease-spring, cubic-bezier(.16,1,.3,1)),box-shadow .15s;}
+.wcard:active{transform:scale(.98);box-shadow:var(--sh-xs, 0 1px 2px rgba(20,30,50,.05)), inset 0 1px 0 rgba(255,255,255,.6),0 4px 8px rgba(0,0,0,.08);}
 .avatar{width:50px;height:50px;border-radius:50%;background:var(--pr-l);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
 .avatar img{width:100%;height:100%;object-fit:cover;}
 .wcard-body{flex:1;min-width:0;}
@@ -111,7 +111,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .time-tag{background:#f2f2f2;color:#222;}
 .act-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:4px;vertical-align:middle;}
 /* ── 채용 카드 ── */
-.jcard{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;padding:14px;cursor:pointer;transition:transform .1s;}
+.jcard{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;padding:14px;cursor:pointer;transition:transform var(--dur-fast, 120ms) var(--ease-spring, cubic-bezier(.16,1,.3,1));}
 .jcard:active{transform:scale(.98);}
 .jcard-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
 .jcard-title{font-size:15px;font-weight:var(--fw-bold);flex:1;padding-right:8px;line-height:1.3;}
