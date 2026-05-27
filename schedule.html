@@ -251,9 +251,33 @@ textarea.form-input{resize:none;}
 .repeat-info{font-size:11.5px;color:var(--primary-dark);background:var(--primary-light);padding:6px 10px;border-radius:8px;margin-top:6px;display:none;}
 .repeat-info.show{display:block;}
 
-/* === 자동 리마인더 표시 (Phase 3) === */
-.reminder-status{font-size:11px;color:var(--gray-500);text-align:right;padding:4px 16px 0;background:#fff;}
-.reminder-status .on{color:var(--primary);font-weight:700;}
+/* === 자동 리마인더 표시 (Phase 3 → 260527 톤업) === */
+.reminder-status{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:600;line-height:1.4;
+  margin:10px 16px 0;padding:10px 14px;
+  border-radius:12px;
+  background:var(--c-pr-xl, #FFEFF3);color:var(--c-pr-d, #E31C5F);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform .12s var(--ease-spring, ease-out), opacity .15s;
+  letter-spacing:-.01em;
+}
+.reminder-status:empty{display:none;}
+.reminder-status:active{transform:scale(.98);opacity:.85;}
+.reminder-status .label{flex:1;}
+.reminder-status .arrow{font-size:14px;opacity:.7;font-weight:700;}
+.reminder-status.is-on{
+  background:var(--c-mint-xl, #ECFDF5);color:#0F766E;
+}
+.reminder-status.is-off{
+  background:var(--c-g100, #F2F4F6);color:var(--gray-500);
+}
+.reminder-status.is-busy{
+  background:var(--c-pr-l, #FFE5EB);color:var(--c-pr-d, #E31C5F);
+  animation:rem-pulse 1.2s ease-in-out infinite;
+}
+@keyframes rem-pulse{0%,100%{opacity:1}50%{opacity:.65}}
+.reminder-status .on{color:#0F766E;font-weight:700;}
 
 /* === Phase 4: 캘린더 셀 미니 텍스트 === */
 .cal-mini{font-size:9.5px;font-weight:600;color:var(--gray-500);line-height:1.1;margin-top:1px;white-space:nowrap;overflow:hidden;max-width:100%;text-align:center;}
@@ -1367,12 +1391,19 @@ async function checkAutoReminders() {
   const c = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
   const enabled = c.autoReminder !== false;
   const statusEl = document.getElementById('reminder-status');
+  // ── 헬퍼: 상태 텍스트 + 클래스를 한 번에 갱신 + 탭하면 my.html로 이동
+  const setStatus = (cls, label, arrow='') => {
+    if (!statusEl) return;
+    statusEl.className = 'reminder-status' + (cls?' '+cls:'');
+    statusEl.innerHTML = `<span class="label">${label}</span>` + (arrow?`<span class="arrow">${arrow}</span>`:'');
+    statusEl.onclick = (cls==='is-on') ? null : () => { location.href='my.html#sms-setup'; };
+  };
   if (!enabled) {
-    if (statusEl) statusEl.innerHTML = '🔕 자동 리마인더 OFF';
+    setStatus('is-off', '🔕 자동 리마인더 OFF', '설정 ›');
     return;
   }
   if (!c.apiKey || !c.apiSecret || !c.fromPhone) {
-    if (statusEl) statusEl.innerHTML = '🔔 자동 리마인더 <span style="color:var(--gray-400)">대기 (설정에서 SMS 등록 필요)</span>';
+    setStatus('', '🔔 자동 리마인더 대기 중', 'SMS 설정 ›');
     return;
   }
 
@@ -1387,11 +1418,11 @@ async function checkAutoReminders() {
   );
 
   if (targets.length === 0) {
-    if (statusEl) statusEl.innerHTML = `🔔 자동 리마인더 <span class="on">ON</span> · 내일 발송 대상 0건`;
+    setStatus('is-on', `✅ 자동 리마인더 <span class="on">ON</span> · 내일 0건`);
     return;
   }
 
-  if (statusEl) statusEl.innerHTML = `🔔 리마인더 발송 중… ${targets.length}건`;
+  setStatus('is-busy', `🔔 리마인더 발송 중… ${targets.length}건`);
 
   let ok = 0;
   for (const s of targets) {
@@ -1402,7 +1433,7 @@ async function checkAutoReminders() {
     }
   }
   localStorage.setItem('ssak_reminded_v1', JSON.stringify(sentMap));
-  if (statusEl) statusEl.innerHTML = `🔔 자동 리마인더 <span class="on">ON</span> · 내일 ${ok}건 발송완료`;
+  setStatus('is-on', `✅ 자동 리마인더 <span class="on">ON</span> · 내일 ${ok}건 발송완료`);
   if (ok > 0) toast(`📱 내일 일정 ${ok}건 자동 리마인더 발송!`);
 }
 

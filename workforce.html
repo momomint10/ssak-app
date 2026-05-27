@@ -143,6 +143,39 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .my-stat{text-align:center;background:var(--g50);border-radius:12px;padding:10px 6px;}
 .my-stat-val{font-size:16px;font-weight:var(--fw-bold);color:var(--c-pr, #FF385C);}
 .my-stat-lbl{font-size:10px;color:var(--g400);margin-top:2px;}
+
+/* ── 구직 프로필 없음 (빈 상태) — 260527 톤업 ──────────────────── */
+.no-profile{
+  background:#fff;border-radius:14px;
+  padding:32px 20px 22px;
+  text-align:center;
+  box-shadow:0 1px 3px rgba(20,30,50,.06), 0 4px 14px rgba(255,56,92,.06);
+}
+.no-profile-ico{
+  width:72px;height:72px;margin:0 auto 14px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, var(--c-pr-xl, #FFEFF3) 0%, #fff 75%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;line-height:1;
+  box-shadow:0 4px 12px rgba(255,56,92,.10), inset 0 1px 0 rgba(255,255,255,.9);
+  position:relative;
+}
+.no-profile-ico::before{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,56,92,.10), transparent 65%);
+  filter:blur(6px);z-index:-1;
+}
+.no-profile-ttl{
+  font-size:17px;font-weight:var(--fw-bold, 700);
+  color:var(--g-ink, #191F28);
+  margin-bottom:6px;letter-spacing:-.01em;
+}
+.no-profile-sub{
+  font-size:13px;color:var(--g500, #8B95A1);
+  line-height:1.6;margin-bottom:18px;
+}
+.no-profile .btn-full{margin-bottom:0;}
+
 .section-title{font-size:13px;font-weight:700;color:var(--g500);margin-bottom:8px;}
 .btn-full{width:100%;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;margin-bottom:8px;}
 .btn-pr{background:var(--c-pr, #FF385C);color:#fff;}
@@ -904,9 +937,9 @@ async function loadMyProfile(){
     } else {
       html+=`<div class="no-profile" style="margin-bottom:12px;">
         <div class="no-profile-ico">👤</div>
-        <div class="no-profile-ttl">구직 프로필 없음</div>
-        <div class="no-profile-sub">등록하면 채용자가 먼저 연락할 수 있어요</div>
-        <button class="btn-full btn-pr" onclick="openForm(false)">구직 프로필 등록</button>
+        <div class="no-profile-ttl">구직 프로필을 등록해보세요</div>
+        <div class="no-profile-sub">프로필이 있으면 채용자가 먼저 연락드려요</div>
+        <button class="btn-full btn-pr" onclick="openForm(false)">+ 구직 프로필 등록</button>
       </div>`;
     }
 
