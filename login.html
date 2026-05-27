@@ -21,8 +21,8 @@ body { position: relative; overflow-x: hidden; }
 .bg-photo {
   position: fixed; inset: 0; z-index: 0;
   background-image: url('img/hero-mascot.png');
-  background-size: cover;
-  background-position: center top;
+  background-size: auto 140%;   /* 이미지를 140%로 키워 머리 영역이 화면 밖으로 */
+  background-position: center bottom;  /* 턱 아래(로고/분무기/집 모형)만 노출 */
   background-repeat: no-repeat;
 }
 .bg-overlay {
