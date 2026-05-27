@@ -1093,19 +1093,15 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   position: relative;
   z-index: 1;
 }
-/* 글로벌 헤더 하단 라인 글로우 추가 (낮은 톤) */
-:where(.header, .page-header):not(.ds-page-header):not(.home-header)::after {
+/* 글로벌 헤더 하단 라인 글로우 추가 (낮은 톤) — .home-header 포함 */
+:where(.header, .page-header, .home-header):not(.ds-page-header)::after {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--c-pr) 0%, #FC8181 50%, var(--c-pr) 100%);
   box-shadow: 0 0 10px rgba(255, 56, 92, 0.35), 0 0 20px rgba(255, 56, 92, 0.20);
   z-index: 2;
-}
-/* .home-header 기존 ::after 톤 조정 (글로우 낮음) */
-.home-header::after {
-  background: linear-gradient(90deg, var(--c-pr) 0%, #FC8181 50%, var(--c-pr) 100%) !important;
-  box-shadow: 0 0 10px rgba(255, 56, 92, 0.35), 0 0 20px rgba(255, 56, 92, 0.20) !important;
+  pointer-events: none;
 }
 
 /* ── 페이지 공통 카드 hook (페이지별 자체 카드 클래스도 포함) ───── */
