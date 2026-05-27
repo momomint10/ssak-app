@@ -92,11 +92,11 @@ textarea { resize:vertical; min-height:90px; line-height:1.6; }
     </div>
     <div class="ds-status-tabs-wrap">
       <div class="ds-status-tabs" id="status-tabs">
-        <button class="ds-status-tab on" data-st="" onclick="onFilter('')">전체<span class="ds-status-tab-count" id="n-all">0</span></button>
-        <button class="ds-status-tab" data-st="submitted" onclick="onFilter('submitted')">📥 정보 도착<span class="ds-status-tab-count" id="n-submitted">0</span></button>
-        <button class="ds-status-tab" data-st="pending" onclick="onFilter('pending')">⏳ 미입력<span class="ds-status-tab-count" id="n-pending">0</span></button>
-        <button class="ds-status-tab" data-st="quoted" onclick="onFilter('quoted')">✅ 견적 완료<span class="ds-status-tab-count" id="n-quoted">0</span></button>
-        <button class="ds-status-tab" data-st="cancelled" onclick="onFilter('cancelled')">취소<span class="ds-status-tab-count" id="n-cancelled">0</span></button>
+        <button class="ds-status-tab is-blob on" data-st="" onclick="onFilter('')">전체<span class="ds-status-tab-count" id="n-all">0</span></button>
+        <button class="ds-status-tab is-blob" data-st="submitted" onclick="onFilter('submitted')">📥 정보 도착<span class="ds-status-tab-count" id="n-submitted">0</span></button>
+        <button class="ds-status-tab is-blob" data-st="pending" onclick="onFilter('pending')">⏳ 미입력<span class="ds-status-tab-count" id="n-pending">0</span></button>
+        <button class="ds-status-tab is-blob is-mint" data-st="quoted" onclick="onFilter('quoted')">✅ 견적 완료<span class="ds-status-tab-count" id="n-quoted">0</span></button>
+        <button class="ds-status-tab is-blob" data-st="cancelled" onclick="onFilter('cancelled')">취소<span class="ds-status-tab-count" id="n-cancelled">0</span></button>
       </div>
     </div>
   </div>
@@ -187,10 +187,11 @@ const statusLabel = {
   quoted:'✅ 견적 완료', contracted:'🤝 계약', cancelled:'❌ 취소'
 };
 // 상태별 배지 색상 (design.css .ds-badge-*)
+// quoted는 민트 그린 (자연·완료·신선 메타포 — Botanical 영감)
 const statusBadgeCls = {
   pending: 'ds-badge-amber',
   submitted: 'ds-badge-blue',
-  quoted: 'ds-badge-teal',
+  quoted: 'ds-badge-mint',
   contracted: 'ds-badge-pr',
   cancelled: 'ds-badge-gray'
 };

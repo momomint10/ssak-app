@@ -18,6 +18,12 @@
   --c-teal-d:#00A87A;
   --c-teal-l:#E6FAF5;
 
+  /* Mint — 자연/청결/완료 액센트 (Botanical 영감, 2026-05-27) */
+  --c-mint:    #5EEAD4;   /* 메인 민트 */
+  --c-mint-d:  #14B8A6;   /* 강조 */
+  --c-mint-l:  #D1F4E5;   /* 블롭 배경 */
+  --c-mint-xl: #ECFDF5;   /* 옅은 배경 */
+
   /* Neutral — 토스 색상 톤 (살짝 푸르스름한 짙은 회색 계열) */
   --c-bg:    #F7F8FA;   /* 앱 배경 */
   --c-white: #FFFFFF;
@@ -60,6 +66,8 @@
   --sh-pr-sm: 0 2px 8px rgba(255, 56, 92, 0.25), 0 4px 12px rgba(255, 56, 92, 0.12);
   --sh-pr-lg: 0 8px 24px rgba(255, 56, 92, 0.40), 0 16px 40px rgba(255, 56, 92, 0.24);
   --sh-teal: 0 4px 14px rgba(0, 200, 150, 0.32), 0 10px 28px rgba(0, 200, 150, 0.20);
+  --sh-mint: 0 4px 14px rgba(94, 234, 212, 0.32), 0 10px 28px rgba(20, 184, 166, 0.18);
+  --sh-mint-sm: 0 2px 8px rgba(94, 234, 212, 0.25), 0 4px 12px rgba(20, 184, 166, 0.10);
 
   /* 카드 상단 highlight — inset 1px 흰색으로 광원 시뮬레이션 */
   --hl-top:  inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -1193,3 +1201,122 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-swipe-wrap:active .ds-swipe-card:not(:has(.swipe-action.open)) {
   /* 카드가 살짝 함몰 */
 }
+
+/* ════════════════════════════════════════════════════════════════
+ * 2026-05-27 추가: Botanical 영감 — 블롭 + 민트 시스템
+ * (Pinterest Maëlline의 Botanical 앱 영감)
+ *
+ * 컨셉:
+ * - 카드/요소 뒤에 둥근 캡슐형 컬러 블롭 → 시각 위계 + 자연 친화
+ * - 민트 그린 secondary 액센트 → 청결·완료 메타포
+ * - 블롭 스타일 활성 탭 → 부드러운 인터랙션
+ * ════════════════════════════════════════════════════════════════ */
+
+/* ── 블롭 카드 (카드 안에 컬러 블롭 배경 — Botanical 식물 카드 패턴) ─ */
+/* 사용: <div class="ds-blob-card ds-blob-pr">...</div> */
+.ds-blob-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  padding: var(--sp-md);
+  background: var(--c-white);
+  box-shadow: var(--sh-sm), var(--hl-top);
+  transition: box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-fast) var(--ease-spring);
+}
+.ds-blob-card::before {
+  /* 블롭 배경 — 카드 우상단 라운드 캡슐 */
+  content: '';
+  position: absolute;
+  top: -20%; right: -20%;
+  width: 70%; height: 140%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  transition: transform var(--dur-slow) var(--ease-spring);
+}
+.ds-blob-card > * { position: relative; z-index: 1; }
+
+/* 블롭 색상 variant */
+.ds-blob-pr::before    { background: radial-gradient(circle, var(--c-pr-l) 0%, transparent 70%); }
+.ds-blob-mint::before  { background: radial-gradient(circle, var(--c-mint-l) 0%, transparent 70%); }
+.ds-blob-teal::before  { background: radial-gradient(circle, var(--c-teal-l) 0%, transparent 70%); }
+
+/* 블롭 카드 active: 블롭이 살짝 회전 (재미있는 인터랙션) */
+.ds-blob-card:active::before {
+  transform: rotate(-8deg) scale(1.05);
+}
+
+/* ── 블롭 스타일 활성 탭 (status-tabs.on을 둥근 블롭으로) ──────── */
+.ds-status-tab.is-blob {
+  background: transparent;
+  border-color: transparent;
+  position: relative;
+  color: var(--c-g500);
+  font-weight: var(--fw-semibold);
+}
+.ds-status-tab.is-blob.on {
+  background: var(--c-pr-l);
+  border-color: transparent;
+  color: var(--c-pr-d);
+  box-shadow: 0 2px 8px rgba(255, 56, 92, 0.18);
+}
+.ds-status-tab.is-blob.on::after {
+  /* 활성 탭 아래 작은 점 indicator (Botanical 영감) */
+  content: '';
+  position: absolute;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--c-pr);
+  box-shadow: 0 0 6px rgba(255, 56, 92, 0.5);
+}
+
+/* 민트 variant (완료/긍정 카테고리용) */
+.ds-status-tab.is-blob.is-mint.on {
+  background: var(--c-mint-l);
+  color: var(--c-mint-d);
+  box-shadow: 0 2px 8px rgba(94, 234, 212, 0.25);
+}
+.ds-status-tab.is-blob.is-mint.on::after {
+  background: var(--c-mint-d);
+  box-shadow: 0 0 6px rgba(20, 184, 166, 0.5);
+}
+
+/* ── 민트 배지 (.ds-badge-mint) — Botanical 톤 ─────────────────── */
+.ds-badge-mint {
+  background: var(--c-mint-l);
+  color: var(--c-mint-d);
+}
+
+/* ── 민트 CTA 버튼 (서브 액션용 — 완료·신선·자연) ───────────────── */
+.ds-btn-mint {
+  background: linear-gradient(180deg, #6FFFE0 0%, var(--c-mint) 100%);
+  color: var(--c-g900);
+  padding: 12px 18px;
+  border-radius: var(--r-md);
+  font-size: var(--f-md);
+  font-weight: var(--fw-semibold);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: var(--sh-mint), var(--hl-top-strong);
+  transition: box-shadow var(--dur-normal) var(--ease-out),
+              transform var(--dur-fast) var(--ease-spring);
+}
+.ds-btn-mint:active {
+  transform: translateY(1px);
+  box-shadow: var(--sh-mint-sm), var(--hl-top);
+}
+
+/* ── 카드 안 블롭 (작은 thumbnail용) ───────────────────────────── */
+.ds-thumb-blob {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--c-mint-l) 0%, var(--c-mint-xl) 70%);
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.ds-thumb-blob.is-pr { background: radial-gradient(circle at 30% 30%, var(--c-pr-l) 0%, var(--c-pr-xl) 70%); }
+.ds-thumb-blob.is-teal { background: radial-gradient(circle at 30% 30%, var(--c-teal-l) 0%, #F0FDF9 70%); }
