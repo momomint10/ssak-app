@@ -1053,7 +1053,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 /* ── 페이지 공통 헤더 hook (.header, .home-header, .page-header) ─── */
 /* 헤더 입체감 A안 (낮은 톤): 앰비언트 오브 + 컬러 그림자 + 메쉬 + 라인 글로우
    + 모든 페이지 헤더 자동 sticky (스크롤 시 상단 고정 통일) */
-:where(.header, .home-header, .page-header):not(.ds-page-header) {
+:where(.header, .home-header, .page-header):not(.ds-page-header):not(.no-design-hook) {
   position: sticky;
   top: 0;
   z-index: 50;
@@ -1071,7 +1071,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   -webkit-backdrop-filter: saturate(160%) blur(5px);
 }
 /* 글로벌 헤더에도 앰비언트 오브 추가 (낮은 톤) */
-:where(.header, .page-header):not(.ds-page-header):not(.home-header)::before {
+:where(.header, .page-header):not(.ds-page-header):not(.home-header):not(.no-design-hook)::before {
   content: '';
   position: absolute;
   top: -70px; right: -50px;
@@ -1089,12 +1089,12 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   top: -70px !important; right: -50px !important;
 }
 /* 헤더 직계 자식은 z-index 위로 */
-:where(.header, .home-header, .page-header):not(.ds-page-header) > * {
+:where(.header, .home-header, .page-header):not(.ds-page-header):not(.no-design-hook) > * {
   position: relative;
   z-index: 1;
 }
 /* 글로벌 헤더 하단 라인 글로우 추가 (낮은 톤) — .home-header 포함 */
-:where(.header, .page-header, .home-header):not(.ds-page-header)::after {
+:where(.header, .page-header, .home-header):not(.ds-page-header):not(.no-design-hook)::after {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0;
   height: 3px;

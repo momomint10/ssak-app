@@ -199,7 +199,18 @@ function toast(msg, duration = 2500, kind) {
   el.classList.remove('ds-toast-success','ds-toast-error','ds-toast-info');
   el.classList.add('ds-toast-' + k);
 
-  el.textContent = msg;
+  // 마스코트 자동 부착 (2026-05-27): success → happy, error → wow, 기본 → default
+  // 페이지에서 명시적으로 끄려면 toast(msg, dur, kind, { mascot: false })
+  if (typeof mascot === 'function' && typeof MASCOT_SVG === 'object') {
+    const mascotExpr = k === 'success' ? 'happy' : (k === 'error' ? 'wow' : 'default');
+    const svg = mascot(mascotExpr, { size: 28 });
+    el.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;">' +
+      '<span style="display:inline-block;width:28px;height:28px;flex-shrink:0;">' + svg + '</span>' +
+      '<span>' + msg.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>' +
+      '</span>';
+  } else {
+    el.textContent = msg;
+  }
   el.style.opacity = '1';
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => { el.style.opacity = '0'; }, duration);
