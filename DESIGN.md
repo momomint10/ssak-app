@@ -1,7 +1,7 @@
 # 싹싹(Ssak-ssak) 디자인 시스템
 
-> **버전**: design.css v2 (2026-05-26 modernized)
-> **레퍼런스 톤**: Toss, Kakao Bank, Daangn (한국 모바일 표준)
+> **버전**: design.css v3 (2026-05-27 — 입체감·발광 시스템 + 글로벌 hook)
+> **레퍼런스 톤**: Toss, Kakao Bank, Daangn (한국 모바일 표준 + 발광 입체감)
 > **타겟 사용자**: 30~50대 입주청소 사장님 (다양 연령대 — 노년 친화 over-fit 회피)
 > **단일 진실 원본**: `design.css` (이 문서는 그 사람이 읽기 좋게 정리한 사본)
 
@@ -310,6 +310,7 @@
 
 | 일자 | 버전 | 주요 변경 |
 | --- | --- | --- |
+| 2026-05-27 | **v3** | **입체감 + 발광 + 글로벌 hook**: 5단계 elevation (`--sh-xs/sm/md/lg/xl`) + 컬러 그림자 (`--sh-pr/pr-sm/pr-lg/teal`) + highlight (`--hl-top/strong`) + spring transition (`--ease-spring`, `--dur-fast/normal/slow`) / 헤더 A안 풀 (앰비언트 오브 + 메쉬 + 라인 글로우) / 카드·네비·시트 발광 확장 / 14개 페이지 글로벌 hook으로 자동 반영 / 12개 페이지 font-weight 800/900 → 700 일괄 |
 | 2026-05-26 | v2 | Toss/Kakao 톤 모던화 (색상 g900 `#222`→`#191F28`, 폰트 lg 16→15px, xl 20→17px, fw 800→700 일괄, ls/lh 토큰 추가) |
 | 2026-05-26 | v1.5 | `.ds-page-header / .ds-status-tabs-wrap / .ds-swipe-* / .ds-list-*` 신규 컴포넌트 추가 (quote-list 마이그레이션 동반) |
 | 2026-05-02 | v1.0 | 초기 design.css (Airbnb 톤) |

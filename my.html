@@ -87,7 +87,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .stats-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:14px;}
 .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
 .stat-item{text-align:center;background:var(--gray-50);border-radius:14px;padding:14px 8px;}
-.stat-value{font-size:22px;font-weight:900;color:var(--gray-900);line-height:1;}
+.stat-value{font-size:22px;font-weight:var(--fw-bold);color:var(--gray-900);line-height:1;}
 .stat-value.green{color:var(--primary);}
 .stat-value.amber{color:#F59E0B;}
 .stat-label{font-size:11px;color:var(--gray-400);margin-top:5px;font-weight:500;}
@@ -112,7 +112,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
 /* 앱 버전 */
 .app-version{text-align:center;padding:20px;color:var(--gray-400);font-size:12px;}
-.app-version strong{display:block;font-size:15px;font-weight:900;color:var(--primary);margin-bottom:4px;}
+.app-version strong{display:block;font-size:15px;font-weight:var(--fw-bold);color:var(--primary);margin-bottom:4px;}
 
 /* 하단 네비 */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,0.95);border-top:1px solid var(--gray-200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
@@ -123,7 +123,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
 /* 토스트 */
 #toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,54,0.9);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
-.trust-card{background:#fff;border-radius:var(--radius);margin:12px 16px;padding:14px 18px;box-shadow:var(--shadow);} .trust-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;} .trust-row{display:flex;gap:12px;} .trust-stat{flex:1;text-align:center;padding:8px 0;} .trust-val{font-size:22px;font-weight:900;color:var(--gray-900);margin-bottom:2px;} .trust-val.amber{color:#F59E0B;} .trust-lbl{font-size:11px;color:var(--gray-500);} .trust-empty{font-size:11px;color:var(--gray-400);text-align:center;padding:8px 0;} </style>
+.trust-card{background:#fff;border-radius:var(--radius);margin:12px 16px;padding:14px 18px;box-shadow:var(--shadow);} .trust-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;} .trust-row{display:flex;gap:12px;} .trust-stat{flex:1;text-align:center;padding:8px 0;} .trust-val{font-size:22px;font-weight:var(--fw-bold);color:var(--gray-900);margin-bottom:2px;} .trust-val.amber{color:#F59E0B;} .trust-lbl{font-size:11px;color:var(--gray-500);} .trust-empty{font-size:11px;color:var(--gray-400);text-align:center;padding:8px 0;} </style>
 <script src="utils.js"></script>
 </head>
 <body>
@@ -264,7 +264,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <div id="pin-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closePinModal()">
   <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;">
     <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;"></div>
-    <div style="font-size:17px;font-weight:800;margin-bottom:6px;" id="pin-modal-title">PIN 로그인 설정</div>
+    <div style="font-size:17px;font-weight:var(--fw-bold);margin-bottom:6px;" id="pin-modal-title">PIN 로그인 설정</div>
     <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;" id="pin-modal-desc">4자리 PIN을 설정하면 다음부터 SMS 없이 빠르게 로그인할 수 있습니다.</div>
     <label style="display:block;font-size:13px;font-weight:700;color:#444;margin-bottom:8px;">새 PIN (4자리)</label>
     <input type="tel" id="pin-input-1" inputmode="numeric" maxlength="4" placeholder="••••"
@@ -274,7 +274,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
            style="width:100%;padding:13px 14px;font-size:24px;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;outline:none;letter-spacing:8px;text-align:center;">
     <div id="pin-modal-alert" style="display:none;background:#FFF0F4;color:#C92A4A;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:600;margin-top:10px;"></div>
     <button id="pin-modal-save" onclick="savePin()"
-            style="width:100%;padding:14px;font-size:15px;font-weight:800;font-family:inherit;border:none;border-radius:12px;background:var(--c-pr, #FF385C);color:#fff;cursor:pointer;margin-top:14px;min-height:52px;">PIN 설정</button>
+            style="width:100%;padding:14px;font-size:15px;font-weight:var(--fw-bold);font-family:inherit;border:none;border-radius:12px;background:var(--c-pr, #FF385C);color:#fff;cursor:pointer;margin-top:14px;min-height:52px;">PIN 설정</button>
     <button id="pin-modal-remove" onclick="removePin()" style="display:none;width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #FECACA;border-radius:12px;background:#fff;color:#DC2626;cursor:pointer;margin-top:8px;">PIN 해제</button>
     <button onclick="closePinModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:8px;">취소</button>
     <div style="font-size:11.5px;color:#999;text-align:center;margin-top:10px;line-height:1.5;">
@@ -287,7 +287,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <div id="trust-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closeTrustDevicesModal()">
   <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;max-height:80vh;display:flex;flex-direction:column;">
     <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;flex-shrink:0;"></div>
-    <div style="font-size:17px;font-weight:800;margin-bottom:6px;flex-shrink:0;">🔒 자동 로그인 기기</div>
+    <div style="font-size:17px;font-weight:var(--fw-bold);margin-bottom:6px;flex-shrink:0;">🔒 자동 로그인 기기</div>
     <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;flex-shrink:0;">
       등록된 기기는 30일 동안 인증번호 없이 자동 로그인됩니다.<br>
       <b style="color:#DC2626;">기기 분실 시 즉시 삭제</b>해 보안을 지키세요.

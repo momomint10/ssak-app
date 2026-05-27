@@ -45,7 +45,7 @@ html,body{
 .brand-logo{
   width:28px;height:28px;background:#1FCC4A;border-radius:6px;
   display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:900;font-size:16px;letter-spacing:-1px;
+  color:#fff;font-weight:var(--fw-bold);font-size:16px;letter-spacing:-1px;
 }
 .brand-name{font-size:18px;font-weight:700;color:var(--text);}
 
@@ -150,7 +150,7 @@ html,body{
   width:22px;height:22px;border-radius:5px;
   border:2px solid var(--radio-off);
   display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;color:transparent;font-weight:900;font-size:13px;
+  flex-shrink:0;color:transparent;font-weight:var(--fw-bold);font-size:13px;
   transition:.15s;
 }
 .opt-row.on .opt-check{
@@ -254,14 +254,14 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
   width:30px;height:30px;border-radius:6px;
   border:1.5px solid var(--border);
   background:var(--card);
-  font-size:15px;font-weight:800;color:var(--text-sub);
+  font-size:15px;font-weight:var(--fw-bold);color:var(--text-sub);
   cursor:pointer;font-family:inherit;
   display:flex;align-items:center;justify-content:center;
 }
 .cnt-btn:active{background:var(--bg);}
 .cnt-val{
   min-width:24px;text-align:center;
-  font-size:15px;font-weight:800;color:var(--text);
+  font-size:15px;font-weight:var(--fw-bold);color:var(--text);
   font-variant-numeric:tabular-nums;
 }
 
@@ -312,10 +312,10 @@ textarea.input-field{resize:vertical;min-height:90px;line-height:1.7;}
 /* 완료/에러 */
 .done-screen,.error-screen{text-align:center;padding:60px 24px;}
 .done-ico,.error-ico{font-size:64px;margin-bottom:18px;}
-.done-title{font-size:22px;font-weight:800;margin-bottom:10px;color:var(--text);}
+.done-title{font-size:22px;font-weight:var(--fw-bold);margin-bottom:10px;color:var(--text);}
 .done-desc{font-size:14px;color:var(--text-sub);line-height:1.7;}
 .done-desc b{color:var(--accent);}
-.error-title{font-size:18px;font-weight:800;margin-bottom:8px;color:var(--red);}
+.error-title{font-size:18px;font-weight:var(--fw-bold);margin-bottom:8px;color:var(--red);}
 .error-desc{font-size:14px;color:var(--text-sub);line-height:1.7;}
 
 #toast{

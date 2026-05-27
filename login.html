@@ -29,7 +29,7 @@ html, body {
 }
 .brand h1 {
   font-size: 32px;
-  font-weight: 800;
+  font-weight:var(--fw-bold);
   background: linear-gradient(90deg, var(--c-pr, #FF385C) 0%, #FC8181 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -43,7 +43,7 @@ html, body {
   padding: 24px 20px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
-.card-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+.card-title { font-size: 18px; font-weight:var(--fw-bold); margin-bottom: 8px; }
 .card-desc { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px; }
 
 label {
@@ -72,7 +72,7 @@ input[disabled] { background: #F5F5F5; color: #999; }
   width: 100%;
   padding: 16px;
   font-size: 17px;  /* 50대 친화: 큰 글씨 */
-  font-weight: 800;
+  font-weight:var(--fw-bold);
   font-family: inherit;
   border: none;
   border-radius: 12px;
@@ -241,7 +241,7 @@ function offerTrustDevice() {
     const html = `
       <div id="trust-ov" style="display:flex;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;padding:20px;">
         <div style="background:#fff;border-radius:16px;padding:24px 20px;max-width:380px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,0.2);">
-          <div style="font-size:20px;font-weight:800;margin-bottom:8px;">🔒 이 기기를 기억할까요?</div>
+          <div style="font-size:20px;font-weight:var(--fw-bold);margin-bottom:8px;">🔒 이 기기를 기억할까요?</div>
           <div style="font-size:14px;color:#666;line-height:1.7;margin-bottom:18px;">
             30일 동안 <b>인증번호 없이 자동 로그인</b>합니다.<br>
             <b style="color:#DC2626;">⚠️ 본인 휴대폰에서만</b> 사용하세요.<br>
@@ -249,7 +249,7 @@ function offerTrustDevice() {
           </div>
           <div style="display:flex;gap:10px;">
             <button onclick="__trustResolve(false)" style="flex:1;padding:13px;border:1.5px solid #E5E7EB;background:#fff;border-radius:10px;font-size:14px;font-weight:700;color:#666;cursor:pointer;font-family:inherit;">매번 인증</button>
-            <button onclick="__trustResolve(true)" style="flex:1.5;padding:13px;border:none;background:#FF385C;color:#fff;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;">자동 로그인 (30일)</button>
+            <button onclick="__trustResolve(true)" style="flex:1.5;padding:13px;border:none;background:#FF385C;color:#fff;border-radius:10px;font-size:14px;font-weight:var(--fw-bold);cursor:pointer;font-family:inherit;">자동 로그인 (30일)</button>
           </div>
         </div>
       </div>`;

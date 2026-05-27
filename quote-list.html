@@ -429,7 +429,7 @@ function renderDetail(){
     ${isQuoted ? `
       <div class="detail-section" style="background:#D1FAE5;padding:12px 14px;border-radius:10px;">
         <div class="detail-h" style="color:#065F46;">견적 (발송 완료)</div>
-        <div style="font-size:18px;font-weight:800;color:#047857;margin-bottom:6px;">${fmtAmount(r.final_quote_amount)}</div>
+        <div style="font-size:18px;font-weight:var(--fw-bold);color:#047857;margin-bottom:6px;">${fmtAmount(r.final_quote_amount)}</div>
         <div style="font-size:11px;color:#065F46;">${fmtDate(r.quoted_at)}</div>
         ${r.quote_message ? `<div class="detail-notes" style="background:rgba(255,255,255,0.6);margin-top:8px;">${esc(r.quote_message)}</div>` : ''}
       </div>
@@ -437,7 +437,7 @@ function renderDetail(){
 
     ${isSubmitted ? `
       <hr style="margin:18px 0;border:none;border-top:1px solid #f0f0f0;">
-      <div style="font-size:15px;font-weight:800;margin-bottom:10px;">💰 견적 발송</div>
+      <div style="font-size:15px;font-weight:var(--fw-bold);margin-bottom:10px;">💰 견적 발송</div>
 
       <label>금액 (원) *</label>
       <input type="number" id="d-amount" placeholder="예: 350000" inputmode="numeric" oninput="rebuildMsg()">
