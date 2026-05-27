@@ -367,8 +367,8 @@ async function loadFeed(reset=false) {
     if(page===0) feed.innerHTML='';
     if(!d.data.length && page===0){
       feed.innerHTML=searchKw
-        ?`<div class="empty"><div class="empty-ico">🔍</div><div class="empty-ttl">"${esc(searchKw)}" 결과 없음</div><div class="empty-sub">다른 키워드로 검색해보세요</div></div>`
-        :`<div class="empty"><div class="empty-ico">✏️</div><div class="empty-ttl">아직 글이 없어요</div><div class="empty-sub">첫 글을 작성해보세요!</div></div>`;
+        ?`<div class="empty"><div class="ds-empty-svg" style="margin:0 auto 14px;">${typeof svgIcon==='function'?svgIcon('microfiber',{size:72,color:'var(--c-pr)'}):'🔍'}</div><div class="empty-ttl">"${esc(searchKw)}" 결과 없음</div><div class="empty-sub">다른 키워드로 검색해보세요</div></div>`
+        :`<div class="empty"><div class="ds-empty-svg" style="margin:0 auto 14px;">${typeof svgIcon==='function'?svgIcon('microfiber',{size:72,color:'var(--c-pr)'}):'✏️'}</div><div class="empty-ttl">아직 글이 없어요</div><div class="empty-sub">첫 글을 작성해보세요!</div></div>`;
     } else {
       d.data.forEach(p=>feed.insertAdjacentHTML('beforeend',card(p)));
       document.getElementById('bmore')?.remove();

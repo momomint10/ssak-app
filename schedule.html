@@ -790,8 +790,8 @@ function renderList() {
   countBadge.textContent = `${items.length}건`;
 
   if (items.length === 0) {
-    list.innerHTML = `<div class="empty-state">
-      <div class="empty-icon">📭</div>
+    list.innerHTML = `<div class="empty-state" style="text-align:center;padding:32px 16px;">
+      <div class="ds-empty-svg" style="margin:0 auto 14px;">${typeof svgIcon === 'function' ? svgIcon('broom', { size: 72, color: 'var(--c-pr)' }) : '📭'}</div>
       <div class="empty-text">이 날 예약이 없습니다<br><span style="color:var(--c-pr, #FF385C);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
     </div>`;
     return;

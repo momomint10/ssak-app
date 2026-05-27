@@ -528,7 +528,7 @@ async function loadWorkers(){
     if(curRegion!=='전체') url+='region='+encodeURIComponent(curRegion)+'&';
     const d=await fetch(url).then(r=>r.json());
     if(!d.data.length){
-      list.innerHTML='<div class="empty"><div class="empty-ico">👥</div><div class="empty-ttl">등록된 인력이 없어요</div><div class="empty-sub">내 프로필을 먼저 등록해보세요!</div></div>';
+      list.innerHTML='<div class="empty"><div class="ds-empty-svg" style="margin:0 auto 14px;">'+(typeof svgIcon==='function'?svgIcon('broom',{size:72,color:'var(--c-pr)'}):'👥')+'</div><div class="empty-ttl">등록된 인력이 없어요</div><div class="empty-sub">내 프로필을 먼저 등록해보세요!</div></div>';
       return;
     }
     list.innerHTML=d.data.map(w=>`
@@ -565,7 +565,7 @@ async function loadJobs(){
     if(curJobRegion&&curJobRegion!=='전체') url+='&region='+encodeURIComponent(curJobRegion);
     const d=await fetch(url).then(r=>r.json());
     if(!d.data||!d.data.length){
-      list.innerHTML='<div class="empty"><div class="empty-ico">💼</div><div class="empty-ttl">등록된 채용공고가 없어요</div><div class="empty-sub">첫 공고를 등록해보세요!</div></div>';
+      list.innerHTML='<div class="empty"><div class="ds-empty-svg" style="margin:0 auto 14px;">'+(typeof svgIcon==='function'?svgIcon('cart',{size:72,color:'var(--c-pr)'}):'💼')+'</div><div class="empty-ttl">등록된 채용공고가 없어요</div><div class="empty-sub">첫 공고를 등록해보세요!</div></div>';
       return;
     }
     // 내 프로필 기준 자동매칭 표시

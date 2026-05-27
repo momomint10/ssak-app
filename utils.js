@@ -499,3 +499,150 @@ function initNavBadge() {
     setTimeout(_run, 0);
   }
 })();
+
+/* ════════════════════════════════════════════════════════════════
+ * 하단 네비 SVG 아이콘 시스템 (2026-05-27 추가)
+ * 모든 페이지의 .nav-icon (이모지)를 라인 SVG로 자동 변환
+ * 24x24 viewBox, stroke 2px, currentColor (활성 시 코랄)
+ * ════════════════════════════════════════════════════════════════ */
+const NAV_ICONS = {
+  home: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 11L12 4L21 11V19.5C21 20.3284 20.3284 21 19.5 21H15V14H9V21H4.5C3.67157 21 3 20.3284 3 19.5V11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
+  care: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M13 2L4 14H11.5L10.5 22L20 10H12.5L13 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>`,
+  schedule: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9.5H21" stroke="currentColor" stroke-width="2"/><path d="M8 3V7M16 3V7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="14" r="1.2" fill="currentColor"/><circle cx="12" cy="14" r="1.2" fill="currentColor"/><circle cx="16" cy="14" r="1.2" fill="currentColor"/><circle cx="8" cy="17.5" r="1.2" fill="currentColor"/><circle cx="12" cy="17.5" r="1.2" fill="currentColor"/></svg>`,
+  team: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="2"/><path d="M2.5 21C2.5 17.4101 5.41015 14.5 9 14.5C12.5899 14.5 15.5 17.4101 15.5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="9.5" r="2.5" stroke="currentColor" stroke-width="2"/><path d="M16.5 21C16.5 18.5147 18.7386 16.5 21 16.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  my: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/><path d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+};
+const NAV_EMOJI_MAP = {
+  '🏠': 'home', '🏡': 'home',
+  '⚡': 'care', '⚡️': 'care',
+  '📅': 'schedule', '📆': 'schedule',
+  '👥': 'team', '👫': 'team',
+  '👤': 'my', '👨': 'my', '👩': 'my'
+};
+function initNavIcons() {
+  document.querySelectorAll('.nav-icon').forEach(el => {
+    if (el.dataset.svgApplied) return;
+    const text = (el.textContent || '').trim();
+    const key = NAV_EMOJI_MAP[text];
+    if (key && NAV_ICONS[key]) {
+      el.innerHTML = NAV_ICONS[key];
+      el.dataset.svgApplied = '1';
+      el.classList.add('nav-icon-svg');
+    }
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNavIcons);
+} else {
+  initNavIcons();
+}
+
+/* ════════════════════════════════════════════════════════════════
+ * 싹싹이 마스코트 SVG (2026-05-27)
+ * 분무기 본체에 얼굴 + 다양한 표정 (Botanical 영감, 100% 자체 저작)
+ *
+ * 사용: mascot('happy', { size: 140, color: 'var(--c-pr)' })
+ * 표정: default | happy | sleep | cheer | wow
+ * ════════════════════════════════════════════════════════════════ */
+const MASCOT_SVG = {
+  // 기본 (살짝 미소)
+  default: `<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- 트리거 / 노즐 -->
+    <path d="M30 32 L52 32 L54 38 L46 42 L30 42 Z" fill="currentColor" opacity=".18"/>
+    <path d="M30 32 L52 32 L54 38 L46 42 L30 42 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M54 34 L78 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <!-- 분사 미스트 -->
+    <circle cx="84" cy="24" r="2" fill="currentColor" opacity=".5"/>
+    <circle cx="92" cy="30" r="1.5" fill="currentColor" opacity=".4"/>
+    <circle cx="90" cy="20" r="1.5" fill="currentColor" opacity=".4"/>
+    <!-- 병 본체 (얼굴이 들어갈 큰 면) -->
+    <path d="M28 42 L52 42 L58 54 Q62 60 62 70 L62 122 Q62 130 54 130 L26 130 Q18 130 18 122 L18 70 Q18 60 22 54 Z"
+          fill="white"/>
+    <path d="M28 42 L52 42 L58 54 Q62 60 62 70 L62 122 Q62 130 54 130 L26 130 Q18 130 18 122 L18 70 Q18 60 22 54 Z"
+          stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- 액체 (하단) -->
+    <path d="M19 100 L61 100 L61 122 Q61 129 54 129 L26 129 Q19 129 19 122 Z"
+          fill="currentColor" opacity=".18"/>
+    <!-- 얼굴: 눈 (default: 보통 점) -->
+    <circle cx="32" cy="78" r="2.5" fill="currentColor"/>
+    <circle cx="48" cy="78" r="2.5" fill="currentColor"/>
+    <!-- 얼굴: 미소 (default) -->
+    <path d="M34 90 Q40 95 46 90" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <!-- 볼터치 (코랄 톤) -->
+    <circle cx="26" cy="86" r="3" fill="currentColor" opacity=".22"/>
+    <circle cx="54" cy="86" r="3" fill="currentColor" opacity=".22"/>
+  </svg>`,
+
+  // happy (활짝 웃음 — 응원)
+  happy: `<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M30 32 L52 32 L54 38 L46 42 L30 42 Z" fill="currentColor" opacity=".18"/>
+    <path d="M30 32 L52 32 L54 38 L46 42 L30 42 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M54 34 L78 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <!-- 더 밝은 미스트 (강한 표현) -->
+    <circle cx="84" cy="24" r="2.5" fill="currentColor" opacity=".6"/>
+    <circle cx="92" cy="30" r="2" fill="currentColor" opacity=".5"/>
+    <circle cx="90" cy="20" r="2" fill="currentColor" opacity=".5"/>
+    <circle cx="98" cy="26" r="1.5" fill="currentColor" opacity=".3"/>
+    <path d="M28 42 L52 42 L58 54 Q62 60 62 70 L62 122 Q62 130 54 130 L26 130 Q18 130 18 122 L18 70 Q18 60 22 54 Z" fill="white"/>
+    <path d="M28 42 L52 42 L58 54 Q62 60 62 70 L62 122 Q62 130 54 130 L26 130 Q18 130 18 122 L18 70 Q18 60 22 54 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M19 100 L61 100 L61 122 Q61 129 54 129 L26 129 Q19 129 19 122 Z" fill="currentColor" opacity=".22"/>
+    <!-- 눈: 반달 (행복) -->
+    <path d="M28 78 Q32 73 36 78" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M44 78 Q48 73 52 78" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <!-- 입: 큰 웃음 -->
+    <path d="M30 88 Q40 100 50 88" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="currentColor" opacity=".15"/>
+    <path d="M30 88 Q40 100 50 88" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <!-- 볼터치 강화 -->
+    <circle cx="26" cy="86" r="4" fill="currentColor" opacity=".30"/>
+    <circle cx="54" cy="86" r="4" fill="currentColor" opacity=".30"/>
+  </svg>`,
+
+  // sleep (잠 — Z Z)
+  sleep: `<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M30 32 L52 32 L54 38 L46 42 L30 42 Z" fill="currentColor" opacity=".15"/>
+    <path d="M30 32 L52 32 L54 38 L46 42 L30 42 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M54 34 L78 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <!-- Zzz -->
+    <text x="86" y="22" font-family="sans-serif" font-size="12" font-weight="700" fill="currentColor" opacity=".7">z</text>
+    <text x="92" y="14" font-family="sans-serif" font-size="9" font-weight="700" fill="currentColor" opacity=".5">z</text>
+    <path d="M28 42 L52 42 L58 54 Q62 60 62 70 L62 122 Q62 130 54 130 L26 130 Q18 130 18 122 L18 70 Q18 60 22 54 Z" fill="white"/>
+    <path d="M28 42 L52 42 L58 54 Q62 60 62 70 L62 122 Q62 130 54 130 L26 130 Q18 130 18 122 L18 70 Q18 60 22 54 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M19 100 L61 100 L61 122 Q61 129 54 129 L26 129 Q19 129 19 122 Z" fill="currentColor" opacity=".18"/>
+    <!-- 눈: 닫힘 (선) -->
+    <path d="M28 78 L36 78" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M44 78 L52 78" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- 입: 작은 평온 -->
+    <circle cx="40" cy="92" r="2" fill="currentColor" opacity=".5"/>
+  </svg>`,
+
+  // wow (놀람 — 큰 눈)
+  wow: `<svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M30 32 L52 32 L54 38 L46 42 L30 42 Z" fill="currentColor" opacity=".18"/>
+    <path d="M30 32 L52 32 L54 38 L46 42 L30 42 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M54 34 L78 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <!-- 강한 미스트 -->
+    <circle cx="84" cy="24" r="3" fill="currentColor" opacity=".6"/>
+    <circle cx="92" cy="30" r="2" fill="currentColor" opacity=".5"/>
+    <path d="M28 42 L52 42 L58 54 Q62 60 62 70 L62 122 Q62 130 54 130 L26 130 Q18 130 18 122 L18 70 Q18 60 22 54 Z" fill="white"/>
+    <path d="M28 42 L52 42 L58 54 Q62 60 62 70 L62 122 Q62 130 54 130 L26 130 Q18 130 18 122 L18 70 Q18 60 22 54 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M19 100 L61 100 L61 122 Q61 129 54 129 L26 129 Q19 129 19 122 Z" fill="currentColor" opacity=".18"/>
+    <!-- 눈: 크게 (놀람) -->
+    <circle cx="32" cy="78" r="4" fill="white" stroke="currentColor" stroke-width="2"/>
+    <circle cx="32" cy="78" r="2" fill="currentColor"/>
+    <circle cx="48" cy="78" r="4" fill="white" stroke="currentColor" stroke-width="2"/>
+    <circle cx="48" cy="78" r="2" fill="currentColor"/>
+    <!-- 입: O 모양 -->
+    <circle cx="40" cy="92" r="4" fill="white" stroke="currentColor" stroke-width="2"/>
+  </svg>`
+};
+
+/** 마스코트 SVG 렌더링
+ * @param {string} mood - default|happy|sleep|wow
+ * @param {object} opts - { size:120, color:'var(--c-pr)' }
+ */
+function mascot(mood = 'default', opts = {}) {
+  const svg = MASCOT_SVG[mood] || MASCOT_SVG.default;
+  const size = opts.size || 120;
+  const color = opts.color || 'var(--c-pr)';
+  return `<span class="ds-mascot" style="display:inline-block;width:${size}px;color:${color};" aria-hidden="true">${svg}</span>`;
+}

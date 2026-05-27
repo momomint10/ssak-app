@@ -680,12 +680,12 @@ function closeTrash(){ document.getElementById('trash-ov').classList.remove('on'
 
 function renderTrash(){
   if (!trashList.length) {
-    // 휴지통 빈 상태 = 깨끗한 양동이 (민트 톤)
+    // 휴지통 빈 상태 = 싹싹이가 잠자고 있음 (할 일 없음 메타포)
     document.getElementById('trash-body').innerHTML =
-      '<div class="ds-empty">' +
-        '<div class="ds-empty-svg is-mint">' + svgIcon('bucket', { size: 96, color: 'var(--c-mint-d)' }) + '</div>' +
+      '<div class="ds-empty" style="padding:40px 24px;">' +
+        '<div style="margin:0 auto 12px;width:120px;">' + mascot('sleep', { size: 120, color: 'var(--c-mint-d)' }) + '</div>' +
         '<div class="ds-empty-title">휴지통이 비어 있습니다</div>' +
-        '<div class="ds-empty-sub">깨끗하게 정리됐어요</div>' +
+        '<div class="ds-empty-sub">싹싹이가 쉬고 있어요</div>' +
       '</div>';
     return;
   }

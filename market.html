@@ -423,7 +423,7 @@ async function loadFeed(reset=false){
     if(!d.success) throw new Error(d.error||'서버 오류');
     if(page===0) feed.innerHTML='';
     if(!d.data.length && page===0){
-      feed.innerHTML=`<div class="empty"><div class="empty-ico">🛒</div><div class="empty-ttl">${searchKw?'"'+esc(searchKw)+'" 결과 없음':'등록된 물품이 없어요'}</div><div class="empty-sub">첫 물품을 팔아보세요!</div></div>`;
+      feed.innerHTML=`<div class="empty"><div class="ds-empty-svg" style="margin:0 auto 14px;">${typeof svgIcon==='function'?svgIcon('cart',{size:72,color:'var(--c-pr)'}):'🛒'}</div><div class="empty-ttl">${searchKw?'"'+esc(searchKw)+'" 결과 없음':'등록된 물품이 없어요'}</div><div class="empty-sub">첫 물품을 팔아보세요!</div></div>`;
     } else {
       const grid = document.createElement('div'); grid.className='grid';
       d.data.forEach(item => {
