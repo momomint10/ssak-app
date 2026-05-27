@@ -42,32 +42,45 @@
   overflow: hidden;  /* ::before 장식 원 클리핑용 */
   border-bottom: 0.5px solid #f5e8e4;
 }
-/* 사진 배경 레이어 (260527 글라스 톤 확장 — 헤더에만 은은하게) */
+/* 사진 배경 레이어 (260527 글라스 톤 강화 — 사진 노출 ↑) */
 .hd-bg-photo {
   position: absolute; inset: 0;
   background-image: url('img/hero-mascot.png');
   background-size: cover;
   background-position: center 35%;
-  opacity: 0.32;
-  filter: saturate(1.05);
+  opacity: 0.65;
+  filter: saturate(1.15) contrast(1.05);
   z-index: 0;
   pointer-events: none;
   transition: opacity .24s ease;
 }
-/* 사진 위에 따뜻한 페이드 (코랄 → 투명 위쪽, 크림 → 진해짐 아래쪽 — 카드 영역 가독성 ↑) */
+/* 사진 위에 따뜻한 페이드 (위는 투명→코랄, 아래로 갈수록 진해져서 카드 영역 가독성 확보) */
 .hd-bg-photo::after {
   content: '';
   position: absolute; inset: 0;
   background: linear-gradient(180deg,
-    rgba(255, 234, 232, 0.20) 0%,
-    rgba(255, 240, 244, 0.55) 65%,
-    rgba(255, 248, 245, 0.92) 100%);
+    rgba(255, 234, 232, 0.05) 0%,
+    rgba(255, 240, 244, 0.25) 65%,
+    rgba(255, 248, 245, 0.78) 100%);
 }
-/* 스크롤 시 헤더 축소 — 사진도 더 옅게 */
+/* 헤더 텍스트(인사말·이름)는 사진 위에서도 또렷하게 */
+.home-header .hd-greeting,
+.home-header .hd-name {
+  text-shadow: 0 1px 3px rgba(255,255,255,0.65);
+}
+/* 헤더 우상단 아이콘 버튼도 글라스 톤 */
+.home-header .hd-icon-btn {
+  background: rgba(255,255,255,0.55) !important;
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: 0 4px 12px rgba(20,30,50,0.08);
+}
+/* 스크롤 시 헤더 축소 — 사진도 살짝만 옅게 */
 .home-header.scrolled {
   padding: 10px 20px 8px;
 }
-.home-header.scrolled .hd-bg-photo { opacity: 0.18; }
+.home-header.scrolled .hd-bg-photo { opacity: 0.42; }
 /* .home-header::after는 design.css 글로벌 hook으로 라인 글로우 적용됨 */
 /* .home-header::before/::after는 design.css 글로벌 hook이 override함 (입체감 통일) */
 .hd-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
