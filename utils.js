@@ -516,10 +516,14 @@ const NAV_EMOJI_MAP = {
   '👤': 'my', '👨': 'my', '👩': 'my'
 };
 function initNavIcons() {
-  document.querySelectorAll('.nav-icon').forEach(el => {
+  // 3가지 클래스 시스템 모두 커버: .nav-icon / .ni-ico / .ds-nav-ico
+  // (페이지마다 다른 네비 컴포넌트를 써서 SVG 변환이 한 곳에만 적용되던 버그 fix)
+  document.querySelectorAll('.nav-icon, .ni-ico, .ds-nav-ico').forEach(el => {
     if (el.dataset.svgApplied) return;
-    const text = (el.textContent || '').trim();
-    const key = NAV_EMOJI_MAP[text];
+    // 이모지(VS16 U+FE0F 제거)로 키 찾기
+    const raw = (el.textContent || '').trim();
+    const text = raw.replace(/️/g, '');
+    const key = NAV_EMOJI_MAP[text] || NAV_EMOJI_MAP[raw];
     if (key && NAV_ICONS[key]) {
       el.innerHTML = NAV_ICONS[key];
       el.dataset.svgApplied = '1';
