@@ -1367,3 +1367,46 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 :where(.tabs-seg, .tabs):not(.ds-status-tabs) {
   box-shadow: var(--sh-inset-sm, inset 0 1px 2px rgba(20,30,50,.04));
 }
+
+/* ════════════════════════════════════════════════════════════════
+ * 빈 상태 SVG 일러스트 (utils.js의 svgIcon/emptySvg와 짝)
+ * 청소 도구 SVG가 발광 원 안에 떠있는 효과
+ * ════════════════════════════════════════════════════════════════ */
+.ds-empty-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  padding: 18px;
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--c-pr-xl) 0%, var(--c-bg) 75%);
+  position: relative;
+}
+.ds-empty-svg::before {
+  /* 살짝 빛 발산 (Botanical 영감) */
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 56, 92, 0.10), transparent 65%);
+  filter: blur(8px);
+  z-index: -1;
+}
+.ds-empty-svg svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 6px rgba(255, 56, 92, 0.18));
+}
+
+/* 민트 variant (휴지통 빈 상태 = 깨끗함 메타포) */
+.ds-empty-svg.is-mint {
+  background: radial-gradient(circle at 30% 30%, var(--c-mint-xl) 0%, var(--c-bg) 75%);
+}
+.ds-empty-svg.is-mint::before {
+  background: radial-gradient(circle, rgba(94, 234, 212, 0.14), transparent 65%);
+}
+.ds-empty-svg.is-mint svg {
+  filter: drop-shadow(0 2px 6px rgba(94, 234, 212, 0.22));
+}

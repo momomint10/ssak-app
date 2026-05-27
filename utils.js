@@ -224,6 +224,144 @@ function emptyHtml(icon, title, sub = '') {
   </div>`;
 }
 
+/* ════════════════════════════════════════════════════════════════
+ * 청소 도구 SVG 아이콘 시스템 (2026-05-27 추가, 자체 저작 100% 안전)
+ * 사용: svgIcon('spray', { size: 80, color: 'var(--c-pr)' })
+ *       또는 직접: SVG_ICONS.spray, SVG_ICONS.bucket 등
+ * ════════════════════════════════════════════════════════════════ */
+const SVG_ICONS = {
+  // 분무기 (Spray bottle) — 견적요청서 빈 상태
+  spray: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 분사 미스트 -->
+    <circle cx="78" cy="22" r="2" fill="currentColor" opacity=".5"/>
+    <circle cx="86" cy="28" r="1.5" fill="currentColor" opacity=".4"/>
+    <circle cx="84" cy="18" r="1.5" fill="currentColor" opacity=".4"/>
+    <circle cx="92" cy="22" r="1.2" fill="currentColor" opacity=".3"/>
+    <!-- 트리거 -->
+    <path d="M30 30 L48 30 L50 36 L42 40 L30 40 Z" fill="currentColor" opacity=".18"/>
+    <path d="M30 30 L48 30 L50 36 L42 40 L30 40 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- 노즐 -->
+    <path d="M50 32 L72 28" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <!-- 병 본체 -->
+    <path d="M28 40 L52 40 L56 50 Q58 54 58 60 L58 82 Q58 88 52 88 L32 88 Q26 88 26 82 L26 60 Q26 54 28 50 Z"
+          fill="currentColor" opacity=".10"/>
+    <path d="M28 40 L52 40 L56 50 Q58 54 58 60 L58 82 Q58 88 52 88 L32 88 Q26 88 26 82 L26 60 Q26 54 28 50 Z"
+          stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- 액체 레벨 -->
+    <path d="M28 70 L56 70 L56 82 Q56 86 52 86 L32 86 Q28 86 28 82 Z"
+          fill="currentColor" opacity=".22"/>
+    <!-- 라벨 -->
+    <circle cx="42" cy="64" r="6" fill="currentColor" opacity=".15"/>
+    <path d="M42 60 L42 64 M42 64 L44 66 M42 64 L40 66" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+  </svg>`,
+
+  // 마이크로파이버 천 (Microfiber cloth) — 완료보고서 빈 상태
+  microfiber: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 천 본체 (살짝 기울임) -->
+    <path d="M20 30 L78 22 L84 78 L26 86 Z" fill="currentColor" opacity=".18"/>
+    <path d="M20 30 L78 22 L84 78 L26 86 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- 줄무늬 (마이크로파이버 결) -->
+    <line x1="28" y1="42" x2="80" y2="34" stroke="currentColor" stroke-width="1.5" opacity=".4"/>
+    <line x1="30" y1="52" x2="82" y2="44" stroke="currentColor" stroke-width="1.5" opacity=".4"/>
+    <line x1="31" y1="62" x2="83" y2="54" stroke="currentColor" stroke-width="1.5" opacity=".4"/>
+    <line x1="33" y1="72" x2="84" y2="64" stroke="currentColor" stroke-width="1.5" opacity=".4"/>
+    <!-- 모서리 접힘 -->
+    <path d="M70 22 L78 22 L74 30 Z" fill="currentColor" opacity=".3"/>
+  </svg>`,
+
+  // 양동이 (Bucket) — 휴지통 빈 상태 (깨끗함 메타포)
+  bucket: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 손잡이 -->
+    <path d="M28 32 Q28 18 50 18 Q72 18 72 32" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- 양동이 본체 (사다리꼴) -->
+    <path d="M22 32 L78 32 L72 84 Q72 88 68 88 L32 88 Q28 88 28 84 Z" fill="currentColor" opacity=".18"/>
+    <path d="M22 32 L78 32 L72 84 Q72 88 68 88 L32 88 Q28 88 28 84 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- 윗면 타원 -->
+    <ellipse cx="50" cy="32" rx="28" ry="4" fill="currentColor" opacity=".25"/>
+    <ellipse cx="50" cy="32" rx="28" ry="4" stroke="currentColor" stroke-width="2.5" fill="none"/>
+    <!-- 측면 디테일 -->
+    <line x1="32" y1="46" x2="68" y2="46" stroke="currentColor" stroke-width="1.5" opacity=".3"/>
+    <!-- 작은 거품 (깨끗함) -->
+    <circle cx="38" cy="58" r="2.5" fill="currentColor" opacity=".3"/>
+    <circle cx="55" cy="62" r="3" fill="currentColor" opacity=".25"/>
+    <circle cx="48" cy="70" r="2" fill="currentColor" opacity=".35"/>
+  </svg>`,
+
+  // 브룸 (Broom) — 일정/인력 빈 상태
+  broom: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 막대기 (대각선) -->
+    <line x1="22" y1="22" x2="58" y2="58" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <!-- 막대기 끝 (손잡이) -->
+    <circle cx="22" cy="22" r="3" fill="currentColor"/>
+    <!-- 빗자루 부분 묶음 -->
+    <path d="M52 52 L70 64 L66 78 L42 70 Z" fill="currentColor" opacity=".25"/>
+    <path d="M52 52 L70 64 L66 78 L42 70 Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- 빗자루 끝 가지들 -->
+    <line x1="46" y1="68" x2="38" y2="84" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="50" y1="70" x2="46" y2="86" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="56" y1="72" x2="54" y2="88" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="62" y1="74" x2="62" y2="88" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="68" y1="76" x2="70" y2="86" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <!-- 묶음 띠 -->
+    <path d="M48 58 L68 70" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  </svg>`,
+
+  // 청소 카트 (Cart) — 인력매칭/통계 빈 상태
+  cart: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- 손잡이 -->
+    <path d="M20 20 L20 40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M20 20 L32 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- 카트 본체 -->
+    <rect x="22" y="40" width="60" height="36" rx="3" fill="currentColor" opacity=".15"/>
+    <rect x="22" y="40" width="60" height="36" rx="3" stroke="currentColor" stroke-width="2.5"/>
+    <!-- 분무기 (카트 안) -->
+    <rect x="30" y="46" width="10" height="20" rx="2" fill="currentColor" opacity=".4"/>
+    <!-- 마이크로파이버 천 묶음 -->
+    <rect x="44" y="50" width="14" height="16" rx="1.5" fill="currentColor" opacity=".3"/>
+    <line x1="46" y1="55" x2="56" y2="55" stroke="currentColor" stroke-width="1" opacity=".5"/>
+    <line x1="46" y1="59" x2="56" y2="59" stroke="currentColor" stroke-width="1" opacity=".5"/>
+    <!-- 양동이 (카트 우측) -->
+    <path d="M62 50 L76 50 L74 66 L64 66 Z" fill="currentColor" opacity=".35"/>
+    <!-- 바퀴 2개 -->
+    <circle cx="32" cy="82" r="6" fill="currentColor" opacity=".25"/>
+    <circle cx="32" cy="82" r="6" stroke="currentColor" stroke-width="2"/>
+    <circle cx="32" cy="82" r="1.5" fill="currentColor"/>
+    <circle cx="72" cy="82" r="6" fill="currentColor" opacity=".25"/>
+    <circle cx="72" cy="82" r="6" stroke="currentColor" stroke-width="2"/>
+    <circle cx="72" cy="82" r="1.5" fill="currentColor"/>
+  </svg>`
+};
+
+/** SVG 아이콘 헬퍼
+ * @param {string} name - spray|microfiber|bucket|broom|cart
+ * @param {object} opts - { size:96, color:'var(--c-pr)' }
+ * @returns {string} HTML 문자열 (inline SVG wrapper)
+ */
+function svgIcon(name, opts = {}) {
+  const svg = SVG_ICONS[name];
+  if (!svg) return '';
+  const size = opts.size || 96;
+  const color = opts.color || 'var(--c-pr, #FF385C)';
+  return `<span style="display:inline-block;width:${size}px;height:${size}px;color:${color};" aria-hidden="true">${svg}</span>`;
+}
+
+/** 빈 상태 (SVG 아이콘 포함) HTML
+ * @param {string} iconName - spray|microfiber|bucket|broom|cart  OR  이모지/HTML
+ * @param {string} title - 메인 메시지
+ * @param {string} sub - 보조 메시지
+ * @param {object} opts - { color:'var(--c-pr)', size:96 }
+ */
+function emptySvg(iconName, title, sub = '', opts = {}) {
+  const icon = SVG_ICONS[iconName]
+    ? svgIcon(iconName, { size: opts.size || 96, color: opts.color || 'var(--c-pr)' })
+    : `<div style="font-size:48px;">${iconName}</div>`;
+  return `<div class="ds-empty">
+    <div class="ds-empty-svg">${icon}</div>
+    <div class="ds-empty-title">${esc(title)}</div>
+    ${sub ? `<div class="ds-empty-sub">${esc(sub)}</div>` : ''}
+  </div>`;
+}
+
 // ── 푸시 알림 VAPID ────────────────────────────────────────────
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
