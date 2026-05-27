@@ -1320,3 +1320,42 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 }
 .ds-thumb-blob.is-pr { background: radial-gradient(circle at 30% 30%, var(--c-pr-l) 0%, var(--c-pr-xl) 70%); }
 .ds-thumb-blob.is-teal { background: radial-gradient(circle at 30% 30%, var(--c-teal-l) 0%, #F0FDF9 70%); }
+
+/* ════════════════════════════════════════════════════════════════
+ * 글로벌 .tab 액티브 — Botanical 영감 점 indicator + 발광 강화
+ * ssak-quote, workforce, community, schedule 등 .tab/.tabs-seg 패턴
+ * (segmented control 구조 보존, 활성 시 indicator 추가)
+ * ════════════════════════════════════════════════════════════════ */
+
+/* segmented control 활성 탭에 코랄 발광 강화 */
+:where(.tab.active, .tab.on):not(.ds-status-tab) {
+  position: relative;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F5 100%) !important;
+  box-shadow:
+    var(--sh-sm, 0 2px 6px rgba(20,30,50,.07)),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 4px 14px rgba(255, 56, 92, 0.18) !important;
+}
+
+/* 활성 탭 아래 작은 코랄 점 indicator (Botanical 영감) */
+:where(.tab.active, .tab.on):not(.ds-status-tab)::after {
+  content: '';
+  position: absolute;
+  bottom: -7px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--c-pr);
+  box-shadow: 0 0 8px rgba(255, 56, 92, 0.6);
+  pointer-events: none;
+  animation: ds-dot-fade-in var(--dur-normal, 180ms) var(--ease-out, ease-out);
+}
+@keyframes ds-dot-fade-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-3px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* tabs 컨테이너 자체에 살짝 입체감 */
+:where(.tabs-seg, .tabs):not(.ds-status-tabs) {
+  box-shadow: var(--sh-inset-sm, inset 0 1px 2px rgba(20,30,50,.04));
+}
