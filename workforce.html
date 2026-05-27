@@ -897,7 +897,7 @@ async function loadMyProfile(){
           <div class="my-stat"><div class="my-stat-val">${(myProfile.regions||[]).length}</div><div class="my-stat-lbl">활동 지역</div></div>
         </div>
         <div style="display:flex;gap:8px;margin-top:2px;">
-          <button class="btn-full btn-primary" onclick="openForm(true)" style="flex:1;padding:10px;font-size:13px;">✏️ 수정</button>
+          <button class="btn-full btn-pr" onclick="openForm(true)" style="flex:1;padding:10px;font-size:13px;">✏️ 수정</button>
           <button class="btn-full btn-outline" onclick="toggleStatus()" style="flex:1;padding:10px;font-size:13px;">${isActive?'⏸ 중단':'▶ 재시작'}</button>
         </div>
       </div>`;
@@ -906,7 +906,7 @@ async function loadMyProfile(){
         <div class="no-profile-ico">👤</div>
         <div class="no-profile-ttl">구직 프로필 없음</div>
         <div class="no-profile-sub">등록하면 채용자가 먼저 연락할 수 있어요</div>
-        <button class="btn-full btn-primary" onclick="openForm(false)">구직 프로필 등록</button>
+        <button class="btn-full btn-pr" onclick="openForm(false)">구직 프로필 등록</button>
       </div>`;
     }
 

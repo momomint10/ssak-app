@@ -1155,6 +1155,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 /* ── 페이지 공통 Primary 버튼 hook (코랄 색 사용 + 일정 크기) ──── */
 :where(button.btn, .btn-primary, .btn-new, .btn-add, .btn-send, .btn-pr):not(.ghost):not(.ds-btn-ghost):not(.ds-btn-secondary):not([disabled]) {
   background: linear-gradient(180deg, #FF5070 0%, var(--c-pr) 100%) !important;
+  color: #fff !important;
   box-shadow: var(--sh-pr), var(--hl-top-strong);
   transition: box-shadow var(--dur-normal, 180ms) var(--ease-out, ease-out),
               transform var(--dur-fast, 120ms) var(--ease-spring, ease-out),
