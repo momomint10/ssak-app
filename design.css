@@ -1462,6 +1462,22 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
               padding .18s var(--ease-spring, cubic-bezier(.16,1,.3,1)),
               color .15s;
 }
+/* 비활성 탭의 아이콘 축소·페이드 — 선택 탭이 자연스럽게 강조 (260528) */
+.nav-item:not(.active):not(.on) .nav-icon-svg,
+.ni:not(.on):not(.active) .nav-icon-svg,
+.ds-nav-item:not(.on):not(.active) .nav-icon-svg {
+  transform: scale(.82);
+  opacity: 0.55;
+  transition: transform .22s var(--ease-spring, cubic-bezier(.16,1,.3,1)),
+              opacity .18s var(--ease-out, ease-out);
+}
+/* 비활성 탭 라벨도 살짝 옅게 (위계 강조) */
+.nav-item:not(.active):not(.on) > div:not(.nav-icon):not(.nav-icon-svg),
+.ni:not(.on):not(.active) > div:not(.ni-ico):not(.nav-icon-svg),
+.ds-nav-item:not(.on):not(.active) > div:not(.ds-nav-ico):not(.nav-icon-svg) {
+  opacity: 0.7;
+  transition: opacity .18s var(--ease-out, ease-out);
+}
 /* 누를 때 살짝 함몰 */
 .nav-item:active .nav-icon-svg,
 .ni:active .nav-icon-svg,
