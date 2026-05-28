@@ -1558,3 +1558,47 @@ body:has(.bg-photo) input[type="text"] {
 @keyframes vt-fade-in {
   from { opacity: 0; transform: translateY(8px); }
 }
+
+/* ════════════════════════════════════════════════════════════════
+ * 글로벌 아바타 시스템 (260528) — 모든 페이지 공유
+ * 사용:
+ *   <div class="ds-avatar ds-avatar-md av-mint">김</div>
+ *   <div class="ds-avatar ds-avatar-lg av-amber"><img src="..."></div>
+ * 색 자동 분배 (utils.js):
+ *   const cls = avatarColor(nickname); → 'av-mint' | 'av-amber' | ...
+ * ════════════════════════════════════════════════════════════════ */
+.ds-avatar {
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFC9D3 0%, #FF385C 100%);  /* 기본 코랄 */
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  color: #FFFFFF;
+  font-weight: 800;
+  overflow: hidden; position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(255, 56, 92, 0.18);
+}
+.ds-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* 사이즈 (모바일 친화) */
+.ds-avatar-xs { width: 32px; height: 32px; font-size: 13px; }
+.ds-avatar-sm { width: 42px; height: 42px; font-size: 17px; }
+.ds-avatar-md { width: 48px; height: 48px; font-size: 20px; }
+.ds-avatar-lg { width: 64px; height: 64px; font-size: 26px; }
+.ds-avatar-xl { width: 88px; height: 88px; font-size: 36px; }
+
+/* 색 variant — 닉네임 해시로 자동 분배 (5색 + 기본 코랄) */
+.av-coral, .ds-avatar.av-coral { background: linear-gradient(135deg, #FFC9D3 0%, #FF385C 100%); box-shadow: 0 3px 10px rgba(255, 56, 92, 0.18); }
+.av-mint,  .ds-avatar.av-mint  { background: linear-gradient(135deg, #A7F3D0 0%, #14B8A6 100%); box-shadow: 0 3px 10px rgba(20, 184, 166, 0.20); }
+.av-amber, .ds-avatar.av-amber { background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 100%); box-shadow: 0 3px 10px rgba(245, 158, 11, 0.18); }
+.av-blue,  .ds-avatar.av-blue  { background: linear-gradient(135deg, #BFDBFE 0%, #3B82F6 100%); box-shadow: 0 3px 10px rgba(59, 130, 246, 0.18); }
+.av-purple,.ds-avatar.av-purple{ background: linear-gradient(135deg, #DDD6FE 0%, #8B5CF6 100%); box-shadow: 0 3px 10px rgba(139, 92, 246, 0.18); }
+
+/* 검증 체크 마크 (옵션) */
+.ds-avatar .ds-verified {
+  position: absolute; bottom: -2px; right: -2px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #14B8A6; border: 2px solid #FFFFFF;
+  display: flex; align-items: center; justify-content: center;
+  color: #FFFFFF; font-size: 11px; font-weight: 900; line-height: 1;
+}

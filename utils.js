@@ -725,3 +725,34 @@ function confetti(opts = {}) {
   }
   setTimeout(() => container.remove(), totalDur + 1200);
 }
+
+/* ════════════════════════════════════════════════════════════════
+ * 글로벌 아바타 헬퍼 (260528) — design.css .ds-avatar와 짝
+ * 사용:
+ *   const cls = avatarColor(user.nickname);
+ *   `<div class="ds-avatar ds-avatar-md ${cls}">${user.nickname[0]}</div>`
+ * ════════════════════════════════════════════════════════════════ */
+const AVATAR_COLORS = ['av-coral', 'av-mint', 'av-amber', 'av-blue', 'av-purple'];
+function avatarColor(seed) {
+  if (!seed) return AVATAR_COLORS[0];
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+
+/** 아바타 HTML 생성 — 사진 있으면 img, 없으면 첫글자
+ * @param {string} nickname
+ * @param {string} photoUrl
+ * @param {string} size 'xs'|'sm'|'md'|'lg'|'xl' (default 'md')
+ * @param {boolean} verified — true면 우하단 ✓ 마크
+ */
+function avatarHtml(nickname, photoUrl, size = 'md', verified = false) {
+  const cls = avatarColor(nickname);
+  const sizeCls = 'ds-avatar-' + size;
+  const v = verified ? '<span class="ds-verified">✓</span>' : '';
+  if (photoUrl) {
+    return `<div class="ds-avatar ${sizeCls} ${cls}"><img loading="lazy" src="${esc(photoUrl)}" alt="">${v}</div>`;
+  }
+  const initial = (nickname || '?').trim().charAt(0);
+  return `<div class="ds-avatar ${sizeCls} ${cls}">${esc(initial)}${v}</div>`;
+}
