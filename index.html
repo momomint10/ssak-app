@@ -143,9 +143,9 @@
 .today-card-sub { font-size:12px; color:var(--c-g500); margin-top:2px; }
 .today-card-arrow { font-size:18px; color:var(--c-g300); flex-shrink:0; }
 
-/* ── 빠른 실행: 1 hero + 3 보조 (행동 위계 명확화) ─────── */
+/* ── 빠른 실행: 1 hero + 2 보조 (네비 중복 제거) ─────── */
 .quick-grid {
-  display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
+  display:grid; grid-template-columns:repeat(2,1fr); gap:8px;
   padding:0 16px; margin-top:16px;
 }
 .quick-btn {
@@ -290,23 +290,11 @@
       <div class="quick-ico" style="background:#FEF3F3;">✍️</div>
       <div class="quick-lbl">계약서</div>
     </button>
-    <button class="quick-btn ds-tap-card" onclick="goTo('workforce')">
-      <div class="quick-ico" style="background:#FFF8F5;">👥</div>
-      <div class="quick-lbl">동료</div>
-    </button>
   </div>
 
   <!-- 더보기 메뉴 (접이식) -->
   <div class="section-wrap ds-fade-in ds-fade-in-2" style="margin-top:12px;">
     <div class="recent-card">
-      <div class="recent-row ds-tap" onclick="goTo('schedule')">
-        <div class="recent-ico" style="background:#FFF0EC;">📅</div>
-        <div class="recent-body">
-          <div class="recent-title">스케줄 관리</div>
-          <div class="recent-sub">예약 일정 확인 및 관리</div>
-        </div>
-        <div class="recent-right">›</div>
-      </div>
       <div class="recent-row ds-tap" onclick="goTo('community')">
         <div class="recent-ico" style="background:#EFF6FF;">💬</div>
         <div class="recent-body">
