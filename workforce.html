@@ -67,7 +67,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 .hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 /* .hd-title / .hd-sub 페이지 인라인 정의 삭제 → design.css의 .ds-page-title (22px 600) / .ds-page-subtitle 이 시각 결정 */
-.btn-hd{background:var(--c-pr, #FF385C);color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-hd{background:#fff;color:var(--c-pr,#FF385C);border:1.5px solid rgba(255,56,92,0.35);border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s;}
+.btn-hd:hover{background:rgba(255,56,92,0.06);border-color:rgba(255,56,92,0.55);}
+.btn-hd:active{background:rgba(255,56,92,0.10);}
 .tab-row{padding:10px 16px;background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);border-bottom:0.5px solid #f5e8e4;}
 /* Segmented Control 탭 */
 .tabs-seg{display:flex;background:var(--g100,#F3F4F6);border-radius:12px;padding:3px;gap:2px;}
