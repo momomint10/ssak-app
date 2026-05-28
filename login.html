@@ -41,18 +41,17 @@ body { position: relative; overflow-x: hidden; }
   max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
-  padding: 24px 24px 0;       /* 하단 padding 0 — 카드가 viewport 끝까지 (Bottom Sheet) */
+  padding: 24px 24px max(28px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
 }
 /* 상단 영역 — 사진의 우상단 Ssak-Ssak 로고가 브랜드 역할
    (한글 "싹싹" 텍스트 제거, 작은 태그라인만 유지) */
 .brand {
-  /* Bottom Sheet 카드 바로 위 중앙 — 우상단 로고와 충분히 떨어짐 */
+  /* 카드 바로 위 중앙으로 이동 — 우상단 Ssak-Ssak 로고와 충분히 떨어짐 */
   text-align: center;
-  margin-top: auto;             /* 위 공간 흡수 → 브랜드를 카드 위로 */
-  margin-bottom: 18px;          /* 카드와 적절한 여백 */
-  padding: 0 24px;              /* 좌우 안전 영역 */
+  margin-top: auto;             /* 위 공간을 흡수해서 브랜드를 하단 카드 쪽으로 */
+  margin-bottom: 14px;          /* 카드와 약간의 여백 */
 }
 .brand p {
   /* 얇고 뚜렷하게 — 얇은 글자 + 또렷한 흰 헤일로 */
@@ -72,38 +71,19 @@ body { position: relative; overflow-x: hidden; }
     0 0 18px rgba(255,255,255,0.55);
 }
 
-/* ── Bottom Sheet 카드 (260528 — 로봇 메인 시각, 카드 보조) ── */
+/* ── 글라스 패널 (260528 — 자연스럽게 비치는 투명도) ── */
 .card {
-  position: relative;
-  /* viewport 끝까지 확장 (shell padding 24px 보정) */
-  margin-left: -24px;
-  margin-right: -24px;
-  margin-bottom: 0;
-  /* drag handle 공간 위해 상단 padding ↑ */
-  padding: 38px 24px 26px;
-  /* 상단만 둥글게 (Bottom Sheet 시그니처) */
-  border-radius: 32px 32px 0 0;
-  background: rgba(255, 255, 255, 0.42);
-  backdrop-filter: blur(72px) saturate(220%);
-  -webkit-backdrop-filter: blur(72px) saturate(220%);
-  border: none;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.75);
-  /* 위쪽으로만 그림자 — Bottom Sheet가 화면에서 떠오르는 느낌 */
+  background: rgba(255, 255, 255, 0.20);     /* .35 → .20 */
+  backdrop-filter: blur(64px) saturate(220%); /* blur 56→64px로 가독성 유지 */
+  -webkit-backdrop-filter: blur(64px) saturate(220%);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border-radius: 28px;
+  padding: 28px 24px 24px;
+  margin-bottom: 12px;
   box-shadow:
-    0 -12px 40px rgba(20, 30, 50, 0.18),
-    0 -4px 16px rgba(20, 30, 50, 0.06),
+    0 20px 50px rgba(20, 30, 50, 0.15),
+    0 6px 20px rgba(20, 30, 50, 0.06),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.85);
-}
-/* Drag handle (Bottom Sheet 시그니처 그립 표시) */
-.card::before {
-  content: '';
-  position: absolute;
-  top: 12px; left: 50%;
-  transform: translateX(-50%);
-  width: 40px; height: 4px;
-  border-radius: 2px;
-  background: rgba(20, 30, 50, 0.18);
-  pointer-events: none;
 }
 .card-title {
   font-size: 22px; font-weight: 800;
@@ -240,23 +220,21 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
   border-color: rgba(4, 120, 87, 0.2);
 }
 
-/* Bottom Sheet 카드의 연장선 — 같은 글라스, 모서리 없음, viewport 끝까지 */
 .bottom {
   text-align: center;
-  margin: 0 -24px;            /* viewport 끝까지 */
-  padding: 12px 24px max(20px, env(safe-area-inset-bottom));
-  font-size: 11px;
-  color: rgba(78, 89, 104, 0.85);
-  font-weight: 500;
-  background: rgba(255, 255, 255, 0.42);
-  backdrop-filter: blur(72px) saturate(220%);
-  -webkit-backdrop-filter: blur(72px) saturate(220%);
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
-  border-top: 0.5px solid rgba(20, 30, 50, 0.05);
+  margin-top: 4px;
+  padding: 14px 18px;
+  font-size: 11.5px;
+  color: #4E5968;
+  font-weight: 600;
+  /* 거의 보이지 않을 만큼 투명 */
+  background: rgba(255, 255, 255, 0.10);   /* .18 → .10 */
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(20, 30, 50, 0.05);
 }
-.bottom a { color: #FF385C; font-weight: 600; }
 .bottom small { display: block; line-height: 1.7; }
 .bottom a { color: #FF385C; font-weight: 700; }
 </style>
