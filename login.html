@@ -71,19 +71,19 @@ body { position: relative; overflow-x: hidden; }
     0 0 18px rgba(255,255,255,0.55);
 }
 
-/* ── 글라스 패널 (260528 — 자연스럽게 비치는 투명도) ── */
+/* ── 글라스 패널 (260528 — 살짝 불투명 한 단계 ↑) ── */
 .card {
-  background: rgba(255, 255, 255, 0.20);     /* .35 → .20 */
-  backdrop-filter: blur(64px) saturate(220%); /* blur 56→64px로 가독성 유지 */
+  background: rgba(255, 255, 255, 0.32);     /* .20 → .32 (한 단계 불투명) */
+  backdrop-filter: blur(64px) saturate(220%);
   -webkit-backdrop-filter: blur(64px) saturate(220%);
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
   border-radius: 28px;
   padding: 28px 24px 24px;
   margin-bottom: 12px;
   box-shadow:
-    0 20px 50px rgba(20, 30, 50, 0.15),
-    0 6px 20px rgba(20, 30, 50, 0.06),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.85);
+    0 20px 50px rgba(20, 30, 50, 0.16),
+    0 6px 20px rgba(20, 30, 50, 0.07),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.9);
 }
 .card-title {
   font-size: 22px; font-weight: 800;
