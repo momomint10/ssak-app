@@ -143,9 +143,9 @@
 .today-card-sub { font-size:12px; color:var(--c-g500); margin-top:2px; }
 .today-card-arrow { font-size:18px; color:var(--c-g300); flex-shrink:0; }
 
-/* ── 빠른 실행 4버튼 ──────────────────────────────────────── */
+/* ── 빠른 실행: 1 hero + 3 보조 (행동 위계 명확화) ─────── */
 .quick-grid {
-  display:grid; grid-template-columns:repeat(2,1fr); gap:8px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:8px;
   padding:0 16px; margin-top:16px;
 }
 .quick-btn {
@@ -166,6 +166,32 @@
   display:flex; align-items:center; justify-content:center; font-size:19px;
 }
 .quick-lbl { font-size:13px; font-weight:600; color:var(--c-g700); }
+
+/* hero 카드 — 첫 번째(고객케어) 강조: full width + 가로 + 큰 ico */
+.quick-btn.quick-hero {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #FFF0F3 0%, #FFFBFC 100%);
+  border: 1px solid rgba(255, 56, 92, 0.10);
+  box-shadow:
+    0 4px 14px rgba(255, 56, 92, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, .85);
+}
+.quick-btn.quick-hero .quick-ico {
+  width: 52px; height: 52px; border-radius: 14px; font-size: 24px;
+}
+.quick-btn.quick-hero .quick-lbl {
+  font-size: 16px; font-weight: 700; color: var(--c-g900);
+}
+.quick-hero-sub {
+  font-size: 12px; color: var(--c-g500); font-weight: 500; margin-top: 2px;
+}
+.quick-hero-arrow {
+  margin-left: auto; font-size: 18px; color: var(--c-pr, #FF385C); font-weight: 700;
+}
 
 /* ── 이번 달 실적 ─────────────────────────────────────────── */
 .perf-card {
@@ -246,11 +272,15 @@
     <div class="today-card-arrow">›</div>
   </div>
 
-  <!-- 빠른 실행 -->
+  <!-- 빠른 실행: 1 hero(고객케어) + 3 보조 -->
   <div class="quick-grid ds-fade-in ds-fade-in-1" style="margin-top:16px;">
-    <button class="quick-btn ds-tap-card" onclick="goTo('quote')">
+    <button class="quick-btn quick-hero ds-tap-card" onclick="goTo('quote')">
       <div class="quick-ico" style="background:#FFF0EC;">⚡</div>
-      <div class="quick-lbl">고객케어</div>
+      <div>
+        <div class="quick-lbl">고객케어</div>
+        <div class="quick-hero-sub">견적 · 계약 · 완료 보고를 한 번에</div>
+      </div>
+      <div class="quick-hero-arrow">›</div>
     </button>
     <button class="quick-btn ds-tap-card" onclick="goTo('report')">
       <div class="quick-ico" style="background:#FFF5F0;">📸</div>
@@ -264,7 +294,6 @@
       <div class="quick-ico" style="background:#FFF8F5;">👥</div>
       <div class="quick-lbl">동료</div>
     </button>
-
   </div>
 
   <!-- 더보기 메뉴 (접이식) -->
