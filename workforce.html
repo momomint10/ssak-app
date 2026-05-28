@@ -375,13 +375,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--g400);cursor:pointer;}
 .ni.on{color:var(--c-pr, #FF385C);font-weight:700;}
 .ni-ico{font-size:20px;line-height:1;}
-#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.92);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:85vw;}
-
-    @keyframes skeleton-shimmer {
-      0%{background-position:-400px 0}
-      100%{background-position:400px 0}
-    }
-    [style*="skeleton-shimmer"] > div { background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:800px 100%;animation:skeleton-shimmer 1.4s infinite linear; }
+/* #toast — design.css 글로벌 (260528) */
   </style>
 <script src="utils.js"></script>
 </head>
@@ -622,13 +616,11 @@ function setJobRegion(r){curJobRegion=r;renderJobFilters();loadJobs();}
 async function loadWorkers(){
   const list=document.getElementById('worker-list');
   list.innerHTML = Array(4).fill(`
-    <div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #f0f0f0;animation:skeleton-shimmer 1.4s infinite;">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:52px;height:52px;border-radius:50%;background:#f0f0f0;flex-shrink:0;"></div>
-        <div style="flex:1;">
-          <div style="height:14px;background:#f0f0f0;border-radius:4px;margin-bottom:8px;width:60%;"></div>
-          <div style="height:11px;background:#f0f0f0;border-radius:4px;width:80%;"></div>
-        </div>
+    <div class="ds-skel-list-item">
+      <div class="ds-skel av"></div>
+      <div class="ds-skel-body">
+        <div class="ds-skel" style="height:14px;width:60%;"></div>
+        <div class="ds-skel" style="height:11px;width:80%;"></div>
       </div>
     </div>`).join('');
   try{
@@ -703,13 +695,11 @@ async function loadWorkers(){
 async function loadJobs(){
   const list=document.getElementById('job-list');
   list.innerHTML = Array(4).fill(`
-    <div style="background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #f0f0f0;animation:skeleton-shimmer 1.4s infinite;">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:52px;height:52px;border-radius:50%;background:#f0f0f0;flex-shrink:0;"></div>
-        <div style="flex:1;">
-          <div style="height:14px;background:#f0f0f0;border-radius:4px;margin-bottom:8px;width:60%;"></div>
-          <div style="height:11px;background:#f0f0f0;border-radius:4px;width:80%;"></div>
-        </div>
+    <div class="ds-skel-list-item">
+      <div class="ds-skel av"></div>
+      <div class="ds-skel-body">
+        <div class="ds-skel" style="height:14px;width:60%;"></div>
+        <div class="ds-skel" style="height:11px;width:80%;"></div>
       </div>
     </div>`).join('');
   try{

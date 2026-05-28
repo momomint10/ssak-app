@@ -158,7 +158,7 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
 .ni-ico{font-size:20px;line-height:1;}
 
 /* 토스트 */
-#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.92);color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;}
+/* #toast — design.css 글로벌 (260528) */
 
 /* 상태 변경 드롭다운 */
 .status-modal{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.4);}
@@ -203,10 +203,6 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
   .ch-inp:focus{border-color:var(--pr);background:#fff;}
   .ch-send{background:var(--g900);color:#fff;border:none;border-radius:50%;width:36px;height:36px;flex-shrink:0;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
   .ch-send:disabled{background:var(--g300);}
-
-    @keyframes skeleton-shimmer {
-      0%{opacity:1} 50%{opacity:.5} 100%{opacity:1}
-    }
   </style>
 <script src="utils.js"></script>
 </head>
@@ -410,10 +406,10 @@ async function loadFeed(reset=false){
   loading=true;
   const feed = document.getElementById('feed');
   if(page===0) feed.innerHTML = Array(4).fill(`
-    <div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;border:1px solid #f0f0f0;animation:skeleton-shimmer 1.4s infinite;">
-      <div style="height:160px;background:#f0f0f0;border-radius:12px;margin-bottom:10px;"></div>
-      <div style="height:13px;background:#f0f0f0;border-radius:4px;margin-bottom:7px;width:70%;"></div>
-      <div style="height:11px;background:#f0f0f0;border-radius:4px;width:40%;"></div>
+    <div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;border:1.5px solid #F2F4F6;">
+      <div class="ds-skel" style="height:160px;border-radius:12px;margin-bottom:10px;"></div>
+      <div class="ds-skel" style="height:13px;margin-bottom:7px;width:70%;"></div>
+      <div class="ds-skel" style="height:11px;width:40%;"></div>
     </div>`).join('');
   try{
     let url = SERVER+'/api/market/listings?page='+page+'&limit=20';
