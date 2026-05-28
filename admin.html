@@ -214,6 +214,34 @@ input:focus { border-color: var(--c-pr, #FF385C); }
   </div>
 </div>
 
+<!-- Admin PIN 설정 모달 (베타 출시 차단 해소, 260528) -->
+<div class="ov" id="admin-pin-ov" onclick="if(event.target===this)closeAdminPin()">
+  <div class="sh">
+    <div class="sh-hd"></div>
+    <div class="sh-title">🔢 사용자 PIN 설정</div>
+    <div style="font-size:13.5px;color:#4E5968;line-height:1.6;margin-bottom:14px;">
+      <b id="admin-pin-target" style="color:#191F28;"></b>
+      <span id="admin-pin-phone" style="color:#8B95A1;margin-left:6px;font-size:12.5px;"></span>
+      <br><span style="color:#FF385C;font-weight:600;font-size:12px;">
+        설정된 PIN을 사장님께 직접 전달해주세요. 사용자는 MY에서 변경 가능합니다.
+      </span>
+    </div>
+    <label>4자리 PIN</label>
+    <div style="display:flex;gap:8px;align-items:stretch;">
+      <input id="admin-pin-input" type="tel" inputmode="numeric" maxlength="4" placeholder="0000"
+        style="flex:1;text-align:center;font-size:24px;letter-spacing:8px;font-weight:800;font-family:inherit;padding:12px;"
+        oninput="this.value=this.value.replace(/\D/g,'').slice(0,4)">
+      <button type="button" onclick="genRandomPin()" style="padding:0 16px;background:#F2F4F6;border:1.5px solid #E5E8EB;border-radius:10px;font-size:12px;font-weight:700;color:#4E5968;cursor:pointer;font-family:inherit;">🎲 랜덤</button>
+    </div>
+    <div id="admin-pin-alert" style="display:none;margin-top:10px;padding:10px 12px;background:#FFF0F4;color:#C92A4A;border-radius:10px;font-size:13px;font-weight:600;"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn" id="admin-pin-save" onclick="saveAdminPin()" style="flex:1;">설정</button>
+      <button class="btn ghost" onclick="removeAdminPin()" style="flex:1;background:#FEE2E2 !important;color:#C92A4A !important;border-color:#FCA5A5 !important;">PIN 해제</button>
+    </div>
+    <button class="btn ghost" onclick="closeAdminPin()" style="margin-top:8px;">취소</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -271,6 +299,7 @@ function userCard(u) {
   const isMe = u.id === me.sub;
   const actions = isMe ? ''
     : `<div class="row-actions">
+        <button class="btn-mini" onclick="openAdminPin('${u.id}','${esc((u.name||fmtPhone(u.phone_e164)).replace(/'/g,"\\'"))}','${esc((u.phone_e164||'').replace(/'/g,"\\'"))}')">🔢 PIN</button>
         ${u.status === 'active'
           ? `<button class="btn-mini" onclick="toggleStatus('${u.id}','disabled')">비활성</button>`
           : `<button class="btn-mini" onclick="toggleStatus('${u.id}','active')">재활성</button>`}
@@ -352,6 +381,80 @@ async function delUser(id, label) {
     if (!d.success) { toast(d.error); return; }
     toast('✅ 삭제 완료');
     loadUsers();
+  } catch (e) { toast('오류: ' + e.message); }
+}
+
+// ══════════════════════════════════════════════════
+// Admin PIN 설정 — 베타 출시 차단 해소 (260528)
+// ══════════════════════════════════════════════════
+let _adminPinTarget = null;
+function openAdminPin(id, label, phone) {
+  _adminPinTarget = { id, label, phone };
+  document.getElementById('admin-pin-target').textContent = label;
+  document.getElementById('admin-pin-phone').textContent = fmtPhone(phone);
+  document.getElementById('admin-pin-input').value = '';
+  document.getElementById('admin-pin-alert').style.display = 'none';
+  document.getElementById('admin-pin-ov').classList.add('on');
+  setTimeout(() => document.getElementById('admin-pin-input').focus(), 200);
+}
+function closeAdminPin() {
+  document.getElementById('admin-pin-ov').classList.remove('on');
+  _adminPinTarget = null;
+}
+function genRandomPin() {
+  // 너무 단순한 패턴 회피
+  let pin;
+  do {
+    pin = String(Math.floor(1000 + Math.random() * 9000));
+  } while (/^(\d)\1{3}$/.test(pin) || pin === '1234' || pin === '0000' || pin === '1111');
+  document.getElementById('admin-pin-input').value = pin;
+  document.getElementById('admin-pin-alert').style.display = 'none';
+}
+async function saveAdminPin() {
+  if (!_adminPinTarget) return;
+  const pin = document.getElementById('admin-pin-input').value.trim();
+  const alert = document.getElementById('admin-pin-alert');
+  if (!/^\d{4}$/.test(pin)) { alert.textContent = '4자리 숫자 PIN을 입력하세요'; alert.style.display = 'block'; return; }
+  if (/^(\d)\1{3}$/.test(pin) || pin === '1234' || pin === '0000' || pin === '1111') {
+    alert.textContent = '너무 단순한 PIN (1234, 0000, 1111 등 금지)'; alert.style.display = 'block'; return;
+  }
+  const btn = document.getElementById('admin-pin-save');
+  btn.disabled = true; btn.textContent = '설정 중...';
+  try {
+    const r = await fetchAuth(SERVER + '/api/admin/users/' + _adminPinTarget.id + '/pin-setup', {
+      method: 'POST', body: JSON.stringify({ pin })
+    });
+    const d = await r.json();
+    if (!d.success) {
+      alert.textContent = d.error || '설정 실패';
+      alert.style.display = 'block';
+      btn.disabled = false; btn.textContent = '설정';
+      return;
+    }
+    // 성공 — PIN 안내 (관리자가 사장님께 전달할 수 있도록)
+    const phoneFmt = fmtPhone(_adminPinTarget.phone);
+    const msg = `✅ PIN 설정 완료\n\n${_adminPinTarget.label} (${phoneFmt})\nPIN: ${pin}\n\n이 PIN을 SMS·전화·메모 등으로 전달해주세요.\nMY → PIN 변경에서 본인이 바꿀 수 있습니다.`;
+    alert.textContent = '';
+    alert.style.display = 'none';
+    closeAdminPin();
+    setTimeout(() => window.alert(msg), 100);
+    toast('✅ PIN 설정 완료');
+  } catch (e) {
+    alert.textContent = '서버 오류: ' + e.message;
+    alert.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = '설정';
+  }
+}
+async function removeAdminPin() {
+  if (!_adminPinTarget) return;
+  if (!confirm(`${_adminPinTarget.label}의 PIN을 해제할까요?\n사용자는 SMS 인증으로 다시 로그인해야 합니다.`)) return;
+  try {
+    const r = await fetchAuth(SERVER + '/api/admin/users/' + _adminPinTarget.id + '/pin', { method: 'DELETE' });
+    const d = await r.json();
+    if (!d.success) { toast(d.error); return; }
+    toast('✅ PIN 해제');
+    closeAdminPin();
   } catch (e) { toast('오류: ' + e.message); }
 }
 
