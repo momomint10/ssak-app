@@ -17,141 +17,121 @@ html, body {
 }
 body { position: relative; overflow-x: hidden; }
 
-/* ── 배경 사진 (Gemini 자체 생성) + 따뜻한 그라데이션 오버레이 ── */
+/* ── 배경 사진 (Gemini 자체 생성: 로봇+키친) ── */
 .bg-photo {
   position: fixed; inset: 0; z-index: 0;
   background-image: url('img/hero-mascot.png');
-  background-size: auto 140%;   /* 이미지를 140%로 키워 머리 영역이 화면 밖으로 */
-  background-position: center bottom;  /* 턱 아래(로고/분무기/집 모형)만 노출 */
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
 }
+/* 하단 페이드만 — UI 영역에 살짝 화이트 글라스 깔아서 가독성 보장 */
 .bg-overlay {
   position: fixed; inset: 0; z-index: 1;
   background: linear-gradient(180deg,
-    rgba(255, 248, 245, 0.02) 0%,
-    rgba(255, 234, 232, 0.12) 35%,
-    rgba(255, 224, 220, 0.32) 70%,
-    rgba(255, 240, 244, 0.62) 100%);
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 248, 245, 0.20) 60%,
+    rgba(255, 245, 240, 0.55) 85%,
+    rgba(255, 240, 235, 0.75) 100%);
 }
-/* sparkle 장식 (코랄/민트 별 입자) */
-.bg-sparkle {
-  position: fixed; z-index: 1; pointer-events: none;
-  opacity: 1;
-  filter: drop-shadow(0 2px 6px rgba(255,255,255,.55));
-}
-.bg-sparkle.s1 { top: 90px; left: 38px; }
-.bg-sparkle.s2 { top: 140px; right: 46px; }
-.bg-sparkle.s3 { top: 200px; left: 130px; }
 
 .shell {
   position: relative; z-index: 2;
   max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
-  padding: 28px 24px 32px;  /* 상단 padding 축소 — 브랜드 타이포 더 위로 */
+  padding: 24px 24px max(28px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
 }
+/* 상단 영역 — 사진의 우상단 Ssak-Ssak 로고가 브랜드 역할
+   (한글 "싹싹" 텍스트 제거, 작은 태그라인만 유지) */
 .brand {
   text-align: center;
-  margin: 12px 0 24px;
-}
-.brand h1 {
-  font-size: 64px;          /* 38 → 64px (브랜드명 대폭 강조) */
-  font-weight: 900;
-  color: #191F28;
-  letter-spacing: -0.05em;
-  line-height: 1;
-  margin-bottom: 8px;
-  /* 강력한 다중 흰 그림자 — 사진 위에서 또렷이 떠보임 */
-  text-shadow:
-    0 2px 4px rgba(255,255,255,1),
-    0 4px 24px rgba(255,255,255,0.95),
-    0 0 40px rgba(255,255,255,0.6);
+  margin-top: 4px;
+  margin-bottom: auto;  /* 하단 폼을 바닥으로 밀어냄 */
 }
 .brand p {
-  font-size: 14px;
+  font-size: 12px;
   color: #C92A4A;
   font-weight: 800;
-  letter-spacing: 0.10em;
-  margin-top: 6px;
-  text-shadow:
-    0 1px 3px rgba(255,255,255,0.9),
-    0 0 16px rgba(255,255,255,0.6);
+  letter-spacing: 0.14em;
+  text-shadow: 0 1px 3px rgba(255,255,255,0.9), 0 0 14px rgba(255,255,255,0.6);
 }
 
-/* ── 글라스 카드 ── */
+/* ── 글라스 폼 (카드 컨테이너 없이 pill 입력만 바닥에 정렬) ── */
 .card {
-  background: rgba(255, 255, 255, 0.32);
-  backdrop-filter: blur(44px) saturate(220%);
-  -webkit-backdrop-filter: blur(44px) saturate(220%);
-  border: 2px solid rgba(255, 255, 255, 0.95);
-  border-radius: 26px;
-  padding: 26px 22px 22px;
-  box-shadow:
-    0 32px 72px rgba(20, 30, 50, 0.22),
-    0 10px 28px rgba(255, 56, 92, 0.18),
-    inset 0 2px 0 rgba(255,255,255,1);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 8px;
 }
 .card-title {
-  font-size: 18px; font-weight: 700;
+  font-size: 22px; font-weight: 800;
   color: #191F28; margin-bottom: 8px;
-  letter-spacing: -0.01em;
+  text-align: center;
+  letter-spacing: -0.015em;
+  text-shadow: 0 1px 4px rgba(255,255,255,0.92), 0 0 18px rgba(255,255,255,0.65);
 }
 .card-desc {
-  font-size: 13.5px; color: #4E5968;
-  line-height: 1.6; margin-bottom: 20px;
+  font-size: 13.5px; color: #1F2937;
+  line-height: 1.6; margin-bottom: 22px;
+  text-align: center;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(255,255,255,0.85);
 }
 
 label {
-  display: block;
-  font-size: 11px; font-weight: 700;
-  color: #4E5968;
-  margin-bottom: 6px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  display: none;  /* placeholder가 라벨 역할 — UI 단순화 */
 }
+/* ── Pill 입력 필드 (사진 속 디자인과 통일) ── */
 input[type="tel"], input[type="text"] {
   width: 100%;
-  padding: 15px 14px;
-  font-size: 17px;
+  padding: 18px 26px;
+  font-size: 16px;
   font-family: inherit;
   font-weight: 600;
   color: #191F28;
-  border: 2px solid rgba(255, 255, 255, 0.95);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.22);
-  backdrop-filter: blur(18px) saturate(200%);
-  -webkit-backdrop-filter: blur(18px) saturate(200%);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  border-radius: 9999px;  /* 완전한 pill */
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
   outline: none;
-  letter-spacing: 0.5px;
-  box-shadow: inset 0 1px 2px rgba(20,30,50,.04), 0 3px 10px rgba(20,30,50,.06);
-  transition: border-color .15s, background .15s;
+  letter-spacing: 0.3px;
+  box-shadow:
+    0 8px 22px rgba(20, 30, 50, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  margin-bottom: 10px;
+  transition: border-color .15s, background .18s;
 }
 input:focus {
   border-color: var(--c-pr, #FF385C);
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.88);
 }
 input[disabled] { background: rgba(245, 245, 245, 0.7); color: #999; }
-input::placeholder { color: #8B95A1; font-weight: 500; }
+input::placeholder { color: rgba(75, 85, 99, 0.7); font-weight: 500; }
 
+/* ── Pill 버튼 ── */
 .btn {
   width: 100%;
-  padding: 16px;
+  padding: 18px;
   font-size: 16px;
   font-weight: 700;
   font-family: inherit;
   border: none;
-  border-radius: 14px;
+  border-radius: 9999px;  /* pill */
   background: linear-gradient(180deg, #FF5070 0%, #FF385C 100%);
   color: #fff;
   cursor: pointer;
-  margin-top: 14px;
+  margin-top: 10px;
   min-height: 56px;
   letter-spacing: -0.01em;
   box-shadow:
-    0 10px 26px rgba(255, 56, 92, 0.32),
-    inset 0 1px 0 rgba(255,255,255,.22);
+    0 14px 32px rgba(255, 56, 92, 0.42),
+    inset 0 1px 0 rgba(255,255,255,.28);
   transition: transform 0.12s cubic-bezier(0.16,1,0.3,1), box-shadow 0.18s;
 }
 .btn:active { transform: scale(0.98); }
@@ -161,12 +141,12 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
   box-shadow: none;
 }
 .btn.ghost {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   color: #FF385C;
-  border: 1.5px solid rgba(255, 56, 92, 0.35);
-  box-shadow: 0 4px 12px rgba(20,30,50,.06);
+  border: 1.5px solid rgba(255, 56, 92, 0.4);
+  box-shadow: 0 6px 16px rgba(20,30,50,.08);
 }
 .btn-link {
   background: none;
@@ -235,17 +215,13 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 </head>
 <body>
 
-<!-- 글라스모피즘 배경 레이어 -->
+<!-- 배경: Gemini 자체 생성 로봇+키친 사진 (우상단 Ssak-Ssak 로고 + 하단 sparkle 내장) -->
 <div class="bg-photo" aria-hidden="true"></div>
 <div class="bg-overlay" aria-hidden="true"></div>
-<svg class="bg-sparkle s1" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L13.5 9.5L21 11L13.5 12.5L12 20L10.5 12.5L3 11L10.5 9.5L12 2Z" fill="#FF385C"/></svg>
-<svg class="bg-sparkle s2" width="10" height="10" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L13.5 9.5L21 11L13.5 12.5L12 20L10.5 12.5L3 11L10.5 9.5L12 2Z" fill="#14B8A6"/></svg>
-<svg class="bg-sparkle s3" width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L13.5 9.5L21 11L13.5 12.5L12 20L10.5 12.5L3 11L10.5 9.5L12 2Z" fill="#FF385C" opacity=".6"/></svg>
 
 <div class="shell">
 
   <div class="brand">
-    <h1>싹싹</h1>
     <p>CLEAN · CARE · CONNECT</p>
   </div>
 
