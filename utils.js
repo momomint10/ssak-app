@@ -358,6 +358,15 @@ function emptySvg(iconName, title, sub = '', opts = {}) {
   </div>`;
 }
 
+// ── 친근한 에러 메시지 — fetch/network 실패 시 영문 raw 노출 방지
+function friendlyFetchError(err, fallback) {
+  const msg = (err && err.message) || '';
+  if (/fetch|network|NetworkError|Failed to fetch|aborted/i.test(msg)) {
+    return '잠시 후 다시 시도해 주세요. 인터넷 연결을 확인하시거나 새로고침해 보세요.';
+  }
+  return fallback || '잠시 후 다시 시도해 주세요.';
+}
+
 // ── 푸시 알림 VAPID ────────────────────────────────────────────
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);

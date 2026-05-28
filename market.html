@@ -445,7 +445,7 @@ async function loadFeed(reset=false){
         btn.textContent='더보기'; btn.onclick=()=>loadFeed(); feed.appendChild(btn); page++;
       } else { hasMore=false; page++; }
     }
-  }catch(e){ feed.innerHTML=`<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">불러오기 실패</div><div class="empty-sub">${esc(e.message)}</div></div>`; }
+  }catch(e){ feed.innerHTML=`<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">상품을 불러올 수 없어요</div><div class="empty-sub">${esc(friendlyFetchError(e,'상품 목록을 불러오지 못했어요.'))}</div></div>`; }
   loading=false;
 }
 

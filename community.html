@@ -379,7 +379,7 @@ async function loadFeed(reset=false) {
     if(searchKw && d.data.length>0){info.style.display='block';info.innerHTML='<b>"'+esc(searchKw)+'"</b> 검색 결과 '+d.data.length+'건';}
     else info.style.display='none';
   } catch(e){
-    feed.innerHTML='<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">불러오기 실패</div><div class="empty-sub">'+esc(e.message)+'</div></div>';
+    feed.innerHTML='<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">글을 불러올 수 없어요</div><div class="empty-sub">'+esc(friendlyFetchError(e,'글을 불러오지 못했어요.'))+'</div></div>';
   }
   loading=false;
 }
