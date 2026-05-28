@@ -71,30 +71,33 @@ body { position: relative; overflow-x: hidden; }
     0 0 18px rgba(255,255,255,0.55);
 }
 
-/* ── 글라스 패널 (260528 — 살짝 불투명 한 단계 ↑) ── */
+/* ── 글라스 패널 (260528 — 불투명 ↑ + 사이즈 컴팩트) ── */
 .card {
-  background: rgba(255, 255, 255, 0.32);     /* .20 → .32 (한 단계 불투명) */
+  max-width: 340px;            /* 카드 너비 좁힘 (기존 480 - 좌우 패딩) */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.48);     /* .32 → .48 (한 단계 더 불투명) */
   backdrop-filter: blur(64px) saturate(220%);
   -webkit-backdrop-filter: blur(64px) saturate(220%);
-  border: 1.5px solid rgba(255, 255, 255, 0.65);
-  border-radius: 28px;
-  padding: 28px 24px 24px;
-  margin-bottom: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  border-radius: 24px;                       /* 28 → 24px (살짝 더 짧은 모서리) */
+  padding: 22px 20px 18px;                   /* 28/24/24 → 22/20/18 (컴팩트) */
   box-shadow:
-    0 20px 50px rgba(20, 30, 50, 0.16),
-    0 6px 20px rgba(20, 30, 50, 0.07),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.9);
+    0 18px 44px rgba(20, 30, 50, 0.18),
+    0 5px 16px rgba(20, 30, 50, 0.08),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
 }
 .card-title {
-  font-size: 22px; font-weight: 800;
-  color: #191F28; margin-bottom: 8px;
+  font-size: 18px; font-weight: 800;          /* 22 → 18 */
+  color: #191F28; margin-bottom: 6px;         /* 8 → 6 */
   text-align: center;
   letter-spacing: -0.015em;
-  text-shadow: none;  /* 글라스 카드 안이라 그림자 불필요 */
+  text-shadow: none;
 }
 .card-desc {
-  font-size: 13.5px; color: #4E5968;
-  line-height: 1.6; margin-bottom: 22px;
+  font-size: 12.5px; color: #4E5968;          /* 13.5 → 12.5 */
+  line-height: 1.55; margin-bottom: 16px;     /* 22 → 16 */
   text-align: center;
   font-weight: 500;
   text-shadow: none;
@@ -103,30 +106,30 @@ body { position: relative; overflow-x: hidden; }
 label {
   display: none;  /* placeholder가 라벨 역할 */
 }
-/* ── Pill 입력 필드 (260528 — 자연스럽게 비침) ── */
+/* ── Pill 입력 필드 (260528 컴팩트) ── */
 input[type="tel"], input[type="text"] {
   width: 100%;
-  padding: 17px 24px;
-  font-size: 16px;
+  padding: 14px 20px;                          /* 17/24 → 14/20 */
+  font-size: 15px;                             /* 16 → 15 */
   font-family: inherit;
   font-weight: 600;
   color: #191F28;
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.22);   /* .40 → .22 (대폭 투명) */
+  background: rgba(255, 255, 255, 0.35);       /* .22 → .35 (불투명 ↑) */
   backdrop-filter: blur(32px) saturate(200%);
   -webkit-backdrop-filter: blur(32px) saturate(200%);
   outline: none;
   letter-spacing: 0.3px;
   box-shadow:
     0 2px 8px rgba(20, 30, 50, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  margin-bottom: 10px;
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  margin-bottom: 8px;
   transition: border-color .15s, box-shadow .18s, background .18s;
 }
 input:focus {
   border-color: var(--c-pr, #FF385C);
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.75);
   box-shadow:
     0 4px 14px rgba(255, 56, 92, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
@@ -134,23 +137,23 @@ input:focus {
 input[disabled] { background: rgba(245, 245, 245, 0.7); color: #999; }
 input::placeholder { color: #8B95A1; font-weight: 500; }
 
-/* ── Pill 버튼 ── */
+/* ── Pill 버튼 (260528 컴팩트) ── */
 .btn {
   width: 100%;
-  padding: 18px;
-  font-size: 16px;
+  padding: 14px;                              /* 18 → 14 */
+  font-size: 15px;                            /* 16 → 15 */
   font-weight: 700;
   font-family: inherit;
   border: none;
-  border-radius: 9999px;  /* pill */
+  border-radius: 9999px;
   background: linear-gradient(180deg, #FF5070 0%, #FF385C 100%);
   color: #fff;
   cursor: pointer;
-  margin-top: 10px;
-  min-height: 56px;
+  margin-top: 8px;                            /* 10 → 8 */
+  min-height: 48px;                           /* 56 → 48 */
   letter-spacing: -0.01em;
   box-shadow:
-    0 14px 32px rgba(255, 56, 92, 0.42),
+    0 10px 24px rgba(255, 56, 92, 0.38),
     inset 0 1px 0 rgba(255,255,255,.28);
   transition: transform 0.12s cubic-bezier(0.16,1,0.3,1), box-shadow 0.18s;
 }
@@ -180,10 +183,10 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 }
 
 .hint {
-  font-size: 12.5px;
+  font-size: 11.5px;            /* 12.5 → 11.5 */
   color: #4E5968;
-  margin-top: 14px;
-  line-height: 1.6;
+  margin-top: 10px;             /* 14 → 10 */
+  line-height: 1.55;
   text-align: center;
 }
 .hint b { color: var(--c-pr, #FF385C); }
@@ -222,17 +225,17 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 
 .bottom {
   text-align: center;
-  margin-top: 4px;
-  padding: 14px 18px;
-  font-size: 11.5px;
+  margin: 0 auto;
+  max-width: 340px;                 /* 카드와 동일 너비 */
+  padding: 10px 16px;               /* 14/18 → 10/16 (컴팩트) */
+  font-size: 10.5px;                /* 11.5 → 10.5 */
   color: #4E5968;
   font-weight: 600;
-  /* 거의 보이지 않을 만큼 투명 */
-  background: rgba(255, 255, 255, 0.10);   /* .18 → .10 */
+  background: rgba(255, 255, 255, 0.20);   /* .10 → .20 (살짝 ↑) */
   backdrop-filter: blur(32px) saturate(180%);
   -webkit-backdrop-filter: blur(32px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;              /* 18 → 16 */
   box-shadow: 0 4px 12px rgba(20, 30, 50, 0.05);
 }
 .bottom small { display: block; line-height: 1.7; }
