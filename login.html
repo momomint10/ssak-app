@@ -48,39 +48,40 @@ body { position: relative; overflow-x: hidden; }
 /* 상단 영역 — 사진의 우상단 Ssak-Ssak 로고가 브랜드 역할
    (한글 "싹싹" 텍스트 제거, 작은 태그라인만 유지) */
 .brand {
-  text-align: center;
-  margin-top: 4px;
-  margin-bottom: auto;  /* 하단 폼을 바닥으로 밀어냄 */
+  text-align: left;             /* 우상단 Ssak-Ssak 로고와 안 겹치게 좌측 정렬 */
+  margin-top: 8px;
+  margin-bottom: auto;          /* 하단 폼을 바닥으로 밀어냄 */
+  padding-left: 4px;
 }
 .brand p {
-  /* 글라스 pill 안에 담아서 가독성 ↑ + 사진의 차분한 톤과 조화 */
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  font-size: 11px;
-  color: #4E5968;          /* 코랄 → 잉크 그레이 */
+  /* 글라스 pill 제거 — 사진의 우상단 Ssak-Ssak 로고 안 가리도록 텍스트만 */
+  display: inline;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  font-size: 10.5px;
+  color: #4E5968;
   font-weight: 700;
   letter-spacing: 0.18em;
-  text-shadow: none;
-  box-shadow: 0 4px 12px rgba(20, 30, 50, 0.08);
+  /* 흰 텍스트 그림자로 사진 위에서도 또렷이 */
+  text-shadow:
+    0 1px 3px rgba(255,255,255,0.95),
+    0 0 12px rgba(255,255,255,0.7);
 }
 
-/* ── 강한 글라스 패널 (260528 가독성 우선) ── */
+/* ── 글라스 패널 (260528 — 투명도 ↑ 배경 사진 비치도록) ── */
 .card {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.55);     /* .78 → .55 (배경 비침) */
+  backdrop-filter: blur(48px) saturate(200%); /* blur 40→48px로 가독성 보완 */
+  -webkit-backdrop-filter: blur(48px) saturate(200%);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
   border-radius: 28px;
   padding: 28px 24px 24px;
   margin-bottom: 12px;
   box-shadow:
-    0 24px 60px rgba(20, 30, 50, 0.22),
-    0 8px 24px rgba(20, 30, 50, 0.10),
+    0 20px 50px rgba(20, 30, 50, 0.18),
+    0 6px 20px rgba(20, 30, 50, 0.08),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
 }
 .card-title {
@@ -101,7 +102,7 @@ body { position: relative; overflow-x: hidden; }
 label {
   display: none;  /* placeholder가 라벨 역할 */
 }
-/* ── Pill 입력 필드 (글라스 카드 안 — 거의 솔리드) ── */
+/* ── Pill 입력 필드 (260528 — 글라스 카드 안에서도 살짝 비침) ── */
 input[type="tel"], input[type="text"] {
   width: 100%;
   padding: 17px 24px;
@@ -109,20 +110,22 @@ input[type="tel"], input[type="text"] {
   font-family: inherit;
   font-weight: 600;
   color: #191F28;
-  border: 1.5px solid rgba(20, 30, 50, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
   border-radius: 9999px;  /* pill 유지 */
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.65);   /* .92 → .65 (배경 살짝 비침) */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   outline: none;
   letter-spacing: 0.3px;
   box-shadow:
-    0 2px 6px rgba(20, 30, 50, 0.04),
+    0 2px 8px rgba(20, 30, 50, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
   margin-bottom: 10px;
-  transition: border-color .15s, box-shadow .18s;
+  transition: border-color .15s, box-shadow .18s, background .18s;
 }
 input:focus {
   border-color: var(--c-pr, #FF385C);
-  background: #fff;
+  background: rgba(255, 255, 255, 0.90);
   box-shadow:
     0 4px 14px rgba(255, 56, 92, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
@@ -223,13 +226,13 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
   font-size: 11.5px;
   color: #4E5968;
   font-weight: 600;
-  /* 글라스 mini-card로 가독성 확보 */
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  /* 투명도 ↑ — 배경 사진이 더 비치도록 */
+  background: rgba(255, 255, 255, 0.32);   /* .55 → .32 */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 18px;
-  box-shadow: 0 6px 16px rgba(20, 30, 50, 0.08);
+  box-shadow: 0 4px 12px rgba(20, 30, 50, 0.06);
 }
 .bottom small { display: block; line-height: 1.7; }
 .bottom a { color: #FF385C; font-weight: 700; }
