@@ -85,12 +85,15 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* 이달 통계 */
 .stats-bar{background:#fff;margin:0 0 12px;padding:20px 24px;box-shadow:var(--shadow);}
 .stats-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:14px;}
-.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
-.stat-item{text-align:center;background:var(--gray-50);border-radius:14px;padding:14px 8px;}
-.stat-value{font-size:22px;font-weight:var(--fw-bold);color:var(--gray-900);line-height:1;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.stats-hero{grid-column:1/-1;background:linear-gradient(135deg,#FFF0F3 0%,#FFFBFC 100%);border:1px solid rgba(255,56,92,0.10);border-radius:14px;padding:14px 18px;display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
+.stats-hero-lbl{font-size:13px;font-weight:700;color:var(--gray-700);}
+.stats-hero-val{font-size:26px;font-weight:var(--fw-bold);color:var(--c-pr,#FF385C);letter-spacing:-0.02em;line-height:1;}
+.stat-item{text-align:center;background:var(--gray-50);border-radius:12px;padding:11px 6px;}
+.stat-value{font-size:18px;font-weight:var(--fw-bold);color:var(--gray-900);line-height:1;}
 .stat-value.green{color:var(--primary);}
 .stat-value.amber{color:#F59E0B;}
-.stat-label{font-size:11px;color:var(--gray-400);margin-top:5px;font-weight:500;}
+.stat-label{font-size:11px;color:var(--gray-400);margin-top:4px;font-weight:500;}
 
 /* 섹션 */
 .section{background:#fff;border-radius:var(--radius);margin:0 16px 12px;box-shadow:var(--shadow);overflow:hidden;}
@@ -143,6 +146,10 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   <!-- 신뢰 지표 --><div class="trust-card"><div class="trust-title">⭐ 고객 신뢰 지표</div><div class="trust-row"><div class="trust-stat"><div class="trust-val amber" id="my-rating">-</div><div class="trust-lbl">평균 평점</div></div><div class="trust-stat"><div class="trust-val" id="my-review-count">0</div><div class="trust-lbl">후기 수</div></div><div class="trust-stat"><div class="trust-val" id="my-recommend">-</div><div class="trust-lbl">추천 비율</div></div></div></div><!-- 이달 통계 -->
   <div class="stats-bar">
     <div class="stats-title">📊 이달 현황</div>
+    <div class="stats-hero">
+      <div class="stats-hero-lbl">이달 매출</div>
+      <div class="stats-hero-val" id="stat-revenue">-</div>
+    </div>
     <div class="stats-grid">
       <div class="stat-item">
         <div class="stat-value green" id="stat-bookings">0</div>
@@ -155,10 +162,6 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <div class="stat-item">
         <div class="stat-value" id="stat-done">0</div>
         <div class="stat-label">완료 건수</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value green" id="stat-revenue" style="font-size:18px;">-</div>
-        <div class="stat-label">이달 매출</div>
       </div>
     </div>
   </div>
