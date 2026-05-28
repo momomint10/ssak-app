@@ -71,33 +71,33 @@ body { position: relative; overflow-x: hidden; }
     0 0 18px rgba(255,255,255,0.55);
 }
 
-/* ── 글라스 패널 (260528 — 불투명 ↑ + 사이즈 컴팩트) ── */
+/* ── 글라스 패널 (260528 — 높이 한 단계 더 ↓) ── */
 .card {
-  max-width: 340px;            /* 카드 너비 좁힘 (기존 480 - 좌우 패딩) */
+  max-width: 340px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 10px;
-  background: rgba(255, 255, 255, 0.48);     /* .32 → .48 (한 단계 더 불투명) */
+  background: rgba(255, 255, 255, 0.48);
   backdrop-filter: blur(64px) saturate(220%);
   -webkit-backdrop-filter: blur(64px) saturate(220%);
   border: 1.5px solid rgba(255, 255, 255, 0.75);
-  border-radius: 24px;                       /* 28 → 24px (살짝 더 짧은 모서리) */
-  padding: 22px 20px 18px;                   /* 28/24/24 → 22/20/18 (컴팩트) */
+  border-radius: 22px;                       /* 24 → 22 */
+  padding: 18px 20px 14px;                   /* 22/20/18 → 18/20/14 (높이 ↓) */
   box-shadow:
     0 18px 44px rgba(20, 30, 50, 0.18),
     0 5px 16px rgba(20, 30, 50, 0.08),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.95);
 }
 .card-title {
-  font-size: 18px; font-weight: 800;          /* 22 → 18 */
-  color: #191F28; margin-bottom: 6px;         /* 8 → 6 */
+  font-size: 18px; font-weight: 800;
+  color: #191F28; margin-bottom: 4px;         /* 6 → 4 */
   text-align: center;
   letter-spacing: -0.015em;
   text-shadow: none;
 }
 .card-desc {
-  font-size: 12.5px; color: #4E5968;          /* 13.5 → 12.5 */
-  line-height: 1.55; margin-bottom: 16px;     /* 22 → 16 */
+  font-size: 12.5px; color: #4E5968;
+  line-height: 1.5; margin-bottom: 12px;      /* 16 → 12 */
   text-align: center;
   font-weight: 500;
   text-shadow: none;
@@ -109,14 +109,14 @@ label {
 /* ── Pill 입력 필드 (260528 컴팩트) ── */
 input[type="tel"], input[type="text"] {
   width: 100%;
-  padding: 14px 20px;                          /* 17/24 → 14/20 */
-  font-size: 15px;                             /* 16 → 15 */
+  padding: 12px 20px;                          /* 14 → 12 */
+  font-size: 15px;
   font-family: inherit;
   font-weight: 600;
   color: #191F28;
   border: 1.5px solid rgba(255, 255, 255, 0.65);
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.35);       /* .22 → .35 (불투명 ↑) */
+  background: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(32px) saturate(200%);
   -webkit-backdrop-filter: blur(32px) saturate(200%);
   outline: none;
@@ -124,7 +124,7 @@ input[type="tel"], input[type="text"] {
   box-shadow:
     0 2px 8px rgba(20, 30, 50, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.85);
-  margin-bottom: 8px;
+  margin-bottom: 6px;                          /* 8 → 6 */
   transition: border-color .15s, box-shadow .18s, background .18s;
 }
 input:focus {
@@ -140,8 +140,8 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 /* ── Pill 버튼 (260528 컴팩트) ── */
 .btn {
   width: 100%;
-  padding: 14px;                              /* 18 → 14 */
-  font-size: 15px;                            /* 16 → 15 */
+  padding: 12px;                              /* 14 → 12 */
+  font-size: 15px;
   font-weight: 700;
   font-family: inherit;
   border: none;
@@ -149,8 +149,8 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
   background: linear-gradient(180deg, #FF5070 0%, #FF385C 100%);
   color: #fff;
   cursor: pointer;
-  margin-top: 8px;                            /* 10 → 8 */
-  min-height: 48px;                           /* 56 → 48 */
+  margin-top: 6px;                            /* 8 → 6 */
+  min-height: 44px;                           /* 48 → 44 */
   letter-spacing: -0.01em;
   box-shadow:
     0 10px 24px rgba(255, 56, 92, 0.38),
@@ -183,10 +183,10 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 }
 
 .hint {
-  font-size: 11.5px;            /* 12.5 → 11.5 */
+  font-size: 11.5px;
   color: #4E5968;
-  margin-top: 10px;             /* 14 → 10 */
-  line-height: 1.55;
+  margin-top: 8px;              /* 10 → 8 */
+  line-height: 1.5;             /* 1.55 → 1.5 */
   text-align: center;
 }
 .hint b { color: var(--c-pr, #FF385C); }
