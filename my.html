@@ -469,6 +469,25 @@ async function savePin(){
     toast('✅ PIN 설정 완료');
     document.getElementById('acc-pin-title').textContent = 'PIN 로그인 변경';
     document.getElementById('acc-pin-sub').textContent = '✅ 설정됨 — 다음 로그인부터 PIN 4자리';
+    // Phase 5-B — 첫 가입자에게 1회 push priming. 모달 닫힘 + 토스트 본 뒤 자연스럽게 권유.
+    if (!localStorage.getItem('ssak_push_primed') && typeof ssakShowPushPrime === 'function') {
+      const perm = (typeof pushPermission === 'function') ? pushPermission() : Notification.permission;
+      if (perm === 'default' || perm === 'granted') {
+        setTimeout(() => {
+          ssakShowPushPrime({
+            title: '🎉 마지막 한 가지!',
+            body: '예약·문의를 놓치지 않으려면 알림을 켜두세요. 매일 아침 그날 일정도 알려드려요.',
+            onAccept: async () => {
+              const res = await ssakSubscribePush({ hour: 8, minute: 0, reminder_enabled: true });
+              if (res.ok) toast('🔔 알림 설정 완료 — 매일 오전 8:00');
+              else if (res.err === 'denied') ssakShowPushDeniedGuide();
+            }
+          });
+        }, 1200);
+      } else {
+        localStorage.setItem('ssak_push_primed', '1');
+      }
+    }
   } catch (e) {
     pinAlert('오류: ' + (e.message||''));
     btn.disabled = false; btn.textContent = 'PIN 설정';

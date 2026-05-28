@@ -546,37 +546,59 @@ function closeReminderModal() {
   if (m) m.style.display = 'none';
 }
 
-// 🔔 버튼 클릭 → 모달 열기 (필요 시 구독 먼저 생성)
+// 🔔 버튼 클릭 → 상태별 흐름 분기 (Phase 5-B priming)
 async function togglePushNotification() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+  const perm = pushPermission();
+  if (perm === 'unsupported') {
     toast('이 브라우저는 푸시 알림을 지원하지 않습니다');
     return;
   }
-  if (Notification.permission === 'denied') {
-    toast('브라우저 설정에서 알림을 허용해 주세요 🔔');
+  if (perm === 'ios-no-pwa') {
+    ssakShowIOSInstallGuide();
+    return;
+  }
+  if (perm === 'denied') {
+    ssakShowPushDeniedGuide();
     return;
   }
 
-  fillReminderTimes();
-  const enabledEl = document.getElementById('reminder-enabled');
-  const timeEl = document.getElementById('reminder-time');
+  // granted 인데 구독 객체가 없으면 → 구독부터, 있으면 → 설정 모달
   const reg = await navigator.serviceWorker.ready;
   const sub = await reg.pushManager.getSubscription();
 
-  if (sub) {
-    try {
-      const r = await fetch(SERVER + '/api/push/reminder?endpoint=' + encodeURIComponent(sub.endpoint));
-      const d = await r.json();
-      const cfg = (d && d.data) || { reminder_hour: 8, reminder_minute: 0, reminder_enabled: true };
-      enabledEl.checked = cfg.reminder_enabled !== false;
-      const hh = String(cfg.reminder_hour ?? 8).padStart(2,'0');
-      const mm = String(cfg.reminder_minute ?? 0).padStart(2,'0');
-      timeEl.value = `${hh}:${mm}`;
-    } catch(e) {
-      enabledEl.checked = true;
-      timeEl.value = '08:00';
-    }
-  } else {
+  if (!sub) {
+    // permission='default' or granted-but-not-subscribed → priming
+    ssakShowPushPrime({
+      onAccept: async () => {
+        const res = await ssakSubscribePush({ hour: 8, minute: 0, reminder_enabled: true });
+        if (res.ok) {
+          updateBellState(true);
+          toast('🔔 매일 오전 8:00에 알림을 받아요. 시간은 벨에서 바꿀 수 있어요');
+        } else if (res.err === 'denied') {
+          ssakShowPushDeniedGuide();
+        } else if (res.err === 'default') {
+          // 사용자가 native prompt를 닫음 — 조용히
+        } else {
+          toast('알림 설정 중 오류: ' + (res.err || 'unknown'));
+        }
+      }
+    });
+    return;
+  }
+
+  // 이미 구독 중 → 설정 모달
+  fillReminderTimes();
+  const enabledEl = document.getElementById('reminder-enabled');
+  const timeEl = document.getElementById('reminder-time');
+  try {
+    const r = await fetch(SERVER + '/api/push/reminder?endpoint=' + encodeURIComponent(sub.endpoint));
+    const d = await r.json();
+    const cfg = (d && d.data) || { reminder_hour: 8, reminder_minute: 0, reminder_enabled: true };
+    enabledEl.checked = cfg.reminder_enabled !== false;
+    const hh = String(cfg.reminder_hour ?? 8).padStart(2,'0');
+    const mm = String(cfg.reminder_minute ?? 0).padStart(2,'0');
+    timeEl.value = `${hh}:${mm}`;
+  } catch(e) {
     enabledEl.checked = true;
     timeEl.value = '08:00';
   }
@@ -727,10 +749,22 @@ async function loadHomeStats() {
   if (period) period.textContent = `${now.getMonth()+1}월`;
 }
 
-// 벨 아이콘 상태 (redesign에 맞게)
+// 벨 아이콘 상태 — 3 state: subscribed / available / denied
 function updateBellState(subscribed) {
   const dot = document.getElementById('notif-dot');
-  if (dot) dot.style.display = subscribed ? 'block' : 'none';
+  if (!dot) return;
+  const perm = (typeof pushPermission === 'function') ? pushPermission() : Notification.permission;
+  if (subscribed) {
+    dot.style.display = 'block';
+    dot.style.background = '#FFD600'; // 활성 — 옐로
+    dot.style.borderColor = 'rgba(255,56,92,.6)';
+  } else if (perm === 'denied') {
+    dot.style.display = 'block';
+    dot.style.background = '#B0B7C3'; // 거부 — 회색
+    dot.style.borderColor = 'rgba(176,183,195,.5)';
+  } else {
+    dot.style.display = 'none'; // default — 깔끔
+  }
 }
 
 // DOMContentLoaded
@@ -739,11 +773,13 @@ document.addEventListener('DOMContentLoaded', () => {
   loadUser();
   loadHomeStats();
   initStickyHeader(); // 스크롤 그림자 헤더
-  // SW 구독 상태
+  // SW 구독 상태 — 거부 상태도 회색 dot으로 반영
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     navigator.serviceWorker.ready.then(reg =>
       reg.pushManager.getSubscription()
     ).then(sub => updateBellState(!!sub)).catch(() => {});
+  } else {
+    updateBellState(false);
   }
 });
 

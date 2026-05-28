@@ -756,3 +756,173 @@ function avatarHtml(nickname, photoUrl, size = 'md', verified = false) {
   const initial = (nickname || '?').trim().charAt(0);
   return `<div class="ds-avatar ${sizeCls} ${cls}">${esc(initial)}${v}</div>`;
 }
+
+// ══════════════════════════════════════════════════════════════════
+// 푸시 알림 UX — priming · denied 가이드 · iOS PWA 안내 (Phase 5-B)
+// ══════════════════════════════════════════════════════════════════
+// 설계 메모:
+// · 브라우저 native prompt는 한 번 거부되면 코드에서 다시 띄울 수 없음 → soft priming 필수
+// · iOS Safari는 PWA(홈화면 추가) 상태에서만 push 가능
+// · 모든 페이지에서 동일한 priming UX를 쓰도록 utils.js에 집중
+
+function pushSupported() {
+  return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+}
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+}
+function pushPermission() {
+  if (!pushSupported()) return 'unsupported';
+  if (isIOS() && !isStandalone()) return 'ios-no-pwa';
+  return Notification.permission; // 'default' | 'granted' | 'denied'
+}
+
+/** native prompt → 서버 구독 등록까지 한 번에. 호출 전에 priming UI를 보여줬다고 가정 */
+async function ssakSubscribePush({ hour = 8, minute = 0, reminder_enabled = true } = {}) {
+  if (!pushSupported()) return { ok: false, err: 'unsupported' };
+  const reg = await navigator.serviceWorker.ready;
+  let sub = await reg.pushManager.getSubscription();
+  if (!sub) {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return { ok: false, err: permission };
+    const keyRes = await fetch(SERVER + '/api/push/vapid-key').then(r => r.json());
+    const vapidKey = urlBase64ToUint8Array(keyRes.publicKey);
+    sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: vapidKey });
+  }
+  const { endpoint } = sub;
+  const keys = sub.toJSON().keys;
+  const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  await fetch(SERVER + '/api/push/subscribe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      endpoint, p256dh: keys.p256dh, auth: keys.auth,
+      anon_id: getAnon(),
+      deviceId: cfg.company || 'unknown',
+      reminder_hour: hour, reminder_minute: minute
+    })
+  });
+  await fetch(SERVER + '/api/push/reminder', {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ endpoint, reminder_enabled, reminder_hour: hour, reminder_minute: minute })
+  });
+  localStorage.setItem('ssak_push_primed', '1');
+  return { ok: true, sub };
+}
+
+function _ssakInjectPushStyles() {
+  if (document.getElementById('ds-push-modal-style')) return;
+  // CSS는 design.css에 정의됨 — 이 함수는 안전장치(개발 중 design.css 누락 대비)
+  return;
+}
+function _ssakRemovePushModal() {
+  const el = document.getElementById('ds-push-modal');
+  if (el) el.remove();
+}
+
+/**
+ * Soft priming 모달. native prompt 전에 가치 제안.
+ * @param {Object} opts
+ * @param {string} opts.title  헤더 카피
+ * @param {string} opts.body   설명
+ * @param {string} opts.cta    수락 버튼
+ * @param {string} opts.deny   거부 버튼 (default '나중에')
+ * @param {Function} opts.onAccept  사용자 수락 시 호출
+ * @param {Function} opts.onDeny    사용자 거부 시 호출 (optional)
+ */
+function ssakShowPushPrime(opts = {}) {
+  _ssakInjectPushStyles();
+  _ssakRemovePushModal();
+  const title = opts.title || '🔔 알림을 받아볼까요?';
+  const body  = opts.body  || '매일 아침 그날 일정과 새 예약·문의를 알려드려요. 한 건도 놓치지 않으려고요.';
+  const cta   = opts.cta   || '네, 켤게요';
+  const deny  = opts.deny  || '나중에';
+  const html = `
+    <div id="ds-push-modal" class="ds-push-overlay" role="dialog" aria-modal="true">
+      <div class="ds-push-card">
+        <div class="ds-push-emoji">🔔</div>
+        <div class="ds-push-title">${esc(title)}</div>
+        <div class="ds-push-body">${esc(body)}</div>
+        <ul class="ds-push-bullets">
+          <li><span>📅</span><span>매일 아침 오늘 일정 요약</span></li>
+          <li><span>📬</span><span>새 예약·문의 도착 시</span></li>
+          <li><span>🔕</span><span>언제든 끄거나 시간 바꾸기</span></li>
+        </ul>
+        <div class="ds-push-actions">
+          <button class="ds-push-btn-ghost" id="ds-push-deny">${esc(deny)}</button>
+          <button class="ds-push-btn-primary" id="ds-push-accept">${esc(cta)}</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+  document.getElementById('ds-push-deny').onclick = () => {
+    _ssakRemovePushModal();
+    localStorage.setItem('ssak_push_primed', '1'); // 1회 제시 기록 (재반복 방지)
+    if (typeof opts.onDeny === 'function') opts.onDeny();
+  };
+  document.getElementById('ds-push-accept').onclick = async () => {
+    const btn = document.getElementById('ds-push-accept');
+    btn.disabled = true; btn.textContent = '설정 중…';
+    if (typeof opts.onAccept === 'function') {
+      await opts.onAccept();
+    }
+    _ssakRemovePushModal();
+  };
+}
+
+/** 권한이 이미 거부됐을 때 — 브라우저 설정 복구 가이드 */
+function ssakShowPushDeniedGuide() {
+  _ssakRemovePushModal();
+  const isiOS = isIOS();
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  let steps = '';
+  if (isiOS) {
+    steps = '<li>설정 앱 → Safari → 웹사이트 설정 → 알림</li><li>"ssakapp.co.kr" 항목 → "허용" 선택</li>';
+  } else if (isAndroid) {
+    steps = '<li>크롬 주소창 왼쪽 🔒 자물쇠 아이콘 탭</li><li>"권한" → "알림" → 허용</li>';
+  } else {
+    steps = '<li>주소창 왼쪽 🔒 자물쇠 아이콘 클릭</li><li>"알림" 항목을 "허용"으로 변경</li><li>페이지 새로고침</li>';
+  }
+  const html = `
+    <div id="ds-push-modal" class="ds-push-overlay" role="dialog" aria-modal="true">
+      <div class="ds-push-card">
+        <div class="ds-push-emoji">🔕</div>
+        <div class="ds-push-title">알림이 차단돼 있어요</div>
+        <div class="ds-push-body">이전에 거부되어 브라우저 설정에서 직접 허용해야 해요.</div>
+        <ol class="ds-push-steps">${steps}</ol>
+        <div class="ds-push-actions">
+          <button class="ds-push-btn-primary" id="ds-push-accept">확인</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+  document.getElementById('ds-push-accept').onclick = _ssakRemovePushModal;
+}
+
+/** iOS Safari + 비-PWA 상태 — 홈화면 추가 안내 */
+function ssakShowIOSInstallGuide() {
+  _ssakRemovePushModal();
+  const html = `
+    <div id="ds-push-modal" class="ds-push-overlay" role="dialog" aria-modal="true">
+      <div class="ds-push-card">
+        <div class="ds-push-emoji">📲</div>
+        <div class="ds-push-title">홈 화면에 추가해 주세요</div>
+        <div class="ds-push-body">아이폰은 홈 화면에 설치된 상태에서만 푸시 알림을 받을 수 있어요.</div>
+        <ol class="ds-push-steps">
+          <li>아래 공유 버튼 <b>⬆️</b> 탭</li>
+          <li>"홈 화면에 추가" 선택</li>
+          <li>홈 화면 아이콘으로 다시 열고 알림 켜기</li>
+        </ol>
+        <div class="ds-push-actions">
+          <button class="ds-push-btn-primary" id="ds-push-accept">알겠어요</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', html);
+  document.getElementById('ds-push-accept').onclick = _ssakRemovePushModal;
+}
