@@ -87,21 +87,24 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .section-title span{flex:1;}
 .section-title .count-badge{background:#FFF0EC;color:var(--primary-dark);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
 
-/* 예약 카드 */
-.booking-card{background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.15s;}
+/* 예약 카드 (260528 AX 톤 — workforce와 통일 컴팩트) */
+.booking-card{background:#fff;border:1.5px solid #F2F4F6;border-radius:14px;padding:11px 12px;margin-bottom:8px;box-shadow:var(--sh-sm, 0 2px 6px rgba(20,30,50,.05)), inset 0 1px 0 rgba(255,255,255,.7), 0 4px 14px rgba(255,56,92,.03);cursor:pointer;transition:transform var(--dur-fast, 120ms) var(--ease-spring, cubic-bezier(.16,1,.3,1)),box-shadow .15s;}
 .booking-card:active{transform:scale(0.98);}
-.booking-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
-.booking-name{font-size:15px;font-weight:700;}
-.booking-status{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;}
-.status-confirmed{background:#f7f7f7;color:#222222;}
+.booking-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:4px;}
+.booking-name{font-size:16px;font-weight:700;color:var(--g-ink,#191F28);letter-spacing:-0.01em;}
+.booking-status{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.status-confirmed{background:#F2F4F6;color:var(--g700,#374151);}
 .status-inprogress{background:#FFF7ED;color:#EA580C;}
-.status-done{background:#FFF0EC;color:var(--primary-dark);}
+.status-done{background:#ECFDF5;color:#15803D;}
 .status-cancelled{background:#FEF2F2;color:#DC2626;}
-.booking-meta{display:flex;gap:10px;font-size:12px;color:var(--gray-500);flex-wrap:wrap;}
+.booking-meta{display:flex;gap:10px;font-size:11.5px;color:var(--gray-500);flex-wrap:wrap;font-weight:500;}
 .booking-meta-item{display:flex;align-items:center;gap:3px;}
-.booking-card-footer{margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-100);display:flex;gap:6px;}
-.card-action-btn{flex:1;padding:7px 0;border-radius:8px;border:1.5px solid var(--gray-200);background:#fff;color:var(--gray-500);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;}
-.card-action-btn.primary{background:#FFF0EC;border-color:var(--c-pr, #FF385C);color:var(--primary-dark);}
+.booking-price-line{font-size:14px;font-weight:800;color:var(--c-pr,#FF385C);margin-top:4px;letter-spacing:-0.01em;}
+.booking-addr-line{font-size:11.5px;color:var(--gray-500);margin-top:3px;font-weight:500;}
+.booking-memo-line{font-size:11px;color:var(--gray-400);margin-top:3px;font-style:italic;}
+.booking-card-footer{margin-top:8px;padding-top:8px;border-top:1px solid #F2F4F6;display:flex;gap:5px;}
+.card-action-btn{flex:1;padding:6px 0;border-radius:8px;border:1px solid #E5E8EB;background:#fff;color:var(--gray-600,#4E5968);font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.card-action-btn.primary{background:var(--c-pr-l,#FFF0F3);border-color:var(--c-pr-l,#FFF0F3);color:var(--c-pr-d,#E31C5F);font-weight:700;}
 .card-action-btn.danger{background:#FEF2F2;border-color:#FECACA;color:#DC2626;}
 
 /* 빈 상태 */
@@ -839,9 +842,9 @@ function renderList() {
           </div>
           <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||esc(s.status)}</span>
         </div>
-        ${s.addr ? `<div style="font-size:12px;color:var(--gray-500);margin-bottom:4px;">📍 ${esc(s.addr)}</div>` : ''}
-        ${s.price ? `<div style="font-size:12.5px;font-weight:700;color:var(--gray-700);">💰 ${Number(s.price).toLocaleString()}원</div>` : ''}
-        ${s.memo ? `<div style="font-size:12px;color:var(--gray-400);margin-top:4px;">💬 ${esc(s.memo)}</div>` : ''}
+        ${s.addr ? `<div class="booking-addr-line">📍 ${esc(s.addr)}</div>` : ''}
+        ${s.price ? `<div class="booking-price-line">💰 ${Number(s.price).toLocaleString()}원</div>` : ''}
+        ${s.memo ? `<div class="booking-memo-line">💬 ${esc(s.memo)}</div>` : ''}
         <div class="booking-card-footer">
           <button class="card-action-btn primary" onclick="event.stopPropagation();openActionSheet('${esc(s.id)}')">⚡ 액션</button>
           <button class="card-action-btn" onclick="event.stopPropagation();openEditModal('${esc(s.id)}')">✏️ 수정</button>
