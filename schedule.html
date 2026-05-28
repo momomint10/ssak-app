@@ -61,13 +61,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .month-label{font-size:16px;font-weight:700;color:var(--gray-900);}
 
 /* 캘린더 */
-.calendar-wrap{background:#fff;padding:0 12px 12px;border-bottom:1px solid var(--gray-200);}
-.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px;}
+.calendar-wrap{background:#fff;padding:0 12px 8px;border-bottom:1px solid var(--gray-200);}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:2px;}
 .cal-wd{text-align:center;font-size:11px;font-weight:600;color:var(--gray-400);padding:4px 0;}
 .cal-wd:first-child{color:#EF4444;}
 .cal-wd:last-child{color:var(--blue);}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
-.cal-day{min-height:44px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:4px 2px;cursor:pointer;transition:background 0.15s;position:relative;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
+.cal-day{min-height:40px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:2px 2px;cursor:pointer;transition:background 0.15s;position:relative;}
 .cal-day:active{background:var(--gray-100);}
 .cal-day.other-month .cal-num{color:var(--gray-300);}
 .cal-day.today .cal-num{background:var(--c-pr, #FF385C);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
