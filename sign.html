@@ -45,7 +45,7 @@
 
   /* ── 축하 화면 글라스모피즘 (260527 강도 ↑↑ 명료하게) ── */
   .celebration{position:relative;overflow:hidden;}
-  .celebration .cs-bg{position:absolute;inset:0;z-index:0;background-image:url('img/hero-mascot.png');background-size:auto 140%;background-position:center bottom;background-repeat:no-repeat;filter:saturate(1.1);}
+  .celebration .cs-bg{position:absolute;inset:0;z-index:0;background-image:url('img/hero-mascot.png');background-image:-webkit-image-set(url('img/hero-mascot.webp') 1x, url('img/hero-mascot.png') 1x);background-image:image-set(url('img/hero-mascot.webp') type('image/webp') 1x, url('img/hero-mascot.png') type('image/png') 1x);background-size:auto 140%;background-position:center bottom;background-repeat:no-repeat;filter:saturate(1.1);}
   .celebration .cs-ov{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(255,248,245,0.02) 0%,rgba(255,234,232,0.12) 35%,rgba(255,224,220,0.32) 70%,rgba(255,240,244,0.62) 100%);}
   .celebration .cs-spk{position:absolute;z-index:1;pointer-events:none;opacity:1;filter:drop-shadow(0 2px 6px rgba(255,255,255,0.7));}
   .celebration > *:not(.cs-bg):not(.cs-ov):not(.cs-spk){position:relative;z-index:2;}
