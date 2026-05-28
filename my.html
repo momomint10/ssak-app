@@ -582,6 +582,29 @@ function confirmLogout() {
   toast('✅ 초기화 완료! 홈으로 이동합니다...');
   setTimeout(() => location.href = 'index.html', 1500);
 }
+
+// ══════════════════════════════════════════════════
+// 베타 모드 — login.html?action=setup-pin 진입 시 PIN 모달 자동 열기
+// (첫 SMS 인증 후 PIN 설정으로 자연스러운 onboarding)
+// ══════════════════════════════════════════════════
+(function autoOpenPinSetup(){
+  const params = new URLSearchParams(location.search);
+  if (params.get('action') !== 'setup-pin') return;
+  const isFirst = params.get('first') === '1';
+  // URL 정리 (다음 진입 시 안 뜨도록)
+  history.replaceState(null, '', '/my.html');
+  // 약간 지연 후 자동 열기 (UI 안정 후)
+  setTimeout(() => {
+    if (isFirst && typeof toast === 'function') {
+      toast('🎉 환영합니다! PIN을 설정하면 다음부터 SMS 없이 로그인할 수 있어요', 4000);
+    }
+    const pinRow = document.getElementById('acc-pin-row');
+    if (pinRow) pinRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => {
+      if (typeof openPinModal === 'function') openPinModal();
+    }, 600);
+  }, 400);
+})();
 </script>
 </body>
 </html>

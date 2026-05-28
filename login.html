@@ -227,6 +227,40 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 .bottom { display: none; }
 .bottom small { display: block; line-height: 1.7; }
 .bottom a { color: #FF385C; font-weight: 700; }
+
+/* ── 베타 배너 (LAUNCH_MODE='beta' 일 때만) ── */
+.beta-banner{
+  margin:8px auto 12px;max-width:340px;
+  padding:8px 14px;border-radius:9999px;
+  background:rgba(255,255,255,0.62);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.75);
+  font-size:11.5px;color:#191F28;font-weight:700;
+  text-align:center;letter-spacing:0.02em;
+  box-shadow:0 4px 12px rgba(20,30,50,0.06);
+}
+.beta-banner b{color:#FF385C;font-weight:800;}
+.beta-banner.hide{display:none;}
+/* 베타 모드: SMS 버튼 작게/secondary */
+body.beta-mode #btn-send{
+  background:transparent !important;
+  color:#8B95A1 !important;
+  font-size:13px;font-weight:600;
+  min-height:auto;padding:8px;
+  margin-top:14px;box-shadow:none !important;
+  text-decoration:underline;
+}
+body.beta-mode #btn-pin-mode{
+  background:linear-gradient(180deg,#FF5070 0%,#FF385C 100%);
+  color:#fff !important;
+  border:none !important;
+  display:block !important;
+  margin-top:0;
+  font-size:15px;font-weight:700;padding:12px;min-height:44px;
+  border-radius:9999px;
+  box-shadow:0 10px 24px rgba(255,56,92,.38);
+}
 </style>
 <script src="utils.js"></script>
 </head>
@@ -240,6 +274,11 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 
   <div class="brand">
     <p>CLEAN · CARE · CONNECT</p>
+  </div>
+
+  <!-- 베타 배너 (LAUNCH_MODE='beta'일 때만 보임) -->
+  <div class="beta-banner hide" id="beta-banner">
+    🚧 <b>베타 모드</b> — PIN 4자리로 로그인 (SMS는 최초 1회만)
   </div>
 
   <!-- Step 1: 휴대폰 번호 -->
@@ -299,6 +338,32 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 </div>
 
 <script>
+// ══════════════════════════════════════════════════
+// 🚧 런치 모드 (정식 출시 시 'production'으로 변경)
+// 'beta' — PIN 우선 (SMS 1회만, trust-device 모달 숨김, 베타 배너 표시)
+// 'production' — 기존 SMS+JWT+선택적 PIN 흐름
+// ══════════════════════════════════════════════════
+const LAUNCH_MODE = 'beta';
+
+// 베타 모드 활성화: body 클래스 + 배너 표시
+if (LAUNCH_MODE === 'beta') {
+  document.body.classList.add('beta-mode');
+  const banner = document.getElementById('beta-banner');
+  if (banner) banner.classList.remove('hide');
+  // 베타 모드: PIN 버튼을 항상 표시 (CSS body.beta-mode에서 primary 스타일 적용)
+  const pinBtn = document.getElementById('btn-pin-mode');
+  if (pinBtn) {
+    pinBtn.style.display = 'block';
+    pinBtn.textContent = '🔢 PIN으로 로그인';
+  }
+  // SMS 버튼 라벨 변경 (작아짐 + secondary)
+  const smsBtn = document.getElementById('btn-send');
+  if (smsBtn) smsBtn.textContent = 'PIN 처음이세요? · SMS로 로그인 (1회만)';
+  // 안내 hint 메시지 변경
+  const hint = document.querySelector('#step-phone .hint');
+  if (hint) hint.innerHTML = '베타: 휴대폰 번호 + PIN 4자리로 로그인합니다.<br>처음이시면 SMS 인증 1회 후 PIN을 설정해 주세요.';
+}
+
 let currentPhone = '';
 let timerId = null;
 let resendCooldown = null;
@@ -429,8 +494,26 @@ async function registerTrustDevice(jwt) {
   } catch (e) { /* silent */ }
 }
 
-// 인증 성공 후 redirect 직전 트러스트 옵션 묻기
+// 인증 성공 후 redirect 직전 트러스트 옵션 묻기 (정식) 또는 PIN 설정 유도 (베타)
 async function finalizeLogin(token, nextUrl) {
+  if (LAUNCH_MODE === 'beta') {
+    // 베타 모드: SMS 인증 후 PIN 미설정 시 자동으로 PIN 설정 화면으로
+    if (currentPhone) {
+      try {
+        const r = await fetch(SERVER + '/api/auth/pin-status?phone=' + encodeURIComponent(currentPhone));
+        const d = await r.json();
+        if (d.success && !d.has_pin) {
+          // PIN 미설정 — MY 페이지에서 PIN 설정 흐름 유도
+          location.replace('/my.html?action=setup-pin&first=1');
+          return;
+        }
+      } catch (e) { /* 무시하고 일반 흐름 */ }
+    }
+    // 이미 PIN 있음 또는 확인 실패 → 정상 이동
+    location.replace(nextUrl);
+    return;
+  }
+  // 정식 출시 모드: 기존 trust-device 모달 흐름
   const trust = await offerTrustDevice();
   if (trust) await registerTrustDevice(token);
   location.replace(nextUrl);
