@@ -646,3 +646,82 @@ function mascot(mood = 'default', opts = {}) {
   const color = opts.color || 'var(--c-pr)';
   return `<span class="ds-mascot" style="display:inline-block;width:${size}px;color:${color};" aria-hidden="true">${svg}</span>`;
 }
+
+/* ════════════════════════════════════════════════════════════════
+ * 2026 트렌드 헬퍼 (260528)
+ * - countUp: 숫자 카운트업 (토스/카뱅 시그니처)
+ * - navigate: View Transitions API wrapper (Chrome 111+/Safari 18+)
+ * - confetti: 완료 화면 입자 폭발 (자체 구현, 외부 의존 0)
+ * ════════════════════════════════════════════════════════════════ */
+
+/** 숫자 카운트업 애니메이션
+ * @param {HTMLElement} el - 대상 엘리먼트
+ * @param {number} target - 최종 숫자
+ * @param {object} opts - { duration:800, start:0, prefix:'', suffix:'', format:fn }
+ */
+function countUp(el, target, opts = {}) {
+  if (!el || typeof target !== 'number') return;
+  const duration = opts.duration || 800;
+  const start = opts.start ?? 0;
+  const prefix = opts.prefix || '';
+  const suffix = opts.suffix || '';
+  const format = opts.format || (n => Math.round(n).toLocaleString('ko-KR'));
+  const easeOut = t => 1 - Math.pow(1 - t, 4);
+  const startTime = performance.now();
+  function tick(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    const v = start + (target - start) * easeOut(t);
+    el.textContent = prefix + format(v) + suffix;
+    if (t < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+/** View Transitions API 래퍼 — 페이지 이동 시 morph 트랜지션
+ *  지원 안 되는 브라우저는 즉시 이동 (fallback 자동)
+ * @param {string} url - 이동할 URL
+ */
+function navigate(url) {
+  if (document.startViewTransition) {
+    document.startViewTransition(() => { location.href = url; });
+  } else {
+    location.href = url;
+  }
+}
+
+/** Confetti 입자 폭발 — 완료/축하 화면용 (자체 구현, ~3KB)
+ * @param {object} opts - { count:60, colors:[…], origin:{x:.5,y:.5}, duration:2400 }
+ */
+function confetti(opts = {}) {
+  const count = opts.count || 60;
+  const colors = opts.colors || ['#FF385C', '#FC8181', '#14B8A6', '#FFB800', '#A78BFA', '#5EEAD4'];
+  const origin = opts.origin || { x: 0.5, y: 0.5 };
+  const totalDur = opts.duration || 2400;
+  const container = document.createElement('div');
+  container.setAttribute('aria-hidden', 'true');
+  container.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:99999;overflow:hidden;';
+  document.body.appendChild(container);
+  const cx = window.innerWidth * origin.x;
+  const cy = window.innerHeight * origin.y;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    const size = 6 + Math.random() * 8;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const angle = (Math.PI / 2) + (Math.random() - 0.5) * Math.PI * 0.85;
+    const velocity = 220 + Math.random() * 380;
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    const vx = Math.cos(angle) * velocity * dir;
+    const vy = -Math.sin(angle) * velocity;
+    const rotation = Math.random() * 720 - 360;
+    const shape = Math.random() > 0.5 ? '50%' : '2px';
+    const w = size, h = Math.random() > 0.3 ? size * 0.55 : size;
+    p.style.cssText = `position:absolute;left:${cx}px;top:${cy}px;width:${w}px;height:${h}px;background:${color};border-radius:${shape};transform:translate(-50%,-50%);will-change:transform,opacity;`;
+    container.appendChild(p);
+    p.animate([
+      { transform: 'translate(-50%,-50%) rotate(0deg)', opacity: 1 },
+      { transform: `translate(calc(-50% + ${vx}px), calc(-50% + ${vy * 0.7}px)) rotate(${rotation/2}deg)`, opacity: 1, offset: 0.5 },
+      { transform: `translate(calc(-50% + ${vx * 1.15}px), calc(-50% + ${vy + 380}px)) rotate(${rotation}deg)`, opacity: 0 }
+    ], { duration: totalDur + Math.random() * 800, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' });
+  }
+  setTimeout(() => container.remove(), totalDur + 1200);
+}

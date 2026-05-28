@@ -960,6 +960,10 @@ function show(name) {
       ? (name === 'main' || name === 'owner' || name === 'owner-done' ? 'block' : 'flex')
       : 'none';
   });
+  // 2026 트렌드: 축하 화면 진입 시 confetti 입자 폭발
+  if ((name === 'done' || name === 'owner-done') && typeof confetti === 'function') {
+    setTimeout(() => confetti({ count: 80, origin: { x: 0.5, y: 0.35 } }), 250);
+  }
 }
 function showError(t, s) {
   show('error');

@@ -1614,8 +1614,17 @@ function renderSalesChart() {
   });
 
   svg.innerHTML = bars + labels;
-  document.getElementById('stats-total').textContent = totalRev > 0 ? Math.round(totalRev / 10000).toLocaleString() + '만' : '0만';
-  document.getElementById('stats-count').textContent = doneCount;
+  // 2026 트렌드: 숫자 카운트업 (countUp 헬퍼는 utils.js에 정의됨, 미정의 시 즉시 표시 fallback)
+  const totalEl = document.getElementById('stats-total');
+  const countEl = document.getElementById('stats-count');
+  const totalManwon = Math.round(totalRev / 10000);
+  if (typeof countUp === 'function') {
+    countUp(totalEl, totalManwon, { duration: 900, suffix: '만' });
+    countUp(countEl, doneCount, { duration: 700 });
+  } else {
+    totalEl.textContent = totalRev > 0 ? totalManwon.toLocaleString() + '만' : '0만';
+    countEl.textContent = doneCount;
+  }
 
   const monthLbl = `${viewYear}.${String(viewMonth+1).padStart(2,'0')}`;
   document.getElementById('stats-title').textContent = isThisMonth ? '이번 달 매출' : `${monthLbl} 매출`;

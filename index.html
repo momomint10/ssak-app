@@ -481,7 +481,9 @@ function goTo(page) {
   const target = map[page];
   if (!target) return;
   if (target[1]) sessionStorage.setItem('gotoTab', target[1]);
-  location.href = target[0];
+  // 2026 트렌드: View Transitions API (Chrome 111+/Safari 18+) — morph 트랜지션
+  if (typeof navigate === 'function') navigate(target[0]);
+  else location.href = target[0];
 }
 
 // ── Toast ────────────────────────────────────
@@ -698,9 +700,22 @@ async function loadHomeStats() {
       const perfDone    = document.getElementById('perf-done');
       const perfRevenue = document.getElementById('perf-revenue');
       const perfBooked  = document.getElementById('perf-booked');
-      if (perfDone)    perfDone.textContent    = d2.done ?? 0;
-      if (perfRevenue) perfRevenue.textContent = d2.revenue ? Math.round(d2.revenue/10000) : '-';
-      if (perfBooked)  perfBooked.textContent  = (d2.confirmed > 0 ? d2.confirmed : '-');
+      // 2026 트렌드: 숫자 카운트업 (utils.js countUp / fallback: 즉시 표시)
+      const doneN = d2.done ?? 0;
+      const revN  = d2.revenue ? Math.round(d2.revenue/10000) : 0;
+      const bookN = d2.confirmed > 0 ? d2.confirmed : 0;
+      if (perfDone) {
+        if (typeof countUp === 'function') countUp(perfDone, doneN, { duration: 800 });
+        else perfDone.textContent = doneN;
+      }
+      if (perfRevenue) {
+        if (typeof countUp === 'function' && revN > 0) countUp(perfRevenue, revN, { duration: 900 });
+        else perfRevenue.textContent = revN > 0 ? revN : '-';
+      }
+      if (perfBooked) {
+        if (typeof countUp === 'function' && bookN > 0) countUp(perfBooked, bookN, { duration: 700 });
+        else perfBooked.textContent = bookN > 0 ? bookN : '-';
+      }
     }
   } catch(e) {}
 

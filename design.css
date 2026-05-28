@@ -1484,3 +1484,77 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-nav-item:active .nav-icon-svg {
   transform: scale(.92);
 }
+
+/* ════════════════════════════════════════════════════════════════
+ * 2026 트렌드: Liquid Glass (iOS 26 영감, 260528)
+ * - 글라스 요소에 대각선 specular highlight (좌상→우하 빛 반사)
+ * - inset box-shadow로 inner glow + depth
+ * - 입력 필드(replaced element)는 inset shadow만, 카드는 ::before로
+ * ════════════════════════════════════════════════════════════════ */
+:where(.ds-card.liquid, .liquid-glass, .card-glass, .celebration .done-card):not(.no-liquid) {
+  position: relative;
+  overflow: hidden;  /* specular가 모서리 밖으로 안 새어나가도록 */
+}
+:where(.ds-card.liquid, .liquid-glass, .card-glass, .celebration .done-card):not(.no-liquid)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.55) 0%,
+    rgba(255,255,255,0.18) 18%,
+    rgba(255,255,255,0) 35%,
+    rgba(255,255,255,0) 65%,
+    rgba(255,255,255,0.10) 85%,
+    rgba(255,255,255,0.40) 100%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.92;
+  z-index: 1;
+}
+:where(.ds-card.liquid, .liquid-glass, .card-glass, .celebration .done-card):not(.no-liquid) > * {
+  position: relative;
+  z-index: 2;  /* 컨텐츠가 specular 위로 */
+}
+
+/* Liquid Glass 입력 필드 — inset box-shadow로 specular 표현 */
+:where(input.liquid, .liquid-input, .pill-glass) {
+  box-shadow:
+    0 8px 22px rgba(20, 30, 50, 0.10),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
+    inset 3px 3px 12px -4px rgba(255, 255, 255, 0.55),
+    inset -3px -4px 10px -4px rgba(20, 30, 50, 0.06);
+}
+
+/* 글로벌 hook: login.html의 input/btn (별도 클래스 없이 자동 적용) */
+body:has(.bg-photo) input[type="tel"],
+body:has(.bg-photo) input[type="text"] {
+  box-shadow:
+    0 8px 22px rgba(20, 30, 50, 0.10),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
+    inset 3px 3px 12px -4px rgba(255, 255, 255, 0.5),
+    inset -3px -4px 10px -4px rgba(20, 30, 50, 0.06);
+}
+
+/* ════════════════════════════════════════════════════════════════
+ * 2026 트렌드: View Transitions API (260528)
+ * - utils.js navigate() 호출 시 페이지 morph 트랜지션
+ * - 지원: Chrome 111+, Safari 18+ (미지원 브라우저는 즉시 이동)
+ * ════════════════════════════════════════════════════════════════ */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root) {
+  animation: 220ms cubic-bezier(0.4, 0, 0.2, 1) both vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 280ms cubic-bezier(0.16, 1, 0.3, 1) both vt-fade-in;
+}
+@keyframes vt-fade-out {
+  to { opacity: 0; transform: translateY(-4px); }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
