@@ -93,23 +93,61 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   background:var(--pr);border-color:var(--pr);color:#fff;
   box-shadow:0 2px 8px rgba(255,56,92,.25);
 }
-/* ── 인력 카드 ── */
-.list{padding:4px 12px 0;}
-.wcard{background:#fff;border-radius:var(--radius);border:1px solid #ebebeb;box-shadow:var(--sh-xs, 0 1px 2px rgba(20,30,50,.05)), inset 0 1px 0 rgba(255,255,255,.5);margin-bottom:10px;padding:14px;display:flex;gap:12px;cursor:pointer;transition:transform var(--dur-fast, 120ms) var(--ease-spring, cubic-bezier(.16,1,.3,1)),box-shadow .15s;}
-.wcard:active{transform:scale(.98);box-shadow:var(--sh-xs, 0 1px 2px rgba(20,30,50,.05)), inset 0 1px 0 rgba(255,255,255,.6),0 4px 8px rgba(0,0,0,.08);}
-.avatar{width:50px;height:50px;border-radius:50%;background:var(--pr-l);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
+/* ── 인력 카드 (260528 AX 하이브리드: A기본 + B아바타 + C메타) ── */
+.list{padding:8px 16px 0;}
+/* Stats bar — 마켓플레이스 활기 시그널 (260528) */
+.stats-bar{display:flex;justify-content:center;gap:24px;padding:6px 0 14px;font-size:12px;font-weight:600;color:var(--g500);}
+.stats-bar .stat{display:inline-flex;align-items:center;gap:5px;}
+.stats-bar .stat b{color:var(--c-pr);font-weight:800;font-size:13px;}
+.stats-bar .stat-div{width:1px;background:var(--g200);}
+
+.wcard{
+  background:#fff;border-radius:18px;border:1.5px solid #F2F4F6;
+  box-shadow:var(--sh-sm, 0 2px 6px rgba(20,30,50,.05)), inset 0 1px 0 rgba(255,255,255,.7), 0 4px 14px rgba(255,56,92,.03);
+  margin-bottom:14px;padding:18px 16px;cursor:pointer;
+  transition:transform var(--dur-fast, 120ms) var(--ease-spring, cubic-bezier(.16,1,.3,1)),box-shadow .15s;
+}
+.wcard:active{transform:scale(.98);box-shadow:var(--sh-xs, 0 1px 2px rgba(20,30,50,.05)), 0 4px 8px rgba(0,0,0,.08);}
+.wcard-top{display:flex;gap:14px;align-items:flex-start;}
+
+/* 아바타 — 색 그라데이션 (이름 해시로 다양화), 인증 체크 */
+.avatar{
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,#FFC9D3 0%,#FF385C 100%);  /* 기본 코랄 */
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;font-weight:800;color:#fff;
+  flex-shrink:0;overflow:hidden;position:relative;
+  box-shadow:0 4px 12px rgba(255,56,92,.18);
+}
+.avatar.av-mint{background:linear-gradient(135deg,#A7F3D0 0%,#14B8A6 100%);box-shadow:0 4px 12px rgba(20,184,166,.20);}
+.avatar.av-amber{background:linear-gradient(135deg,#FDE68A 0%,#F59E0B 100%);box-shadow:0 4px 12px rgba(245,158,11,.18);}
+.avatar.av-blue{background:linear-gradient(135deg,#BFDBFE 0%,#3B82F6 100%);box-shadow:0 4px 12px rgba(59,130,246,.18);}
+.avatar.av-purple{background:linear-gradient(135deg,#DDD6FE 0%,#8B5CF6 100%);box-shadow:0 4px 12px rgba(139,92,246,.18);}
 .avatar img{width:100%;height:100%;object-fit:cover;}
+.avatar .verified-mark{position:absolute;bottom:-2px;right:-2px;width:20px;height:20px;border-radius:50%;background:#14B8A6;border:2px solid #fff;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900;line-height:1;}
+
 .wcard-body{flex:1;min-width:0;}
-.wcard-top{display:flex;align-items:flex-start;justify-content:space-between;}
-.wcard-name{font-size:15px;font-weight:600;}
-.wcard-rate{font-size:13px;font-weight:600;color:var(--c-pr, #FF385C);}
-.wcard-meta{font-size:12px;color:var(--g500);margin:3px 0;}
-.skill-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
-.skill-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:9999px;background:#f7f7f7;color:#222;}
-.day-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;}
-.day-tag{font-size:10px;padding:2px 8px;border-radius:9999px;background:#f7f7f7;color:#222;font-weight:600;}
-.time-tag{background:#f2f2f2;color:#222;}
-.act-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:4px;vertical-align:middle;}
+.wcard-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:4px;}
+.wcard-name{font-size:17px;font-weight:700;color:var(--g-ink, #191F28);letter-spacing:-0.01em;}
+.wcard-rate{font-size:17px;font-weight:800;color:var(--c-pr, #FF385C);letter-spacing:-0.01em;white-space:nowrap;}
+.wcard-rate-unit{font-size:11px;color:var(--g400);font-weight:600;margin-left:2px;}
+.wcard-meta{font-size:12.5px;color:var(--g500);margin-bottom:8px;font-weight:500;}
+.skill-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.skill-tag{font-size:11px;font-weight:600;padding:4px 10px;border-radius:9999px;background:transparent;color:var(--g600,#4E5968);border:1.2px solid #E5E8EB;}
+.skill-tag.more{background:var(--g100);border-color:var(--g100);color:var(--g500);}
+
+/* 메타 4-grid (경력·지역·시간·활동) */
+.wmeta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:12px;padding-top:12px;border-top:1px solid #F2F4F6;}
+.wmeta-item{text-align:center;}
+.wmeta-lbl{font-size:10px;color:var(--g400);font-weight:600;margin-bottom:2px;letter-spacing:0.02em;}
+.wmeta-val{font-size:13px;color:var(--g-ink, #191F28);font-weight:700;}
+.wmeta-val.teal{color:#14B8A6;}
+.wmeta-val.muted{color:var(--g400);font-weight:600;}
+
+/* day-tags 제거되었지만 호환 — 표시 안 함 */
+.day-tags{display:none;}
+.day-tag{display:none;}
+.act-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#14B8A6;margin-right:4px;vertical-align:middle;box-shadow:0 0 0 2px rgba(20,184,166,.20);}
 /* ── 채용 카드 ── */
 .jcard{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:10px;padding:14px;cursor:pointer;transition:transform var(--dur-fast, 120ms) var(--ease-spring, cubic-bezier(.16,1,.3,1));}
 .jcard:active{transform:scale(.98);}
@@ -564,19 +602,63 @@ async function loadWorkers(){
       list.innerHTML='<div class="empty"><div class="ds-empty-svg" style="margin:0 auto 14px;">'+(typeof svgIcon==='function'?svgIcon('broom',{size:72,color:'var(--c-pr)'}):'👥')+'</div><div class="empty-ttl">등록된 인력이 없어요</div><div class="empty-sub">내 프로필을 먼저 등록해보세요!</div></div>';
       return;
     }
-    list.innerHTML=d.data.map(w=>`
+    // 마켓플레이스 활기 stats bar + AX 하이브리드 카드 (260528)
+    const total = d.data.length;
+    const regionLbl = curRegion === '전체' ? '전체' : curRegion;
+    const avgExp = Math.round(d.data.reduce((s,w)=>s+(w.experience||0),0)/Math.max(1,total));
+    const statsBar = `
+      <div class="stats-bar">
+        <span class="stat"><b>${total}</b>명 활동중</span>
+        <span class="stat-div"></span>
+        <span class="stat"><b>${esc(regionLbl)}</b> 지역</span>
+        <span class="stat-div"></span>
+        <span class="stat"><b>평균 ${avgExp}년</b></span>
+      </div>`;
+
+    // 닉네임 해시 → 아바타 컬러 (이름별 일관)
+    const avColors = ['', 'av-mint', 'av-amber', 'av-blue', 'av-purple'];
+    const avColor = (s) => {
+      let h = 0;
+      for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+      return avColors[h % avColors.length];
+    };
+
+    list.innerHTML = statsBar + d.data.map(w => {
+      const cls = avColor(w.nickname || '');
+      const firstChar = (w.nickname || '?').trim().charAt(0);
+      const avatar = w.photo_url
+        ? `<div class="avatar"><img loading="lazy" src="${esc(w.photo_url)}" alt=""></div>`
+        : `<div class="avatar ${cls}">${esc(firstChar)}</div>`;
+      const skills = (w.skills || []);
+      const visibleSkills = skills.slice(0, 3);
+      const overflow = skills.length - 3;
+      const skillTags = visibleSkills.map(s => `<span class="skill-tag">${esc(s)}</span>`).join('') +
+        (overflow > 0 ? `<span class="skill-tag more">+${overflow}</span>` : '');
+      const region = (w.regions || ['-'])[0] || '-';
+      const firstTime = (w.available_times || ['-'])[0] || '-';
+      const dayCount = (w.available_days || []).length;
+      const exp = w.experience || 0;
+      return `
       <div class="wcard" onclick="openDet('${w.id}')">
-        <div class="avatar">${w.photo_url?`<img loading="lazy" src="${esc(w.photo_url)}" alt="">`:' <span style="font-size:22px;">👤</span>'}</div>
-        <div class="wcard-body">
-          <div class="wcard-top">
-            <span class="wcard-name"><span class="act-dot"></span>${esc(w.nickname)}</span>
-            <span class="wcard-rate">${fmtRate(w.daily_rate)}</span>
+        <div class="wcard-top">
+          ${avatar}
+          <div class="wcard-body">
+            <div class="wcard-head">
+              <span class="wcard-name">${esc(w.nickname)}</span>
+              <span class="wcard-rate">${fmtRate(w.daily_rate)}<span class="wcard-rate-unit">/일</span></span>
+            </div>
+            <div class="wcard-meta">📍 ${(w.regions||[]).slice(0,2).join(', ')} · <span class="act-dot"></span>활동중</div>
+            <div class="skill-tags">${skillTags}</div>
           </div>
-          <div class="wcard-meta">📍 ${(w.regions||[]).slice(0,2).join(', ')} · 경력 ${w.experience||0}년</div>
-          <div class="skill-tags">${(w.skills||[]).map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('')}</div>
-          <div class="day-tags">${(w.available_days||[]).map(d=>`<span class="day-tag">${esc(d)}</span>`).join('')}${(w.available_times||[]).map(t=>`<span class="day-tag time-tag">${esc(t)}</span>`).join('')}</div>
         </div>
-      </div>`).join('');
+        <div class="wmeta-grid">
+          <div class="wmeta-item"><div class="wmeta-lbl">경력</div><div class="wmeta-val">${exp}년</div></div>
+          <div class="wmeta-item"><div class="wmeta-lbl">활동지역</div><div class="wmeta-val">${esc(region)}</div></div>
+          <div class="wmeta-item"><div class="wmeta-lbl">가능시간</div><div class="wmeta-val">${esc(firstTime)}</div></div>
+          <div class="wmeta-item"><div class="wmeta-lbl">요일</div><div class="wmeta-val ${dayCount>0?'':'muted'}">${dayCount > 0 ? dayCount + '일' : '-'}</div></div>
+        </div>
+      </div>`;
+    }).join('');
   }catch(e){list.innerHTML=`<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">오류 발생</div><div class="empty-sub">${esc(e.message)}</div></div>`;}
 }
 
