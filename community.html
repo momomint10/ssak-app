@@ -57,7 +57,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 .header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 /* .header-title 페이지 인라인 정의 삭제 → design.css의 .ds-page-title 이 시각 결정 (22px 600) */
-.btn-write{background:var(--c-pr, #FF385C);color:#fff;border:none;border-radius:20px;padding:7px 15px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-write{background:#fff;color:var(--c-pr,#FF385C);border:1.5px solid rgba(255,56,92,0.35);border-radius:20px;padding:7px 15px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s;}
+.btn-write:hover{background:rgba(255,56,92,0.06);border-color:rgba(255,56,92,0.55);}
+.btn-write:active{background:rgba(255,56,92,0.10);}
 
 /* 검색 */
 .search-wrap{position:relative;}
