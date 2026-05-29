@@ -1716,3 +1716,183 @@ body:has(.bg-photo) input[type="text"] {
   border: 1px solid #E4E9EE;
 }
 .ds-push-btn-ghost:active { background: #F2F4F6; }
+
+/* ══════════════════════════════════════════════════════════════════
+   홈 사진 hero + 조합 패턴 (Phase 6 — 2026-05-29)
+   사진 hero 헤더 + Status-First + Number-Led KPI + Floating CTA
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 사진 hero 헤더 ── */
+.ds-hero-photo {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  border-radius: 0 0 28px 28px;
+  margin-bottom: -14px;
+  z-index: 1;
+}
+.ds-hero-photo .ds-hero-img {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center 30%;
+  filter: saturate(0.95);
+}
+.ds-hero-photo .ds-hero-overlay {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(0,0,0,0.12) 0%,
+      rgba(0,0,0,0.05) 35%,
+      rgba(26,31,44,0.55) 70%,
+      rgba(26,31,44,0.82) 100%);
+}
+.ds-hero-photo .ds-hero-top {
+  position: relative; z-index: 2;
+  display: flex; justify-content: flex-end; gap: 8px;
+  padding: calc(16px + env(safe-area-inset-top)) 18px 0;
+}
+.ds-hero-photo .ds-hero-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; color: #fff; cursor: pointer;
+  position: relative;
+}
+.ds-hero-photo .ds-hero-btn .ds-hero-dot {
+  position: absolute; top: 7px; right: 7px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #FFD600; border: 1.5px solid rgba(255,255,255,0.8);
+}
+.ds-hero-photo .ds-hero-body {
+  position: absolute; z-index: 2;
+  bottom: 22px; left: 22px; right: 22px;
+  color: #fff;
+}
+.ds-hero-greet {
+  font-size: 12.5px; font-weight: 600;
+  opacity: 0.92; letter-spacing: -0.01em;
+}
+.ds-hero-name {
+  font-size: 26px; font-weight: 800;
+  letter-spacing: -0.025em; margin-top: 2px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  color: #fff;
+}
+.ds-hero-rev-row {
+  display: flex; align-items: end; gap: 8px;
+  margin-top: 12px;
+}
+.ds-hero-rev-lbl {
+  font-size: 11px; font-weight: 600;
+  opacity: 0.85; letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.ds-hero-rev-val {
+  font-size: 32px; font-weight: 900;
+  letter-spacing: -0.03em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.3);
+}
+.ds-hero-rev-val .ds-hero-rev-unit {
+  font-size: 16px; font-weight: 700; opacity: 0.85;
+}
+.ds-hero-trend {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 11.5px; font-weight: 700;
+  background: rgba(16,185,129,0.92); color: #fff;
+  padding: 3px 8px 3px 6px; border-radius: 999px;
+  margin-left: 6px; margin-bottom: 6px;
+}
+.ds-hero-trend.down { background: rgba(239,68,68,0.92); }
+
+/* ── 콘텐츠 래퍼 (헤더 위에 살짝 올라오는) ── */
+.ds-home-content {
+  position: relative; z-index: 2;
+  background: var(--c-bg, #F7F8FA);
+  border-radius: 28px 28px 0 0;
+  padding: 16px 16px 0;
+}
+
+/* ── Status-First 카드 ── */
+.ds-status-card {
+  background: #fff;
+  border: 1px solid var(--c-g100, #F2F4F6);
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: flex; align-items: center; gap: 14px;
+  position: relative;
+  cursor: pointer;
+}
+.ds-status-card:active { transform: scale(0.99); transition: transform .12s; }
+.ds-status-ico {
+  width: 44px; height: 44px; border-radius: 13px; background: #FFF0F3;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+  flex-shrink: 0; position: relative;
+}
+.ds-status-ico.has-task::after {
+  content: ''; position: absolute; top: -2px; right: -2px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--c-pr, #FF385C); border: 2px solid #fff;
+  animation: ds-status-pulse 1.8s ease-out infinite;
+}
+@keyframes ds-status-pulse {
+  0% { opacity: 1; transform: scale(1); }
+  70% { opacity: 0.4; transform: scale(1.4); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.ds-status-body { flex: 1; min-width: 0; }
+.ds-status-title {
+  font-size: 15.5px; font-weight: 800; color: var(--c-g900, #1A1F2C);
+  letter-spacing: -0.01em;
+}
+.ds-status-title .num { color: var(--c-pr, #FF385C); }
+.ds-status-sub {
+  font-size: 12.5px; color: var(--c-g500, #8B95A1);
+  margin-top: 3px; font-weight: 500;
+  overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ds-status-arr { color: var(--c-g400, #B0B8C1); font-size: 20px; flex-shrink: 0; }
+
+/* ── KPI 3-col 한 줄 ── */
+.ds-kpi-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-top: 10px;
+}
+.ds-kpi-card {
+  background: #fff;
+  border: 1px solid var(--c-g100, #F2F4F6);
+  border-radius: 14px;
+  padding: 12px 10px;
+  text-align: center;
+}
+.ds-kpi-val {
+  font-size: 18px; font-weight: 800; color: var(--c-g900, #1A1F2C);
+  letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
+}
+.ds-kpi-val.pr { color: var(--c-pr, #FF385C); }
+.ds-kpi-lbl {
+  font-size: 11px; color: var(--c-g500, #8B95A1);
+  margin-top: 2px; font-weight: 600;
+}
+
+/* ── Floating CTA (+ 새 견적) ── */
+.ds-fab {
+  position: fixed; bottom: 78px;
+  right: calc(50% - 240px + 20px);
+  width: 60px; height: 60px; border-radius: 50%;
+  background: var(--c-pr, #FF385C); color: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border: none; cursor: pointer; z-index: 50;
+  box-shadow:
+    0 10px 30px rgba(255,56,92,0.4),
+    0 4px 12px rgba(255,56,92,0.25);
+  transition: transform .12s;
+  font-family: inherit;
+}
+.ds-fab:active { transform: scale(0.92); }
+.ds-fab-ico { font-size: 22px; font-weight: 300; line-height: 1; }
+.ds-fab-lbl { font-size: 9px; font-weight: 800; margin-top: 1px; letter-spacing: 0.04em; }
+@media (max-width: 480px) { .ds-fab { right: 20px; } }

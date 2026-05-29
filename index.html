@@ -239,38 +239,60 @@
 <body>
 <div class="shell">
 
-  <!-- 헤더 -->
-  <div class="home-header ds-app-header">
-    <div class="hd-bg-photo" aria-hidden="true"></div>
-    <div class="hd-top">
-      <div>
-        <div class="hd-greeting" id="greeting">좋은 아침이에요 ☀️</div>
-        <h1 class="hd-name ds-page-title"><span id="user-name">사장님</span></h1>
-      </div>
-      <div class="hd-actions">
-        <button class="hd-icon-btn ds-tap" onclick="togglePushNotification()" title="알림 설정">
-          🔔
-          <div class="hd-notif-dot" id="notif-dot" style="display:none;"></div>
-        </button>
-        <button class="hd-icon-btn ds-tap" onclick="goTo('settings')">⚙️</button>
+  <!-- 사진 hero 헤더 (Phase 6 — 2026-05-29) -->
+  <div class="ds-hero-photo">
+    <div class="ds-hero-img" style="background-image:url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=85');" aria-hidden="true"></div>
+    <div class="ds-hero-overlay" aria-hidden="true"></div>
+    <div class="ds-hero-top">
+      <button class="ds-hero-btn ds-tap" onclick="togglePushNotification()" aria-label="알림 설정">
+        🔔
+        <span class="ds-hero-dot" id="notif-dot" style="display:none;"></span>
+      </button>
+      <button class="ds-hero-btn ds-tap" onclick="goTo('settings')" aria-label="설정">⚙️</button>
+    </div>
+    <div class="ds-hero-body">
+      <div class="ds-hero-greet" id="greeting">좋은 아침이에요</div>
+      <div class="ds-hero-name"><span id="user-name">사장님</span></div>
+      <div class="ds-hero-rev-row">
+        <div>
+          <div class="ds-hero-rev-lbl">이달 매출</div>
+          <div class="ds-hero-rev-val"><span id="hero-revenue">-</span><span class="ds-hero-rev-unit">만원</span></div>
+        </div>
+        <div class="ds-hero-trend" id="hero-trend" style="display:none;"></div>
       </div>
     </div>
   </div>
 
-  <!-- 오늘 할 일 카드 -->
-  <div class="today-card ds-tap-card ds-fade-in" onclick="goTo('schedule')" id="today-card">
-    <div class="today-card-ico">📋</div>
-    <div class="today-card-body">
-      <div class="today-card-label">
-        <span class="ds-pulse-dot" style="margin-right:5px;"></span>오늘 할 일
+  <!-- 콘텐츠 영역 (사진 hero 위로 살짝 올라옴) -->
+  <div class="ds-home-content">
+
+    <!-- Status-First: 오늘 일정 풀 문장 -->
+    <div class="ds-status-card ds-fade-in" onclick="goTo('schedule')" id="today-card">
+      <div class="ds-status-ico has-task" id="status-ico">📋</div>
+      <div class="ds-status-body">
+        <div class="ds-status-title" id="today-text">
+          <span class="ds-skel ds-skel-line" style="width:60%;height:18px;"></span>
+        </div>
+        <div class="ds-status-sub" id="today-sub"></div>
       </div>
-      <div class="today-card-text" id="today-text">
-        <span class="ds-skel ds-skel-line" style="width:60%;height:18px;"></span>
-      </div>
-      <div class="today-card-sub" id="today-sub"></div>
+      <div class="ds-status-arr">›</div>
     </div>
-    <div class="today-card-arrow">›</div>
-  </div>
+
+    <!-- KPI 3-col 한 줄 (이번 달 실적) -->
+    <div class="ds-kpi-row ds-fade-in ds-fade-in-1">
+      <div class="ds-kpi-card">
+        <div class="ds-kpi-val pr" id="perf-done">-</div>
+        <div class="ds-kpi-lbl">완료</div>
+      </div>
+      <div class="ds-kpi-card ds-tap" onclick="location.href='schedule.html?filter=confirmed'" style="cursor:pointer;">
+        <div class="ds-kpi-val" id="perf-booked">-</div>
+        <div class="ds-kpi-lbl">확정 예약</div>
+      </div>
+      <div class="ds-kpi-card">
+        <div class="ds-kpi-val" id="perf-pending">-</div>
+        <div class="ds-kpi-lbl">대기 문의</div>
+      </div>
+    </div>
 
   <!-- 빠른 실행: 고객케어 hero 단일 (보조 카드는 고객케어 내부와 중복이라 제거) -->
   <div class="quick-grid ds-fade-in ds-fade-in-1" style="margin-top:16px;">
@@ -306,41 +328,15 @@
     </div>
   </div>
 
-  <!-- 이번 달 실적 (토스 시그니처: 큰 숫자 + 작은 단위) -->
-  <div class="perf-card ds-fade-in ds-fade-in-3">
-    <div class="perf-head">
-      <div class="perf-title">📊 이번 달 실적</div>
-      <div class="perf-period" id="perf-period"></div>
-    </div>
-    <div class="perf-stats">
-      <div class="perf-stat">
-        <div class="ds-num-display sm pr">
-          <span class="num" id="perf-done">-</span>
-          <span class="unit">건</span>
-        </div>
-        <div class="perf-lbl">완료</div>
-        <div class="perf-change" id="perf-done-change"></div>
-      </div>
-      <div class="perf-stat">
-        <div class="ds-num-display sm">
-          <span class="num" id="perf-revenue">-</span>
-          <span class="unit">만</span>
-        </div>
-        <div class="perf-lbl">매출</div>
-        <div class="perf-change" id="perf-revenue-change"></div>
-      </div>
-      <div class="perf-stat ds-tap" onclick="location.href='schedule.html?filter=confirmed'" style="cursor:pointer;">
-        <div class="ds-num-display sm">
-          <span class="num" id="perf-booked">-</span>
-          <span class="unit">건</span>
-        </div>
-        <div class="perf-lbl">확정 예약</div>
-        <div class="perf-change" id="perf-booked-change"></div>
-      </div>
-    </div>
-  </div>
+  </div><!-- /ds-home-content -->
 
 </div><!-- /shell -->
+
+<!-- Floating CTA — 새 견적 작성 -->
+<button class="ds-fab" onclick="goTo('quote')" aria-label="새 견적 작성">
+  <span class="ds-fab-ico">+</span>
+  <span class="ds-fab-lbl">견적</span>
+</button>
 
 <!-- 하단 네비 -->
 <nav class="ds-nav">
@@ -697,53 +693,65 @@ async function loadHomeStats() {
     const pending = d.data || [];
     const todayText = document.getElementById('today-text');
     const todaySub  = document.getElementById('today-sub');
-    const todayCard = document.getElementById('today-card');
-    const pulseDot  = document.querySelector('.today-card-label .ds-pulse-dot');
+    const statusIco = document.getElementById('status-ico');
+    const perfPendingEl = document.getElementById('perf-pending');
 
+    // Status-First 풀 문장 카피 (2026-05-29 조합 패턴)
     if (todayText) {
       if (pending.length > 0) {
-        // 친근하고 액션 지향적 카피
-        todayText.textContent = `대기 예약 ${pending.length}건`;
-        todaySub && (todaySub.textContent = '탭해서 빠르게 처리하세요');
-        if (pulseDot) pulseDot.style.background = 'var(--c-amber)';
-        if (pulseDot && pulseDot.style.cssText.indexOf('box-shadow') === -1) {
-          pulseDot.style.boxShadow = '0 0 0 0 var(--c-amber)';
+        const first = pending[0] || {};
+        const timeStr = first.time || first.scheduled_time || '';
+        const customer = first.customer_name || first.name || '';
+        const taskKind = first.kind || first.service || '청소';
+        todayText.innerHTML = `예약 <span class="num">${pending.length}건</span>이 있어요`;
+        if (todaySub) {
+          if (timeStr && customer) todaySub.textContent = `${timeStr} ${customer}님 ${taskKind}부터 시작이에요`;
+          else if (timeStr) todaySub.textContent = `${timeStr}에 첫 일정이 있어요`;
+          else todaySub.textContent = '탭해서 빠르게 처리하세요';
         }
-        // 카드를 시각적으로 강조 — 토스 스타일 부드러운 강조
-        todayCard && (todayCard.style.boxShadow = '0 4px 24px rgba(245,158,11,.18)');
+        if (statusIco) statusIco.classList.add('has-task');
       } else {
         todayText.textContent = '여유로운 하루예요 ☀️';
-        todaySub && (todaySub.textContent = '오늘 대기 중인 예약이 없습니다');
-        if (pulseDot) {
-          pulseDot.style.background = 'var(--c-pr)';
-          pulseDot.style.opacity = '0.5';
-        }
+        if (todaySub) todaySub.textContent = '오늘 대기 중인 예약이 없습니다';
+        if (statusIco) statusIco.classList.remove('has-task');
       }
     }
+    // KPI 대기 문의
+    if (perfPendingEl) perfPendingEl.textContent = pending.length || '-';
   } catch(e) {
     const todayText = document.getElementById('today-text');
-    if (todayText) todayText.textContent = '스케줄 확인하기';
+    if (todayText) todayText.textContent = '일정을 불러오는 중이에요';
   }
 
-  // 이달 실적 (토스 시그니처: 큰 숫자 + 작은 단위)
+  // 이달 실적 — 매출은 hero 안, 완료/확정은 KPI 카드에 표시
   try {
     const r2 = await fetch(SERVER + '/api/stats/monthly');
     const d2 = await r2.json();
     if (d2.success) {
+      const heroRev     = document.getElementById('hero-revenue');
+      const heroTrend   = document.getElementById('hero-trend');
       const perfDone    = document.getElementById('perf-done');
-      const perfRevenue = document.getElementById('perf-revenue');
       const perfBooked  = document.getElementById('perf-booked');
-      // 2026 트렌드: 숫자 카운트업 (utils.js countUp / fallback: 즉시 표시)
       const doneN = d2.done ?? 0;
       const revN  = d2.revenue ? Math.round(d2.revenue/10000) : 0;
       const bookN = d2.confirmed > 0 ? d2.confirmed : 0;
+      // hero 매출
+      if (heroRev) {
+        if (typeof countUp === 'function' && revN > 0) countUp(heroRev, revN, { duration: 900 });
+        else heroRev.textContent = revN > 0 ? revN : '-';
+      }
+      // hero 트렌드 (지난달 비교 — 데이터 있을 때만)
+      if (heroTrend && d2.revenue_change_pct !== undefined && d2.revenue_change_pct !== null) {
+        const pct = Math.round(d2.revenue_change_pct);
+        const dir = pct >= 0 ? '↗' : '↘';
+        heroTrend.textContent = `${dir} ${Math.abs(pct)}%`;
+        heroTrend.classList.toggle('down', pct < 0);
+        heroTrend.style.display = 'inline-flex';
+      }
+      // KPI
       if (perfDone) {
         if (typeof countUp === 'function') countUp(perfDone, doneN, { duration: 800 });
         else perfDone.textContent = doneN;
-      }
-      if (perfRevenue) {
-        if (typeof countUp === 'function' && revN > 0) countUp(perfRevenue, revN, { duration: 900 });
-        else perfRevenue.textContent = revN > 0 ? revN : '-';
       }
       if (perfBooked) {
         if (typeof countUp === 'function' && bookN > 0) countUp(perfBooked, bookN, { duration: 700 });
@@ -751,11 +759,6 @@ async function loadHomeStats() {
       }
     }
   } catch(e) {}
-
-  // 기간 표시
-  const now = new Date();
-  const period = document.getElementById('perf-period');
-  if (period) period.textContent = `${now.getMonth()+1}월`;
 }
 
 // 벨 아이콘 상태 — 3 state: subscribed / available / denied
