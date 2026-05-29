@@ -239,9 +239,9 @@
 <body>
 <div class="shell">
 
-  <!-- 사진 hero 헤더 (Phase 6 — 2026-05-29) -->
-  <div class="ds-hero-photo">
-    <div class="ds-hero-img" id="hero-img" style="background-image:url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=85&auto=format&fit=crop');" aria-hidden="true"></div>
+  <!-- 사진 hero 헤더 (Phase 6 — 기본은 흰 헤더, 사장님이 사진 등록 시 사진 모드 활성화) -->
+  <div class="ds-hero-photo no-photo" id="hero-root">
+    <div class="ds-hero-img" id="hero-img" aria-hidden="true"></div>
     <div class="ds-hero-overlay" aria-hidden="true"></div>
     <div class="ds-hero-top">
       <button class="ds-hero-btn ds-tap" onclick="togglePushNotification()" aria-label="알림 설정">
@@ -779,26 +779,34 @@ function updateBellState(subscribed) {
   }
 }
 
-// 사용자 hero 이미지 적용 — localStorage 캐시 우선 + 서버 동기화
+// 사용자 hero 이미지 적용 — 사진 있으면 사진 모드, 없으면 흰 헤더 모드
 function applyHeroImage() {
+  const root = document.getElementById('hero-root');
   const heroEl = document.getElementById('hero-img');
-  if (!heroEl) return;
+  if (!root || !heroEl) return;
+  const setMode = (url) => {
+    if (url) {
+      root.classList.remove('no-photo');
+      heroEl.style.backgroundImage = `url('${url}')`;
+    } else {
+      root.classList.add('no-photo');
+      heroEl.style.backgroundImage = '';
+    }
+  };
   const cached = (typeof ssakGetHeroUrl === 'function') ? ssakGetHeroUrl() : '';
-  if (cached) {
-    heroEl.style.backgroundImage = `url('${cached}')`;
-  }
+  setMode(cached);
   // 서버 최신 동기화 (백그라운드)
   (async () => {
     try {
       const r = await fetch(SERVER + '/api/auth/me');
       const d = await r.json();
-      const serverUrl = d && d.user && d.user.hero_image_url;
-      if (serverUrl && serverUrl !== cached) {
-        heroEl.style.backgroundImage = `url('${serverUrl}')`;
-        try { localStorage.setItem('ssak_hero_url', serverUrl); } catch (e) {}
-      } else if (!serverUrl && cached) {
-        // 서버에서 제거됨 → 로컬 캐시도 비우고 기본 이미지
-        try { localStorage.removeItem('ssak_hero_url'); } catch (e) {}
+      const serverUrl = (d && d.user && d.user.hero_image_url) || '';
+      if (serverUrl !== cached) {
+        setMode(serverUrl);
+        try {
+          if (serverUrl) localStorage.setItem('ssak_hero_url', serverUrl);
+          else localStorage.removeItem('ssak_hero_url');
+        } catch (e) {}
       }
     } catch (e) {}
   })();
