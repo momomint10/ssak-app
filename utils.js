@@ -935,3 +935,65 @@ function ssakShowIOSInstallGuide() {
   document.body.insertAdjacentHTML('beforeend', html);
   document.getElementById('ds-push-accept').onclick = _ssakRemovePushModal;
 }
+
+// ══════════════════════════════════════════════════════════════════
+// 홈 사진 hero — 사장님 회사 사진 업로드 (Phase 6 follow-up)
+// ══════════════════════════════════════════════════════════════════
+
+/** File → base64 (server endpoint용) */
+function _fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result; // data:image/jpeg;base64,xxxxx
+      const comma = dataUrl.indexOf(',');
+      resolve(dataUrl.slice(comma + 1));
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/** 회사 사진 업로드. 성공 시 { ok:true, url } 반환 */
+async function ssakUploadHeroImage(file) {
+  if (!file) return { ok: false, err: '파일이 없습니다' };
+  if (!/^image\/(jpeg|png|webp|heic|heif)$/.test(file.type)) {
+    return { ok: false, err: '지원되지 않는 형식 (jpeg/png/webp/heic/heif)' };
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    return { ok: false, err: '이미지는 5MB 이하만 가능해요' };
+  }
+  try {
+    const imageBase64 = await _fileToBase64(file);
+    const r = await fetchAuth(SERVER + '/api/user/hero-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageBase64, imageMime: file.type })
+    });
+    const d = await r.json();
+    if (!d.success) return { ok: false, err: d.error || '업로드 실패' };
+    // 로컬 캐시 — index.html이 같은 디바이스에서 즉시 반영
+    try { localStorage.setItem('ssak_hero_url', d.url); } catch (e) {}
+    return { ok: true, url: d.url };
+  } catch (e) {
+    return { ok: false, err: e.message };
+  }
+}
+
+/** 회사 사진 제거 */
+async function ssakRemoveHeroImage() {
+  try {
+    const r = await fetchAuth(SERVER + '/api/user/hero-image', { method: 'DELETE' });
+    const d = await r.json();
+    if (!d.success) return { ok: false, err: d.error || '제거 실패' };
+    try { localStorage.removeItem('ssak_hero_url'); } catch (e) {}
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, err: e.message };
+  }
+}
+
+/** 현재 사용자의 hero URL — localStorage 캐시 우선, 없으면 빈 문자열 */
+function ssakGetHeroUrl() {
+  try { return localStorage.getItem('ssak_hero_url') || ''; } catch (e) { return ''; }
+}
