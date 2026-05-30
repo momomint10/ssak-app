@@ -1056,3 +1056,99 @@ async function ssakRemoveHeroImage() {
 function ssakGetHeroUrl() {
   try { return localStorage.getItem('ssak_hero_url') || ''; } catch (e) { return ''; }
 }
+
+// ══════════════════════════════════════════════════════════════════
+// 글로벌 모달 confirm/alert — 모바일 친화 (브라우저 native 교체)
+// ══════════════════════════════════════════════════════════════════
+function _ssakModalEnsureStyles() {
+  if (document.getElementById('ds-modal-style')) return;
+  const css = `
+    .ds-modal-ov{position:fixed;inset:0;background:rgba(15,23,32,.55);display:flex;
+      align-items:center;justify-content:center;z-index:1200;animation:dsmFade .15s ease-out;}
+    @keyframes dsmFade{from{opacity:0}to{opacity:1}}
+    @keyframes dsmPop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+    .ds-modal-card{background:#fff;border-radius:18px;max-width:340px;width:calc(100% - 36px);
+      padding:22px 22px 18px;box-shadow:0 24px 60px rgba(0,0,0,.22);
+      animation:dsmPop .18s cubic-bezier(.22,1,.36,1);}
+    .ds-modal-ico{font-size:34px;text-align:center;margin-bottom:6px;line-height:1;}
+    .ds-modal-ttl{font-size:16px;font-weight:800;color:#1A1F2C;text-align:center;
+      letter-spacing:-.01em;margin-bottom:6px;}
+    .ds-modal-msg{font-size:13.5px;color:#6B7684;text-align:center;line-height:1.55;
+      margin-bottom:18px;font-weight:500;}
+    .ds-modal-acts{display:flex;gap:8px;}
+    .ds-modal-btn{flex:1;padding:12px 14px;border-radius:11px;font-size:14.5px;
+      font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:transform .08s;}
+    .ds-modal-btn:active{transform:scale(.97);}
+    .ds-modal-btn-ghost{background:#fff;color:#6B7684;border:1px solid #E4E9EE;}
+    .ds-modal-btn-primary{background:#FF385C;color:#fff;box-shadow:0 3px 12px rgba(255,56,92,.28);}
+    .ds-modal-btn-danger{background:#EF4444;color:#fff;box-shadow:0 3px 12px rgba(239,68,68,.30);}`;
+  const st = document.createElement('style');
+  st.id = 'ds-modal-style'; st.textContent = css;
+  document.head.appendChild(st);
+}
+
+/**
+ * 모바일 친화 confirm — Promise<boolean>
+ * @param {string} message
+ * @param {{title?:string, ok?:string, cancel?:string, danger?:boolean, icon?:string}} opts
+ */
+function ssakConfirm(message, opts = {}) {
+  _ssakModalEnsureStyles();
+  return new Promise(resolve => {
+    const ov = document.createElement('div');
+    ov.className = 'ds-modal-ov';
+    const icon = opts.icon || (opts.danger ? '⚠️' : '🤔');
+    const title = opts.title || '확인이 필요해요';
+    const ok = opts.ok || '확인';
+    const cancel = opts.cancel || '취소';
+    const okClass = opts.danger ? 'ds-modal-btn-danger' : 'ds-modal-btn-primary';
+    ov.innerHTML = `
+      <div class="ds-modal-card" role="alertdialog" aria-modal="true">
+        <div class="ds-modal-ico">${icon}</div>
+        <div class="ds-modal-ttl">${esc(title)}</div>
+        <div class="ds-modal-msg">${esc(message || '')}</div>
+        <div class="ds-modal-acts">
+          <button class="ds-modal-btn ds-modal-btn-ghost" data-act="0">${esc(cancel)}</button>
+          <button class="ds-modal-btn ${okClass}" data-act="1">${esc(ok)}</button>
+        </div>
+      </div>`;
+    const close = (v) => { ov.remove(); document.removeEventListener('keydown', onKey); resolve(v); };
+    const onKey = (e) => { if (e.key === 'Escape') close(false); else if (e.key === 'Enter') close(true); };
+    ov.addEventListener('click', e => {
+      if (e.target.dataset.act === '1') close(true);
+      else if (e.target.dataset.act === '0' || e.target === ov) close(false);
+    });
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(ov);
+    requestAnimationFrame(() => {
+      const okBtn = ov.querySelector('[data-act="1"]'); okBtn && okBtn.focus();
+    });
+  });
+}
+
+/** 모바일 친화 alert — Promise<void> */
+function ssakAlert(message, opts = {}) {
+  _ssakModalEnsureStyles();
+  return new Promise(resolve => {
+    const ov = document.createElement('div');
+    ov.className = 'ds-modal-ov';
+    const icon = opts.icon || (opts.kind === 'error' ? '⚠️' : 'ℹ️');
+    const title = opts.title || '안내';
+    const ok = opts.ok || '확인';
+    ov.innerHTML = `
+      <div class="ds-modal-card" role="alertdialog" aria-modal="true">
+        <div class="ds-modal-ico">${icon}</div>
+        <div class="ds-modal-ttl">${esc(title)}</div>
+        <div class="ds-modal-msg">${esc(message || '')}</div>
+        <div class="ds-modal-acts">
+          <button class="ds-modal-btn ds-modal-btn-primary" data-act="1" style="flex:1;">${esc(ok)}</button>
+        </div>
+      </div>`;
+    const close = () => { ov.remove(); document.removeEventListener('keydown', onKey); resolve(); };
+    const onKey = (e) => { if (e.key === 'Escape' || e.key === 'Enter') close(); };
+    ov.addEventListener('click', e => { if (e.target.dataset.act === '1' || e.target === ov) close(); });
+    document.addEventListener('keydown', onKey);
+    document.body.appendChild(ov);
+    requestAnimationFrame(() => ov.querySelector('[data-act="1"]').focus());
+  });
+}

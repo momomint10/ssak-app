@@ -25,6 +25,10 @@
 })();
 </script>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
+<link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — 견적요청서</title>
 <meta name="theme-color" content="#FF385C">
@@ -225,7 +229,7 @@ async function loadList(){
     updateTrashBadge();
   } catch (e) {
     document.getElementById('list').innerHTML =
-      '<div class="empty"><div class="empty-ico">⚠️</div>불러오기 실패<br><small>' + (e.message||'') + '</small></div>';
+      '<div class="empty"><div class="empty-ico">⚠️</div><div class="empty-ttl">견적 목록을 불러올 수 없어요</div><div class="empty-sub">' + esc(friendlyFetchError(e, '견적 목록을 불러오지 못했어요.')) + '</div></div>';
   }
 }
 
