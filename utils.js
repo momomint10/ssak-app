@@ -81,6 +81,65 @@ function requireAuth() {
   return p;
 }
 
+// ── 성능 최적화: 글로벌 img 자동 lazy + decoding async ────────
+// DOMContentLoaded 시 loading 속성 없는 모든 <img>에 'lazy' 자동 적용,
+// decoding='async'로 메인 스레드 부담 ↓. 모바일 첫 로드 LCP 개선.
+// IntersectionObserver 기반이라 첫 viewport 이미지는 즉시 로드됨.
+(function autoLazyImages() {
+  function apply() {
+    const imgs = document.querySelectorAll('img:not([loading])');
+    for (let i = 0; i < imgs.length; i++) {
+      imgs[i].setAttribute('loading', 'lazy');
+      if (!imgs[i].hasAttribute('decoding')) imgs[i].setAttribute('decoding', 'async');
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply);
+  } else {
+    apply();
+  }
+  // SPA 스타일 동적 삽입 후에도 작동 — MutationObserver
+  if (window.MutationObserver) {
+    const mo = new MutationObserver(muts => {
+      for (const m of muts) {
+        for (const n of m.addedNodes) {
+          if (n.nodeType !== 1) continue;
+          if (n.tagName === 'IMG' && !n.hasAttribute('loading')) {
+            n.setAttribute('loading', 'lazy');
+            if (!n.hasAttribute('decoding')) n.setAttribute('decoding', 'async');
+          } else if (n.querySelectorAll) {
+            n.querySelectorAll('img:not([loading])').forEach(img => {
+              img.setAttribute('loading', 'lazy');
+              if (!img.hasAttribute('decoding')) img.setAttribute('decoding', 'async');
+            });
+          }
+        }
+      }
+    });
+    mo.observe(document.documentElement, { childList: true, subtree: true });
+  }
+})();
+
+// ── 성능 최적화: 외부 도메인 preconnect 자동 부착 ─────────────
+// head에 link[rel=preconnect] 없을 때 동적 삽입.
+// 효과는 약하지만 (이미 head parse 후), 후속 fetch에서는 DNS+TLS 재사용.
+(function autoPreconnect() {
+  const hosts = [
+    'https://ssakssak-server-production.up.railway.app',
+    'https://ezzydgtbuknamwibjhcl.supabase.co',
+    'https://cdn.jsdelivr.net'
+  ];
+  hosts.forEach(href => {
+    if (!document.head.querySelector(`link[rel="preconnect"][href="${href}"]`)) {
+      const l = document.createElement('link');
+      l.rel = 'preconnect';
+      l.href = href;
+      l.crossOrigin = '';
+      document.head.appendChild(l);
+    }
+  });
+})();
+
 // ── 글로벌 fetch monkey-patch (Phase 2) ───────────────────────
 // 싹싹 백엔드 SERVER 요청에 자동으로 JWT 토큰 첨부.
 // 401 응답 시 게스트 페이지가 아니면 login.html로 리다이렉트.
