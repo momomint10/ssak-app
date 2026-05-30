@@ -1780,6 +1780,18 @@ body:has(.bg-photo) input[type="text"] {
   text-shadow: 0 2px 12px rgba(0,0,0,0.25);
   color: #fff;
 }
+/* 회사명 sub-line — 사진 hero 모드 (흰색 + 그림자) */
+.ds-hero-photo .ds-hero-company {
+  font-size: 13px; font-weight: 600;
+  letter-spacing: -0.01em; margin-top: 4px;
+  color: rgba(255,255,255,0.88);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+  display: flex; align-items: center; gap: 6px;
+}
+.ds-hero-photo .ds-hero-company::before {
+  content: ''; width: 4px; height: 4px; border-radius: 50%;
+  background: rgba(255,255,255,0.7);
+}
 .ds-hero-rev-row {
   display: flex; align-items: end; gap: 8px;
   margin-top: 12px;
@@ -1939,6 +1951,23 @@ body:has(.bg-photo) input[type="text"] {
   color: var(--c-g900, #1A1F2C);
   text-shadow: none;
   font-size: 24px;
+}
+/* 회사명 sub-line — 흰 헤더 모드 (코랄 액센트로 전문성/브랜드 강조) */
+.ds-hero-photo.no-photo .ds-hero-company {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: -0.01em; margin-top: 4px;
+  color: var(--c-pr, #FF385C);
+  text-shadow: none;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #FFF0F3;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,56,92,0.18);
+}
+.ds-hero-photo.no-photo .ds-hero-company::before {
+  content: '🏢';
+  font-size: 11px;
+  filter: grayscale(0.2);
 }
 .ds-hero-photo.no-photo .ds-hero-rev-row {
   margin-top: 14px;

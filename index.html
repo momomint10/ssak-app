@@ -253,6 +253,7 @@
     <div class="ds-hero-body">
       <div class="ds-hero-greet" id="greeting">좋은 아침이에요</div>
       <div class="ds-hero-name"><span id="user-name">사장님</span></div>
+      <div class="ds-hero-company" id="hero-company" style="display:none;"></div>
       <div class="ds-hero-rev-row">
         <div>
           <div class="ds-hero-rev-lbl">이달 매출</div>
@@ -410,11 +411,16 @@ function loadUser() {
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
   const sch = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
 
-  // 업주명 표시
+  // 업주명 + 회사명 표시 (전문성 — 회사명 별도 줄에 작게)
   const nameEl = document.getElementById('user-name');
+  const companyEl = document.getElementById('hero-company');
   if (nameEl) {
     if (cfg.ownerName) nameEl.textContent = cfg.ownerName + ' 사장님';
-    else if (cfg.company) nameEl.textContent = cfg.company + ' 사장님';
+    else nameEl.textContent = '사장님';
+  }
+  if (companyEl && cfg.company) {
+    companyEl.textContent = cfg.company;
+    companyEl.style.display = 'block';
   }
 
   // 이달 실적 (로컬 ssak_schedules 기반 fallback — 서버 응답이 늦을 때 빠른 표시용)
