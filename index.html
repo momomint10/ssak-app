@@ -801,6 +801,31 @@ async function saveReminderSettings() {
 
 
 // ── 홈 리디자인 보완 ───────────────────────────────────────────
+// fetch 60초 메모리 캐시 — 같은 사장님이 홈 ↔ 다른 탭 자주 이동 시 네트워크 ↓
+// 캐시 키 = URL. 응답을 sessionStorage에도 저장해 reload 직후에도 즉시 그림.
+const _ssakFetchCache = new Map();
+async function cachedFetch(url, ttlMs = 60000) {
+  const now = Date.now();
+  const mem = _ssakFetchCache.get(url);
+  if (mem && (now - mem.ts) < ttlMs) return mem.data;
+  try {
+    const sess = sessionStorage.getItem('ssak_fetch_' + url);
+    if (sess) {
+      const parsed = JSON.parse(sess);
+      if (parsed && (now - parsed.ts) < ttlMs) {
+        _ssakFetchCache.set(url, parsed);
+        return parsed.data;
+      }
+    }
+  } catch(_) {}
+  const r = await fetch(url);
+  const data = await r.json();
+  const entry = { ts: now, data };
+  _ssakFetchCache.set(url, entry);
+  try { sessionStorage.setItem('ssak_fetch_' + url, JSON.stringify(entry)); } catch(_) {}
+  return data;
+}
+
 async function loadHomeStats() {
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
   const adminKey = cfg.adminKey || '';
@@ -911,8 +936,7 @@ async function loadHomeStats() {
       const spark = document.getElementById('tile-spark');
       let points = null;
       try {
-        const rW = await fetch(SERVER + '/api/stats/weekly?weeks=6');
-        const dW = await rW.json();
+        const dW = await cachedFetch(SERVER + '/api/stats/weekly?weeks=6');
         if (dW && dW.success && Array.isArray(dW.weekly_revenue) && dW.weekly_revenue.length >= 2) {
           // 모두 0인 경우는 추세 의미 없음 → fallback로 떨어뜨림
           const sum = dW.weekly_revenue.reduce((s, v) => s + v, 0);
@@ -937,6 +961,17 @@ async function loadHomeStats() {
         const dot = document.getElementById('spark-dot');
         dot.setAttribute('cx', xs[n-1].toFixed(1));
         dot.setAttribute('cy', ys[n-1].toFixed(1));
+        // 매출 추세 → 색 동적 (상승=코랄, 하락=블루)
+        // 1차: weekly first vs last, 2차: revenue_change_pct
+        const isDown = (() => {
+          if (points.length >= 2 && points[n-1] !== points[0]) return points[n-1] < points[0];
+          return (d2.revenue_change_pct ?? 0) < 0;
+        })();
+        const sparkColor = isDown ? '#3B82F6' : '#FF385C';
+        document.getElementById('spark-line').setAttribute('stroke', sparkColor);
+        document.getElementById('spark-dot').setAttribute('fill', sparkColor);
+        const stops = document.querySelectorAll('#spk stop');
+        stops.forEach(s => s.setAttribute('stop-color', sparkColor));
         spark.style.display = 'block';
       }
     }
@@ -948,9 +983,11 @@ async function loadHomeStats() {
     if (anonId) {
       const cSeen = localStorage.getItem('ssak_community_last_seen') || '';
       const mSeen = localStorage.getItem('ssak_market_last_seen') || '';
+      const cUrl = SERVER + '/api/community/unread?anon_id=' + encodeURIComponent(anonId) + (cSeen ? '&since=' + encodeURIComponent(cSeen) : '');
+      const mUrl = SERVER + '/api/market/unread?anon_id=' + encodeURIComponent(anonId) + (mSeen ? '&since=' + encodeURIComponent(mSeen) : '');
       const [rC, rM] = await Promise.all([
-        fetch(SERVER + '/api/community/unread?anon_id=' + encodeURIComponent(anonId) + (cSeen ? '&since=' + encodeURIComponent(cSeen) : '')).then(r => r.json()).catch(() => null),
-        fetch(SERVER + '/api/market/unread?anon_id=' + encodeURIComponent(anonId) + (mSeen ? '&since=' + encodeURIComponent(mSeen) : '')).then(r => r.json()).catch(() => null)
+        cachedFetch(cUrl).catch(() => null),
+        cachedFetch(mUrl).catch(() => null)
       ]);
       const dotC = document.getElementById('dot-community');
       const dotM = document.getElementById('dot-market');
@@ -963,8 +1000,7 @@ async function loadHomeStats() {
   try {
     const anonId = (typeof getAnon === 'function') ? getAnon() : null;
     if (anonId) {
-      const rJ = await fetch(SERVER + '/api/jobs/my/posted?anon_id=' + encodeURIComponent(anonId));
-      const dJ = await rJ.json();
+      const dJ = await cachedFetch(SERVER + '/api/jobs/my/posted?anon_id=' + encodeURIComponent(anonId));
       if (dJ && Array.isArray(dJ.data)) {
         // open 상태만 카운트 (closed/deleted 제외)
         const openJobs = dJ.data.filter(j => j.status === 'open');
