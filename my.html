@@ -36,14 +36,14 @@
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260604-2">
+<link rel="preload" as="script" href="utils.js?v=20260604-3">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — MY</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260604-2">
+<link rel="stylesheet" href="design.css?v=20260604-3">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -55,18 +55,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
 /* 프로필 헤더 */
 .profile-header{
-  background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
+  background:#fff;  /* V1.6: 코랄 그라데이션 → 흰 배경 */
   padding:60px 24px 24px;
-  border-bottom:0.5px solid #f5e8e4;
-  /* position:relative 제거 → ds-app-header의 position:sticky 적용 */
-  /* position:sticky도 positioned 요소이므로 ::after, .profile-edit-btn의 absolute 정상 작동 */
+  border-bottom:1px solid var(--c-g100);  /* V1.6: 핑크 라인 → 회색 1px */
 }
 /* 스크롤 시 헤더 축소 */
 .profile-header.scrolled{ padding:10px 24px 8px; }
-.profile-header::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;
-  height:3px;background:linear-gradient(90deg,var(--c-pr, #FF385C) 0%,#FC8181 100%);
-}
+/* V1.6: 코랄 발광 라인 제거 — 1px g100 분할은 .profile-header의 border-bottom으로 처리 */
 .profile-header-inner{display:flex;align-items:center;gap:16px;}
 .profile-avatar{width:72px;height:72px;border-radius:50%;background:#FFF5F0;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border:2.5px solid var(--c-pr, #FF385C);
   transition:width .22s ease,height .22s ease,font-size .22s ease;}
@@ -134,7 +129,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
 /* 토스트 — design.css 글로벌 (260528) */
 .trust-card{background:#fff;border-radius:var(--radius);margin:12px 16px;padding:14px 18px;box-shadow:var(--shadow);} .trust-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;} .trust-row{display:flex;gap:12px;} .trust-stat{flex:1;text-align:center;padding:8px 0;} .trust-val{font-size:22px;font-weight:var(--fw-bold);color:var(--gray-900);margin-bottom:2px;} .trust-val.amber{color:#F59E0B;} .trust-lbl{font-size:11px;color:var(--gray-500);} .trust-empty{font-size:11px;color:var(--gray-400);text-align:center;padding:8px 0;} </style>
-<script src="utils.js?v=20260604-2"></script>
+<script src="utils.js?v=20260604-3"></script>
 </head>
 <body>
 <div class="shell">
