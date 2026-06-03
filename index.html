@@ -819,8 +819,11 @@ async function loadHomeStats() {
         if (statusIco) statusIco.classList.add('has-task');
       } else {
         todayText.textContent = '여유로운 하루예요 ☀️';
-        if (todaySub) todaySub.textContent = '오늘 대기 중인 예약이 없습니다';
+        if (todaySub) todaySub.textContent = '탭해서 새 견적을 받아볼까요?';
         if (statusIco) statusIco.classList.remove('has-task');
+        // 빈 상태에서는 status-card 탭 시 schedule 대신 quote로 (액션 권유)
+        const todayCard = document.getElementById('today-card');
+        if (todayCard) todayCard.onclick = () => goTo('quote');
       }
     }
     // KPI 대기 문의

@@ -393,10 +393,74 @@
 
 ---
 
+## 14. 홈 V1.5 — Action Hub 패턴 (v5 — 2026-06-03)
+
+직전 "심플하지만 단촐"한 홈 화면 피드백을 반영한 새 패턴.
+4 액션 + 정보 그룹화로 풍성함과 통일감을 동시에 확보한다.
+
+### 14.1 구조 (위에서 아래)
+
+1. **Hero** — 인사 + 이름 + 회사 칩 (매출 노출 ✗ — 사장님 정서 부담 ↓)
+2. **status-card** — 오늘 일정 한 줄 문장 (`📋 오늘 예약 3건 / 오전 10시 신가족 입주청소부터`)
+   - 빈 상태: `여유로운 하루예요 ☀️ / 탭해서 새 견적을 받아볼까요?` → 탭 시 `quote.html`로 분기
+3. **고객케어 hero** — primary 단일 카드 (견적·계약·완료 한 진입점)
+4. **`.tile-grid` 2×2** — 보조 액션 4개 (단촐 해소 핵심)
+5. **`.kpi-inline`** — 완료·확정·대기 압축 stat (데이터 0건이면 자동 숨김)
+6. **recent-card** — 커뮤니티 / 중고거래
+
+### 14.2 `.tile-grid` 4 tile
+
+| Tile | 아이콘 배경 | 아이콘 색 | 라우팅 |
+| --- | --- | --- | --- |
+| 📅 예약 확정 | `#EFF6FF` | `#3B82F6` (블루 = 일정) | `schedule.html?filter=confirmed` |
+| 📝 견적함 | `#FFF7ED` | `#F59E0B` (앰버 = 문서) | `schedule.html` |
+| 👥 동료 | `#F0FDF4` | `#22C55E` (그린 = 사람) | `workforce.html` |
+| 💰 정산 | `#FAF5FF` | `#A855F7` (보라 = 금융) | `schedule.html?tab=stats` |
+
+### 14.3 F 색 정책 — "정보 / 알림" 두 채널 분리
+
+**숫자 = 정보 채널 → 다크 한 색 통일**
+- `.tile-sub b { color: var(--c-g900) }` — 5건이든 50건이든 시각 안정
+- 값 변경에도 색이 흔들리지 않음
+
+**뱃지 = 알림 채널 → 의미별 색**
+- `.tile-badge`: `--c-pr` 코랄 (응답 필요 — 예약 확정, 견적 대기)
+- `.tile-badge.green`: `#22C55E` (긍정 도착 — 지원자)
+- 뱃지 없음: 조회용 정보 (정산)
+
+**근거**: 카톡·슬랙·인스타의 빨간 뱃지 = 알림 멘탈 모델 활용. 숫자가 동적으로 바뀌어도 사장님이 "지금 빨간 게 있나?"만 보면 됨.
+
+### 14.4 정산 sparkline
+
+- 데이터: `GET /api/stats/weekly?weeks=6` (만원 단위 반올림)
+- 색: `#FF385C` 코랄 (line + dot + area gradient stop) — 매출 = 브랜드 핵심 시그널
+- fallback: monthly `revenue_change_pct` 방향으로 단조 추정 곡선
+- 0 또는 미응답이면 SVG 통째로 숨김
+
+### 14.5 빈 데이터 자동 숨김 (정서적 안정)
+
+- `.ds-hero-rev-row` (구 매출 row) — 완전 제거
+- `.kpi-inline` — `doneN + bookN + pendingCt + revN` 모두 0이면 숨김
+- `.tile-spark` — weekly 합산 0이면 숨김
+- `.tile-badge` — 수치 0이면 숨김
+- 첫 진입 사장님 화면이 무리하게 비지 않도록 액션 4 tile은 항상 유지
+
+### 14.6 데이터 소스 매핑
+
+| 영역 | API | 비고 |
+| --- | --- | --- |
+| 오늘 일정 | `GET /api/bookings?status=pending` | 첫 건 시간·고객·종류 표시 |
+| 매출/실적 | `GET /api/stats/monthly` | `done`, `revenue`, `confirmed`, `revenue_change_pct` |
+| sparkline | `GET /api/stats/weekly?weeks=6` | `weekly_revenue: number[]` (만원) |
+| 동료 지원자 | `GET /api/jobs/my/posted?anon_id=` | 본인 글 + `applicant_count` 합산 |
+
+---
+
 ## 12. 변경 이력
 
 | 일자 | 버전 | 주요 변경 |
 | --- | --- | --- |
+| 2026-06-03 | **v5** | **홈 V1.5 — Action Hub (섹션 14)**: hero 매출 제거 / `.tile-grid` 2×2 / F 색 정책 (숫자 다크 통일 + 뱃지 의미별) / 정산 sparkline 코랄 / `/api/stats/weekly` 신규 endpoint / 빈 상태 status-card → quote 분기 |
 | 2026-06-03 | **v4** | **브랜드 정체성 가이드 (섹션 13)**: 코랄 차별화 옵션 / mint/teal 통합 결정 / 마스코트 변종 5종 계획 / 사진 hero 한국 컨텍스트 / voice·tone 가이드 |
 | 2026-05-27 | **v3** | **입체감 + 발광 + 글로벌 hook**: 5단계 elevation (`--sh-xs/sm/md/lg/xl`) + 컬러 그림자 (`--sh-pr/pr-sm/pr-lg/teal`) + highlight (`--hl-top/strong`) + spring transition (`--ease-spring`, `--dur-fast/normal/slow`) / 헤더 A안 풀 (앰비언트 오브 + 메쉬 + 라인 글로우) / 카드·네비·시트 발광 확장 / 14개 페이지 글로벌 hook으로 자동 반영 / 12개 페이지 font-weight 800/900 → 700 일괄 |
 | 2026-05-26 | v2 | Toss/Kakao 톤 모던화 (색상 g900 `#222`→`#191F28`, 폰트 lg 16→15px, xl 20→17px, fw 800→700 일괄, ls/lh 토큰 추가) |
