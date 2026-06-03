@@ -232,6 +232,31 @@
   cursor:pointer;
 }
 .recent-row:last-child { border-bottom:none; }
+
+/* KPI inline (압축) — 데이터 있을 때만 표시 */
+.kpi-inline {
+  margin: 6px 16px 0;
+  background: #fff;
+  border: 1px solid var(--c-g100, #F2F4F6);
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 6px rgba(20,30,50,.04);
+}
+.kpi-inline-row {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; color: var(--c-g500, #8B95A1); font-weight: 500;
+}
+.kpi-i { display: inline-flex; align-items: baseline; gap: 5px; flex: 1; justify-content: center; }
+.kpi-i b { font-size: 16px; font-weight: 800; color: var(--c-g900, #1A1F2C);
+  font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+}
+.kpi-i:first-child b { color: var(--c-pr, #FF385C); }
+.kpi-i.ds-tap { cursor: pointer; }
+.kpi-i-dot {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--c-g300, #D1D6DB);
+  flex-shrink: 0;
+}
 .recent-ico {
   width:40px; height:40px; border-radius:11px;
   display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
@@ -260,7 +285,7 @@
       <div class="ds-hero-greet" id="greeting">좋은 아침이에요</div>
       <div class="ds-hero-name"><span id="user-name">사장님</span></div>
       <div class="ds-hero-company" id="hero-company" style="display:none;"></div>
-      <div class="ds-hero-rev-row">
+      <div class="ds-hero-rev-row" id="hero-rev-row" style="display:none;">
         <div>
           <div class="ds-hero-rev-lbl">이달 매출</div>
           <div class="ds-hero-rev-val"><span id="hero-revenue">-</span><span class="ds-hero-rev-unit">만원</span></div>
@@ -285,19 +310,14 @@
       <div class="ds-status-arr">›</div>
     </div>
 
-    <!-- KPI 3-col 한 줄 (이번 달 실적) -->
-    <div class="ds-kpi-row ds-fade-in ds-fade-in-1">
-      <div class="ds-kpi-card">
-        <div class="ds-kpi-val pr" id="perf-done">-</div>
-        <div class="ds-kpi-lbl">완료</div>
-      </div>
-      <div class="ds-kpi-card ds-tap" onclick="location.href='schedule.html?filter=confirmed'" style="cursor:pointer;">
-        <div class="ds-kpi-val" id="perf-booked">-</div>
-        <div class="ds-kpi-lbl">확정 예약</div>
-      </div>
-      <div class="ds-kpi-card">
-        <div class="ds-kpi-val" id="perf-pending">-</div>
-        <div class="ds-kpi-lbl">대기 문의</div>
+    <!-- KPI inline (compact) — 데이터 0건이면 JS가 자동 숨김 -->
+    <div class="kpi-inline ds-fade-in ds-fade-in-1" id="kpi-inline" style="display:none;">
+      <div class="kpi-inline-row">
+        <span class="kpi-i"><b id="perf-done">0</b>완료</span>
+        <span class="kpi-i-dot"></span>
+        <span class="kpi-i ds-tap" onclick="location.href='schedule.html?filter=confirmed'"><b id="perf-booked">0</b>확정</span>
+        <span class="kpi-i-dot"></span>
+        <span class="kpi-i"><b id="perf-pending">0</b>대기</span>
       </div>
     </div>
 
@@ -747,10 +767,12 @@ async function loadHomeStats() {
       const doneN = d2.done ?? 0;
       const revN  = d2.revenue ? Math.round(d2.revenue/10000) : 0;
       const bookN = d2.confirmed > 0 ? d2.confirmed : 0;
-      // hero 매출
-      if (heroRev) {
-        if (typeof countUp === 'function' && revN > 0) countUp(heroRev, revN, { duration: 900 });
-        else heroRev.textContent = revN > 0 ? revN : '-';
+      // hero 매출 — 데이터 있을 때만 행 자체 표시 (A 빈 데이터 자동 숨김)
+      const heroRevRow = document.getElementById('hero-rev-row');
+      if (heroRev && revN > 0) {
+        if (heroRevRow) heroRevRow.style.display = 'flex';
+        if (typeof countUp === 'function') countUp(heroRev, revN, { duration: 900 });
+        else heroRev.textContent = revN;
       }
       // hero 트렌드 (지난달 비교 — 데이터 있을 때만)
       if (heroTrend && d2.revenue_change_pct !== undefined && d2.revenue_change_pct !== null) {
@@ -767,7 +789,18 @@ async function loadHomeStats() {
       }
       if (perfBooked) {
         if (typeof countUp === 'function' && bookN > 0) countUp(perfBooked, bookN, { duration: 700 });
-        else perfBooked.textContent = bookN > 0 ? bookN : '-';
+        else perfBooked.textContent = bookN > 0 ? bookN : '0';
+      }
+      // KPI inline 카드 — 데이터 있을 때만 표시 (A 빈 데이터 자동 숨김)
+      const kpiInline = document.getElementById('kpi-inline');
+      const perfPendingEl = document.getElementById('perf-pending');
+      const totalActivity = doneN + bookN + (typeof pending !== 'undefined' ? pending.length : 0);
+      if (kpiInline) {
+        if (totalActivity > 0 || revN > 0) {
+          kpiInline.style.display = 'block';
+        } else {
+          kpiInline.style.display = 'none';
+        }
       }
     }
   } catch(e) {}
