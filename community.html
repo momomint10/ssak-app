@@ -320,6 +320,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <div id="toast"></div>
 
 <script>
+// 진입 시 홈 dot 끄기 — 마지막 본 시각 기록
+try { localStorage.setItem('ssak_community_last_seen', new Date().toISOString()); } catch(_) {}
 // ── 익명 ID ──────────────────────────────────────────────────────
 // ── 유틸 ─────────────────────────────────────────────────────────
 function hl(t, kw) {

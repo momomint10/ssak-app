@@ -304,6 +304,18 @@
 .recent-body { flex:1; min-width:0; }
 .recent-title { font-size:14px; font-weight:700; color:var(--c-g900); }
 .recent-sub { font-size:12px; color:var(--c-g400); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* unread dot — 내 글 댓글 / 내 거래 메시지 신규 알림 (V1.5) */
+.unread-dot {
+  display:inline-block; width:7px; height:7px; border-radius:50%;
+  background: var(--c-pr, #FF385C);
+  margin-left: 6px; vertical-align: middle;
+  box-shadow: 0 0 0 2px rgba(255,56,92,.16);
+  animation: unread-pulse 2.2s ease-in-out infinite;
+}
+@keyframes unread-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(255,56,92,.16); }
+  50%      { box-shadow: 0 0 0 4px rgba(255,56,92,.08); }
+}
 .recent-right { font-size:11px; color:var(--c-g300); flex-shrink:0; }
 </style>
 </head>
@@ -414,7 +426,7 @@
       <div class="recent-row ds-tap" onclick="goTo('community')">
         <div class="recent-ico" style="background:#EFF6FF;">💬</div>
         <div class="recent-body">
-          <div class="recent-title">커뮤니티</div>
+          <div class="recent-title">커뮤니티<span class="unread-dot" id="dot-community" style="display:none;" aria-label="새 댓글"></span></div>
           <div class="recent-sub">청소업 정보 · 팁 · 질문</div>
         </div>
         <div class="recent-right">›</div>
@@ -422,7 +434,7 @@
       <div class="recent-row ds-tap" onclick="goTo('market')">
         <div class="recent-ico" style="background:#FFF8F5;">🛒</div>
         <div class="recent-body">
-          <div class="recent-title">중고거래</div>
+          <div class="recent-title">중고거래<span class="unread-dot" id="dot-market" style="display:none;" aria-label="새 메시지"></span></div>
           <div class="recent-sub">청소 장비 · 소모품 거래</div>
         </div>
         <div class="recent-right">›</div>
@@ -929,6 +941,23 @@ async function loadHomeStats() {
       }
     }
   } catch(e) {}
+
+  // 커뮤니티/중고거래 unread dot — 내 글 댓글 / 내 chat 메시지
+  try {
+    const anonId = (typeof getAnon === 'function') ? getAnon() : null;
+    if (anonId) {
+      const cSeen = localStorage.getItem('ssak_community_last_seen') || '';
+      const mSeen = localStorage.getItem('ssak_market_last_seen') || '';
+      const [rC, rM] = await Promise.all([
+        fetch(SERVER + '/api/community/unread?anon_id=' + encodeURIComponent(anonId) + (cSeen ? '&since=' + encodeURIComponent(cSeen) : '')).then(r => r.json()).catch(() => null),
+        fetch(SERVER + '/api/market/unread?anon_id=' + encodeURIComponent(anonId) + (mSeen ? '&since=' + encodeURIComponent(mSeen) : '')).then(r => r.json()).catch(() => null)
+      ]);
+      const dotC = document.getElementById('dot-community');
+      const dotM = document.getElementById('dot-market');
+      if (dotC && rC && rC.has_new) dotC.style.display = 'inline-block';
+      if (dotM && rM && rM.has_new) dotM.style.display = 'inline-block';
+    }
+  } catch(_) { /* 무음 fallback */ }
 
   // 동료 — 내 채용공고 지원자 합산 (서버 단 필터 endpoint 사용)
   try {

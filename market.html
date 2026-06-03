@@ -385,6 +385,8 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
 <div id="toast"></div>
 
 <script>
+// 진입 시 홈 dot 끄기 — 마지막 본 시각 기록
+try { localStorage.setItem('ssak_market_last_seen', new Date().toISOString()); } catch(_) {}
 const CATEGORIES = ['전체','청소기','걸레/대걸레','세제/약품','사다리','카트','보호장비','공구','기타'];
 const CAT_EMOJI  = {'전체':'🔍','청소기':'🧹','걸레/대걸레':'🫧','세제/약품':'🧴','사다리':'🪜','카트':'🛒','보호장비':'🧤','공구':'🔧','기타':'📦'};
 const STATUS_TXT = { available:'판매중', reserved:'예약중', sold:'판매완료', deleted:'삭제' };
