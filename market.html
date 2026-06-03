@@ -162,10 +162,7 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
 .btn-submit:disabled{background:var(--g300);cursor:not-allowed;}
 
 /* ── 네비 ──────────────────────────────── */
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,.96);border-top:1px solid var(--g200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--g400);cursor:pointer;}
-.ni.on{color:var(--pr);font-weight:700;}
-.ni-ico{font-size:20px;line-height:1;}
+/* 네비 — V1.6 통일: design.css의 .ds-nav 사용 */
 
 /* 토스트 */
 /* #toast — design.css 글로벌 (260528) */
@@ -374,13 +371,13 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
 </div>
 
 <!-- 네비 -->
-<div class="nav">
-  <button class="ni" onclick="location.href='index.html'"><div class="ni-ico">🏠</div><div>홈</div></button>
-  <button class="ni" onclick="location.href='ssak-quote.html'"><div class="ni-ico">⚡</div><div>고객케어</div></button>
-  <button class="ni" onclick="location.href='schedule.html'"><div class="ni-ico">📅</div><div>스케줄</div></button>
-  <button class="ni" onclick="location.href='workforce.html'"><div class="ni-ico">👥</div><div>동료</div></button>
-  <button class="ni" onclick="location.href='my.html'"><div class="ni-ico">👤</div><div>MY</div></button>
-</div>
+<nav class="ds-nav">
+  <button class="ds-nav-item" onclick="location.href='index.html'"><div class="ds-nav-ico">🏠</div><div>홈</div></button>
+  <button class="ds-nav-item" onclick="location.href='ssak-quote.html'"><div class="ds-nav-ico">⚡</div><div>고객케어</div></button>
+  <button class="ds-nav-item" onclick="location.href='schedule.html'"><div class="ds-nav-ico">📅</div><div>스케줄</div></button>
+  <button class="ds-nav-item" onclick="location.href='workforce.html'"><div class="ds-nav-ico">👥</div><div>동료</div></button>
+  <button class="ds-nav-item" onclick="location.href='my.html'"><div class="ds-nav-ico">👤</div><div>MY</div></button>
+</nav>
 
 <div id="toast"></div>
 
