@@ -877,26 +877,20 @@ async function loadHomeStats() {
     if (todayText) todayText.textContent = '일정을 불러오는 중이에요';
   }
 
-  // 이달 실적 — 매출은 hero 안, 완료/확정은 KPI 카드에 표시
+  // 이달 실적 — V1.5: hero 매출 row 제거됨, tile-grid + KPI에만 표시
   try {
     const r2 = await fetch(SERVER + '/api/stats/monthly');
     const d2 = await r2.json();
     if (d2.success) {
-      const heroRev     = document.getElementById('hero-revenue');
-      const heroTrend   = document.getElementById('hero-trend');
+      // hero 관련 잔여 ref 제거 (V1.6 cleanup)
       const perfDone    = document.getElementById('perf-done');
       const perfBooked  = document.getElementById('perf-booked');
       const doneN = d2.done ?? 0;
       const revN  = d2.revenue ? Math.round(d2.revenue/10000) : 0;
       const bookN = d2.confirmed > 0 ? d2.confirmed : 0;
-      // hero 매출 — 데이터 있을 때만 행 자체 표시 (A 빈 데이터 자동 숨김)
-      const heroRevRow = document.getElementById('hero-rev-row');
-      if (heroRev && revN > 0) {
-        if (heroRevRow) heroRevRow.style.display = 'flex';
-        if (typeof countUp === 'function') countUp(heroRev, revN, { duration: 900 });
-        else heroRev.textContent = revN;
-      }
-      // hero 트렌드 (지난달 비교 — 데이터 있을 때만)
+      // V1.5 hero 매출 row 제거됨 — 해당 코드 블록 제거
+      // hero 트렌드 ref만 임시 유지 (다른 곳 호환)
+      const heroTrend = null;
       if (heroTrend && d2.revenue_change_pct !== undefined && d2.revenue_change_pct !== null) {
         const pct = Math.round(d2.revenue_change_pct);
         const dir = pct >= 0 ? '↗' : '↘';
