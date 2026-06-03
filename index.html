@@ -279,7 +279,12 @@
 }
 .tile-lbl { font-size: 14px; font-weight: 700; color: var(--c-g900, #1A1F2C); }
 .tile-sub { font-size: 11px; color: var(--c-g500, #8B95A1); }
-.tile-sub b { font-weight: 800; font-variant-numeric: tabular-nums; }
+/* F 패턴: 숫자는 항상 다크 통일 (정보 채널) — 알림은 뱃지로만 */
+.tile-sub b {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-g900, #1A1F2C);
+}
 .tile-badge {
   position: absolute; top: 10px; right: 10px;
   background: var(--c-pr, #FF385C); color: #fff;
@@ -386,18 +391,18 @@
         <div>
           <div class="tile-ico" style="background:#FAF5FF; color:#A855F7;">💰</div>
           <div class="tile-lbl" style="margin-top:6px;">정산</div>
-          <div class="tile-sub">이번 달 <b id="tile-revenue-n" style="color:#A855F7;">-</b>만</div>
+          <div class="tile-sub">이번 달 <b id="tile-revenue-n">-</b>만</div>
         </div>
         <svg id="tile-spark" class="tile-spark" viewBox="0 0 80 36" width="80" height="36" style="overflow:visible; display:none;">
           <defs>
             <linearGradient id="spk" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stop-color="#A855F7" stop-opacity=".35"/>
-              <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+              <stop offset="0%" stop-color="#FF385C" stop-opacity=".35"/>
+              <stop offset="100%" stop-color="#FF385C" stop-opacity="0"/>
             </linearGradient>
           </defs>
           <path id="spark-area" d="" fill="url(#spk)"/>
-          <path id="spark-line" d="" fill="none" stroke="#A855F7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle id="spark-dot" cx="80" cy="6" r="2.5" fill="#A855F7"/>
+          <path id="spark-line" d="" fill="none" stroke="#FF385C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="spark-dot" cx="80" cy="6" r="2.5" fill="#FF385C"/>
         </svg>
       </div>
     </button>
@@ -935,7 +940,7 @@ async function loadHomeStats() {
         const tWfSub = document.getElementById('tile-workforce-sub');
         const tAppB  = document.getElementById('tile-applicants-badge');
         if (applicantsTotal > 0) {
-          if (tWfSub) tWfSub.innerHTML = `지원 <b style="color:#22C55E;">${applicantsTotal}</b>명 대기`;
+          if (tWfSub) tWfSub.innerHTML = `지원 <b>${applicantsTotal}</b>명 대기`;
           if (tAppB)  { tAppB.textContent = '+' + applicantsTotal; tAppB.style.display = 'inline-block'; }
         } else if (openJobs.length > 0) {
           if (tWfSub) tWfSub.textContent = `모집 ${openJobs.length}건 진행 중`;
