@@ -412,10 +412,10 @@
 
 | Tile | 아이콘 배경 | 아이콘 색 | 라우팅 |
 | --- | --- | --- | --- |
-| 📅 예약 확정 | `#EFF6FF` | `#3B82F6` (블루 = 일정) | `schedule.html?filter=confirmed` |
-| 📝 견적함 | `#FFF7ED` | `#F59E0B` (앰버 = 문서) | `schedule.html` |
+| 📅 예약 확정 | `#EFF6FF` | `#3B82F6` (블루 = 일정) | `schedule.html` |
+| 📝 견적함 | `#FFF7ED` | `#F59E0B` (앰버 = 문서) | `quote-list.html` |
 | 👥 동료 | `#F0FDF4` | `#22C55E` (그린 = 사람) | `workforce.html` |
-| 💰 정산 | `#FAF5FF` | `#A855F7` (보라 = 금융) | `schedule.html?tab=stats` |
+| 💰 정산 | `#FAF5FF` | `#A855F7` (보라 = 금융) | `my.html` (매출 통계 영역) |
 
 ### 14.3 F 색 정책 — "정보 / 알림" 두 채널 분리
 
