@@ -1,5 +1,6 @@
 // 싹싹 앱 Service Worker v2.0 (Web Push 지원)
-const CACHE_NAME = 'ssak-v11';
+// V1.6 디자인 통일 cache bust — 2026-06-04
+const CACHE_NAME = 'ssak-v12';
 const STATIC_ASSETS = [
   '/',
   '/index.html?v=8',
