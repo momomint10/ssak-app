@@ -887,14 +887,19 @@ async function loadHomeStats() {
       if (tPendingB && pendingCt > 0) { tPendingB.textContent = pendingCt; tPendingB.style.display = 'inline-block'; }
       if (tRevenueN) tRevenueN.textContent = revN > 0 ? revN : '-';
 
-      // 정산 sparkline — weekly 데이터 있으면 그림, 없으면 monthly + 트렌드만으로 추정 곡선
+      // 정산 sparkline — /api/stats/weekly에서 6주 데이터, 실패 시 fallback 곡선
       const spark = document.getElementById('tile-spark');
-      const weekly = d2.weekly_revenue || null;  // 백엔드 미존재 시 null
-      let points;
-      if (Array.isArray(weekly) && weekly.length >= 2) {
-        points = weekly.slice(-6);
-      } else if (revN > 0) {
-        // fallback: 트렌드 방향만 반영한 단조 곡선
+      let points = null;
+      try {
+        const rW = await fetch(SERVER + '/api/stats/weekly?weeks=6');
+        const dW = await rW.json();
+        if (dW && dW.success && Array.isArray(dW.weekly_revenue) && dW.weekly_revenue.length >= 2) {
+          // 모두 0인 경우는 추세 의미 없음 → fallback로 떨어뜨림
+          const sum = dW.weekly_revenue.reduce((s, v) => s + v, 0);
+          if (sum > 0) points = dW.weekly_revenue;
+        }
+      } catch(_) { /* network 실패 시 fallback */ }
+      if (!points && revN > 0) {
         const pct = (d2.revenue_change_pct ?? 0) / 100;
         const base = Math.max(1, revN / (1 + pct));
         points = [base*0.85, base*0.92, base*0.88, base, revN*0.95, revN];
@@ -917,22 +922,23 @@ async function loadHomeStats() {
     }
   } catch(e) {}
 
-  // 동료 — 내 채용공고 지원자 합산
+  // 동료 — 내 채용공고 지원자 합산 (서버 단 필터 endpoint 사용)
   try {
     const anonId = (typeof getAnon === 'function') ? getAnon() : null;
     if (anonId) {
-      const rJ = await fetch(SERVER + '/api/jobs?status=open');
+      const rJ = await fetch(SERVER + '/api/jobs/my/posted?anon_id=' + encodeURIComponent(anonId));
       const dJ = await rJ.json();
       if (dJ && Array.isArray(dJ.data)) {
-        const myJobs = dJ.data.filter(j => j.owner_anon_id === anonId || j.anon_id === anonId);
-        const applicantsTotal = myJobs.reduce((s, j) => s + (j.applicant_count || 0), 0);
+        // open 상태만 카운트 (closed/deleted 제외)
+        const openJobs = dJ.data.filter(j => j.status === 'open');
+        const applicantsTotal = openJobs.reduce((s, j) => s + (j.applicant_count || 0), 0);
         const tWfSub = document.getElementById('tile-workforce-sub');
         const tAppB  = document.getElementById('tile-applicants-badge');
         if (applicantsTotal > 0) {
           if (tWfSub) tWfSub.innerHTML = `지원 <b style="color:#22C55E;">${applicantsTotal}</b>명 대기`;
           if (tAppB)  { tAppB.textContent = '+' + applicantsTotal; tAppB.style.display = 'inline-block'; }
-        } else if (myJobs.length > 0) {
-          if (tWfSub) tWfSub.textContent = `모집 ${myJobs.length}건 진행 중`;
+        } else if (openJobs.length > 0) {
+          if (tWfSub) tWfSub.textContent = `모집 ${openJobs.length}건 진행 중`;
         }
       }
     }
