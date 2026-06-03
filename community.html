@@ -36,13 +36,13 @@
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260604-3">
+<link rel="preload" as="script" href="utils.js?v=20260604-4">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — 커뮤니티</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260604-3">
+<link rel="stylesheet" href="design.css?v=20260604-4">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -84,6 +84,11 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* 검색 안내 */
 .search-info{padding:8px 16px 0;font-size:12px;color:var(--gray-400);display:none;}
 .search-info b{color:var(--gray-700);}
+
+/* 정렬 chip (V1.6 — 다크 fill 활성) */
+.sort-row{display:flex;gap:6px;padding:8px 0 0;}
+.sort-chip{padding:5px 12px;border-radius:9999px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer;font-family:inherit;transition:.15s;}
+.sort-chip.on{background:var(--gray-900);border-color:var(--gray-900);color:#fff;}
 
 /* 카테고리 탭 (Blind 스타일 칩 — 가로 스크롤) */
 .cat-tabs{display:flex;gap:6px;padding:10px 0 4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
@@ -200,7 +205,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
 /* 토스트 — design.css 글로벌 (260528) */
 </style>
-<script src="utils.js?v=20260604-3"></script>
+<script src="utils.js?v=20260604-4"></script>
 </head>
 <body>
 <div class="shell">
@@ -216,6 +221,12 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
         oninput="onSearch(this.value)"
         onkeydown="if(event.key==='Enter') doSearch()">
       <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
+    </div>
+    <!-- 정렬 chip (V1.6 — 다크 fill) -->
+    <div class="sort-row" id="sort-row">
+      <button class="sort-chip on" data-sort="latest" onclick="onSort('latest')">최신순</button>
+      <button class="sort-chip" data-sort="popular" onclick="onSort('popular')">인기순</button>
+      <button class="sort-chip" data-sort="comments" onclick="onSort('comments')">댓글 많은순</button>
     </div>
     <!-- 카테고리 칩 (Blind 스타일) -->
     <div class="cat-tabs" id="cat-tabs">
@@ -335,6 +346,7 @@ function hl(t, kw) {
 // ── 상태 ─────────────────────────────────────────────────────────
 let page=0, hasMore=true, loading=false, searchKw='', searchTimer=null;
 let curId=null, curLiked=false, curCat='';
+let curSort='latest';  // V1.6 — latest | popular | comments
 let picBase64=null, picMime=null;
 let writeCat='자유';  // 작성 모달 선택 카테고리
 
@@ -375,6 +387,7 @@ async function loadFeed(reset=false) {
     let url=SERVER+'/api/community/posts?page='+page+'&limit=20';
     if(searchKw) url+='&search='+encodeURIComponent(searchKw);
     if(curCat) url+='&category='+encodeURIComponent(curCat);
+    if(curSort && curSort!=='latest') url+='&sort='+encodeURIComponent(curSort);
     const d=await fetch(url).then(r=>r.json());
     if(!d.success) throw new Error(d.error||'서버 오류');
     if(page===0) feed.innerHTML='';
@@ -425,6 +438,15 @@ function onCat(cat){
   curCat = cat;
   document.querySelectorAll('.cat-tab').forEach(t => {
     t.classList.toggle('on', (t.getAttribute('data-cat') || '') === cat);
+  });
+  loadFeed(true);
+}
+
+// 정렬 — 클라이언트 측 (서버 sort 파라미터 보내고 fallback은 client 정렬)
+function onSort(sort){
+  curSort = sort;
+  document.querySelectorAll('.sort-chip').forEach(t => {
+    t.classList.toggle('on', t.getAttribute('data-sort') === sort);
   });
   loadFeed(true);
 }
