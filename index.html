@@ -257,6 +257,41 @@
   background: var(--c-g300, #D1D6DB);
   flex-shrink: 0;
 }
+
+/* Action Tile Grid 2×2 — V1.5 단촐 해소 */
+.tile-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin: 12px 16px 0;
+}
+.tile {
+  background: #fff; border-radius: 14px; padding: 14px 12px;
+  display: flex; flex-direction: column; gap: 6px;
+  box-shadow: 0 2px 6px rgba(20,30,50,.04);
+  position: relative;
+  border: none; text-align: left;
+  font-family: inherit; color: inherit;
+  cursor: pointer;
+}
+.tile-ico {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.tile-lbl { font-size: 14px; font-weight: 700; color: var(--c-g900, #1A1F2C); }
+.tile-sub { font-size: 11px; color: var(--c-g500, #8B95A1); }
+.tile-sub b { font-weight: 800; font-variant-numeric: tabular-nums; }
+.tile-badge {
+  position: absolute; top: 10px; right: 10px;
+  background: var(--c-pr, #FF385C); color: #fff;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 8px;
+  min-width: 20px; text-align: center;
+}
+.tile-badge.green { background: #22C55E; }
+.tile-row {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+}
+.tile-spark { margin-top: 4px; flex-shrink: 0; }
 .recent-ico {
   width:40px; height:40px; border-radius:11px;
   display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
@@ -285,13 +320,6 @@
       <div class="ds-hero-greet" id="greeting">좋은 아침이에요</div>
       <div class="ds-hero-name"><span id="user-name">사장님</span></div>
       <div class="ds-hero-company" id="hero-company" style="display:none;"></div>
-      <div class="ds-hero-rev-row" id="hero-rev-row" style="display:none;">
-        <div>
-          <div class="ds-hero-rev-lbl">이달 매출</div>
-          <div class="ds-hero-rev-val"><span id="hero-revenue">-</span><span class="ds-hero-rev-unit">만원</span></div>
-        </div>
-        <div class="ds-hero-trend" id="hero-trend" style="display:none;"></div>
-      </div>
     </div>
   </div>
 
@@ -321,7 +349,7 @@
       </div>
     </div>
 
-  <!-- 빠른 실행: 고객케어 hero 단일 (보조 카드는 고객케어 내부와 중복이라 제거) -->
+  <!-- 빠른 실행: 고객케어 hero (primary) -->
   <div class="quick-grid ds-fade-in ds-fade-in-1" style="margin-top:16px;">
     <button class="quick-btn quick-hero ds-tap-card" onclick="goTo('quote')">
       <div class="quick-ico" style="background:#FFF0EC;">⚡</div>
@@ -330,6 +358,48 @@
         <div class="quick-hero-sub">견적 · 계약 · 완료 보고를 한 번에</div>
       </div>
       <div class="quick-hero-arrow">›</div>
+    </button>
+  </div>
+
+  <!-- 액션 tile 2×2 — 단촐 해소 핵심 -->
+  <div class="tile-grid ds-fade-in ds-fade-in-1">
+    <button class="tile ds-tap-card" onclick="location.href='schedule.html?filter=confirmed'">
+      <div class="tile-ico" style="background:#EFF6FF; color:#3B82F6;">📅</div>
+      <div class="tile-lbl">예약 확정</div>
+      <div class="tile-sub">이번 주 <b id="tile-booked-n">-</b>건</div>
+      <span class="tile-badge" id="tile-booked-badge" style="display:none;"></span>
+    </button>
+    <button class="tile ds-tap-card" onclick="location.href='schedule.html'">
+      <div class="tile-ico" style="background:#FFF7ED; color:#F59E0B;">📝</div>
+      <div class="tile-lbl">견적함</div>
+      <div class="tile-sub">대기 <b id="tile-pending-n">-</b>건</div>
+      <span class="tile-badge" id="tile-pending-badge" style="display:none;"></span>
+    </button>
+    <button class="tile ds-tap-card" onclick="location.href='workforce.html'">
+      <div class="tile-ico" style="background:#F0FDF4; color:#22C55E;">👥</div>
+      <div class="tile-lbl">동료</div>
+      <div class="tile-sub" id="tile-workforce-sub">팀원 관리</div>
+      <span class="tile-badge green" id="tile-applicants-badge" style="display:none;"></span>
+    </button>
+    <button class="tile ds-tap-card" onclick="location.href='schedule.html?tab=stats'">
+      <div class="tile-row">
+        <div>
+          <div class="tile-ico" style="background:#FAF5FF; color:#A855F7;">💰</div>
+          <div class="tile-lbl" style="margin-top:6px;">정산</div>
+          <div class="tile-sub">이번 달 <b id="tile-revenue-n" style="color:#A855F7;">-</b>만</div>
+        </div>
+        <svg id="tile-spark" class="tile-spark" viewBox="0 0 80 36" width="80" height="36" style="overflow:visible; display:none;">
+          <defs>
+            <linearGradient id="spk" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#A855F7" stop-opacity=".35"/>
+              <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path id="spark-area" d="" fill="url(#spk)"/>
+          <path id="spark-line" d="" fill="none" stroke="#A855F7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle id="spark-dot" cx="80" cy="6" r="2.5" fill="#A855F7"/>
+        </svg>
+      </div>
     </button>
   </div>
 
@@ -802,8 +872,71 @@ async function loadHomeStats() {
           kpiInline.style.display = 'none';
         }
       }
+
+      // ── V1.5 tile-grid 와이어링 ───────────────────────────
+      const tBookedN  = document.getElementById('tile-booked-n');
+      const tBookedB  = document.getElementById('tile-booked-badge');
+      const tPendingN = document.getElementById('tile-pending-n');
+      const tPendingB = document.getElementById('tile-pending-badge');
+      const tRevenueN = document.getElementById('tile-revenue-n');
+      const pendingCt = (typeof pending !== 'undefined') ? pending.length : 0;
+
+      if (tBookedN)  tBookedN.textContent  = bookN || 0;
+      if (tBookedB && bookN > 0)  { tBookedB.textContent = bookN;     tBookedB.style.display = 'inline-block'; }
+      if (tPendingN) tPendingN.textContent = pendingCt;
+      if (tPendingB && pendingCt > 0) { tPendingB.textContent = pendingCt; tPendingB.style.display = 'inline-block'; }
+      if (tRevenueN) tRevenueN.textContent = revN > 0 ? revN : '-';
+
+      // 정산 sparkline — weekly 데이터 있으면 그림, 없으면 monthly + 트렌드만으로 추정 곡선
+      const spark = document.getElementById('tile-spark');
+      const weekly = d2.weekly_revenue || null;  // 백엔드 미존재 시 null
+      let points;
+      if (Array.isArray(weekly) && weekly.length >= 2) {
+        points = weekly.slice(-6);
+      } else if (revN > 0) {
+        // fallback: 트렌드 방향만 반영한 단조 곡선
+        const pct = (d2.revenue_change_pct ?? 0) / 100;
+        const base = Math.max(1, revN / (1 + pct));
+        points = [base*0.85, base*0.92, base*0.88, base, revN*0.95, revN];
+      }
+      if (spark && points && points.length >= 2) {
+        const max = Math.max(...points), min = Math.min(...points);
+        const range = (max - min) || 1;
+        const W = 80, H = 30, n = points.length;
+        const xs = points.map((_, i) => (i/(n-1)) * W);
+        const ys = points.map(v => H - ((v - min)/range) * (H - 4) - 2);
+        const linePath = xs.map((x, i) => (i === 0 ? 'M' : 'L') + x.toFixed(1) + ',' + ys[i].toFixed(1)).join(' ');
+        const areaPath = linePath + ` L${W},${H+6} L0,${H+6} Z`;
+        document.getElementById('spark-line').setAttribute('d', linePath);
+        document.getElementById('spark-area').setAttribute('d', areaPath);
+        const dot = document.getElementById('spark-dot');
+        dot.setAttribute('cx', xs[n-1].toFixed(1));
+        dot.setAttribute('cy', ys[n-1].toFixed(1));
+        spark.style.display = 'block';
+      }
     }
   } catch(e) {}
+
+  // 동료 — 내 채용공고 지원자 합산
+  try {
+    const anonId = (typeof getAnon === 'function') ? getAnon() : null;
+    if (anonId) {
+      const rJ = await fetch(SERVER + '/api/jobs?status=open');
+      const dJ = await rJ.json();
+      if (dJ && Array.isArray(dJ.data)) {
+        const myJobs = dJ.data.filter(j => j.owner_anon_id === anonId || j.anon_id === anonId);
+        const applicantsTotal = myJobs.reduce((s, j) => s + (j.applicant_count || 0), 0);
+        const tWfSub = document.getElementById('tile-workforce-sub');
+        const tAppB  = document.getElementById('tile-applicants-badge');
+        if (applicantsTotal > 0) {
+          if (tWfSub) tWfSub.innerHTML = `지원 <b style="color:#22C55E;">${applicantsTotal}</b>명 대기`;
+          if (tAppB)  { tAppB.textContent = '+' + applicantsTotal; tAppB.style.display = 'inline-block'; }
+        } else if (myJobs.length > 0) {
+          if (tWfSub) tWfSub.textContent = `모집 ${myJobs.length}건 진행 중`;
+        }
+      }
+    }
+  } catch(e) { /* 무음 fallback */ }
 }
 
 // 벨 아이콘 상태 — 3 state: subscribed / available / denied
