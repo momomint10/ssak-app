@@ -60,19 +60,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--g50);color:var(--g900);}
 .shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:90px;}
-/* ── 헤더 ── */
-.hd{
-  background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
-  padding:12px 16px 0;border-bottom:0.5px solid #f5e8e4;
-  position:sticky;top:0;z-index:50;
-  position:relative;
-}
-.hd::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;
-  height:3px;background:linear-gradient(90deg,var(--c-pr, #FF385C) 0%,#FC8181 100%);
-}
-.hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-/* .hd-title / .hd-sub 페이지 인라인 정의 삭제 → design.css의 .ds-page-title (22px 600) / .ds-page-subtitle 이 시각 결정 */
+/* ── 헤더 ── (V1.6 통일: design.css의 .ds-page-header 사용) */
 .btn-hd{background:#fff;color:var(--c-pr,#FF385C);border:1.5px solid rgba(255,56,92,0.35);border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s;}
 .btn-hd:hover{background:rgba(255,56,92,0.06);border-color:rgba(255,56,92,0.55);}
 .btn-hd:active{background:rgba(255,56,92,0.10);}
@@ -378,21 +366,22 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 .match-card{background:linear-gradient(135deg,var(--c-pr, #FF385C),#FF6B8A);border-radius:14px;padding:16px;margin-bottom:12px;color:#fff;}
 .match-title{font-size:14px;font-weight:var(--fw-bold);margin-bottom:8px;}
 .match-info{font-size:12px;line-height:1.8;background:rgba(255,255,255,.15);border-radius:8px;padding:10px;}
-/* ── 네비 ── */
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,.96);border-top:1px solid var(--g200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--g400);cursor:pointer;}
-.ni.on{color:var(--c-pr, #FF385C);font-weight:700;}
-.ni-ico{font-size:20px;line-height:1;}
+/* ── 네비 ── (V1.6 통일: design.css의 .ds-nav 사용) */
 /* #toast — design.css 글로벌 (260528) */
   </style>
 <script src="utils.js"></script>
 </head>
 <body>
 <div class="shell">
-  <div class="hd">
-    <div class="hd-top">
-      <div><h1 class="ds-page-title hd-title">동료</h1><p class="ds-page-subtitle hd-sub">Coworkers</p></div>
-      <button class="btn-hd" id="hd-btn" onclick="onHdBtn()">프로필 등록</button>
+  <div class="ds-page-header">
+    <div class="ds-page-header-row">
+      <div class="ds-page-titles">
+        <h1 class="ds-page-title">동료</h1>
+        <p class="ds-page-h-sub">팀원 · 매칭 · 지원자</p>
+      </div>
+      <div class="ds-page-actions">
+        <button class="btn-hd" id="hd-btn" onclick="onHdBtn()">프로필 등록</button>
+      </div>
     </div>
     <div class="tab-row">
       <div class="tabs-seg">
@@ -546,13 +535,13 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
 </div>
 
 <!-- 네비 -->
-<div class="nav">
-  <button class="ni" onclick="location.href='index.html'"><div class="ni-ico">🏠</div><div>홈</div></button>
-  <button class="ni" onclick="location.href='ssak-quote.html'"><div class="ni-ico">⚡</div><div>고객케어</div></button>
-  <button class="ni" onclick="location.href='schedule.html'"><div class="ni-ico">📅</div><div>스케줄</div></button>
-  <button class="ni on"><div class="ni-ico">👥</div><div>동료</div></button>
-  <button class="ni" onclick="location.href='my.html'"><div class="ni-ico">👤</div><div>MY</div></button>
-</div>
+<nav class="ds-nav">
+  <button class="ds-nav-item" onclick="location.href='index.html'"><div class="ds-nav-ico">🏠</div><div>홈</div></button>
+  <button class="ds-nav-item" onclick="location.href='ssak-quote.html'"><div class="ds-nav-ico">⚡</div><div>고객케어</div></button>
+  <button class="ds-nav-item" onclick="location.href='schedule.html'"><div class="ds-nav-ico">📅</div><div>스케줄</div></button>
+  <button class="ds-nav-item on"><div class="ds-nav-ico">👥</div><div>동료</div></button>
+  <button class="ds-nav-item" onclick="location.href='my.html'"><div class="ds-nav-ico">👤</div><div>MY</div></button>
+</nav>
 <div id="toast"></div>
 
 <script>

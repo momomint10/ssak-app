@@ -123,12 +123,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .app-version{text-align:center;padding:20px;color:var(--gray-400);font-size:12px;}
 .app-version strong{display:block;font-size:15px;font-weight:var(--fw-bold);color:var(--primary);margin-bottom:4px;}
 
-/* 하단 네비 */
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(255,255,255,0.95);border-top:1px solid var(--gray-200);backdrop-filter:blur(20px);display:flex;padding:8px 0 env(safe-area-inset-bottom,8px);z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,0.06);}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;background:none;border:none;font-family:inherit;font-size:10px;font-weight:500;color:var(--gray-400);cursor:pointer;}
-.nav-item:active{transform:scale(.92);}
-.nav-item.active{color:var(--primary);font-weight:700;}
-.nav-icon{font-size:20px;line-height:1;}
+/* 하단 네비 — V1.6 통일: design.css의 .ds-nav 사용 */
 
 /* 토스트 — design.css 글로벌 (260528) */
 .trust-card{background:#fff;border-radius:var(--radius);margin:12px 16px;padding:14px 18px;box-shadow:var(--shadow);} .trust-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;} .trust-row{display:flex;gap:12px;} .trust-stat{flex:1;text-align:center;padding:8px 0;} .trust-val{font-size:22px;font-weight:var(--fw-bold);color:var(--gray-900);margin-bottom:2px;} .trust-val.amber{color:#F59E0B;} .trust-lbl{font-size:11px;color:var(--gray-500);} .trust-empty{font-size:11px;color:var(--gray-400);text-align:center;padding:8px 0;} </style>
@@ -269,13 +264,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 </div>
 
 <!-- 하단 네비 -->
-<div class="bottom-nav">
-  <button class="nav-item ds-tap" onclick="location.href='index.html'"><div class="nav-icon">🏠</div><div>홈</div></button>
-  <button class="nav-item ds-tap" onclick="location.href='ssak-quote.html'"><div class="nav-icon">⚡</div><div>고객케어</div></button>
-  <button class="nav-item ds-tap" onclick="location.href='schedule.html'"><div class="nav-icon">📅</div><div>스케줄</div></button>
-  <button class="nav-item ds-tap" onclick="location.href='workforce.html'"><div class="nav-icon">👥</div><div>동료</div></button>
-  <button class="nav-item active ds-tap"><div class="nav-icon">👤</div><div>MY</div></button>
-</div>
+<nav class="ds-nav">
+  <button class="ds-nav-item ds-tap" onclick="location.href='index.html'"><div class="ds-nav-ico">🏠</div><div>홈</div></button>
+  <button class="ds-nav-item ds-tap" onclick="location.href='ssak-quote.html'"><div class="ds-nav-ico">⚡</div><div>고객케어</div></button>
+  <button class="ds-nav-item ds-tap" onclick="location.href='schedule.html'"><div class="ds-nav-ico">📅</div><div>스케줄</div></button>
+  <button class="ds-nav-item ds-tap" onclick="location.href='workforce.html'"><div class="ds-nav-ico">👥</div><div>동료</div></button>
+  <button class="ds-nav-item on ds-tap"><div class="ds-nav-ico">👤</div><div>MY</div></button>
+</nav>
 
 <!-- PIN 설정 모달 -->
 <div id="pin-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closePinModal()">
