@@ -1,6 +1,7 @@
 // 싹싹 앱 Service Worker v2.0 (Web Push 지원)
 // V1.6 디자인 통일 cache bust — 2026-06-04
-const CACHE_NAME = 'ssak-v12';
+// V13: fetch 옵션 cache:'no-store' 추가 — Safari standard cache 우회
+const CACHE_NAME = 'ssak-v13';
 const STATIC_ASSETS = [
   '/',
   '/index.html?v=8',
@@ -56,12 +57,17 @@ self.addEventListener('fetch', event => {
   // 동적 페이지(booking, sign) + 단축 URL(b/) — network-only (캐싱 안 함)
   const isDynamic = /\/(booking|sign)\.html/.test(url.pathname) || url.pathname.startsWith('/b/');
   if (isDynamic) {
-    event.respondWith(fetch(event.request).catch(() => new Response('서버 연결 오류', { status: 503 })));
+    event.respondWith(fetch(event.request, { cache: 'no-store' }).catch(() => new Response('서버 연결 오류', { status: 503 })));
     return;
   }
 
+  // HTML/CSS/JS는 Safari browser cache를 우회 — cache:'no-store'로 매번 fresh fetch
+  // 정적 자산이 GitHub Pages max-age=600에 묶여도 SW가 강제로 fresh 받음
+  const isStatic = /\.(html|css|js)(\?|$)/i.test(url.pathname + url.search) || url.pathname.endsWith('/');
+  const fetchOpts = isStatic ? { cache: 'no-store' } : undefined;
+
   event.respondWith(
-    fetch(event.request).then(response => {
+    fetch(event.request, fetchOpts).then(response => {
       if (response.ok && event.request.method === 'GET') {
         const clone = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
