@@ -1059,58 +1059,26 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
  * 페이지에서 명시적으로 override하지 않으면 자동 적용됨.
  * ════════════════════════════════════════════════════════════════ */
 
-/* ── 페이지 공통 헤더 hook (.header, .home-header, .page-header) ─── */
-/* 헤더 입체감 A안 (낮은 톤): 앰비언트 오브 + 컬러 그림자 + 메쉬 + 라인 글로우
-   + 모든 페이지 헤더 자동 sticky (스크롤 시 상단 고정 통일) */
+/* ── 페이지 공통 헤더 hook (V1.6 — 발광 제거) ───────────────────── */
+/* .header, .home-header, .page-header 자동 sticky + 단순 흰 배경 + 1px 분할 */
 :where(.header, .home-header, .page-header):not(.ds-page-header):not(.no-design-hook) {
   position: sticky;
   top: 0;
   z-index: 50;
-  overflow: hidden;
-  /* 메쉬 그라데이션 배경도 자동 부여 (페이지 인라인이 background을 override하지 않으면 적용) */
-  background:
-    radial-gradient(ellipse at 85% 0%, rgba(255, 56, 92, 0.08), transparent 50%),
-    radial-gradient(ellipse at 0% 100%, rgba(252, 129, 129, 0.04), transparent 50%),
-    linear-gradient(180deg, #FFFAF8 0%, #FFFFFF 100%);
-  box-shadow:
-    0 1px 0 rgba(20, 30, 50, 0.02),
-    0 3px 12px rgba(255, 56, 92, 0.05),
-    0 8px 24px rgba(255, 56, 92, 0.03);
-  backdrop-filter: saturate(160%) blur(5px);
-  -webkit-backdrop-filter: saturate(160%) blur(5px);
+  background: #fff;
+  border-bottom: 1px solid var(--c-g100);
 }
-/* 글로벌 헤더에도 앰비언트 오브 추가 (낮은 톤) */
-:where(.header, .page-header):not(.ds-page-header):not(.home-header):not(.no-design-hook)::before {
-  content: '';
-  position: absolute;
-  top: -70px; right: -50px;
-  width: 200px; height: 200px;
-  background: radial-gradient(circle, rgba(255, 56, 92, 0.14), transparent 70%);
-  filter: blur(20px);
-  pointer-events: none;
-  z-index: 0;
+/* V1.6: 발광 box-shadow, ::before 앰비언트 오브, ::after 코랄 글로우 라인 모두 제거 */
+:where(.header, .page-header, .home-header):not(.ds-page-header):not(.no-design-hook)::before,
+:where(.header, .page-header, .home-header):not(.ds-page-header):not(.no-design-hook)::after {
+  display: none !important;
 }
-/* .home-header 기존 ::before 톤 조정 (낮은 톤) */
-.home-header::before {
-  background: radial-gradient(circle, rgba(255, 56, 92, 0.14), transparent 70%) !important;
-  filter: blur(20px) !important;
-  width: 200px !important; height: 200px !important;
-  top: -70px !important; right: -50px !important;
-}
-/* 헤더 직계 자식은 z-index 위로 */
+/* .home-header inline ::before (페이지 정의) override — 동일 제거 */
+.home-header::before { display: none !important; }
+/* 헤더 직계 자식 z-index 안전망 */
 :where(.header, .home-header, .page-header):not(.ds-page-header):not(.no-design-hook) > * {
   position: relative;
   z-index: 1;
-}
-/* 글로벌 헤더 하단 라인 글로우 추가 (낮은 톤) — .home-header 포함 */
-:where(.header, .page-header, .home-header):not(.ds-page-header):not(.no-design-hook)::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--c-pr) 0%, #FC8181 50%, var(--c-pr) 100%);
-  box-shadow: 0 0 10px rgba(255, 56, 92, 0.35), 0 0 20px rgba(255, 56, 92, 0.20);
-  z-index: 2;
-  pointer-events: none;
 }
 
 /* ── 페이지 공통 카드 hook (페이지별 자체 카드 클래스도 포함) ───── */
