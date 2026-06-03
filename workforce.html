@@ -943,7 +943,7 @@ async function toggleJobStatus(jobId,curStatus){
 }
 
 async function confirmMatch(appId,nickname){
-  if(!confirm(`${nickname}님과 매칭을 확정할까요?\n매칭 완료 시 서로의 연락처가 공유되고\n스케줄에 자동으로 추가됩니다.`)) return;
+  if(!(await ssakConfirm(`${nickname}님과 매칭을 확정할까요?\n매칭 완료 시 서로의 연락처가 공유되고\n스케줄에 자동으로 추가됩니다.`))) return;
   const btn=document.getElementById('ap-'+appId)?.querySelector('.btn-match');
   if(btn){btn.disabled=true;btn.textContent='처리 중...';}
   try{

@@ -252,8 +252,7 @@ input:focus { border-color: var(--c-pr, #FF385C); }
 // 진입 가드 — JWT 검증 + owner 확인
 const me = requireAuth();
 if (me.role !== 'owner') {
-  alert('관리자(owner) 권한이 필요합니다.');
-  location.replace('/index.html');
+  ssakAlert('관리자(owner) 권한이 필요합니다.').then(() => location.replace('/index.html'));
 }
 document.getElementById('me-info').textContent =
   (me.name || me.phone) + ' (Owner)';
@@ -364,7 +363,7 @@ async function addUser() {
 
 async function toggleStatus(id, status) {
   const verb = status === 'disabled' ? '비활성화' : '재활성화';
-  if (!confirm(`이 사용자를 ${verb}할까요?`)) return;
+  if (!(await ssakConfirm(`이 사용자를 ${verb}할까요?`))) return;
   try {
     const r = await fetchAuth(SERVER + '/api/admin/users/' + id, {
       method: 'PATCH',
@@ -378,7 +377,7 @@ async function toggleStatus(id, status) {
 }
 
 async function delUser(id, label) {
-  if (!confirm(`${label} 사용자를 삭제할까요?\n삭제 후에는 다시 등록해야 합니다.`)) return;
+  if (!(await ssakConfirm(`${label} 사용자를 삭제할까요?\n삭제 후에는 다시 등록해야 합니다.`))) return;
   try {
     const r = await fetchAuth(SERVER + '/api/admin/users/' + id, { method: 'DELETE' });
     const d = await r.json();
@@ -441,7 +440,7 @@ async function saveAdminPin() {
     alert.textContent = '';
     alert.style.display = 'none';
     closeAdminPin();
-    setTimeout(() => window.alert(msg), 100);
+    setTimeout(() => ssakAlert(msg), 100);
     toast('✅ PIN 설정 완료');
   } catch (e) {
     alert.textContent = '서버 오류: ' + e.message;
@@ -452,7 +451,7 @@ async function saveAdminPin() {
 }
 async function removeAdminPin() {
   if (!_adminPinTarget) return;
-  if (!confirm(`${_adminPinTarget.label}의 PIN을 해제할까요?\n사용자는 SMS 인증으로 다시 로그인해야 합니다.`)) return;
+  if (!(await ssakConfirm(`${_adminPinTarget.label}의 PIN을 해제할까요?\n사용자는 SMS 인증으로 다시 로그인해야 합니다.`))) return;
   try {
     const r = await fetchAuth(SERVER + '/api/admin/users/' + _adminPinTarget.id + '/pin', { method: 'DELETE' });
     const d = await r.json();
@@ -494,8 +493,8 @@ function logRow(L) {
   </div>`;
 }
 
-function logout() {
-  if (!confirm('로그아웃할까요?')) return;
+async function logout() {
+  if (!(await ssakConfirm('로그아웃할까요?'))) return;
   clearJwt();
   location.replace('/login.html');
 }

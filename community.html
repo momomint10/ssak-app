@@ -352,7 +352,7 @@ async function ensureBusinessName(action='글 작성'){
   if (name) return name;
   name = (prompt(`${action}에 표시할 사업장명을 입력하세요.\n(예: 서프로클린)\n\n한 번 입력하면 다음부터 자동 사용됩니다.`) || '').trim();
   if (!name) return null;
-  if (name.length > 40) { alert('40자 이내로 입력해 주세요.'); return null; }
+  if (name.length > 40) { (await ssakAlert('40자 이내로 입력해 주세요.')); return null; }
   setBusinessName(name);
   return name;
 }
@@ -525,7 +525,7 @@ async function submitCmt(){
   } catch(e){toast('오류: '+e.message);}
 }
 async function delCmt(id){
-  if(!confirm('댓글을 삭제할까요?')) return;
+  if(!(await ssakConfirm('댓글을 삭제할까요?'))) return;
   try {
     const d=await fetch(SERVER+'/api/community/comments/'+id,{
       method:'DELETE',headers:{'Content-Type':'application/json'},
@@ -540,7 +540,7 @@ async function delCmt(id){
   } catch(e){toast('오류: '+e.message);}
 }
 async function delPost(){
-  if(!confirm('게시글을 삭제할까요?')) return;
+  if(!(await ssakConfirm('게시글을 삭제할까요?'))) return;
   try {
     const d=await fetch(SERVER+'/api/community/posts/'+curId,{
       method:'DELETE',headers:{'Content-Type':'application/json'},

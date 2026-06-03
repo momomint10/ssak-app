@@ -1039,7 +1039,7 @@ function updateRepeatInfo() {
 
 async function deleteBooking() {
   if (!editingId) return;
-  if (!confirm('이 예약을 삭제하시겠습니까?')) return;
+  if (!(await ssakConfirm('이 예약을 삭제하시겠습니까?'))) return;
   const targetId = editingId;
   schedules = schedules.filter(s => s.id !== targetId);
   saveSchedules();
@@ -1194,7 +1194,7 @@ async function approveBooking(id, bStr) {
 }
 
 async function rejectBooking(id) {
-  if (!confirm('이 예약신청을 거절하시겠습니까?')) return;
+  if (!(await ssakConfirm('이 예약신청을 거절하시겠습니까?'))) return;
   try {
     const ak3 = JSON.parse(localStorage.getItem('ssak_cfg') || '{}').adminKey || '';
     await fetch(SERVER + '/api/bookings/' + id + '/status', {
@@ -1287,7 +1287,7 @@ function actionToggleStatus() {
 async function actionDelete() {
   const id = actionTargetId;
   if (!id) return;
-  if (!confirm('이 예약을 삭제하시겠습니까?')) return;
+  if (!(await ssakConfirm('이 예약을 삭제하시겠습니까?'))) return;
   schedules = schedules.filter(s => s.id !== id);
   saveSchedules();
   closeActionSheet();
@@ -1563,7 +1563,7 @@ function bindSwipeHandlers() {
 }
 
 async function swipeDelete(id) {
-  if (!confirm('이 예약을 삭제하시겠습니까?')) return;
+  if (!(await ssakConfirm('이 예약을 삭제하시겠습니까?'))) return;
   schedules = schedules.filter(s => s.id !== id);
   saveSchedules();
   if (viewMode === 'month') { renderCalendar(); renderList(); }

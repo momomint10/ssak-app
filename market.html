@@ -535,7 +535,7 @@ async function setStatus(st){
 
 // 삭제
 async function deleteListing(){
-  if(!confirm('이 물품을 삭제할까요?')) return;
+  if(!(await ssakConfirm('이 물품을 삭제할까요?'))) return;
   try{
     const d = await fetch(SERVER+'/api/market/listings/'+curId,{
       method:'DELETE', headers:{'Content-Type':'application/json'},

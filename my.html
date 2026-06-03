@@ -511,7 +511,7 @@ async function savePin(){
 }
 
 async function removePin(){
-  if (!confirm('PIN을 해제할까요?\n다시 SMS로만 로그인하게 됩니다.')) return;
+  if (!(await ssakConfirm('PIN을 해제할까요?\n다시 SMS로만 로그인하게 됩니다.'))) return;
   try {
     const r = await fetch(SERVER + '/api/auth/pin', { method: 'DELETE' });
     const d = await r.json();
@@ -525,8 +525,8 @@ async function removePin(){
   }
 }
 
-function confirmSignOut(){
-  if (!confirm('로그아웃하시겠어요?\n다시 사용하려면 SMS 인증으로 로그인해야 합니다.')) return;
+async function confirmSignOut(){
+  if (!(await ssakConfirm('로그아웃하시겠어요?\n다시 사용하려면 SMS 인증으로 로그인해야 합니다.'))) return;
   if (typeof clearJwt === 'function') clearJwt();
   else { localStorage.removeItem('ssak_jwt'); localStorage.removeItem('ssak_user'); }
   // 자동 로그인 토큰도 함께 제거 (다음 로그인부터 인증 필요)
@@ -578,7 +578,7 @@ function renderTrustDevices(list){
 }
 
 async function removeTrustDevice(id){
-  if (!confirm('이 기기의 자동 로그인을 해제할까요?\n그 기기는 다음 접속 시 인증번호를 받아야 합니다.')) return;
+  if (!(await ssakConfirm('이 기기의 자동 로그인을 해제할까요?\n그 기기는 다음 접속 시 인증번호를 받아야 합니다.'))) return;
   try {
     const r = await fetch(SERVER + '/api/auth/trust-devices/' + id, {
       method: 'DELETE',
@@ -625,7 +625,7 @@ async function onHeroFileSelected(e) {
   }
 }
 
-function _updateHeroRow(hasImg) {
+async function _updateHeroRow(hasImg) {
   const badge = document.getElementById('hero-row-badge');
   const sub = document.getElementById('hero-row-sub');
   if (hasImg) {
@@ -645,7 +645,7 @@ function _updateHeroRow(hasImg) {
   const start = () => { timer = setTimeout(async () => {
     timer = null;
     if (!ssakGetHeroUrl()) return;
-    if (!confirm('홈 화면 사진을 제거할까요?')) return;
+    if (!(await ssakConfirm('홈 화면 사진을 제거할까요?'))) return;
     const r = await ssakRemoveHeroImage();
     if (r.ok) { toast('홈 사진이 제거됐어요'); _updateHeroRow(false); }
     else toast(r.err || '제거 실패');
@@ -673,8 +673,8 @@ _updateHeroRow(!!ssakGetHeroUrl());
 })();
 
 // 초기화 (로그아웃)
-function confirmLogout() {
-  if (!confirm('앱 데이터와 설정을 모두 초기화할까요?\n(스케줄, 설정, 이력이 모두 삭제됩니다)')) return;
+async function confirmLogout() {
+  if (!(await ssakConfirm('앱 데이터와 설정을 모두 초기화할까요?\n(스케줄, 설정, 이력이 모두 삭제됩니다)'))) return;
   const keys = ['ssak_cfg','ssak_schedules','ssak_history','ssak_templates','ssak_faqs','ssak_anon_id'];
   keys.forEach(k => localStorage.removeItem(k));
   toast('✅ 초기화 완료! 홈으로 이동합니다...');

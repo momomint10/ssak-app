@@ -1063,8 +1063,8 @@ function saveHistory(to,msg,isNight,type,customerName){
   // 서버 sms_history는 SMS 발송 시 백엔드가 자동 insert → 1초 후 진실 데이터로 교체
   setTimeout(syncServerHistory, 1000);
 }
-function clearHistory(){if(!confirm('전체 이력을 삭제할까요?'))return;smsHistory=[];localStorage.removeItem('ssak_history');renderHistory();toast('이력 삭제 완료');}
-function deleteSentHistory(time){if(!time)return;if(!confirm('이 항목을 삭제할까요?'))return;smsHistory=smsHistory.filter(h=>h.time!==time);localStorage.setItem('ssak_history',JSON.stringify(smsHistory));renderHistory();toast('삭제됨');}
+async function clearHistory(){if(!(await ssakConfirm('전체 이력을 삭제할까요?')))return;smsHistory=[];localStorage.removeItem('ssak_history');renderHistory();toast('이력 삭제 완료');}
+async function deleteSentHistory(time){if(!time)return;if(!(await ssakConfirm('이 항목을 삭제할까요?')))return;smsHistory=smsHistory.filter(h=>h.time!==time);localStorage.setItem('ssak_history',JSON.stringify(smsHistory));renderHistory();toast('삭제됨');}
 function resendFromHistory(time){
   if(!time)return;
   const h=smsHistory.find(x=>x.time===time);
@@ -1353,7 +1353,7 @@ async function renderRemindersList(){
 }
 
 async function cancelReminder(id){
-  if(!confirm('이 예약 발송을 취소할까요?'))return;
+  if(!(await ssakConfirm('이 예약 발송을 취소할까요?')))return;
   try {
     const cfg = JSON.parse(localStorage.getItem('ssak_cfg')||'{}');
     const r = await fetch(`${SERVER}/api/reminders/${encodeURIComponent(id)}?anon_id=${encodeURIComponent(getAnon())}`, {
@@ -1499,8 +1499,8 @@ function loadDraft(kind,id){
   }
   setTimeout(()=>{applyFormData(kind,draft.data);toast('📂 불러왔습니다: '+draft.label);},150);
 }
-function deleteDraft(kind,id){
-  if(!confirm('이 작업을 삭제할까요?'))return;
+async function deleteDraft(kind,id){
+  if(!(await ssakConfirm('이 작업을 삭제할까요?')))return;
   const arr=listDrafts(kind).filter(d=>d.id!==id);
   saveDraftsRaw(kind,arr);
   updateDraftCount(kind);
@@ -1510,8 +1510,8 @@ function deleteDraft(kind,id){
   if(modal&&modal.style.display==='flex'){openDraftList(kind);}
   toast('삭제됨');
 }
-function newDraft(kind){
-  if(!confirm('현재 작업을 초기화할까요? (저장 안 한 내용은 사라집니다)'))return;
+async function newDraft(kind){
+  if(!(await ssakConfirm('현재 작업을 초기화할까요? (저장 안 한 내용은 사라집니다)')))return;
   if(kind==='quote'){
     ['q-name','q-phone','q-size','q-date'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
     document.querySelectorAll('.extra-chip').forEach(c=>c.classList.remove('on'));
@@ -1970,7 +1970,7 @@ function rpStartFresh() {
 
 // 임시저장 삭제
 async function rpDeleteDraft() {
-  if (!confirm('임시저장된 작업을 삭제할까요?')) return;
+  if (!(await ssakConfirm('임시저장된 작업을 삭제할까요?'))) return;
   await rpDeleteDraftFromDB();
   const banner = document.getElementById('rp-draft-banner');
   if (banner) banner.style.display = 'none';
@@ -2004,7 +2004,7 @@ async function rpCheckDraft() {
 
 // ── 전체 초기화 ────────────────────────────────────────────────
 async function rpResetAll() {
-  if (!confirm('완료보고서를 전체 초기화할까요?\n고객 정보·사진·임시저장이 모두 삭제됩니다.')) return;
+  if (!(await ssakConfirm('완료보고서를 전체 초기화할까요?\n고객 정보·사진·임시저장이 모두 삭제됩니다.'))) return;
 
   // 1) 폼 초기화
   ['rp-name','rp-phone','rp-size','rp-addr','rp-crew'].forEach(id => {
@@ -2481,7 +2481,7 @@ async function buildReportHTML(){
 async function generateReport(){
   const name = document.getElementById('rp-name').value.trim();
   const phone = document.getElementById('rp-phone').value.trim();
-  if(!name || !phone){ alert('❗ 고객명과 연락처는 필수입니다'); return; }
+  if(!name || !phone){ (await ssakAlert('❗ 고객명과 연락처는 필수입니다')); return; }
 
   const btn = document.getElementById('rp-send-btn');
   const txtEl = document.getElementById('rp-btn-text');
