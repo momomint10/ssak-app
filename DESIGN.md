@@ -456,10 +456,73 @@
 
 ---
 
+## 15. V1.7 — 매출 정책 + 접근성 + 차분함 (v6 — 2026-06-05)
+
+V1.6 톤(Toss 분할, D nav indicator, 발광 ✗)을 그대로 두되, 두 가지를 추가:
+**사장님 정서 보호 (매출 표시 ✗)** + **접근성 글로벌 강화**.
+
+### 15.1 매출 표시 정책 (절대 규칙)
+
+사장님 직접 명시: *"매출이 강조되면 사장님 입장에서 기분이 안 좋을 것 같아"*
+
+| 영역 | 표시 가능 여부 |
+|---|---|
+| 홈 hero | ✗ — 매출 단어/숫자 금지 |
+| tile-grid 4번째 자리 | ✗ — 정산 tile 제거, **커뮤니티 tile로 교체** (V1.7) |
+| sparkline (매출 추세) | ✗ — 모든 페이지에서 제거 |
+| 어제 대비 매출 % | ✗ |
+| 주간 매출 막대 | ✗ — 단, "일정 건수 막대"는 OK |
+| my.html 통계 페이지 | ⚠ 검색해 들어간 페이지는 노출 가능 (사장님이 의도) |
+| schedule.html 매출 영역 | ⚠ 작게 (페이지 정체성 일부) |
+
+**원칙**: 사장님이 홈 화면을 첫 진입할 때 매출 숫자를 마주치지 않게 한다. 매출이 정말 필요하면 사장님이 직접 my.html에 들어가서 확인한다.
+
+### 15.2 접근성 글로벌 (design.css `:where()` 적용)
+
+```css
+/* 키보드 포커스 — 모든 인터랙티브 요소 */
+:where(button, a, input, textarea, select, [role="button"]):focus-visible {
+  outline: 2px solid var(--c-pr);
+  outline-offset: 2px;
+}
+/* 터치 타겟 44×44 — Apple HIG / Material */
+:where(button, .ds-tap, .ds-nav-item, .ds-icon-btn) {
+  min-height: 44px; min-width: 44px;
+}
+/* 예외 — 작은 inline 칩/뱃지 */
+:where(.tile-badge, .ds-chip-sm, .badge-inline) {
+  min-height: 0; min-width: 0;
+}
+/* 모션 민감 사용자 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+### 15.3 V1.7 홈 tile-grid (정산 → 커뮤니티 교체)
+
+| Tile | Before V1.6 | After V1.7 |
+|---|---|---|
+| 1번 | 📅 예약 확정 | 📅 예약 확정 (그대로) |
+| 2번 | 📝 견적함 | 📝 견적함 (그대로) |
+| 3번 | 👥 동료 | 👥 동료 (그대로) |
+| 4번 | 💰 정산 (240만 + sparkline) | 💬 **커뮤니티** (새 글 N건 + 코랄 뱃지) |
+
+### 15.4 향후 검토 (Today Forecast 패턴)
+
+별도 mockup `today-features-20260605`에서 "오늘의 하루" weather pattern 검증.
+production 적용 시 Stage 2로 진행. 매출 정책 ✗을 그대로 따름.
+
+---
+
 ## 12. 변경 이력
 
 | 일자 | 버전 | 주요 변경 |
 | --- | --- | --- |
+| 2026-06-05 | **v6** | **V1.7 — 매출 정책 + 접근성 (섹션 15)**: 정산 tile → 커뮤니티 tile 교체 / 매출 단어·숫자·sparkline 홈에서 ✗ / focus-visible + min-height 44px + prefers-reduced-motion 글로벌 / DESIGN.md에 매출 정책 명문화 |
 | 2026-06-03 | **v5** | **홈 V1.5 — Action Hub (섹션 14)**: hero 매출 제거 / `.tile-grid` 2×2 / F 색 정책 (숫자 다크 통일 + 뱃지 의미별) / 정산 sparkline 코랄 / `/api/stats/weekly` 신규 endpoint / 빈 상태 status-card → quote 분기 |
 | 2026-06-03 | **v4** | **브랜드 정체성 가이드 (섹션 13)**: 코랄 차별화 옵션 / mint/teal 통합 결정 / 마스코트 변종 5종 계획 / 사진 hero 한국 컨텍스트 / voice·tone 가이드 |
 | 2026-05-27 | **v3** | **입체감 + 발광 + 글로벌 hook**: 5단계 elevation (`--sh-xs/sm/md/lg/xl`) + 컬러 그림자 (`--sh-pr/pr-sm/pr-lg/teal`) + highlight (`--hl-top/strong`) + spring transition (`--ease-spring`, `--dur-fast/normal/slow`) / 헤더 A안 풀 (앰비언트 오브 + 메쉬 + 라인 글로우) / 카드·네비·시트 발광 확장 / 14개 페이지 글로벌 hook으로 자동 반영 / 12개 페이지 font-weight 800/900 → 700 일괄 |

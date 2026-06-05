@@ -129,6 +129,36 @@ html, body {
 }
 button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls-normal); }
 
+/* ── 글로벌 접근성 (V1.7 — 2026-06-05) ──────────────────────────── */
+/* 1) 키보드 포커스 — 모든 인터랙티브 요소에 명확한 ring */
+:where(button, a, input, textarea, select, [role="button"], [tabindex]):focus-visible {
+  outline: 2px solid var(--c-pr);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+:where(button, a, input, textarea, select):focus:not(:focus-visible) {
+  outline: none;
+}
+/* 2) 터치 타겟 44×44 (Apple HIG / Material) — 모든 클릭형 버튼 최소 보장 */
+:where(button, a[role="button"], .ds-tap, .ds-tap-card, .ds-nav-item,
+       .ds-icon-btn, .ds-page-back, [type="button"], [type="submit"]) {
+  min-height: 44px;
+  min-width: 44px;
+}
+/* 작은 inline 칩/뱃지는 예외 — 명시 클래스 */
+:where(.tile-badge, .ds-chip-sm, .badge-inline) {
+  min-height: 0; min-width: 0;
+}
+/* 3) prefers-reduced-motion — 멀미·전정 민감 사용자 대응 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 .shell { max-width: 480px; margin: 0 auto; min-height: 100vh; padding-bottom: 80px; }
 
 /* ── 카드 (전 페이지 통일 스펙) ─────────────────────────────────── */

@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260604-5">
+<link rel="preload" as="script" href="utils.js?v=20260605-1">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260604-5">
+<link rel="stylesheet" href="design.css?v=20260605-1">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -405,25 +405,11 @@
       <div class="tile-sub" id="tile-workforce-sub">팀원 관리</div>
       <span class="tile-badge green" id="tile-applicants-badge" style="display:none;"></span>
     </button>
-    <button class="tile ds-tap-card" onclick="location.href='my.html'">
-      <div class="tile-row">
-        <div>
-          <div class="tile-ico" style="background:#FAF5FF; color:#A855F7;">💰</div>
-          <div class="tile-lbl" style="margin-top:6px;">정산</div>
-          <div class="tile-sub">이번 달 <b id="tile-revenue-n">-</b>만</div>
-        </div>
-        <svg id="tile-spark" class="tile-spark" viewBox="0 0 80 36" width="80" height="36" style="overflow:visible; display:none;">
-          <defs>
-            <linearGradient id="spk" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stop-color="#FF385C" stop-opacity=".35"/>
-              <stop offset="100%" stop-color="#FF385C" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <path id="spark-area" d="" fill="url(#spk)"/>
-          <path id="spark-line" d="" fill="none" stroke="#FF385C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle id="spark-dot" cx="80" cy="6" r="2.5" fill="#FF385C"/>
-        </svg>
-      </div>
+    <button class="tile ds-tap-card" onclick="location.href='community.html'">
+      <div class="tile-ico" style="background:#FFF0F3; color:var(--c-pr);">💬</div>
+      <div class="tile-lbl">커뮤니티</div>
+      <div class="tile-sub">새 글 <b id="tile-community-n">-</b>건</div>
+      <span class="tile-badge" id="tile-community-badge" style="display:none;"></span>
     </button>
   </div>
 
@@ -496,7 +482,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260604-5"></script>
+<script src="utils.js?v=20260605-1"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -908,62 +894,18 @@ async function loadHomeStats() {
         }
       }
 
-      // ── V1.5 tile-grid 와이어링 ───────────────────────────
+      // ── V1.7 tile-grid 와이어링 (매출 표시 ✗ 정책) ──────────
       const tBookedN  = document.getElementById('tile-booked-n');
       const tBookedB  = document.getElementById('tile-booked-badge');
       const tPendingN = document.getElementById('tile-pending-n');
       const tPendingB = document.getElementById('tile-pending-badge');
-      const tRevenueN = document.getElementById('tile-revenue-n');
       const pendingCt = (typeof pending !== 'undefined') ? pending.length : 0;
 
       if (tBookedN)  tBookedN.textContent  = bookN || 0;
       if (tBookedB && bookN > 0)  { tBookedB.textContent = bookN;     tBookedB.style.display = 'inline-block'; }
       if (tPendingN) tPendingN.textContent = pendingCt;
       if (tPendingB && pendingCt > 0) { tPendingB.textContent = pendingCt; tPendingB.style.display = 'inline-block'; }
-      if (tRevenueN) tRevenueN.textContent = revN > 0 ? revN : '-';
-
-      // 정산 sparkline — /api/stats/weekly에서 6주 데이터, 실패 시 fallback 곡선
-      const spark = document.getElementById('tile-spark');
-      let points = null;
-      try {
-        const dW = await cachedFetch(SERVER + '/api/stats/weekly?weeks=6');
-        if (dW && dW.success && Array.isArray(dW.weekly_revenue) && dW.weekly_revenue.length >= 2) {
-          // 모두 0인 경우는 추세 의미 없음 → fallback로 떨어뜨림
-          const sum = dW.weekly_revenue.reduce((s, v) => s + v, 0);
-          if (sum > 0) points = dW.weekly_revenue;
-        }
-      } catch(_) { /* network 실패 시 fallback */ }
-      if (!points && revN > 0) {
-        const pct = (d2.revenue_change_pct ?? 0) / 100;
-        const base = Math.max(1, revN / (1 + pct));
-        points = [base*0.85, base*0.92, base*0.88, base, revN*0.95, revN];
-      }
-      if (spark && points && points.length >= 2) {
-        const max = Math.max(...points), min = Math.min(...points);
-        const range = (max - min) || 1;
-        const W = 80, H = 30, n = points.length;
-        const xs = points.map((_, i) => (i/(n-1)) * W);
-        const ys = points.map(v => H - ((v - min)/range) * (H - 4) - 2);
-        const linePath = xs.map((x, i) => (i === 0 ? 'M' : 'L') + x.toFixed(1) + ',' + ys[i].toFixed(1)).join(' ');
-        const areaPath = linePath + ` L${W},${H+6} L0,${H+6} Z`;
-        document.getElementById('spark-line').setAttribute('d', linePath);
-        document.getElementById('spark-area').setAttribute('d', areaPath);
-        const dot = document.getElementById('spark-dot');
-        dot.setAttribute('cx', xs[n-1].toFixed(1));
-        dot.setAttribute('cy', ys[n-1].toFixed(1));
-        // 매출 추세 → 색 동적 (상승=코랄, 하락=블루)
-        // 1차: weekly first vs last, 2차: revenue_change_pct
-        const isDown = (() => {
-          if (points.length >= 2 && points[n-1] !== points[0]) return points[n-1] < points[0];
-          return (d2.revenue_change_pct ?? 0) < 0;
-        })();
-        const sparkColor = isDown ? '#3B82F6' : '#FF385C';
-        document.getElementById('spark-line').setAttribute('stroke', sparkColor);
-        document.getElementById('spark-dot').setAttribute('fill', sparkColor);
-        const stops = document.querySelectorAll('#spk stop');
-        stops.forEach(s => s.setAttribute('stop-color', sparkColor));
-        spark.style.display = 'block';
-      }
+      // V1.7: 정산 tile + 매출 sparkline 제거 — 사장님 "매출 표시 ✗" 명시
     }
   } catch(e) {}
 
@@ -983,6 +925,16 @@ async function loadHomeStats() {
       const dotM = document.getElementById('dot-market');
       if (dotC && rC && rC.has_new) dotC.style.display = 'inline-block';
       if (dotM && rM && rM.has_new) dotM.style.display = 'inline-block';
+
+      // V1.7: 커뮤니티 tile 와이어링 (정산 자리 교체)
+      const tCommN = document.getElementById('tile-community-n');
+      const tCommB = document.getElementById('tile-community-badge');
+      const cCount = (rC && typeof rC.count === 'number') ? rC.count : 0;
+      if (tCommN) tCommN.textContent = cCount;
+      if (tCommB && cCount > 0) {
+        tCommB.textContent = cCount;
+        tCommB.style.display = 'inline-block';
+      }
     }
   } catch(_) { /* 무음 fallback */ }
 
