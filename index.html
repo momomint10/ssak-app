@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260605-1">
+<link rel="preload" as="script" href="utils.js?v=20260605-2">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260605-1">
+<link rel="stylesheet" href="design.css?v=20260605-2">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -350,7 +350,64 @@
   <!-- 콘텐츠 영역 (사진 hero 위로 살짝 올라옴) -->
   <div class="ds-home-content">
 
-    <!-- Status-First: 오늘 일정 풀 문장 -->
+    <!-- V1.7.x: Today Forecast (weather hero) — 매출 ✗, 일정/진척만 -->
+    <div class="ds-today-fc ds-fade-in" onclick="goTo('schedule')" id="today-fc" style="display:none;">
+      <div class="ds-today-fc-top">
+        <div>
+          <div class="ds-today-fc-label">오늘 일정</div>
+          <div class="ds-today-fc-date" id="today-fc-date">—</div>
+        </div>
+        <div class="ds-today-fc-state" id="today-fc-state">☀ 활기찬 하루</div>
+      </div>
+      <div class="ds-today-fc-scene">
+        <div class="ds-today-sun" id="today-fc-sun" aria-hidden="true">
+          <span class="ray" style="transform: translate(-50%, -50%) rotate(0deg) translateX(40px);"></span>
+          <span class="ray" style="transform: translate(-50%, -50%) rotate(45deg) translateX(40px);"></span>
+          <span class="ray" style="transform: translate(-50%, -50%) rotate(90deg) translateX(40px);"></span>
+          <span class="ray" style="transform: translate(-50%, -50%) rotate(135deg) translateX(40px);"></span>
+          <span class="ray" style="transform: translate(-50%, -50%) rotate(180deg) translateX(40px);"></span>
+          <span class="ray" style="transform: translate(-50%, -50%) rotate(225deg) translateX(40px);"></span>
+          <span class="ray" style="transform: translate(-50%, -50%) rotate(270deg) translateX(40px);"></span>
+          <span class="ray" style="transform: translate(-50%, -50%) rotate(315deg) translateX(40px);"></span>
+        </div>
+        <div class="ds-today-cloud" aria-hidden="true">
+          <svg viewBox="0 0 115 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22,38 C8,38 8,20 22,20 C24,8 44,8 48,20 C58,8 86,8 88,28 C108,28 108,42 88,42 L22,42 Z" fill="rgba(255,255,255,0.86)"/>
+          </svg>
+        </div>
+        <div class="ds-today-sparkles" aria-hidden="true">
+          <span class="ds-today-sparkle s1">✦</span>
+          <span class="ds-today-sparkle s2">✦</span>
+          <span class="ds-today-sparkle s3">✦</span>
+          <span class="ds-today-sparkle s4">✦</span>
+        </div>
+      </div>
+      <div class="ds-today-fc-amount">
+        <span class="ds-today-fc-num" id="today-fc-num">0</span>
+        <span class="ds-today-fc-unit">건</span>
+      </div>
+      <div class="ds-today-fc-sub" id="today-fc-progress">완료 <b>0</b> · 진행 <b>0</b> · 예정 <b>0</b></div>
+      <div class="ds-today-fc-foot">
+        <div class="ds-today-fc-cell">
+          <div class="ds-today-fc-cell-lbl">진척률</div>
+          <div class="ds-today-fc-cell-val up" id="today-fc-progress-pct">0%</div>
+        </div>
+        <div class="ds-today-fc-cell">
+          <div class="ds-today-fc-cell-lbl">🌅 첫</div>
+          <div class="ds-today-fc-cell-val" id="today-fc-first">—</div>
+        </div>
+        <div class="ds-today-fc-cell">
+          <div class="ds-today-fc-cell-lbl">🕘 지금</div>
+          <div class="ds-today-fc-cell-val" id="today-fc-now">—</div>
+        </div>
+        <div class="ds-today-fc-cell">
+          <div class="ds-today-fc-cell-lbl">🌙 마지막</div>
+          <div class="ds-today-fc-cell-val" id="today-fc-last">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status-First (fallback) — Today Forecast가 표시 안 될 때 (일정 0건) -->
     <div class="ds-status-card ds-fade-in" onclick="goTo('schedule')" id="today-card">
       <div class="ds-status-ico has-task" id="status-ico">📋</div>
       <div class="ds-status-body">
@@ -361,6 +418,9 @@
       </div>
       <div class="ds-status-arr">›</div>
     </div>
+
+    <!-- V1.7.x: Timeline (시간별 일정 가로 스크롤) — 일정 있을 때만 -->
+    <div class="ds-timeline ds-fade-in ds-fade-in-1" id="today-timeline" style="display:none;"></div>
 
     <!-- KPI inline (compact) — 데이터 0건이면 JS가 자동 숨김 -->
     <div class="kpi-inline ds-fade-in ds-fade-in-1" id="kpi-inline" style="display:none;">
@@ -411,6 +471,15 @@
       <div class="tile-sub">새 글 <b id="tile-community-n">-</b>건</div>
       <span class="tile-badge" id="tile-community-badge" style="display:none;"></span>
     </button>
+  </div>
+
+  <!-- V1.7.x: 이번 주 일정 막대 (매출 ✗, 일정 건수만) -->
+  <div class="ds-week-fc ds-fade-in ds-fade-in-2" id="week-fc" style="display:none;">
+    <div class="ds-week-fc-title">
+      <span>이번 주 일정</span>
+      <span class="total" id="week-fc-total">—</span>
+    </div>
+    <div class="ds-week-fc-bars" id="week-fc-bars"></div>
   </div>
 
   <!-- 더보기 메뉴 (접이식) -->
@@ -482,7 +551,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260605-1"></script>
+<script src="utils.js?v=20260605-2"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -808,21 +877,173 @@ async function cachedFetch(url, ttlMs = 60000) {
   return data;
 }
 
+// ── V1.7.x: Today Forecast 렌더링 (weather hero) ─────────────
+// 사장님 일정을 일기예보처럼. 매출 ✗, 일정 건수·시간·진척만.
+function renderTodayForecast(items) {
+  const fc = document.getElementById('today-fc');
+  const statusCard = document.getElementById('today-card');
+  const timeline = document.getElementById('today-timeline');
+  if (!fc) return;
+
+  const total = items.length;
+  if (total === 0) {
+    // 일정 0건 — status-card fallback (이미 카피 적용됨)
+    fc.style.display = 'none';
+    if (timeline) timeline.style.display = 'none';
+    if (statusCard) statusCard.style.display = '';
+    return;
+  }
+
+  // 일정 있음 — weather hero 표시, status-card 숨김
+  fc.style.display = '';
+  if (statusCard) statusCard.style.display = 'none';
+
+  // 상태 분류 (status별 카운트)
+  const done = items.filter(i => i.status === 'completed' || i.status === 'done').length;
+  const inprog = items.filter(i => i.status === 'inprogress' || i.status === 'in_progress').length;
+  const upcoming = total - done - inprog;
+  const progressPct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  // 시간 추출 (HH:MM 또는 first.time)
+  const sorted = items.slice().sort((a, b) => {
+    const ta = (a.time || a.scheduled_time || '00:00');
+    const tb = (b.time || b.scheduled_time || '00:00');
+    return ta.localeCompare(tb);
+  });
+  const firstTime = sorted[0] && (sorted[0].time || sorted[0].scheduled_time) || '—';
+  const lastTime  = sorted[sorted.length-1] && (sorted[sorted.length-1].time || sorted[sorted.length-1].scheduled_time) || '—';
+
+  // 지금 진행중 또는 다음 예정
+  const now = new Date();
+  const nowHHMM = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const nextItem = sorted.find(i => {
+    const t = (i.time || i.scheduled_time || '');
+    return t >= nowHHMM && i.status !== 'completed' && i.status !== 'done';
+  });
+  const nowTime = nextItem ? (nextItem.time || nextItem.scheduled_time || '—') : '—';
+
+  // 상태 칩 카피
+  let stateLabel;
+  if (total >= 4)      stateLabel = '☀ 활기찬 하루';
+  else if (total >= 2) stateLabel = '⛅ 순조로움';
+  else                  stateLabel = '🌥 여유로움';
+
+  // 날짜
+  const d = new Date();
+  const days = ['일','월','화','수','목','금','토'];
+  const dateStr = `${d.getMonth()+1}월 ${d.getDate()}일 · ${days[d.getDay()]}`;
+
+  // DOM 업데이트
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  const setHTML = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML = v; };
+  set('today-fc-num', total);
+  set('today-fc-date', dateStr);
+  set('today-fc-state', stateLabel);
+  setHTML('today-fc-progress', `완료 <b>${done}</b> · 진행 <b>${inprog}</b> · 예정 <b>${upcoming}</b>`);
+  set('today-fc-progress-pct', progressPct + '%');
+  set('today-fc-first', firstTime);
+  set('today-fc-now', nowTime);
+  set('today-fc-last', lastTime);
+
+  // Timeline 렌더링
+  if (timeline) {
+    timeline.style.display = '';
+    timeline.innerHTML = sorted.slice(0, 6).map(i => {
+      const t = i.time || i.scheduled_time || '—';
+      const isDone = i.status === 'completed' || i.status === 'done';
+      const isProg = i.status === 'inprogress' || i.status === 'in_progress';
+      const isNow  = (i === nextItem) && !isDone;
+      const stateIco = isDone ? '✅' : isProg ? '▶' : '◷';
+      const dotCls   = isDone ? 'done' : (isProg || isNow) ? 'pending' : 'open';
+      const timeLbl  = isNow ? `지금 · ${t}` : (isDone ? `${t} · 완료` : (isProg ? `${t} · 진행` : `${t} · 예정`));
+      const cust = (i.customer_name || i.name || '고객').slice(0, 8);
+      const job  = (i.kind || i.service || i.type || '청소');
+      return `<button class="ds-tl-item${isNow ? ' now' : ''}" onclick="location.href='schedule.html'">
+        <span class="ds-tl-dot ${dotCls}"></span>
+        <div class="ds-tl-time">${timeLbl}</div>
+        <div class="ds-tl-state">${stateIco}</div>
+        <div class="ds-tl-customer">${cust}</div>
+        <div class="ds-tl-job">${job}</div>
+      </button>`;
+    }).join('');
+  }
+}
+
+// ── 주간 일정 막대 (요일별 — 매출 ✗) ──────────────────────
+function renderWeekForecast(items) {
+  const wf = document.getElementById('week-fc');
+  if (!wf) return;
+  const today = new Date();
+  // 월요일 기준 7일
+  const mondayOffset = (today.getDay() + 6) % 7;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - mondayOffset);
+  monday.setHours(0, 0, 0, 0);
+
+  // 요일별 카운트
+  const labels = ['월','화','수','목','금','토','일'];
+  const counts = [0,0,0,0,0,0,0];
+  let todayIdx = mondayOffset;
+  items.forEach(i => {
+    const dStr = i.date || i.scheduled_date || '';
+    if (!dStr) return;
+    const d = new Date(dStr);
+    const diff = Math.floor((d - monday) / 86400000);
+    if (diff >= 0 && diff < 7) counts[diff]++;
+  });
+
+  const total = counts.reduce((s, n) => s + n, 0);
+  const maxN = Math.max(...counts, 1);
+  if (total === 0) { wf.style.display = 'none'; return; }
+  wf.style.display = '';
+
+  const totalEl = document.getElementById('week-fc-total');
+  if (totalEl) totalEl.textContent = `총 ${total}건`;
+
+  const bars = document.getElementById('week-fc-bars');
+  if (bars) {
+    bars.innerHTML = counts.map((n, i) => {
+      const h = Math.max(8, Math.round((n / maxN) * 72));
+      const today  = (i === todayIdx);
+      const future = (i > todayIdx);
+      const cls = today ? 'today' : (future ? 'future' : '');
+      const todayLbl = today ? `${labels[i]} · 오늘` : labels[i];
+      return `<div class="ds-wb ${cls}">
+        <div class="ds-wb-bar" style="height:${h}px;">${n > 0 ? `<span class="ds-wb-count">${n}</span>` : ''}</div>
+        <div class="ds-wb-lbl">${todayLbl}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
 async function loadHomeStats() {
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
   const adminKey = cfg.adminKey || '';
 
-  // 오늘 할 일 (대기 예약 우선)
+  // 오늘 할 일 + Today Forecast hero (V1.7.x)
   try {
-    const r = await fetch(SERVER + '/api/bookings?status=pending');
-    const d = await r.json();
-    const pending = d.data || [];
+    // 오늘 날짜 기준 모든 bookings 가져오기 (status 무관)
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    const [rPending, rToday, rWeek] = await Promise.all([
+      fetch(SERVER + '/api/bookings?status=pending').then(r => r.json()).catch(() => ({data:[]})),
+      fetch(SERVER + `/api/bookings?date=${todayStr}`).then(r => r.json()).catch(() => ({data:[]})),
+      fetch(SERVER + `/api/bookings?week=current`).then(r => r.json()).catch(() => ({data:[]}))
+    ]);
+    const pending = rPending.data || [];
+    // 오늘 일정 (전체 status) — Today Forecast 렌더
+    const todayItems = (rToday.data || []).length > 0 ? rToday.data : pending;
+    renderTodayForecast(todayItems);
+    // 주간 일정 (week=current 미지원 시 pending fallback)
+    const weekItems = (rWeek.data || []).length > 0 ? rWeek.data : todayItems;
+    renderWeekForecast(weekItems);
+
     const todayText = document.getElementById('today-text');
     const todaySub  = document.getElementById('today-sub');
     const statusIco = document.getElementById('status-ico');
     const perfPendingEl = document.getElementById('perf-pending');
 
-    // Status-First 풀 문장 카피 (2026-05-29 조합 패턴)
+    // Status-First fallback 카피 (Today Forecast가 표시 안 될 때만 의미)
     if (todayText) {
       if (pending.length > 0) {
         const first = pending[0] || {};
@@ -840,12 +1061,10 @@ async function loadHomeStats() {
         todayText.textContent = '여유로운 하루예요 ☀️';
         if (todaySub) todaySub.textContent = '탭해서 새 견적을 받아볼까요?';
         if (statusIco) statusIco.classList.remove('has-task');
-        // 빈 상태에서는 status-card 탭 시 schedule 대신 quote로 (액션 권유)
         const todayCard = document.getElementById('today-card');
         if (todayCard) todayCard.onclick = () => goTo('quote');
       }
     }
-    // KPI 대기 문의
     if (perfPendingEl) perfPendingEl.textContent = pending.length || '-';
   } catch(e) {
     const todayText = document.getElementById('today-text');

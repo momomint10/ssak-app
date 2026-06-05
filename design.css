@@ -932,6 +932,233 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   background: var(--c-bg);
   min-height: calc(100vh - 240px);
 }
+
+/* ══════════════════════════════════════════════════════════════
+ * V1.7.x — Today Forecast (weather hero 패턴)
+ * 사장님 하루를 일기예보처럼 시각화. 매출 표시 ✗ (일정/진척만).
+ * ══════════════════════════════════════════════════════════════ */
+
+.ds-today-fc {
+  margin: 16px var(--sp-md) 0;
+  border-radius: 26px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #DCE9F5 0%, #CFE0F0 55%, #B8D2EA 100%);
+  box-shadow: 0 14px 40px rgba(80, 120, 180, 0.16), 0 2px 0 rgba(15, 15, 18, 0.04);
+  color: #1B2A3F;
+  position: relative;
+  cursor: pointer;
+}
+.ds-today-fc-top {
+  padding: 18px 22px 0;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.ds-today-fc-label {
+  font-size: 11px; font-weight: 700;
+  color: rgba(27, 42, 63, 0.6);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.ds-today-fc-date {
+  font-size: 11px; color: rgba(27, 42, 63, 0.55);
+  font-weight: 600; margin-top: 2px;
+}
+.ds-today-fc-state {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 99px;
+  padding: 5px 11px;
+  font-size: 11px; font-weight: 800;
+  color: #B45309;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+
+/* Hero scene — sun + cloud + sparkles */
+.ds-today-fc-scene {
+  position: relative; height: 120px; margin-top: 4px;
+}
+.ds-today-sun {
+  position: absolute; left: 22px; top: 24px;
+  width: 72px; height: 72px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FFF7CE 0%, #FFD66B 60%, #FFA437 100%);
+  box-shadow: 0 0 0 7px rgba(255, 210, 90, 0.22), 0 0 30px rgba(255, 160, 40, 0.22);
+  animation: ds-sun-bob 5s ease-in-out infinite;
+}
+.ds-today-sun .ray {
+  position: absolute; top: 50%; left: 50%;
+  width: 52px; height: 2.5px;
+  background: rgba(255, 210, 80, 0.55);
+  transform-origin: 0 50%; border-radius: 3px;
+}
+@keyframes ds-sun-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.ds-today-cloud {
+  position: absolute; right: 18px; top: 38px;
+  width: 115px; height: 48px;
+  filter: drop-shadow(0 4px 6px rgba(80, 100, 140, 0.15));
+  animation: ds-cloud-drift 7s ease-in-out infinite;
+}
+@keyframes ds-cloud-drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-6px); }
+}
+.ds-today-sparkles {
+  position: absolute; inset: 0; pointer-events: none;
+}
+.ds-today-sparkle {
+  position: absolute; color: #FFD66B;
+  font-size: 16px; font-weight: 900;
+  animation: ds-sparkle-pop 3s ease-in-out infinite;
+  opacity: 0.85;
+}
+.ds-today-sparkle.s1 { left: 42%; top: 12px; }
+.ds-today-sparkle.s2 { left: 55%; top: 36px; font-size: 11px; animation-delay: 0.7s; }
+.ds-today-sparkle.s3 { left: 68%; top: 74px; font-size: 13px; animation-delay: 1.4s; }
+.ds-today-sparkle.s4 { left: 30%; top: 82px; font-size: 10px; animation-delay: 2.1s; }
+@keyframes ds-sparkle-pop {
+  0%, 100% { transform: scale(0.6); opacity: 0; }
+  40% { transform: scale(1.0); opacity: 1; }
+  70% { transform: scale(0.8); opacity: 0.6; }
+}
+
+/* Big number — 오늘 일정 수 (매출 ✗) */
+.ds-today-fc-amount {
+  padding: 4px 22px 2px;
+  display: flex; align-items: baseline; gap: 5px;
+  color: #1B2A3F;
+}
+.ds-today-fc-num {
+  font-size: 64px; font-weight: 900;
+  letter-spacing: -0.05em; line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+.ds-today-fc-unit {
+  font-size: 22px; font-weight: 700;
+  opacity: 0.65; margin-left: 4px;
+}
+.ds-today-fc-sub {
+  padding: 0 22px 8px;
+  font-size: 12px; color: rgba(27, 42, 63, 0.7);
+  font-weight: 600;
+}
+.ds-today-fc-sub b { color: #047857; font-weight: 800; }
+
+/* Footer cells — 진척/시간 (매출 ✗) */
+.ds-today-fc-foot {
+  margin: 10px 20px 16px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex; justify-content: space-between; gap: 6px;
+}
+.ds-today-fc-cell { text-align: left; min-width: 0; }
+.ds-today-fc-cell-lbl {
+  font-size: 10px; color: rgba(27, 42, 63, 0.55);
+  font-weight: 600; margin-bottom: 2px;
+}
+.ds-today-fc-cell-val {
+  font-size: 13px; font-weight: 800; color: #1B2A3F;
+  font-variant-numeric: tabular-nums;
+}
+.ds-today-fc-cell-val.up { color: #047857; }
+
+/* ── Timeline (시간별 일정 가로 스크롤) ─────────────────────── */
+.ds-timeline {
+  margin: 14px 0 0;
+  padding: 12px 0 12px var(--sp-md);
+  overflow-x: auto; display: flex; gap: 10px;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.ds-timeline::-webkit-scrollbar { display: none; }
+.ds-tl-item {
+  flex-shrink: 0; width: 108px;
+  background: var(--c-white, #fff);
+  border-radius: 16px;
+  padding: 13px 12px;
+  box-shadow: 0 4px 14px rgba(15, 15, 18, 0.05);
+  text-align: left; position: relative;
+  cursor: pointer;
+}
+.ds-tl-item.now {
+  background: #047857; color: #fff;
+  box-shadow: 0 6px 20px rgba(4, 120, 87, 0.28);
+}
+.ds-tl-time {
+  font-size: 11px; font-weight: 700; opacity: 0.7;
+}
+.ds-tl-item.now .ds-tl-time { opacity: 0.9; }
+.ds-tl-state { font-size: 18px; margin: 5px 0 3px; }
+.ds-tl-customer {
+  font-size: 12px; font-weight: 800;
+  letter-spacing: -0.01em; line-height: 1.2;
+}
+.ds-tl-job {
+  font-size: 10px; opacity: 0.7; margin-top: 2px;
+  line-height: 1.3;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ds-tl-item.now .ds-tl-job { opacity: 0.85; }
+.ds-tl-dot {
+  position: absolute; top: 9px; right: 9px;
+  width: 6px; height: 6px; border-radius: 50%;
+}
+.ds-tl-dot.done { background: #047857; }
+.ds-tl-dot.pending { background: #F59E0B; }
+.ds-tl-dot.open { background: var(--c-g500); opacity: 0.4; }
+.ds-tl-item.now .ds-tl-dot.pending { background: #FCD34D; }
+.ds-tl-empty {
+  flex-shrink: 0; padding: 13px 18px;
+  font-size: 12px; color: var(--c-g500);
+  background: var(--c-white, #fff); border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(15, 15, 18, 0.05);
+}
+
+/* ── Weekly forecast (요일별 일정 건수 — 매출 ✗) ───────────── */
+.ds-week-fc {
+  margin: 14px var(--sp-md) 0;
+  background: var(--c-white, #fff);
+  border-radius: 18px; padding: 16px 16px 14px;
+  box-shadow: 0 6px 16px rgba(15, 15, 18, 0.05);
+}
+.ds-week-fc-title {
+  font-size: 11px; font-weight: 700; color: var(--c-g500);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex; justify-content: space-between;
+}
+.ds-week-fc-title .total {
+  color: var(--c-g900); font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.ds-week-fc-bars {
+  display: flex; justify-content: space-between; gap: 6px;
+  align-items: flex-end; height: 80px;
+}
+.ds-wb {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.ds-wb-bar {
+  width: 100%; max-width: 24px;
+  background: linear-gradient(180deg, #B8D2EA, #CFE0F0);
+  border-radius: 6px 6px 2px 2px;
+  position: relative;
+}
+.ds-wb-count {
+  position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+  font-size: 10px; font-weight: 800; color: var(--c-g500);
+  font-variant-numeric: tabular-nums;
+}
+.ds-wb.today .ds-wb-bar { background: linear-gradient(180deg, #047857, #10B981); }
+.ds-wb.today .ds-wb-count { color: #047857; }
+.ds-wb.future .ds-wb-bar {
+  background: repeating-linear-gradient(45deg, #E5E7EB, #E5E7EB 4px, #F3F4F6 4px, #F3F4F6 8px);
+}
+.ds-wb-lbl { font-size: 10px; color: var(--c-g500); font-weight: 600; }
+.ds-wb.today .ds-wb-lbl { color: #047857; font-weight: 800; }
+
 .ds-page-header-row {
   display: flex; align-items: center; gap: var(--sp-sm);
 }
