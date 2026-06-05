@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260605-2">
+<link rel="preload" as="script" href="utils.js?v=20260605-3">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260605-2">
+<link rel="stylesheet" href="design.css?v=20260605-3">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -230,40 +230,8 @@
 .perf-change.up { color:var(--c-pr); }
 .perf-change.dn { color:var(--c-red); }
 
-/* ── 최근 알림 섹션 ───────────────────────────────────────── */
-.section-wrap { padding:0 20px; margin-top:14px; }
-.recent-card { background:#fff; border-radius:18px; overflow:hidden; box-shadow: var(--sh-sm, 0 2px 6px rgba(20,30,50,.07)), inset 0 1px 0 rgba(255,255,255,.8); }
-.recent-row {
-  display:flex; align-items:center; gap:12px;
-  padding:14px 16px; border-bottom:0.5px solid #f0f0f0;
-  cursor:pointer;
-}
-.recent-row:last-child { border-bottom:none; }
-
-/* KPI inline (압축) — 데이터 있을 때만 표시 */
-.kpi-inline {
-  margin: 6px 16px 0;
-  background: #fff;
-  border: 1px solid var(--c-g100, #F2F4F6);
-  border-radius: 14px;
-  padding: 10px 14px;
-  box-shadow: 0 2px 6px rgba(20,30,50,.04);
-}
-.kpi-inline-row {
-  display: flex; align-items: center; justify-content: space-between;
-  font-size: 13px; color: var(--c-g500, #8B95A1); font-weight: 500;
-}
-.kpi-i { display: inline-flex; align-items: baseline; gap: 5px; flex: 1; justify-content: center; }
-.kpi-i b { font-size: 16px; font-weight: 800; color: var(--c-g900, #1A1F2C);
-  font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
-}
-.kpi-i:first-child b { color: var(--c-pr, #FF385C); }
-.kpi-i.ds-tap { cursor: pointer; }
-.kpi-i-dot {
-  width: 3px; height: 3px; border-radius: 50%;
-  background: var(--c-g300, #D1D6DB);
-  flex-shrink: 0;
-}
+/* V1.7.1 prioritization A: .recent-row, .kpi-inline 정의 제거
+   — HTML과 함께 dead code 정리. 다른 페이지 의존 없음 검증됨. */
 
 /* Action Tile Grid 2×2 — V1.5 단촐 해소 */
 .tile-grid {
@@ -419,19 +387,7 @@
       <div class="ds-status-arr">›</div>
     </div>
 
-    <!-- V1.7.x: Timeline (시간별 일정 가로 스크롤) — 일정 있을 때만 -->
-    <div class="ds-timeline ds-fade-in ds-fade-in-1" id="today-timeline" style="display:none;"></div>
-
-    <!-- KPI inline (compact) — 데이터 0건이면 JS가 자동 숨김 -->
-    <div class="kpi-inline ds-fade-in ds-fade-in-1" id="kpi-inline" style="display:none;">
-      <div class="kpi-inline-row">
-        <span class="kpi-i"><b id="perf-done">0</b>완료</span>
-        <span class="kpi-i-dot"></span>
-        <span class="kpi-i ds-tap" onclick="location.href='schedule.html'"><b id="perf-booked">0</b>확정</span>
-        <span class="kpi-i-dot"></span>
-        <span class="kpi-i"><b id="perf-pending">0</b>대기</span>
-      </div>
-    </div>
+    <!-- V1.7.1: Timeline/KPI 제거 — Today Forecast 카드가 같은 정보를 가짐 (prioritization A) -->
 
   <!-- 빠른 실행: 고객케어 hero (primary) -->
   <div class="quick-grid ds-fade-in ds-fade-in-1" style="margin-top:16px;">
@@ -473,46 +429,15 @@
     </button>
   </div>
 
-  <!-- V1.7.x: 이번 주 일정 막대 (매출 ✗, 일정 건수만) -->
-  <div class="ds-week-fc ds-fade-in ds-fade-in-2" id="week-fc" style="display:none;">
-    <div class="ds-week-fc-title">
-      <span>이번 주 일정</span>
-      <span class="total" id="week-fc-total">—</span>
-    </div>
-    <div class="ds-week-fc-bars" id="week-fc-bars"></div>
-  </div>
-
-  <!-- 더보기 메뉴 (접이식) -->
-  <div class="section-wrap ds-fade-in ds-fade-in-2" style="margin-top:12px;">
-    <div class="recent-card">
-      <div class="recent-row ds-tap" onclick="goTo('community')">
-        <div class="recent-ico" style="background:#EFF6FF;">💬</div>
-        <div class="recent-body">
-          <div class="recent-title">커뮤니티<span class="unread-dot" id="dot-community" style="display:none;" aria-label="새 댓글"></span></div>
-          <div class="recent-sub">청소업 정보 · 팁 · 질문</div>
-        </div>
-        <div class="recent-right">›</div>
-      </div>
-      <div class="recent-row ds-tap" onclick="goTo('market')">
-        <div class="recent-ico" style="background:#FFF8F5;">🛒</div>
-        <div class="recent-body">
-          <div class="recent-title">중고거래<span class="unread-dot" id="dot-market" style="display:none;" aria-label="새 메시지"></span></div>
-          <div class="recent-sub">청소 장비 · 소모품 거래</div>
-        </div>
-        <div class="recent-right">›</div>
-      </div>
-    </div>
-  </div>
+  <!-- V1.7.1 prioritization A: Weekly forecast/Recent row 제거
+       — Weekly: schedule.html에서 더 자세히 봄
+       — Recent: 커뮤니티는 4 tile + nav에 이미 있음 (3중 중복), 중고거래는 my.html로 이동 -->
 
   </div><!-- /ds-home-content -->
 
 </div><!-- /shell -->
 
-<!-- Floating CTA — 새 견적 작성 -->
-<button class="ds-fab" onclick="goTo('quote')" aria-label="새 견적 작성">
-  <span class="ds-fab-ico">+</span>
-  <span class="ds-fab-lbl">견적</span>
-</button>
+<!-- V1.7.1 prioritization A: FAB 제거 — 고객케어 hero가 같은 quote 액션 -->
 
 <!-- 하단 네비 -->
 <nav class="ds-nav">
@@ -551,7 +476,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260605-2"></script>
+<script src="utils.js?v=20260605-3"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -587,45 +512,11 @@ function loadUser() {
     companyEl.style.display = 'block';
   }
 
-  // 이달 실적 (로컬 ssak_schedules 기반 fallback — 서버 응답이 늦을 때 빠른 표시용)
-  // 서버 응답은 loadHomeStats()에서 도착 시 덮어씀
-  var now = new Date();
-  var ym = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-  var doneThisMonth = sch.filter(function(x) {
-    return (x.date||'').startsWith(ym) && x.status === 'done';
-  });
-  var confirmedThisMonth = sch.filter(function(x) {
-    return (x.date||'').startsWith(ym) && x.status === 'confirmed';
-  });
-  var confirmedRevenue = confirmedThisMonth.reduce(function(acc, x) { return acc + (parseInt(x.price)||0); }, 0);
-  var totalRevenue = doneThisMonth.reduce(function(acc, x) { return acc + (parseInt(x.price)||0); }, 0);
-
-  var perfDoneEl   = document.getElementById('perf-done');
-  var perfRevEl    = document.getElementById('perf-revenue');
-  var perfRevChg   = document.getElementById('perf-revenue-change');
-  var perfBookedEl = document.getElementById('perf-booked');
-  var perfBookedChg= document.getElementById('perf-booked-change');
-
-  if (perfDoneEl && doneThisMonth.length > 0) perfDoneEl.textContent = doneThisMonth.length;
-  if (perfRevEl) {
-    var manwon = Math.round(totalRevenue / 10000);
-    if (manwon > 0) perfRevEl.textContent = manwon;
-  }
-  if (perfRevChg && totalRevenue > 0) {
-    perfRevChg.textContent = Math.round(totalRevenue/10000) + '만원';
-  }
-  if (perfBookedEl && confirmedThisMonth.length > 0) perfBookedEl.textContent = confirmedThisMonth.length;
-  if (perfBookedChg && confirmedRevenue > 0) {
-    perfBookedChg.textContent = '예정 ' + Math.round(confirmedRevenue/10000) + '만';
-  }
-
-  // 확정 예약 박스 클릭 → 스케줄 이동
-  var bookedStat = perfBookedEl && perfBookedEl.closest('.perf-stat');
-  if (bookedStat && !bookedStat.dataset.clickBound) {
-    bookedStat.dataset.clickBound = '1';
-    bookedStat.style.cursor = 'pointer';
-    bookedStat.onclick = function(){ location.href = 'schedule.html?filter=confirmed'; };
-  }
+  // V1.7.1 prioritization A: 이달 실적 fallback 제거
+  // — perf-done/perf-revenue/perf-booked 엘리먼트가 모두 KPI inline과 함께 제거됨
+  // — 매출 정보는 사장님 정책상 홈 표시 ✗
+  // — Today Forecast가 일정 카운트를 이미 표시
+  void sch;
 }
 
 // ── 네비게이션 ───────────────────────────────
@@ -882,14 +773,12 @@ async function cachedFetch(url, ttlMs = 60000) {
 function renderTodayForecast(items) {
   const fc = document.getElementById('today-fc');
   const statusCard = document.getElementById('today-card');
-  const timeline = document.getElementById('today-timeline');
   if (!fc) return;
 
   const total = items.length;
   if (total === 0) {
     // 일정 0건 — status-card fallback (이미 카피 적용됨)
     fc.style.display = 'none';
-    if (timeline) timeline.style.display = 'none';
     if (statusCard) statusCard.style.display = '';
     return;
   }
@@ -945,75 +834,9 @@ function renderTodayForecast(items) {
   set('today-fc-now', nowTime);
   set('today-fc-last', lastTime);
 
-  // Timeline 렌더링
-  if (timeline) {
-    timeline.style.display = '';
-    timeline.innerHTML = sorted.slice(0, 6).map(i => {
-      const t = i.time || i.scheduled_time || '—';
-      const isDone = i.status === 'completed' || i.status === 'done';
-      const isProg = i.status === 'inprogress' || i.status === 'in_progress';
-      const isNow  = (i === nextItem) && !isDone;
-      const stateIco = isDone ? '✅' : isProg ? '▶' : '◷';
-      const dotCls   = isDone ? 'done' : (isProg || isNow) ? 'pending' : 'open';
-      const timeLbl  = isNow ? `지금 · ${t}` : (isDone ? `${t} · 완료` : (isProg ? `${t} · 진행` : `${t} · 예정`));
-      const cust = (i.customer_name || i.name || '고객').slice(0, 8);
-      const job  = (i.kind || i.service || i.type || '청소');
-      return `<button class="ds-tl-item${isNow ? ' now' : ''}" onclick="location.href='schedule.html'">
-        <span class="ds-tl-dot ${dotCls}"></span>
-        <div class="ds-tl-time">${timeLbl}</div>
-        <div class="ds-tl-state">${stateIco}</div>
-        <div class="ds-tl-customer">${cust}</div>
-        <div class="ds-tl-job">${job}</div>
-      </button>`;
-    }).join('');
-  }
-}
-
-// ── 주간 일정 막대 (요일별 — 매출 ✗) ──────────────────────
-function renderWeekForecast(items) {
-  const wf = document.getElementById('week-fc');
-  if (!wf) return;
-  const today = new Date();
-  // 월요일 기준 7일
-  const mondayOffset = (today.getDay() + 6) % 7;
-  const monday = new Date(today);
-  monday.setDate(today.getDate() - mondayOffset);
-  monday.setHours(0, 0, 0, 0);
-
-  // 요일별 카운트
-  const labels = ['월','화','수','목','금','토','일'];
-  const counts = [0,0,0,0,0,0,0];
-  let todayIdx = mondayOffset;
-  items.forEach(i => {
-    const dStr = i.date || i.scheduled_date || '';
-    if (!dStr) return;
-    const d = new Date(dStr);
-    const diff = Math.floor((d - monday) / 86400000);
-    if (diff >= 0 && diff < 7) counts[diff]++;
-  });
-
-  const total = counts.reduce((s, n) => s + n, 0);
-  const maxN = Math.max(...counts, 1);
-  if (total === 0) { wf.style.display = 'none'; return; }
-  wf.style.display = '';
-
-  const totalEl = document.getElementById('week-fc-total');
-  if (totalEl) totalEl.textContent = `총 ${total}건`;
-
-  const bars = document.getElementById('week-fc-bars');
-  if (bars) {
-    bars.innerHTML = counts.map((n, i) => {
-      const h = Math.max(8, Math.round((n / maxN) * 72));
-      const today  = (i === todayIdx);
-      const future = (i > todayIdx);
-      const cls = today ? 'today' : (future ? 'future' : '');
-      const todayLbl = today ? `${labels[i]} · 오늘` : labels[i];
-      return `<div class="ds-wb ${cls}">
-        <div class="ds-wb-bar" style="height:${h}px;">${n > 0 ? `<span class="ds-wb-count">${n}</span>` : ''}</div>
-        <div class="ds-wb-lbl">${todayLbl}</div>
-      </div>`;
-    }).join('');
-  }
+  // V1.7.1 prioritization A: Timeline/Weekly forecast 렌더링 제거
+  // — Timeline은 Today Forecast 카드의 🌅/🕘/🌙 셀과 의미 중복
+  // — Weekly forecast는 schedule.html에서 더 자세히 봄
 }
 
 async function loadHomeStats() {
@@ -1034,14 +857,12 @@ async function loadHomeStats() {
     // 오늘 일정 (전체 status) — Today Forecast 렌더
     const todayItems = (rToday.data || []).length > 0 ? rToday.data : pending;
     renderTodayForecast(todayItems);
-    // 주간 일정 (week=current 미지원 시 pending fallback)
-    const weekItems = (rWeek.data || []).length > 0 ? rWeek.data : todayItems;
-    renderWeekForecast(weekItems);
+    // V1.7.1: Weekly forecast 제거 — rWeek는 fetch만 유지 (다른 기능 호환)
+    void rWeek;
 
     const todayText = document.getElementById('today-text');
     const todaySub  = document.getElementById('today-sub');
     const statusIco = document.getElementById('status-ico');
-    const perfPendingEl = document.getElementById('perf-pending');
 
     // Status-First fallback 카피 (Today Forecast가 표시 안 될 때만 의미)
     if (todayText) {
@@ -1065,7 +886,6 @@ async function loadHomeStats() {
         if (todayCard) todayCard.onclick = () => goTo('quote');
       }
     }
-    if (perfPendingEl) perfPendingEl.textContent = pending.length || '-';
   } catch(e) {
     const todayText = document.getElementById('today-text');
     if (todayText) todayText.textContent = '일정을 불러오는 중이에요';
@@ -1076,42 +896,8 @@ async function loadHomeStats() {
     const r2 = await fetch(SERVER + '/api/stats/monthly');
     const d2 = await r2.json();
     if (d2.success) {
-      // hero 관련 잔여 ref 제거 (V1.6 cleanup)
-      const perfDone    = document.getElementById('perf-done');
-      const perfBooked  = document.getElementById('perf-booked');
-      const doneN = d2.done ?? 0;
-      const revN  = d2.revenue ? Math.round(d2.revenue/10000) : 0;
+      // V1.7.1: KPI inline 제거 — Today Forecast 카드가 같은 정보를 가짐
       const bookN = d2.confirmed > 0 ? d2.confirmed : 0;
-      // V1.5 hero 매출 row 제거됨 — 해당 코드 블록 제거
-      // hero 트렌드 ref만 임시 유지 (다른 곳 호환)
-      const heroTrend = null;
-      if (heroTrend && d2.revenue_change_pct !== undefined && d2.revenue_change_pct !== null) {
-        const pct = Math.round(d2.revenue_change_pct);
-        const dir = pct >= 0 ? '↗' : '↘';
-        heroTrend.textContent = `${dir} ${Math.abs(pct)}%`;
-        heroTrend.classList.toggle('down', pct < 0);
-        heroTrend.style.display = 'inline-flex';
-      }
-      // KPI
-      if (perfDone) {
-        if (typeof countUp === 'function') countUp(perfDone, doneN, { duration: 800 });
-        else perfDone.textContent = doneN;
-      }
-      if (perfBooked) {
-        if (typeof countUp === 'function' && bookN > 0) countUp(perfBooked, bookN, { duration: 700 });
-        else perfBooked.textContent = bookN > 0 ? bookN : '0';
-      }
-      // KPI inline 카드 — 데이터 있을 때만 표시 (A 빈 데이터 자동 숨김)
-      const kpiInline = document.getElementById('kpi-inline');
-      const perfPendingEl = document.getElementById('perf-pending');
-      const totalActivity = doneN + bookN + (typeof pending !== 'undefined' ? pending.length : 0);
-      if (kpiInline) {
-        if (totalActivity > 0 || revN > 0) {
-          kpiInline.style.display = 'block';
-        } else {
-          kpiInline.style.display = 'none';
-        }
-      }
 
       // ── V1.7 tile-grid 와이어링 (매출 표시 ✗ 정책) ──────────
       const tBookedN  = document.getElementById('tile-booked-n');
@@ -1140,10 +926,8 @@ async function loadHomeStats() {
         cachedFetch(cUrl).catch(() => null),
         cachedFetch(mUrl).catch(() => null)
       ]);
-      const dotC = document.getElementById('dot-community');
-      const dotM = document.getElementById('dot-market');
-      if (dotC && rC && rC.has_new) dotC.style.display = 'inline-block';
-      if (dotM && rM && rM.has_new) dotM.style.display = 'inline-block';
+      // V1.7.1: dot-community/dot-market(recent-row) 제거 — 커뮤니티 tile-badge가 대체
+      void rM;
 
       // V1.7: 커뮤니티 tile 와이어링 (정산 자리 교체)
       const tCommN = document.getElementById('tile-community-n');

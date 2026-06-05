@@ -1,7 +1,8 @@
 // 싹싹 앱 Service Worker v2.0 (Web Push 지원)
 // V1.6 디자인 통일 cache bust — 2026-06-04
 // V13: fetch 옵션 cache:'no-store' 추가 — Safari standard cache 우회
-const CACHE_NAME = 'ssak-v13';
+// V14: V1.7.1 prioritization A — 홈 5 영역 제거 (KPI/Weekly/Recent/Timeline/FAB)
+const CACHE_NAME = 'ssak-v14';
 const STATIC_ASSETS = [
   '/',
   '/index.html?v=8',
