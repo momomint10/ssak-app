@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260605-3">
+<link rel="preload" as="script" href="utils.js?v=20260605-4">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260605-3">
+<link rel="stylesheet" href="design.css?v=20260605-4">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -389,20 +389,8 @@
 
     <!-- V1.7.1: Timeline/KPI 제거 — Today Forecast 카드가 같은 정보를 가짐 (prioritization A) -->
 
-  <!-- 빠른 실행: 고객케어 hero (primary) -->
-  <div class="quick-grid ds-fade-in ds-fade-in-1" style="margin-top:16px;">
-    <button class="quick-btn quick-hero ds-tap-card" onclick="goTo('quote')">
-      <div class="quick-ico" style="background:#FFF0EC;">⚡</div>
-      <div>
-        <div class="quick-lbl">고객케어</div>
-        <div class="quick-hero-sub">견적 · 계약 · 완료 보고를 한 번에</div>
-      </div>
-      <div class="quick-hero-arrow">›</div>
-    </button>
-  </div>
-
-  <!-- 액션 tile 2×2 — 단촐 해소 핵심 -->
-  <div class="tile-grid ds-fade-in ds-fade-in-1">
+  <!-- V1.7.1 balance: 위쪽 2 tile — 비즈니스 (예약·견적) -->
+  <div class="tile-grid ds-fade-in ds-fade-in-1" style="margin-top:12px;">
     <button class="tile ds-tap-card" onclick="location.href='schedule.html'">
       <div class="tile-ico" style="background:#EFF6FF; color:#3B82F6;">📅</div>
       <div class="tile-lbl">예약 확정</div>
@@ -415,6 +403,22 @@
       <div class="tile-sub">대기 <b id="tile-pending-n">-</b>건</div>
       <span class="tile-badge" id="tile-pending-badge" style="display:none;"></span>
     </button>
+  </div>
+
+  <!-- V1.7.1 balance: 가운데 — 고객케어 hero (primary, sandwich center) -->
+  <div class="quick-grid ds-fade-in ds-fade-in-1" style="margin-top:10px;">
+    <button class="quick-btn quick-hero ds-tap-card" onclick="goTo('quote')">
+      <div class="quick-ico" style="background:#FFF0EC;">⚡</div>
+      <div>
+        <div class="quick-lbl">고객케어</div>
+        <div class="quick-hero-sub">견적 · 계약 · 완료 보고를 한 번에</div>
+      </div>
+      <div class="quick-hero-arrow">›</div>
+    </button>
+  </div>
+
+  <!-- V1.7.1 balance: 아래쪽 2 tile — 채널 (동료·커뮤니티) -->
+  <div class="tile-grid ds-fade-in ds-fade-in-1" style="margin-top:10px;">
     <button class="tile ds-tap-card" onclick="location.href='workforce.html'">
       <div class="tile-ico" style="background:#F0FDF4; color:#22C55E;">👥</div>
       <div class="tile-lbl">동료</div>
@@ -476,7 +480,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260605-3"></script>
+<script src="utils.js?v=20260605-4"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────

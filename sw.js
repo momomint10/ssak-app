@@ -2,7 +2,8 @@
 // V1.6 디자인 통일 cache bust — 2026-06-04
 // V13: fetch 옵션 cache:'no-store' 추가 — Safari standard cache 우회
 // V14: V1.7.1 prioritization A — 홈 5 영역 제거 (KPI/Weekly/Recent/Timeline/FAB)
-const CACHE_NAME = 'ssak-v14';
+// V15: V1.7.1 balance — 고객케어 카드 sandwich (2 tile + 고객케어 + 2 tile)
+const CACHE_NAME = 'ssak-v15';
 const STATIC_ASSETS = [
   '/',
   '/index.html?v=8',
