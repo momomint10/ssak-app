@@ -33,13 +33,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v25";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v26";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260606-3">
+<link rel="preload" as="script" href="utils.js?v=20260606-4">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260606-3">
+<link rel="stylesheet" href="design.css?v=20260606-4">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -304,55 +304,107 @@
 }
 /* V1.7.5: .hh-btns/.hh-btn/.hh-dot 제거 — 헤더 🔔/⚙️ 아이콘 삭제 */
 
-/* ═══ V1.7.4 mockup port: stat 4 tile ═══ */
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin: 14px 16px 20px;
-}
-.stat-tile {
-  background: #fff;
-  border-radius: 14px;
-  padding: 14px 8px 12px;
-  box-shadow: 0 4px 12px rgba(15,15,18,0.05);
+/* V1.8: stat-grid/stat-tile 제거 — 단일 health card로 교체 */
+
+/* ═══ V1.8 헬스 카드 — 3단계 색 (블루 → 살구 → 코랄) ═══ */
+.health-card {
+  margin: 12px 16px 20px;
+  border-radius: 16px;
+  padding: 13px 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
   border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
+  text-align: left;
+  color: #fff;
   font-family: inherit;
+  width: calc(100% - 32px);
+  display: block;
+  cursor: pointer;
+  transition: background 800ms ease-out, box-shadow 400ms ease, transform 120ms cubic-bezier(.16,1,.3,1);
   -webkit-tap-highlight-color: transparent;
-  transition: transform 120ms cubic-bezier(.16,1,.3,1);
 }
-.stat-tile:active {
-  transform: scale(0.96);
+.health-card:active { transform: scale(0.98); }
+
+/* L1 여유롭게 — 연한 블루 */
+.health-card.level-1 {
+  background: linear-gradient(135deg, #BFD7F0 0%, #7BA8DC 100%);
 }
-.stat-ico {
-  width: 38px; height: 38px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  margin-bottom: 2px;
+/* L2 순조롭게 — 살구 (하늘 → 노을) */
+.health-card.level-2 {
+  background: linear-gradient(135deg, #FFD8B5 0%, #FFB585 100%);
 }
-.stat-num {
-  font-size: 20px;
-  font-weight: 900;
-  color: var(--c-g900, #0F0F12);
-  font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  margin-top: 4px;
+/* L3 활기차게 — 연한 코랄 */
+.health-card.level-3 {
+  background: linear-gradient(135deg, #FFB8C5 0%, #FF7A95 100%);
 }
-.stat-lbl {
-  font-size: 11px;
-  color: var(--c-g500, #6B7280);
-  font-weight: 600;
-  margin-top: 2px;
+
+.health-card .health-bar { background: rgba(255,255,255,0.28); }
+.health-card .health-bar-fill { background: rgba(255,255,255,0.95); }
+
+/* 배경 빛 */
+.health-card::before {
+  content:''; position:absolute;
+  right:-30px; top:-40px;
+  width:140px; height:140px; border-radius:50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.32), transparent 60%);
+  pointer-events:none;
 }
+
+.health-face {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  width: 60px; height: 60px; z-index: 2;
+  animation: health-face-bob 3s ease-in-out infinite;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.18));
+}
+@keyframes health-face-bob {
+  0%, 100% { transform: translateY(-50%) scale(1) rotate(-3deg); }
+  50%      { transform: translateY(-50%) scale(1.07) rotate(3deg); }
+}
+.health-content { position: relative; z-index: 1; padding-right: 68px; }
+.health-lbl { font-size:10px; font-weight:800; opacity:0.92; text-transform:uppercase; letter-spacing:0.06em; }
+.health-status { font-size:12px; font-weight:800; margin-top:2px; opacity:0.95; }
+.health-amount { margin-top:5px; display:flex; align-items:baseline; gap:3px; flex-wrap:wrap; }
+.health-num { font-size:28px; font-weight:900; font-family:'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing:-0.04em; line-height:1; }
+.health-unit { font-size:13px; font-weight:800; opacity:0.85; }
+.health-meta { font-size:11px; opacity:0.78; margin-left:5px; font-weight:700; }
+.health-bar { margin-top:7px; height:4px; border-radius:99px; overflow:hidden; }
+.health-bar-fill { height:100%; border-radius:99px; box-shadow:0 0 6px rgba(255,255,255,0.3); transition: width 600ms cubic-bezier(.16,1,.3,1); }
+.health-goal { margin-top:4px; font-size:9.5px; font-weight:700; opacity:0.85; display:flex; justify-content:space-between; }
+
+@media (prefers-reduced-motion: reduce) {
+  .health-face { animation: none; transform: translateY(-50%); }
+}
+
+/* V1.8 Timeline 컴팩트 (시간/지역/내용 3줄) */
+.ds-timeline {
+  margin: 10px 0 16px;
+  padding: 0 0 0 20px;
+  gap: 7px;
+}
+.ds-tl-item {
+  flex-shrink: 0; width: 98px;
+  background: rgba(255,255,255,0.55); backdrop-filter: blur(10px);
+  border-radius: 11px; padding: 7px 9px 8px;
+  text-align: left;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+.ds-tl-item.now {
+  background: #047857; color:#fff;
+  box-shadow: 0 4px 14px rgba(4,120,87,0.32);
+  border-color: transparent;
+}
+.ds-tl-item.done {
+  background: rgba(255,255,255,0.32);
+  opacity: 0.75;
+}
+.ds-tl-time { font-size:12px; font-weight:900; font-family:'JetBrains Mono', ui-monospace, Menlo, monospace; letter-spacing:-0.02em; color:#1B2A3F; line-height:1.1; }
+.ds-tl-item.now .ds-tl-time { color:#fff; }
+.ds-tl-item.done .ds-tl-time { color:rgba(27,42,63,0.7); }
+.ds-tl-area { font-size:10px; font-weight:700; color:rgba(27,42,63,0.7); margin-top:2px; letter-spacing:-0.01em; line-height:1.1; }
+.ds-tl-item.now .ds-tl-area { color:rgba(255,255,255,0.9); }
+.ds-tl-task { font-size:10px; font-weight:600; color:rgba(27,42,63,0.55); margin-top:1px; line-height:1.1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ds-tl-item.now .ds-tl-task { color:rgba(255,255,255,0.75); }
 
 /* ═══ V1.7.4 mockup port: Today Forecast 강화 (큰 사이즈) ═══ */
 .ds-today-fc {
@@ -710,29 +762,21 @@
   <!-- V1.7.4 mockup port: Timeline (시간별 일정 가로 스크롤) — JS가 채움 -->
   <div class="ds-timeline ds-fade-in ds-fade-in-1" id="today-timeline" style="display:none;"></div>
 
-  <!-- V1.7.4 mockup port: 4 stat tile (진행 중 / 오늘 완료 / 대기 견적 / 만족도) -->
-  <div class="stat-grid ds-fade-in ds-fade-in-2">
-    <button class="stat-tile ds-tap-card" onclick="location.href='schedule.html?filter=inprogress'">
-      <div class="stat-ico" style="background:#FFF7ED;">⚡</div>
-      <div class="stat-num" id="stat-inprogress">0</div>
-      <div class="stat-lbl">진행 중</div>
-    </button>
-    <button class="stat-tile ds-tap-card" onclick="location.href='schedule.html?filter=done'">
-      <div class="stat-ico" style="background:#F0FDF4;">✅</div>
-      <div class="stat-num" id="stat-done-today">0</div>
-      <div class="stat-lbl">오늘 완료</div>
-    </button>
-    <button class="stat-tile ds-tap-card" onclick="location.href='quote-list.html'">
-      <div class="stat-ico" style="background:#FEF3C7;">📝</div>
-      <div class="stat-num" id="stat-pending">0</div>
-      <div class="stat-lbl">대기 견적</div>
-    </button>
-    <button class="stat-tile ds-tap-card" onclick="location.href='my.html'">
-      <div class="stat-ico" style="background:#FEF3C7;">⭐</div>
-      <div class="stat-num" id="stat-rating">4.9</div>
-      <div class="stat-lbl">만족도</div>
-    </button>
-  </div>
+  <!-- V1.8: 단일 헬스 카드 — 활동량 자동 추정 + 3단계 색 + 캐릭터 -->
+  <button class="health-card ds-fade-in ds-fade-in-2 level-1" id="health-card">
+    <svg class="health-face" id="health-face" viewBox="0 0 100 100" aria-hidden="true"></svg>
+    <div class="health-content">
+      <div class="health-lbl">오늘 활동량</div>
+      <div class="health-status" id="health-status">여유롭게 시작하고 있어요</div>
+      <div class="health-amount">
+        <span class="health-num" id="health-kcal">0</span>
+        <span class="health-unit">kcal</span>
+        <span class="health-meta" id="health-meta"></span>
+      </div>
+      <div class="health-bar"><div class="health-bar-fill" id="health-bar-fill" style="width:0%;"></div></div>
+      <div class="health-goal"><span>목표 1,000 kcal</span><span id="health-pct">0%</span></div>
+    </div>
+  </button>
 
   </div><!-- /ds-home-content -->
 
@@ -775,7 +819,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260606-3"></script>
+<script src="utils.js?v=20260606-4"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -1143,20 +1187,24 @@ function renderTodayForecast(items) {
   // DOM 업데이트
   const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
   const setHTML = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML = v; };
+  // V1.8 bug fix: upcoming은 confirmed 만 (cancelled 제외)
+  const confirmed = items.filter(i => i.status === 'confirmed').length;
   set('today-fc-num', total);
   set('today-fc-date', dateStr);
   set('today-fc-state', stateLabel);
-  setHTML('today-fc-progress', `완료 <b>${done}</b> · 진행 <b>${inprog}</b> · 예정 <b>${upcoming}</b>`);
+  setHTML('today-fc-progress', `완료 <b>${done}</b> · 진행 <b>${inprog}</b> · 예정 <b>${confirmed}</b>`);
   set('today-fc-progress-pct', progressPct + '%');
   set('today-fc-first', firstTime);
   set('today-fc-now', nowTime);
   set('today-fc-last', lastTime);
 
-  // V1.7.4 mockup port: Timeline 복원
+  // V1.8 단순 Timeline: 시간/지역/내용 3줄
   renderTimeline(sorted, nextItem);
+  // V1.8 헬스 카드 자동 추정 + 색 단계
+  renderHealthCard(items);
 }
 
-// V1.7.4 mockup port: 시간별 일정 카드 가로 스크롤
+// V1.8 단순 Timeline (시간/지역/내용 3줄, 컴팩트)
 function renderTimeline(sorted, nextItem) {
   const tl = document.getElementById('today-timeline');
   if (!tl) return;
@@ -1166,20 +1214,107 @@ function renderTimeline(sorted, nextItem) {
     const t = i.time || i.scheduled_time || '—';
     const isDone = i.status === 'completed' || i.status === 'done';
     const isProg = i.status === 'inprogress' || i.status === 'in_progress';
+    const isCancelled = i.status === 'cancelled';
     const isNow  = (i === nextItem) && !isDone;
-    const stateIco = isDone ? '✅' : isProg ? '▶' : '◷';
-    const dotCls   = isDone ? 'done' : (isProg || isNow) ? 'pending' : 'open';
-    const timeLbl  = isNow ? `지금 · ${t}` : (isDone ? `${t} · 완료` : (isProg ? `${t} · 진행` : `${t} · 예정`));
-    const cust = ((i.customer_name || i.name || '고객') + '').slice(0, 8);
-    const job  = (i.kind || i.service || i.type || '청소');
-    return `<button class="ds-tl-item${isNow ? ' now' : ''}" onclick="location.href='schedule.html'">
-      <span class="ds-tl-dot ${dotCls}"></span>
-      <div class="ds-tl-time">${timeLbl}</div>
-      <div class="ds-tl-state">${stateIco}</div>
-      <div class="ds-tl-customer">${cust}</div>
-      <div class="ds-tl-job">${job}</div>
+    if (isCancelled) return ''; // 취소된 일정 숨김
+    const stateCls = isDone ? 'done' : (isNow ? 'now' : '');
+    // 지역: address에서 자치구 추출 (예: "서울 강서구 ..." → "강서구")
+    const addr = i.address || i.addr || '';
+    const m = addr.match(/(\S+구|\S+군|\S+시)/);
+    const area = (m && m[1]) || (i.region || i.district || '');
+    const task = (i.kind || i.service || i.type || '청소').slice(0, 6);
+    return `<button class="ds-tl-item ${stateCls}" onclick="location.href='schedule.html'">
+      <div class="ds-tl-time">${t}</div>
+      <div class="ds-tl-area">${area || '—'}</div>
+      <div class="ds-tl-task">${task}</div>
     </button>`;
   }).join('');
+}
+
+// V1.8 헬스 카드: 청소 작업 자동 추정 + 3단계 색/캐릭터
+const HEALTH_FACE_SVG = {
+  // L1 여유롭게 — 연한 블루 배경, 점 눈 + 부드러운 미소
+  1: `<defs><radialGradient id="f1" cx=".5" cy=".4"><stop offset="0" stop-color="#9CC4E8"/><stop offset="1" stop-color="#5E94CC"/></radialGradient></defs>
+      <circle cx="50" cy="50" r="40" fill="url(#f1)" stroke="rgba(255,255,255,.7)" stroke-width="2.5"/>
+      <circle cx="36" cy="46" r="3" fill="#1F2D40"/>
+      <circle cx="64" cy="46" r="3" fill="#1F2D40"/>
+      <path d="M38 64 Q50 71 62 64" stroke="#1F2D40" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="28" cy="58" rx="5" ry="3.5" fill="#FFB8C5" opacity=".5"/>
+      <ellipse cx="72" cy="58" rx="5" ry="3.5" fill="#FFB8C5" opacity=".5"/>
+      <ellipse cx="78" cy="22" rx="7" ry="3.5" fill="#fff" opacity=".75"/>`,
+  // L2 순조롭게 — 살구 배경, 반달 눈 + 자연 미소
+  2: `<defs><radialGradient id="f2" cx=".5" cy=".4"><stop offset="0" stop-color="#FFC094"/><stop offset="1" stop-color="#E89868"/></radialGradient></defs>
+      <circle cx="50" cy="50" r="40" fill="url(#f2)" stroke="rgba(255,255,255,.7)" stroke-width="2.5"/>
+      <path d="M30 46 Q36 41 42 46" stroke="#3D2010" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M58 46 Q64 41 70 46" stroke="#3D2010" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M34 63 Q50 73 66 63" stroke="#3D2010" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="26" cy="60" rx="5.5" ry="3.5" fill="#FF8FA8" opacity=".5"/>
+      <ellipse cx="74" cy="60" rx="5.5" ry="3.5" fill="#FF8FA8" opacity=".5"/>
+      <path d="M82 22 L84 26 L88 26 L85 28 L86 32 L82 30 L78 32 L79 28 L76 26 L80 26 Z" fill="#fff" opacity=".85"/>`,
+  // L3 활기차게 — 코랄 배경, 환한 미소 + 별 액센트
+  3: `<defs><radialGradient id="f3" cx=".5" cy=".4"><stop offset="0" stop-color="#FF9CB0"/><stop offset="1" stop-color="#E85F7C"/></radialGradient></defs>
+      <circle cx="50" cy="50" r="40" fill="url(#f3)" stroke="rgba(255,255,255,.7)" stroke-width="2.5"/>
+      <path d="M28 47 Q34 40 40 47" stroke="#3A1525" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M60 47 Q66 40 72 47" stroke="#3A1525" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M32 62 Q50 76 68 62" stroke="#3A1525" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="26" cy="61" rx="6" ry="4" fill="#FF6080" opacity=".5"/>
+      <ellipse cx="74" cy="61" rx="6" ry="4" fill="#FF6080" opacity=".5"/>
+      <path d="M84 20 L86 24 L90 24 L87 27 L88 32 L84 29 L80 32 L81 27 L78 24 L82 24 Z" fill="#fff"/>
+      <path d="M14 26 L16 29 L19 29 L17 31 L18 35 L14 33 L11 35 L12 31 L10 29 L13 29 Z" fill="#fff" opacity=".85"/>`,
+};
+const HEALTH_STATUS = {
+  1: '여유롭게 시작하고 있어요',
+  2: '순조롭게 일하고 있어요',
+  3: '활기차게 일하고 있어요 ✨',
+};
+
+function renderHealthCard(items) {
+  const card = document.getElementById('health-card');
+  const face = document.getElementById('health-face');
+  if (!card || !face) return;
+  // 청소 시간: 일정의 status가 done/inprogress인 항목들로 자동 추정
+  // 일정 1건당 평균 2시간 가정 (실측 데이터 없을 때)
+  const worked = (items || []).filter(i => {
+    return i.status === 'completed' || i.status === 'done' || i.status === 'inprogress' || i.status === 'in_progress';
+  });
+  // service_time/duration 있으면 사용, 없으면 평균 2h
+  let hours = 0;
+  worked.forEach(i => {
+    const t = parseFloat(i.duration || i.service_time || 0);
+    hours += (t > 0 ? t : 2);
+  });
+  // 칼로리: 1시간 청소 ≈ 220kcal (체중 65kg 기준)
+  const kcal = Math.round(hours * 220);
+  // 걸음: 1시간 청소 ≈ 5,000보
+  const steps = Math.round(hours * 5000);
+  // 3 단계 결정
+  // L1: 0~400 / L2: 400~700 / L3: 700+
+  let level = 1;
+  if (kcal >= 700) level = 3;
+  else if (kcal >= 400) level = 2;
+  // 카드 색 클래스 갱신
+  card.classList.remove('level-1', 'level-2', 'level-3');
+  card.classList.add(`level-${level}`);
+  // 캐릭터 SVG 교체
+  face.innerHTML = HEALTH_FACE_SVG[level];
+  // 텍스트 갱신
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  set('health-status', HEALTH_STATUS[level]);
+  set('health-kcal', kcal);
+  // meta: 시간 + 걸음
+  const metaEl = document.getElementById('health-meta');
+  if (metaEl) {
+    if (kcal > 0) {
+      metaEl.textContent = `· ${hours.toFixed(1)}h · ${steps.toLocaleString()}보`;
+    } else {
+      metaEl.textContent = '· 오늘 시작 전';
+    }
+  }
+  // 진행바 (목표 1000kcal 기준)
+  const pct = Math.min(100, Math.round(kcal / 1000 * 100));
+  const fill = document.getElementById('health-bar-fill');
+  if (fill) fill.style.width = pct + '%';
+  set('health-pct', pct + '%');
 }
 
 // V1.7.4 mockup port: 헤더 날짜 업데이트
@@ -1307,27 +1442,15 @@ async function loadWeather() {
   }
 }
 
-// V1.7.4 mockup port: 4 stat tile 와이어링
-function renderStatTiles(items, pending) {
-  const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-  const total = (items || []).length;
-  const done = (items || []).filter(i => i.status === 'completed' || i.status === 'done').length;
-  const inprog = (items || []).filter(i => i.status === 'inprogress' || i.status === 'in_progress').length;
-  set('stat-inprogress', inprog);
-  set('stat-done-today', done);
-  set('stat-pending', (pending || []).length);
-  // 만족도 — 백엔드 endpoint 추가 전 임시 4.9 (mockup 그대로)
-  set('stat-rating', '4.9');
-}
+// V1.8: renderStatTiles 제거 — 단일 헬스 카드로 교체 (renderHealthCard)
 
 async function loadHomeStats() {
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
   const adminKey = cfg.adminKey || '';
 
-  // V1.7.4 mockup port: 헤더 날짜 + 0건 안전망
+  // V1.8: 헤더 날짜 + 0건 안전망 (헬스 카드는 renderTodayForecast에서 자동 호출)
   try { updateHomeHeaderDate(); } catch(_) {}
   try { renderTodayForecast([]); } catch(_) {}
-  try { renderStatTiles([], []); } catch(_) {}
   // V1.7.4 실시간 날씨 — 첫 로드 + 5분 폴링
   try { loadWeather(); } catch(_) {}
   if (!window._weatherInterval) {
@@ -1348,8 +1471,7 @@ async function loadHomeStats() {
     // 오늘 일정 (전체 status) — Today Forecast 렌더
     const todayItems = (rToday.data || []).length > 0 ? rToday.data : pending;
     renderTodayForecast(todayItems);
-    // V1.7.4 mockup port: 4 stat tile 와이어링
-    renderStatTiles(todayItems, pending);
+    // V1.8: renderHealthCard는 renderTodayForecast 내부에서 자동 호출
     // V1.7.1: Weekly forecast 제거 — rWeek는 fetch만 유지 (다른 기능 호환)
     void rWeek;
 
