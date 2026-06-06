@@ -31,7 +31,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v36";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v37";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260607-4">
+<link rel="stylesheet" href="design.css?v=20260607-5">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -1025,6 +1025,50 @@
   .ds-np-hero .np-timebar .bar-fill { animation: none; }
 }
 
+/* V1.9.11: 일정이 늘면 hero가 자연스럽게 확장 — staggered fade-in */
+@keyframes ds-np-row-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ds-np-hero-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.ds-np-hero,
+.ds-np-empty-hero {
+  animation: ds-np-hero-in 0.5s cubic-bezier(.16,1,.3,1) both;
+}
+.ds-np-list-label {
+  animation: ds-np-row-in 0.4s cubic-bezier(.16,1,.3,1) both;
+}
+.ds-np-row {
+  animation: ds-np-row-in 0.45s cubic-bezier(.16,1,.3,1) both;
+}
+/* 카드 자체 — 일정 늘어날 때 부드러운 그림자 reflow */
+.ds-today-fc {
+  transition: transform 240ms cubic-bezier(.16,1,.3,1),
+              box-shadow 320ms ease;
+}
+/* 일정이 많을 때 (data-count) — sub 텍스트 strong 효과 강화 */
+.ds-today-fc[data-fc-count="0"] .ds-today-fc-sub { opacity: 0.65; }
+.ds-today-fc[data-fc-count="1"] .ds-today-fc-sub b { font-size: 13px; }
+.ds-today-fc[data-fc-count="2"] .ds-today-fc-sub b { font-size: 13.5px; }
+.ds-today-fc[data-fc-count="3"] .ds-today-fc-sub b,
+.ds-today-fc[data-fc-count="4"] .ds-today-fc-sub b { font-size: 14px; }
+.ds-today-fc[data-fc-count-many="1"] .ds-today-fc-sub {
+  font-size: 13.5px;
+}
+.ds-today-fc[data-fc-count-many="1"] .ds-today-fc-sub b {
+  font-size: 14.5px;
+  text-shadow: 0 0 8px rgba(4,120,87,0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-np-hero, .ds-np-empty-hero, .ds-np-list-label, .ds-np-row {
+    animation: none;
+  }
+}
+
 /* ═══ V1.7.4: 고객케어 노란 hero + Extended FAB 모두 제거 (이미지 그대로) ═══ */
 
 /* ── V1.7.3: Extended FAB (고객케어 primary CTA) — DEPRECATED V1.7.4 ──────────── */
@@ -1746,27 +1790,45 @@ function renderTimeline(sorted, nextItem) {
     }
   }
 
-  // 미니 리스트
+  // 미니 리스트 — V1.9.11: staggered animation-delay (자연스러운 확장)
+  let rowIdx = 0;
+  const HERO_BASE_DELAY = 30; // hero가 끝난 직후 row 시작
+  const STEP = 55; // row마다 55ms 간격
   html += `<div class="ds-np-list">`;
   if (nextItems.length > 0) {
-    html += `<div class="ds-np-list-label">예정</div>`;
-    html += nextItems.map(i => `<button class="ds-np-row" onclick="location.href='schedule.html'">
-      <div class="np-row-time">${fmtTime(i.time || i.scheduled_time)}</div>
-      <div class="np-row-title">${taskName(i)}</div>
-      <div class="np-row-area">${extractArea(i) || ''}</div>
-    </button>`).join('');
+    html += `<div class="ds-np-list-label" style="animation-delay:${HERO_BASE_DELAY + rowIdx * STEP}ms;">예정</div>`;
+    html += nextItems.map(i => {
+      const d = HERO_BASE_DELAY + (++rowIdx) * STEP;
+      return `<button class="ds-np-row" style="animation-delay:${d}ms;" onclick="location.href='schedule.html'">
+        <div class="np-row-time">${fmtTime(i.time || i.scheduled_time)}</div>
+        <div class="np-row-title">${taskName(i)}</div>
+        <div class="np-row-area">${extractArea(i) || ''}</div>
+      </button>`;
+    }).join('');
   }
   if (doneItems.length > 0) {
-    html += `<div class="ds-np-list-label">완료</div>`;
-    html += doneItems.map(i => `<button class="ds-np-row done" onclick="location.href='schedule.html'">
-      <div class="np-row-time">${fmtTime(i.time || i.scheduled_time)}</div>
-      <div class="np-row-title">${taskName(i)}</div>
-      <div class="np-row-area">${extractArea(i) || ''}</div>
-    </button>`).join('');
+    const labelDelay = HERO_BASE_DELAY + (++rowIdx) * STEP;
+    html += `<div class="ds-np-list-label" style="animation-delay:${labelDelay}ms;">완료</div>`;
+    html += doneItems.map(i => {
+      const d = HERO_BASE_DELAY + (++rowIdx) * STEP;
+      return `<button class="ds-np-row done" style="animation-delay:${d}ms;" onclick="location.href='schedule.html'">
+        <div class="np-row-time">${fmtTime(i.time || i.scheduled_time)}</div>
+        <div class="np-row-title">${taskName(i)}</div>
+        <div class="np-row-area">${extractArea(i) || ''}</div>
+      </button>`;
+    }).join('');
   }
   html += `</div>`;
 
   tl.innerHTML = html;
+
+  // V1.9.11: 일정 개수에 따른 풍성함 data attr
+  const fc = document.getElementById('today-fc');
+  if (fc) {
+    const cnt = active.length;
+    fc.setAttribute('data-fc-count', String(Math.min(cnt, 4)));
+    fc.setAttribute('data-fc-count-many', cnt >= 5 ? '1' : '0');
+  }
 }
 
 // V1.8 헬스 카드: 청소 작업 자동 추정 + 3단계 색/캐릭터
