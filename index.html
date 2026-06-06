@@ -33,13 +33,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v29";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v30";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260606-7">
+<link rel="preload" as="script" href="utils.js?v=20260606-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260606-7">
+<link rel="stylesheet" href="design.css?v=20260606-8">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -648,7 +648,11 @@
   .ds-today-fc.scene-thunder::before { animation: none; }
 }
 
-/* ═══ V1.7.4 mockup port: Timeline 강화 ═══ */
+/* ═══ V1.9.3: Timeline (weather hero 안으로 이동, foot 자리 대체) ═══ */
+.ds-today-fc .ds-timeline {
+  margin: 10px 0 16px;
+  padding: 0 0 0 20px;
+}
 .ds-timeline {
   margin-top: 16px;
   padding: 12px 0 12px 16px;
@@ -806,28 +810,14 @@
         <span class="ds-today-fc-unit">건</span>
       </div>
       <div class="ds-today-fc-sub" id="today-fc-progress">완료 <b>0</b> · 진행 <b>0</b> · 예정 <b>0</b></div>
-      <!-- V1.9.2: 진척률 셀 제거 (사장님 결정 — 중복 정보) → 3셀 (첫/지금/마지막) -->
-      <div class="ds-today-fc-foot">
-        <div class="ds-today-fc-cell">
-          <div class="ds-today-fc-cell-lbl">🌅 첫</div>
-          <div class="ds-today-fc-cell-val" id="today-fc-first">—</div>
-        </div>
-        <div class="ds-today-fc-cell">
-          <div class="ds-today-fc-cell-lbl">🕘 지금</div>
-          <div class="ds-today-fc-cell-val" id="today-fc-now">—</div>
-        </div>
-        <div class="ds-today-fc-cell">
-          <div class="ds-today-fc-cell-lbl">🌙 마지막</div>
-          <div class="ds-today-fc-cell-val" id="today-fc-last">—</div>
-        </div>
-      </div>
+      <!-- V1.9.3: foot 3셀 제거 → 그 자리에 mini Timeline (E안 mockup 그대로) -->
+      <div class="ds-timeline" id="today-timeline" style="display:none;"></div>
     </div>
 
     <!-- V1.7.2: status-card fallback 영구 hide — weather hero가 0건도 처리 -->
     <div class="ds-status-card" id="today-card" style="display:none;"></div>
 
-  <!-- V1.7.4 mockup port: Timeline (시간별 일정 가로 스크롤) — JS가 채움 -->
-  <div class="ds-timeline ds-fade-in ds-fade-in-1" id="today-timeline" style="display:none;"></div>
+    <!-- V1.9.3: 외부 Timeline 제거 — weather hero 안으로 통합됨 -->
 
   <!-- V1.8: 단일 헬스 카드 — 활동량 자동 추정 + 3단계 색 + 캐릭터 -->
   <button class="health-card ds-fade-in ds-fade-in-2 level-1" id="health-card">
@@ -886,7 +876,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260606-7"></script>
+<script src="utils.js?v=20260606-8"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -1203,9 +1193,7 @@ function renderTodayForecast(items) {
     set('today-fc-state', '🌤 여유로운 하루');
     setHTML('today-fc-progress', '오늘 일정 없음 · 탭해서 새 견적 받기');
     // V1.9.2: today-fc-progress-pct 제거
-    set('today-fc-first', '—');
-    set('today-fc-now', '—');
-    set('today-fc-last', '—');
+    // V1.9.3: foot 3셀 제거 — first/now/last 셀 set 호출 제거
     // 카드 클릭 시 견적 페이지로 (no schedule, so quote action)
     fc.onclick = () => goTo('quote');
     return;
@@ -1261,9 +1249,8 @@ function renderTodayForecast(items) {
   set('today-fc-state', stateLabel);
   setHTML('today-fc-progress', `완료 <b>${done}</b> · 진행 <b>${inprog}</b> · 예정 <b>${confirmed}</b>`);
   // V1.9.2: today-fc-progress-pct set 제거 (진척률 셀 삭제됨)
-  set('today-fc-first', firstTime);
-  set('today-fc-now', nowTime);
-  set('today-fc-last', lastTime);
+  // V1.9.3: foot 3셀 제거 — first/now/last 셀 set 호출 제거
+  void firstTime; void nowTime; void lastTime;
 
   // V1.8 단순 Timeline: 시간/지역/내용 3줄
   renderTimeline(sorted, nextItem);
