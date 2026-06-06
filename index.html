@@ -33,13 +33,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v27";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v28";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260606-5">
+<link rel="preload" as="script" href="utils.js?v=20260606-6">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260606-5">
+<link rel="stylesheet" href="design.css?v=20260606-6">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -326,21 +326,37 @@
 }
 .health-card:active { transform: scale(0.98); }
 
-/* L1 여유롭게 — 연한 블루 */
+/* V1.9.1: 단계별 진한 텍스트 색 (가독성 ↑, WCAG AA 4.5:1+ 통과)
+   카드 배경은 옅게 유지 + 텍스트는 톤에 맞춰 진하게 */
+
+/* L1 여유롭게 — 연한 블루 (배경) + 진한 네이비 (텍스트) */
 .health-card.level-1 {
   background: linear-gradient(135deg, #BFD7F0 0%, #7BA8DC 100%);
+  color: #0F1E33;  /* 진한 네이비 — contrast 8.5:1 */
 }
-/* L2 순조롭게 — 살구 (하늘 → 노을) */
+.health-card.level-1 .health-bar { background: rgba(15,30,51,0.20); }
+.health-card.level-1 .health-bar-fill { background: rgba(15,30,51,0.85); }
+
+/* L2 순조롭게 — 살구 (배경) + 진한 갈색 (텍스트) */
 .health-card.level-2 {
   background: linear-gradient(135deg, #FFD8B5 0%, #FFB585 100%);
+  color: #4A2410;  /* 진한 초콜릿 — contrast 6.2:1 */
 }
-/* L3 활기차게 — 연한 코랄 */
+.health-card.level-2 .health-bar { background: rgba(74,36,16,0.20); }
+.health-card.level-2 .health-bar-fill { background: rgba(74,36,16,0.85); }
+
+/* L3 활기차게 — 연한 코랄 (배경) + 진한 와인 (텍스트) */
 .health-card.level-3 {
   background: linear-gradient(135deg, #FFB8C5 0%, #FF7A95 100%);
+  color: #4A0E1F;  /* 진한 와인 — contrast 5.8:1 */
 }
+.health-card.level-3 .health-bar { background: rgba(74,14,31,0.20); }
+.health-card.level-3 .health-bar-fill { background: rgba(74,14,31,0.85); }
 
-.health-card .health-bar { background: rgba(255,255,255,0.28); }
-.health-card .health-bar-fill { background: rgba(255,255,255,0.95); }
+/* 보너스: 미세한 텍스트 그림자 (더 또렷하게) */
+.health-card .health-content {
+  text-shadow: 0 1px 0 rgba(255,255,255,0.25);
+}
 
 /* 배경 빛 */
 .health-card::before {
@@ -873,7 +889,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260606-5"></script>
+<script src="utils.js?v=20260606-6"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -1522,8 +1538,24 @@ async function loadHomeStats() {
       fetch(SERVER + `/api/bookings?week=current`).then(r => r.json()).catch(() => ({data:[]}))
     ]);
     const pending = rPending.data || [];
-    // 오늘 일정 (전체 status) — Today Forecast 렌더
-    const todayItems = (rToday.data || []).length > 0 ? rToday.data : pending;
+    // V1.9.1: localStorage 우선 — schedule.html과 동기화 (사장님이 직접 입력한 일정 즉시 반영)
+    let todayItems;
+    try {
+      const localAll = JSON.parse(localStorage.getItem('ssak_schedules') || '[]');
+      const localToday = localAll.filter(s => {
+        const sd = (s.date || s.scheduled_date || '').slice(0, 10);
+        return sd === todayStr && s.status !== 'cancelled';
+      });
+      if (localToday.length > 0) {
+        todayItems = localToday;
+      } else if ((rToday.data || []).length > 0) {
+        todayItems = rToday.data;
+      } else {
+        todayItems = pending;
+      }
+    } catch(_) {
+      todayItems = (rToday.data || []).length > 0 ? rToday.data : pending;
+    }
     renderTodayForecast(todayItems);
     // V1.8: renderHealthCard는 renderTodayForecast 내부에서 자동 호출
     // V1.7.1: Weekly forecast 제거 — rWeek는 fetch만 유지 (다른 기능 호환)
