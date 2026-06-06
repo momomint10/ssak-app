@@ -33,13 +33,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v22";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v23";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260605-9">
+<link rel="preload" as="script" href="utils.js?v=20260606-1">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260605-9">
+<link rel="stylesheet" href="design.css?v=20260606-1">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -271,7 +271,155 @@
 }
 .tile-badge.green { background: #22C55E; }
 
-/* ── V1.7.3: Extended FAB (고객케어 primary CTA) ──────────── */
+/* ═══ V1.7.4 mockup port: 큰 헤더 ═══ */
+.home-header-v2 {
+  padding: 54px 24px 12px;
+  background: #fff;
+}
+.hh-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.hh-body { flex: 1; min-width: 0; }
+.hh-date {
+  font-size: 13px;
+  color: var(--c-g500, #6B7280);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.hh-name {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--c-g900, #0F0F12);
+}
+.hh-company {
+  font-size: 12px;
+  color: var(--c-g500);
+  margin-top: 6px;
+  font-weight: 600;
+}
+.hh-btns {
+  display: flex;
+  gap: 8px;
+  padding-top: 6px;
+}
+.hh-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--c-g100, #F2F4F6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--c-g900);
+  position: relative;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.hh-dot {
+  position: absolute; top: 8px; right: 8px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #FFD600;
+  border: 2px solid #fff;
+}
+
+/* ═══ V1.7.4 mockup port: stat 4 tile ═══ */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 14px 16px 20px;
+}
+.stat-tile {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px 8px 12px;
+  box-shadow: 0 4px 12px rgba(15,15,18,0.05);
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 120ms cubic-bezier(.16,1,.3,1);
+}
+.stat-tile:active {
+  transform: scale(0.96);
+}
+.stat-ico {
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+.stat-num {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--c-g900, #0F0F12);
+  font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-top: 4px;
+}
+.stat-lbl {
+  font-size: 11px;
+  color: var(--c-g500, #6B7280);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ═══ V1.7.4 mockup port: Today Forecast 강화 (큰 사이즈) ═══ */
+.ds-today-fc {
+  margin: 14px 16px 0;
+}
+.ds-today-fc-date::after {
+  /* "월 일 · 요일 · 강서구" — 위치 정보는 JS가 채움 */
+}
+/* Weather hero 더 크게 — mockup 비율 */
+.ds-today-fc .ds-today-fc-scene {
+  height: 130px;
+}
+.ds-today-fc .ds-today-sun {
+  width: 76px; height: 76px;
+}
+.ds-today-fc .ds-today-cloud {
+  width: 120px; height: 52px;
+}
+.ds-today-fc .ds-today-fc-num {
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+/* ═══ V1.7.4 mockup port: Timeline 강화 ═══ */
+.ds-timeline {
+  margin-top: 16px;
+  padding: 12px 0 12px 16px;
+}
+.ds-tl-item {
+  width: 112px;
+  border-radius: 16px;
+  padding: 13px 12px;
+}
+.ds-tl-item.now {
+  background: #047857;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(4,120,87,0.28);
+}
+
+/* ═══ V1.7.4: 고객케어 노란 hero + Extended FAB 모두 제거 (이미지 그대로) ═══ */
+
+/* ── V1.7.3: Extended FAB (고객케어 primary CTA) — DEPRECATED V1.7.4 ──────────── */
 .ds-fab-ext {
   position: fixed;
   right: 16px;
@@ -348,21 +496,21 @@
 <body>
 <div class="shell">
 
-  <!-- 사진 hero 헤더 (Phase 6 — 기본은 흰 헤더, 사장님이 사진 등록 시 사진 모드 활성화) -->
-  <div class="ds-hero-photo no-photo" id="hero-root">
-    <div class="ds-hero-img" id="hero-img" aria-hidden="true"></div>
-    <div class="ds-hero-overlay" aria-hidden="true"></div>
-    <div class="ds-hero-top">
-      <button class="ds-hero-btn ds-tap" onclick="togglePushNotification()" aria-label="알림 설정">
-        🔔
-        <span class="ds-hero-dot" id="notif-dot" style="display:none;"></span>
-      </button>
-      <button class="ds-hero-btn ds-tap" onclick="goTo('settings')" aria-label="설정">⚙️</button>
-    </div>
-    <div class="ds-hero-body">
-      <div class="ds-hero-greet" id="greeting">좋은 아침이에요</div>
-      <div class="ds-hero-name"><span id="user-name">사장님</span></div>
-      <div class="ds-hero-company" id="hero-company" style="display:none;"></div>
+  <!-- V1.7.4 mockup port: 큰 헤더 (날짜 위 + 이름,인사 두 줄 큰 글씨) -->
+  <div class="home-header-v2">
+    <div class="hh-row">
+      <div class="hh-body">
+        <div class="hh-date" id="hh-date">2026년 6월 6일 · 토</div>
+        <div class="hh-name"><span id="user-name">사장님</span>,<br><span id="greeting">좋은 아침이에요</span></div>
+        <div class="hh-company" id="hero-company" style="display:none;"></div>
+      </div>
+      <div class="hh-btns">
+        <button class="hh-btn" onclick="togglePushNotification()" aria-label="알림 설정">
+          🔔
+          <span class="hh-dot" id="notif-dot" style="display:none;"></span>
+        </button>
+        <button class="hh-btn" onclick="goTo('settings')" aria-label="설정">⚙️</button>
+      </div>
     </div>
   </div>
 
@@ -429,50 +577,36 @@
     <!-- V1.7.2: status-card fallback 영구 hide — weather hero가 0건도 처리 -->
     <div class="ds-status-card" id="today-card" style="display:none;"></div>
 
-    <!-- V1.7.1: Timeline/KPI 제거 — Today Forecast 카드가 같은 정보를 가짐 (prioritization A) -->
+  <!-- V1.7.4 mockup port: Timeline (시간별 일정 가로 스크롤) — JS가 채움 -->
+  <div class="ds-timeline ds-fade-in ds-fade-in-1" id="today-timeline" style="display:none;"></div>
 
-  <!-- V1.7.3: 4 tile 2×2 통합 (sandwich center 제거 → Extended FAB로 이동) -->
-  <div class="tile-grid ds-fade-in ds-fade-in-1" style="margin-top:12px;">
-    <button class="tile ds-tap-card" onclick="location.href='schedule.html'">
-      <div class="tile-ico" style="background:#EFF6FF; color:#3B82F6;">📅</div>
-      <div class="tile-lbl">예약 확정</div>
-      <div class="tile-sub">이번 주 <b id="tile-booked-n">-</b>건</div>
-      <span class="tile-badge" id="tile-booked-badge" style="display:none;"></span>
+  <!-- V1.7.4 mockup port: 4 stat tile (진행 중 / 오늘 완료 / 대기 견적 / 만족도) -->
+  <div class="stat-grid ds-fade-in ds-fade-in-2">
+    <button class="stat-tile ds-tap-card" onclick="location.href='schedule.html?filter=inprogress'">
+      <div class="stat-ico" style="background:#FFF7ED;">⚡</div>
+      <div class="stat-num" id="stat-inprogress">0</div>
+      <div class="stat-lbl">진행 중</div>
     </button>
-    <button class="tile ds-tap-card" onclick="location.href='quote-list.html'">
-      <div class="tile-ico" style="background:#FFF7ED; color:#F59E0B;">📝</div>
-      <div class="tile-lbl">견적함</div>
-      <div class="tile-sub">대기 <b id="tile-pending-n">-</b>건</div>
-      <span class="tile-badge" id="tile-pending-badge" style="display:none;"></span>
+    <button class="stat-tile ds-tap-card" onclick="location.href='schedule.html?filter=done'">
+      <div class="stat-ico" style="background:#F0FDF4;">✅</div>
+      <div class="stat-num" id="stat-done-today">0</div>
+      <div class="stat-lbl">오늘 완료</div>
     </button>
-    <button class="tile ds-tap-card" onclick="location.href='workforce.html'">
-      <div class="tile-ico" style="background:#F0FDF4; color:#22C55E;">👥</div>
-      <div class="tile-lbl">동료</div>
-      <div class="tile-sub" id="tile-workforce-sub">팀원 관리</div>
-      <span class="tile-badge green" id="tile-applicants-badge" style="display:none;"></span>
+    <button class="stat-tile ds-tap-card" onclick="location.href='quote-list.html'">
+      <div class="stat-ico" style="background:#FEF3C7;">📝</div>
+      <div class="stat-num" id="stat-pending">0</div>
+      <div class="stat-lbl">대기 견적</div>
     </button>
-    <button class="tile ds-tap-card" onclick="location.href='community.html'">
-      <div class="tile-ico" style="background:#FFF0F3; color:var(--c-pr);">💬</div>
-      <div class="tile-lbl">커뮤니티</div>
-      <div class="tile-sub">새 글 <b id="tile-community-n">-</b>건</div>
-      <span class="tile-badge" id="tile-community-badge" style="display:none;"></span>
+    <button class="stat-tile ds-tap-card" onclick="location.href='my.html'">
+      <div class="stat-ico" style="background:#FEF3C7;">⭐</div>
+      <div class="stat-num" id="stat-rating">4.9</div>
+      <div class="stat-lbl">만족도</div>
     </button>
   </div>
-
-  <!-- V1.7.1 prioritization A: Weekly forecast/Recent row 제거
-       — Weekly: schedule.html에서 더 자세히 봄
-       — Recent: 커뮤니티는 4 tile + nav에 이미 있음 (3중 중복), 중고거래는 my.html로 이동 -->
 
   </div><!-- /ds-home-content -->
 
 </div><!-- /shell -->
-
-<!-- V1.7.3: Extended FAB — 고객케어 (모든 페이지 가능, 현재는 홈에만 노출)
-     라벨 명시로 50대도 의미 즉시 인지. nav 위 16px sticky 위치 -->
-<button class="ds-fab-ext ds-fade-in" onclick="goTo('quote')" aria-label="고객케어 — 견적·계약·완료 보고">
-  <span class="ds-fab-ext-ico">⚡</span>
-  <span class="ds-fab-ext-lbl">고객케어</span>
-</button>
 
 <!-- 하단 네비 -->
 <nav class="ds-nav">
@@ -511,7 +645,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260605-9"></script>
+<script src="utils.js?v=20260606-1"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -869,10 +1003,12 @@ function renderTodayForecast(items) {
   else if (total >= 2) stateLabel = '⛅ 순조로움';
   else                  stateLabel = '🌥 여유로움';
 
-  // 날짜
+  // 날짜 + 위치 (mockup 그대로: "6월 5일 · 목 · 강서구")
   const d = new Date();
   const days = ['일','월','화','수','목','금','토'];
-  const dateStr = `${d.getMonth()+1}월 ${d.getDate()}일 · ${days[d.getDay()]}`;
+  const cfgLoc = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  const region = cfgLoc.region || cfgLoc.district || cfgLoc.address?.split(' ').slice(0,2).join(' ') || '';
+  const dateStr = `${d.getMonth()+1}월 ${d.getDate()}일 · ${days[d.getDay()]}` + (region ? ` · ${region}` : '');
 
   // DOM 업데이트
   const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
@@ -886,17 +1022,66 @@ function renderTodayForecast(items) {
   set('today-fc-now', nowTime);
   set('today-fc-last', lastTime);
 
-  // V1.7.1 prioritization A: Timeline/Weekly forecast 렌더링 제거
-  // — Timeline은 Today Forecast 카드의 🌅/🕘/🌙 셀과 의미 중복
-  // — Weekly forecast는 schedule.html에서 더 자세히 봄
+  // V1.7.4 mockup port: Timeline 복원
+  renderTimeline(sorted, nextItem);
+}
+
+// V1.7.4 mockup port: 시간별 일정 카드 가로 스크롤
+function renderTimeline(sorted, nextItem) {
+  const tl = document.getElementById('today-timeline');
+  if (!tl) return;
+  if (!sorted || sorted.length === 0) { tl.style.display = 'none'; return; }
+  tl.style.display = '';
+  tl.innerHTML = sorted.slice(0, 6).map(i => {
+    const t = i.time || i.scheduled_time || '—';
+    const isDone = i.status === 'completed' || i.status === 'done';
+    const isProg = i.status === 'inprogress' || i.status === 'in_progress';
+    const isNow  = (i === nextItem) && !isDone;
+    const stateIco = isDone ? '✅' : isProg ? '▶' : '◷';
+    const dotCls   = isDone ? 'done' : (isProg || isNow) ? 'pending' : 'open';
+    const timeLbl  = isNow ? `지금 · ${t}` : (isDone ? `${t} · 완료` : (isProg ? `${t} · 진행` : `${t} · 예정`));
+    const cust = ((i.customer_name || i.name || '고객') + '').slice(0, 8);
+    const job  = (i.kind || i.service || i.type || '청소');
+    return `<button class="ds-tl-item${isNow ? ' now' : ''}" onclick="location.href='schedule.html'">
+      <span class="ds-tl-dot ${dotCls}"></span>
+      <div class="ds-tl-time">${timeLbl}</div>
+      <div class="ds-tl-state">${stateIco}</div>
+      <div class="ds-tl-customer">${cust}</div>
+      <div class="ds-tl-job">${job}</div>
+    </button>`;
+  }).join('');
+}
+
+// V1.7.4 mockup port: 헤더 날짜 업데이트
+function updateHomeHeaderDate() {
+  const d = new Date();
+  const days = ['일','월','화','수','목','금','토'];
+  const dateStr = `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 · ${days[d.getDay()]}`;
+  const el = document.getElementById('hh-date');
+  if (el) el.textContent = dateStr;
+}
+
+// V1.7.4 mockup port: 4 stat tile 와이어링
+function renderStatTiles(items, pending) {
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  const total = (items || []).length;
+  const done = (items || []).filter(i => i.status === 'completed' || i.status === 'done').length;
+  const inprog = (items || []).filter(i => i.status === 'inprogress' || i.status === 'in_progress').length;
+  set('stat-inprogress', inprog);
+  set('stat-done-today', done);
+  set('stat-pending', (pending || []).length);
+  // 만족도 — 백엔드 endpoint 추가 전 임시 4.9 (mockup 그대로)
+  set('stat-rating', '4.9');
 }
 
 async function loadHomeStats() {
   const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
   const adminKey = cfg.adminKey || '';
 
-  // V1.7.2: API fetch 전에 먼저 0건 weather hero 표시 (offline/401 안전망)
+  // V1.7.4 mockup port: 헤더 날짜 + 0건 안전망
+  try { updateHomeHeaderDate(); } catch(_) {}
   try { renderTodayForecast([]); } catch(_) {}
+  try { renderStatTiles([], []); } catch(_) {}
 
   // 오늘 할 일 + Today Forecast hero (V1.7.x)
   try {
@@ -912,6 +1097,8 @@ async function loadHomeStats() {
     // 오늘 일정 (전체 status) — Today Forecast 렌더
     const todayItems = (rToday.data || []).length > 0 ? rToday.data : pending;
     renderTodayForecast(todayItems);
+    // V1.7.4 mockup port: 4 stat tile 와이어링
+    renderStatTiles(todayItems, pending);
     // V1.7.1: Weekly forecast 제거 — rWeek는 fetch만 유지 (다른 기능 호환)
     void rWeek;
 
@@ -946,57 +1133,10 @@ async function loadHomeStats() {
     if (todayText) todayText.textContent = '일정을 불러오는 중이에요';
   }
 
-  // 이달 실적 — V1.5: hero 매출 row 제거됨, tile-grid + KPI에만 표시
-  try {
-    const r2 = await fetch(SERVER + '/api/stats/monthly');
-    const d2 = await r2.json();
-    if (d2.success) {
-      // V1.7.1: KPI inline 제거 — Today Forecast 카드가 같은 정보를 가짐
-      const bookN = d2.confirmed > 0 ? d2.confirmed : 0;
+  // V1.7.4 mockup port: 4 action tile (예약/견적/동료/커뮤니티) 제거 → 4 stat tile (renderStatTiles)
+  // tile-grid 와이어링 코드 제거 (DOM 엘리먼트 자체가 없어졌으니 getElementById null)
 
-      // ── V1.7 tile-grid 와이어링 (매출 표시 ✗ 정책) ──────────
-      const tBookedN  = document.getElementById('tile-booked-n');
-      const tBookedB  = document.getElementById('tile-booked-badge');
-      const tPendingN = document.getElementById('tile-pending-n');
-      const tPendingB = document.getElementById('tile-pending-badge');
-      const pendingCt = (typeof pending !== 'undefined') ? pending.length : 0;
-
-      if (tBookedN)  tBookedN.textContent  = bookN || 0;
-      if (tBookedB && bookN > 0)  { tBookedB.textContent = bookN;     tBookedB.style.display = 'inline-block'; }
-      if (tPendingN) tPendingN.textContent = pendingCt;
-      if (tPendingB && pendingCt > 0) { tPendingB.textContent = pendingCt; tPendingB.style.display = 'inline-block'; }
-      // V1.7: 정산 tile + 매출 sparkline 제거 — 사장님 "매출 표시 ✗" 명시
-    }
-  } catch(e) {}
-
-  // 커뮤니티/중고거래 unread dot — 내 글 댓글 / 내 chat 메시지
-  try {
-    const anonId = (typeof getAnon === 'function') ? getAnon() : null;
-    if (anonId) {
-      const cSeen = localStorage.getItem('ssak_community_last_seen') || '';
-      const mSeen = localStorage.getItem('ssak_market_last_seen') || '';
-      const cUrl = SERVER + '/api/community/unread?anon_id=' + encodeURIComponent(anonId) + (cSeen ? '&since=' + encodeURIComponent(cSeen) : '');
-      const mUrl = SERVER + '/api/market/unread?anon_id=' + encodeURIComponent(anonId) + (mSeen ? '&since=' + encodeURIComponent(mSeen) : '');
-      const [rC, rM] = await Promise.all([
-        cachedFetch(cUrl).catch(() => null),
-        cachedFetch(mUrl).catch(() => null)
-      ]);
-      // V1.7.1: dot-community/dot-market(recent-row) 제거 — 커뮤니티 tile-badge가 대체
-      void rM;
-
-      // V1.7: 커뮤니티 tile 와이어링 (정산 자리 교체)
-      const tCommN = document.getElementById('tile-community-n');
-      const tCommB = document.getElementById('tile-community-badge');
-      const cCount = (rC && typeof rC.count === 'number') ? rC.count : 0;
-      if (tCommN) tCommN.textContent = cCount;
-      if (tCommB && cCount > 0) {
-        tCommB.textContent = cCount;
-        tCommB.style.display = 'inline-block';
-      }
-    }
-  } catch(_) { /* 무음 fallback */ }
-
-  // 동료 — 내 채용공고 지원자 합산 (서버 단 필터 endpoint 사용)
+  // V1.7.4: 동료 지원자 표시 제거 (4 stat tile에 없음) — 향후 별도 알림으로 표시 예정
   try {
     const anonId = (typeof getAnon === 'function') ? getAnon() : null;
     if (anonId) {
