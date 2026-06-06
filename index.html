@@ -33,13 +33,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v31";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v32";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260606-9">
+<link rel="preload" as="script" href="utils.js?v=20260606-10">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260606-9">
+<link rel="stylesheet" href="design.css?v=20260606-10">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -426,8 +426,96 @@
 .ds-today-fc {
   margin: 14px 16px 0;
 }
-.ds-today-fc-date::after {
-  /* "월 일 · 요일 · 강서구" — 위치 정보는 JS가 채움 */
+
+/* V1.9.5 A안 가독성 강화 */
+.ds-today-fc-date {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #1B2A3F !important;
+  letter-spacing: -.01em;
+  margin-top: 3px;
+}
+.ds-today-fc-area {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: rgba(27,42,63,.65);
+  margin-top: 2px;
+}
+
+/* V1.9.5: 활기찬 하루 칩 제거 (기능 자체 삭제) */
+.ds-today-fc-state { display: none !important; }
+
+/* 온도 칩 더 크게 (가독성 ↑) */
+.ds-fc-temp {
+  font-size: 14px;
+  font-weight: 900;
+  padding: 5px 12px;
+}
+
+/* ═══ V1.9.5 입체적 날씨 효과 강화 ═══ */
+/* 햇빛 광선 — 빛 번짐 효과 + 펄스 애니메이션 */
+.ds-today-fc .ds-today-sun {
+  box-shadow:
+    0 0 0 8px rgba(255, 210, 90, 0.28),
+    0 0 32px rgba(255, 160, 40, 0.36),
+    0 0 60px rgba(255, 200, 70, 0.20) !important;
+  animation: ds-sun-pulse 4s ease-in-out infinite, ds-sun-bob 5s ease-in-out infinite !important;
+}
+@keyframes ds-sun-pulse {
+  0%, 100% { box-shadow: 0 0 0 8px rgba(255,210,90,.28), 0 0 32px rgba(255,160,40,.36), 0 0 60px rgba(255,200,70,.20); }
+  50%      { box-shadow: 0 0 0 12px rgba(255,210,90,.32), 0 0 48px rgba(255,160,40,.48), 0 0 90px rgba(255,200,70,.28); }
+}
+.ds-today-fc .ds-today-sun .ray {
+  background: linear-gradient(90deg, rgba(255,210,80,.85), rgba(255,210,80,0)) !important;
+  height: 3px !important;
+  width: 56px !important;
+  border-radius: 3px;
+  animation: ds-ray-flicker 3s ease-in-out infinite;
+}
+@keyframes ds-ray-flicker {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+/* 구름 입체감 — 그림자 강화 + 부드러운 흐름 */
+.ds-today-fc .ds-today-cloud {
+  filter: drop-shadow(0 6px 10px rgba(80,100,140,0.22)) drop-shadow(0 2px 4px rgba(80,100,140,0.18)) !important;
+  animation: ds-cloud-drift 7s ease-in-out infinite !important;
+}
+
+/* 비 효과 — 강수 더 풍부하게 (자동 생성) */
+.ds-today-fc.scene-rain .ds-rain-drops .ds-rain-drop:nth-child(3n) {
+  width: 2px; height: 18px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.85));
+}
+.ds-today-fc.scene-rain .ds-rain-drops .ds-rain-drop:nth-child(5n) {
+  width: 1px; height: 10px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.6));
+}
+
+/* 눈 효과 — 다양한 크기 + 회전 */
+.ds-today-fc.scene-snow .ds-snow-flake:nth-child(3n) { font-size: 16px; }
+.ds-today-fc.scene-snow .ds-snow-flake:nth-child(5n) { font-size: 8px; }
+
+/* 번개 — 더 임팩트 있는 깜빡임 */
+.ds-today-fc.scene-thunder::before {
+  animation: ds-thunder-flash 5s ease-in-out infinite !important;
+}
+@keyframes ds-thunder-flash {
+  0%, 88%, 100% { background: rgba(255,255,180,0); }
+  89%, 90%      { background: rgba(255,255,200,0.6); }
+  91%, 92%      { background: rgba(255,255,180,0); }
+  93%, 94%      { background: rgba(255,255,200,0.85); }
+  95%, 96%      { background: rgba(255,255,180,0.4); }
+}
+
+/* 밤 — 별 추가 + 깜빡임 */
+.ds-today-fc.scene-night .ds-today-sparkle {
+  animation: ds-night-twinkle 2s ease-in-out infinite !important;
+}
+@keyframes ds-night-twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.7); }
 }
 /* Weather hero 더 크게 — mockup 비율 */
 .ds-today-fc .ds-today-fc-scene {
@@ -770,16 +858,15 @@
     <div class="ds-today-fc ds-fade-in" id="today-fc" style="display:none;">
       <!-- V1.9 Parallax: 터치 ripple 효과 -->
       <div class="ds-today-fc-ripple" aria-hidden="true"></div>
+      <!-- V1.9.5 A안: 활기찬 하루 칩 삭제 + 가독성 강화 (14px 800) + 위치 별도 -->
       <div class="ds-today-fc-top">
         <div>
           <div class="ds-today-fc-label">오늘 일정</div>
           <div class="ds-today-fc-date" id="today-fc-date">—</div>
+          <div class="ds-today-fc-area" id="today-fc-area">📍 강서구</div>
         </div>
-        <div style="display:flex; gap:6px; align-items:center;">
-          <div class="ds-today-fc-state" id="today-fc-state">☀ 활기찬 하루</div>
-          <div class="ds-fc-temp" id="today-fc-temp" style="display:none;">
-            <span id="today-fc-temp-val">—</span><span class="deg">°</span>
-          </div>
+        <div class="ds-fc-temp" id="today-fc-temp" style="display:none;">
+          <span id="today-fc-temp-val">—</span><span class="deg">°</span>
         </div>
       </div>
       <div class="ds-today-fc-scene">
@@ -876,23 +963,41 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260606-9"></script>
+<script src="utils.js?v=20260606-10"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
-function setGreeting() {
+// V1.9.5: 시간 + 날씨 기반 동적 인사말
+function setGreeting(weather) {
   const hour = new Date().getHours();
-  const greetings = {
-    morning: '좋은 아침이에요 ☀️',
-    afternoon: '안녕하세요 👋',
-    evening: '수고하셨어요 🌙',
-    night: '늦은 시간까지 고생이에요 🌟'
-  };
-  let msg = hour < 12 ? greetings.morning
-    : hour < 18 ? greetings.afternoon
-    : hour < 22 ? greetings.evening
-    : greetings.night;
-  document.getElementById('greeting').textContent = msg;
+  const period = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : hour < 22 ? 'evening' : 'night';
+  const main = weather?.main || '';
+  const temp = typeof weather?.temp === 'number' ? weather.temp : null;
+
+  // 날씨 우선 override
+  let msg;
+  if (main === 'Rain' || main === 'Drizzle') {
+    msg = ({morning:'비 내리는 아침이에요 ☔', afternoon:'비 오니까 조심하세요 ☔', evening:'비 오는 저녁이에요 ☔', night:'비 내리는 밤이에요 ☔'})[period];
+  } else if (main === 'Snow') {
+    msg = ({morning:'눈 내리는 아침이에요 ❄️', afternoon:'눈 오니까 조심하세요 ❄️', evening:'눈 내리는 저녁이에요 ❄️', night:'눈 내리는 밤이에요 ❄️'})[period];
+  } else if (main === 'Thunderstorm') {
+    msg = '천둥번개! 안전 우선이에요 ⛈';
+  } else if (temp !== null && temp >= 30) {
+    msg = '오늘 더위 조심하세요 🌡️';
+  } else if (temp !== null && temp <= -3) {
+    msg = '오늘 많이 추워요 🧥';
+  } else if (temp !== null && temp <= 5) {
+    msg = ({morning:'쌀쌀한 아침이에요 🧣', afternoon:'쌀쌀한 오후예요 🧣', evening:'쌀쌀한 저녁이에요 🧣', night:'쌀쌀한 밤이에요 🧣'})[period];
+  } else if (main === 'Clouds' || main === 'Mist' || main === 'Fog' || main === 'Haze') {
+    msg = ({morning:'흐린 아침이에요 ☁️', afternoon:'구름 많은 오후예요 ☁️', evening:'구름 많은 저녁이에요 ☁️', night:'흐린 밤이에요 ☁️'})[period];
+  } else if (main === 'Clear') {
+    msg = ({morning:'맑은 아침이에요 ☀️', afternoon:'맑은 오후 보내세요 ☀️', evening:'맑은 저녁이에요 🌅', night:'맑은 밤이에요 ✨'})[period];
+  } else {
+    // 기본 — 시간대 인사말
+    msg = ({morning:'좋은 아침이에요 ☀️', afternoon:'안녕하세요 👋', evening:'수고하셨어요 🌙', night:'늦은 시간까지 고생이에요 🌟'})[period];
+  }
+  const el = document.getElementById('greeting');
+  if (el) el.textContent = msg;
 }
 
 // ── 사용자 정보 로드 ─────────────────────────
@@ -1190,7 +1295,7 @@ function renderTodayForecast(items) {
     const dateStr = `${d.getMonth()+1}월 ${d.getDate()}일 · ${days[d.getDay()]}`;
     set('today-fc-num', 0);
     set('today-fc-date', dateStr);
-    set('today-fc-state', '🌤 여유로운 하루');
+    set('today-fc-area', '📍 강서구');
     setHTML('today-fc-progress', '오늘 일정 없음 · 탭해서 새 견적 받기');
     // V1.9.2: today-fc-progress-pct 제거
     // V1.9.3: foot 3셀 제거 — first/now/last 셀 set 호출 제거
@@ -1226,18 +1331,17 @@ function renderTodayForecast(items) {
   });
   const nowTime = nextItem ? (nextItem.time || nextItem.scheduled_time || '—') : '—';
 
-  // 상태 칩 카피
-  let stateLabel;
-  if (total >= 4)      stateLabel = '☀ 활기찬 하루';
-  else if (total >= 2) stateLabel = '⛅ 순조로움';
-  else                  stateLabel = '🌥 여유로움';
+  // V1.9.5: 활기찬 하루 칩 삭제 — stateLabel 코드 제거
 
-  // 날짜 + 위치 (mockup 그대로: "6월 5일 · 목 · 강서구")
+  // V1.9.5 A안: 날짜+시간 한 줄 + 위치 별도
   const d = new Date();
   const days = ['일','월','화','수','목','금','토'];
   const cfgLoc = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
-  const region = cfgLoc.region || cfgLoc.district || cfgLoc.address?.split(' ').slice(0,2).join(' ') || '';
-  const dateStr = `${d.getMonth()+1}월 ${d.getDate()}일 · ${days[d.getDay()]}` + (region ? ` · ${region}` : '');
+  const region = cfgLoc.region || cfgLoc.district || cfgLoc.address?.split(' ').slice(0,2).join(' ') || '강서구';
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mm = String(d.getMinutes()).padStart(2,'0');
+  const dateStr = `${d.getMonth()+1}월 ${d.getDate()}일 · ${days[d.getDay()]} · ${hh}:${mm}`;
+  const areaStr = `📍 ${region}`;
 
   // DOM 업데이트
   const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
@@ -1246,7 +1350,8 @@ function renderTodayForecast(items) {
   const confirmed = items.filter(i => i.status === 'confirmed').length;
   set('today-fc-num', total);
   set('today-fc-date', dateStr);
-  set('today-fc-state', stateLabel);
+  set('today-fc-area', areaStr);
+  // V1.9.5: today-fc-state set 제거 (활기찬 하루 칩 삭제)
   setHTML('today-fc-progress', `완료 <b>${done}</b> · 진행 <b>${inprog}</b> · 예정 <b>${confirmed}</b>`);
   // V1.9.2: today-fc-progress-pct set 제거 (진척률 셀 삭제됨)
   // V1.9.3: foot 3셀 제거 — first/now/last 셀 set 호출 제거
@@ -1467,17 +1572,9 @@ function applyWeatherScene(weather) {
     tempEl.style.display = 'inline-flex';
   }
 
-  // 상태 칩 — 일정 카운트 기반 카피 대신 날씨 카피로 override
-  const stateEl = document.getElementById('today-fc-state');
-  if (stateEl && weather.description) {
-    const icon = scene === 'rain' ? '🌧'
-               : scene === 'snow' ? '❄'
-               : scene === 'thunder' ? '⛈'
-               : scene === 'cloudy' ? '☁'
-               : scene === 'night' ? '🌙'
-               : '☀';
-    stateEl.innerHTML = `${icon} ${weather.description}`;
-  }
+  // V1.9.5: 활기찬 하루 칩 삭제 — 상태 칩 코드 제거
+  // 대신 헤더 인사말이 weather 기반으로 동적 변경 (setGreeting(weather))
+  try { setGreeting(weather); } catch(_) {}
 }
 
 async function loadWeather() {
