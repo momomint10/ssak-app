@@ -33,7 +33,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v32";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v33";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260606-10">
+<link rel="stylesheet" href="design.css?v=20260607-1">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -756,6 +756,220 @@
   box-shadow: 0 6px 20px rgba(4,120,87,0.28);
 }
 
+/* ═══ V1.9.6: Now Playing 스타일 (Spotify 영감) — 카드 X, 텍스트 흐름 ═══ */
+/* 기존 가로 스크롤 Timeline override → 세로 흐름 */
+.ds-today-fc .ds-timeline {
+  display: block !important;
+  margin: 6px 0 16px;
+  padding: 0 22px;
+  overflow-x: visible !important;
+}
+
+/* 진행중 hero — 가장 강조 */
+.ds-np-hero {
+  padding: 14px 0 12px;
+  border-top: 1px solid rgba(27,42,63,0.14);
+  border-bottom: 1px solid rgba(27,42,63,0.14);
+  margin-bottom: 10px;
+  position: relative;
+}
+.ds-np-hero .np-now-label {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 900;
+  color: #FF385C;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.ds-np-hero .np-now-label::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: #FF385C;
+  animation: ds-np-blink 1.4s ease-in-out infinite;
+}
+@keyframes ds-np-blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.75); }
+}
+.ds-np-hero .np-title {
+  font-size: 24px; font-weight: 900;
+  color: #1B2A3F;
+  letter-spacing: -0.02em; line-height: 1.15;
+  text-align: left;
+}
+.ds-np-hero .np-meta {
+  font-size: 14px; font-weight: 700;
+  color: rgba(27,42,63,0.66);
+  margin-top: 6px;
+}
+.ds-np-hero .np-timebar {
+  margin-top: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.ds-np-hero .np-timebar .t-start,
+.ds-np-hero .np-timebar .t-end {
+  font-size: 12px; font-weight: 800;
+  color: rgba(27,42,63,0.65);
+  font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  letter-spacing: -0.02em;
+}
+.ds-np-hero .np-timebar .bar {
+  flex: 1; height: 4px; border-radius: 3px;
+  background: rgba(27,42,63,0.13);
+  position: relative; overflow: hidden;
+}
+.ds-np-hero .np-timebar .bar-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: #FF385C; border-radius: 3px;
+  width: var(--np-progress, 30%);
+  animation: ds-np-flow 2.2s ease-in-out infinite;
+}
+@keyframes ds-np-flow {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+.ds-np-hero.np-hero-btn {
+  background: none; border: none; width: 100%;
+  text-align: left; cursor: pointer;
+}
+
+/* 진행중 없음 — 다음 일정 강조 */
+.ds-np-empty-hero {
+  padding: 14px 0 12px;
+  border-top: 1px solid rgba(27,42,63,0.14);
+  border-bottom: 1px solid rgba(27,42,63,0.14);
+  margin-bottom: 10px;
+}
+.ds-np-empty-hero .np-empty-label {
+  font-size: 11px; font-weight: 900;
+  color: rgba(27,42,63,0.55);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.ds-np-empty-hero .np-empty-text {
+  font-size: 16px; font-weight: 800;
+  color: rgba(27,42,63,0.82);
+  line-height: 1.4;
+}
+
+/* 미니 리스트 — 다음 / 완료 */
+.ds-np-list { display: flex; flex-direction: column; }
+.ds-np-list-label {
+  font-size: 11px; font-weight: 900;
+  color: rgba(27,42,63,0.5);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin: 8px 0 4px;
+}
+.ds-np-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 0;
+  width: 100%; text-align: left;
+  border: none; background: none;
+  color: #1B2A3F; cursor: pointer;
+  font-family: inherit;
+}
+.ds-np-row .np-row-time {
+  font-size: 13px; font-weight: 800;
+  font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  color: rgba(27,42,63,0.65);
+  width: 48px; flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+.ds-np-row .np-row-title {
+  font-size: 14px; font-weight: 700;
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ds-np-row .np-row-area {
+  font-size: 12px; font-weight: 600;
+  color: rgba(27,42,63,0.58);
+  flex-shrink: 0;
+}
+.ds-np-row.done .np-row-title {
+  color: rgba(27,42,63,0.45);
+  text-decoration: line-through;
+  text-decoration-color: rgba(27,42,63,0.3);
+}
+.ds-np-row.done .np-row-time,
+.ds-np-row.done .np-row-area { color: rgba(27,42,63,0.4); }
+.ds-np-row.done::before {
+  content: '✓'; color: #10B981; font-weight: 900;
+  font-size: 12px;
+  width: 10px; flex-shrink: 0; margin-left: -2px;
+}
+
+/* scene 어두운 배경(비/밤/천둥)에서 색 override */
+.ds-today-fc.scene-rain .ds-np-hero,
+.ds-today-fc.scene-night .ds-np-hero,
+.ds-today-fc.scene-thunder .ds-np-hero,
+.ds-today-fc.scene-rain .ds-np-empty-hero,
+.ds-today-fc.scene-night .ds-np-empty-hero,
+.ds-today-fc.scene-thunder .ds-np-empty-hero { border-color: rgba(255,255,255,0.24); }
+.ds-today-fc.scene-rain .ds-np-hero .np-title,
+.ds-today-fc.scene-night .ds-np-hero .np-title,
+.ds-today-fc.scene-thunder .ds-np-hero .np-title { color: #fff; }
+.ds-today-fc.scene-rain .ds-np-hero .np-meta,
+.ds-today-fc.scene-night .ds-np-hero .np-meta,
+.ds-today-fc.scene-thunder .ds-np-hero .np-meta { color: rgba(255,255,255,0.78); }
+.ds-today-fc.scene-rain .ds-np-empty-hero .np-empty-text,
+.ds-today-fc.scene-night .ds-np-empty-hero .np-empty-text,
+.ds-today-fc.scene-thunder .ds-np-empty-hero .np-empty-text { color: rgba(255,255,255,0.92); }
+.ds-today-fc.scene-rain .ds-np-row,
+.ds-today-fc.scene-night .ds-np-row,
+.ds-today-fc.scene-thunder .ds-np-row { color: #fff; }
+.ds-today-fc.scene-rain .ds-np-row .np-row-time,
+.ds-today-fc.scene-rain .ds-np-row .np-row-area,
+.ds-today-fc.scene-night .ds-np-row .np-row-time,
+.ds-today-fc.scene-night .ds-np-row .np-row-area,
+.ds-today-fc.scene-thunder .ds-np-row .np-row-time,
+.ds-today-fc.scene-thunder .ds-np-row .np-row-area { color: rgba(255,255,255,0.68); }
+.ds-today-fc.scene-rain .ds-np-list-label,
+.ds-today-fc.scene-night .ds-np-list-label,
+.ds-today-fc.scene-thunder .ds-np-list-label { color: rgba(255,255,255,0.6); }
+.ds-today-fc.scene-rain .ds-np-row.done .np-row-title,
+.ds-today-fc.scene-night .ds-np-row.done .np-row-title,
+.ds-today-fc.scene-thunder .ds-np-row.done .np-row-title {
+  color: rgba(255,255,255,0.5);
+  text-decoration-color: rgba(255,255,255,0.3);
+}
+.ds-today-fc.scene-rain .ds-np-hero .np-timebar .t-start,
+.ds-today-fc.scene-rain .ds-np-hero .np-timebar .t-end,
+.ds-today-fc.scene-night .ds-np-hero .np-timebar .t-start,
+.ds-today-fc.scene-night .ds-np-hero .np-timebar .t-end,
+.ds-today-fc.scene-thunder .ds-np-hero .np-timebar .t-start,
+.ds-today-fc.scene-thunder .ds-np-hero .np-timebar .t-end { color: rgba(255,255,255,0.78); }
+.ds-today-fc.scene-rain .ds-np-hero .np-timebar .bar,
+.ds-today-fc.scene-night .ds-np-hero .np-timebar .bar,
+.ds-today-fc.scene-thunder .ds-np-hero .np-timebar .bar { background: rgba(255,255,255,0.2); }
+
+/* 가독성 ↑: 헤더 폰트 키움 + 최고/최저 칩 */
+.ds-today-fc-date { font-size: 15px !important; }
+.ds-today-fc-area { font-size: 13px !important; }
+.ds-fc-temp {
+  font-size: 16px !important;
+  padding: 6px 13px !important;
+  display: inline-flex; align-items: baseline; gap: 4px;
+}
+.ds-fc-temp .deg { font-size: 13px !important; }
+.ds-fc-temp-range {
+  font-size: 10.5px; font-weight: 700;
+  opacity: 0.62; margin-left: 6px;
+  letter-spacing: -0.01em;
+}
+.ds-fc-temp-range .hi { color: #FF385C; }
+.ds-fc-temp-range .lo { color: #3B82F6; }
+.ds-today-fc.scene-rain .ds-fc-temp-range .hi,
+.ds-today-fc.scene-night .ds-fc-temp-range .hi,
+.ds-today-fc.scene-thunder .ds-fc-temp-range .hi { color: #FF8FA3; }
+.ds-today-fc.scene-rain .ds-fc-temp-range .lo,
+.ds-today-fc.scene-night .ds-fc-temp-range .lo,
+.ds-today-fc.scene-thunder .ds-fc-temp-range .lo { color: #93C5FD; }
+
+/* 메인 카운트 (5건 등) 가독성 — 그대로 유지 */
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-np-hero .np-now-label::before,
+  .ds-np-hero .np-timebar .bar-fill { animation: none; }
+}
+
 /* ═══ V1.7.4: 고객케어 노란 hero + Extended FAB 모두 제거 (이미지 그대로) ═══ */
 
 /* ── V1.7.3: Extended FAB (고객케어 primary CTA) — DEPRECATED V1.7.4 ──────────── */
@@ -867,6 +1081,9 @@
         </div>
         <div class="ds-fc-temp" id="today-fc-temp" style="display:none;">
           <span id="today-fc-temp-val">—</span><span class="deg">°</span>
+          <span class="ds-fc-temp-range" id="today-fc-temp-range" style="display:none;">
+            <span class="hi" id="today-fc-temp-hi">—°</span> / <span class="lo" id="today-fc-temp-lo">—°</span>
+          </span>
         </div>
       </div>
       <div class="ds-today-fc-scene">
@@ -1363,31 +1580,108 @@ function renderTodayForecast(items) {
   renderHealthCard(items);
 }
 
-// V1.8 단순 Timeline (시간/지역/내용 3줄, 컴팩트)
+// V1.9.6 Now Playing 스타일 — 진행중 hero + 다음/완료 미니 리스트
 function renderTimeline(sorted, nextItem) {
   const tl = document.getElementById('today-timeline');
   if (!tl) return;
-  if (!sorted || sorted.length === 0) { tl.style.display = 'none'; return; }
+  const active = (sorted || []).filter(i => i.status !== 'cancelled');
+  if (active.length === 0) { tl.style.display = 'none'; tl.innerHTML = ''; return; }
   tl.style.display = '';
-  tl.innerHTML = sorted.slice(0, 6).map(i => {
-    const t = i.time || i.scheduled_time || '—';
-    const isDone = i.status === 'completed' || i.status === 'done';
-    const isProg = i.status === 'inprogress' || i.status === 'in_progress';
-    const isCancelled = i.status === 'cancelled';
-    const isNow  = (i === nextItem) && !isDone;
-    if (isCancelled) return ''; // 취소된 일정 숨김
-    const stateCls = isDone ? 'done' : (isNow ? 'now' : '');
-    // 지역: address에서 자치구 추출 (예: "서울 강서구 ..." → "강서구")
+
+  const fmtTime = t => (t || '—').toString().slice(0, 5);
+  const extractArea = i => {
     const addr = i.address || i.addr || '';
     const m = addr.match(/(\S+구|\S+군|\S+시)/);
-    const area = (m && m[1]) || (i.region || i.district || '');
-    const task = (i.kind || i.service || i.type || '청소').slice(0, 6);
-    return `<button class="ds-tl-item ${stateCls}" onclick="location.href='schedule.html'">
-      <div class="ds-tl-time">${t}</div>
-      <div class="ds-tl-area">${area || '—'}</div>
-      <div class="ds-tl-task">${task}</div>
-    </button>`;
-  }).join('');
+    return (m && m[1]) || (i.region || i.district || '');
+  };
+  const taskName = i => (i.kind || i.service || i.type || '청소');
+  const shortAddr = a => {
+    if (!a) return '';
+    return a.replace(/^서울특별시\s*/, '').replace(/^서울시\s*/, '').replace(/^서울\s*/, '').slice(0, 24);
+  };
+  const isDoneItem = i => i.status === 'completed' || i.status === 'done';
+  const isOngoingItem = i => i.status === 'inprogress' || i.status === 'in_progress';
+
+  // hero 선정: 진행중 > 다음 일정 (nextItem) > 첫 예정
+  const ongoing = active.find(isOngoingItem);
+  const heroItem = ongoing
+    || (nextItem && !isDoneItem(nextItem) ? nextItem : null)
+    || active.find(i => !isDoneItem(i));
+
+  const others = active.filter(i => i !== heroItem);
+  const nextItems = others.filter(i => !isDoneItem(i));
+  const doneItems = others.filter(isDoneItem);
+
+  let html = '';
+
+  if (heroItem) {
+    const startStr = fmtTime(heroItem.time || heroItem.scheduled_time);
+    // end_time 추정: end_time 있으면 사용, 없으면 +2h
+    let endStr = heroItem.end_time || heroItem.scheduled_end;
+    if (!endStr && heroItem.time) {
+      const [h, m] = heroItem.time.split(':').map(Number);
+      if (!isNaN(h) && !isNaN(m)) {
+        const eh = (h + 2) % 24;
+        endStr = `${String(eh).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+      }
+    }
+    endStr = fmtTime(endStr);
+    const area = extractArea(heroItem);
+    const addr = shortAddr(heroItem.address || heroItem.addr || '');
+    const metaLine = `📍 ${area || '—'}${addr ? ' · ' + addr : ''}`;
+
+    if (isOngoingItem(heroItem)) {
+      // 진행률 계산
+      const now = new Date();
+      const curMin = now.getHours() * 60 + now.getMinutes();
+      const [sh, sm] = (heroItem.time || '00:00').split(':').map(Number);
+      const [eh, em] = (endStr || '00:00').split(':').map(Number);
+      const startMin = sh * 60 + sm;
+      const endMin = eh * 60 + em;
+      const totalMin = Math.max(endMin - startMin, 1);
+      const elapsedMin = Math.max(0, Math.min(totalMin, curMin - startMin));
+      const progressPct = Math.round((elapsedMin / totalMin) * 100);
+      html += `<button class="ds-np-hero np-hero-btn" onclick="location.href='schedule.html'">
+        <div class="np-now-label">지금 진행중</div>
+        <div class="np-title">${taskName(heroItem)}</div>
+        <div class="np-meta">${metaLine}</div>
+        <div class="np-timebar">
+          <span class="t-start">${startStr}</span>
+          <div class="bar"><div class="bar-fill" style="--np-progress:${progressPct}%;"></div></div>
+          <span class="t-end">${endStr}</span>
+        </div>
+      </button>`;
+    } else {
+      // 다음 일정 강조 hero
+      html += `<button class="ds-np-empty-hero np-hero-btn" onclick="location.href='schedule.html'" style="border-top:1px solid rgba(27,42,63,0.14); border-bottom:1px solid rgba(27,42,63,0.14); border-left:none; border-right:none; background:none; width:100%; cursor:pointer;">
+        <div class="np-empty-label">다음 일정</div>
+        <div class="np-empty-text">${startStr} · ${taskName(heroItem)}</div>
+        <div class="np-meta" style="margin-top:4px;">${metaLine}</div>
+      </button>`;
+    }
+  }
+
+  // 미니 리스트
+  html += `<div class="ds-np-list">`;
+  if (nextItems.length > 0) {
+    html += `<div class="ds-np-list-label">예정</div>`;
+    html += nextItems.map(i => `<button class="ds-np-row" onclick="location.href='schedule.html'">
+      <div class="np-row-time">${fmtTime(i.time || i.scheduled_time)}</div>
+      <div class="np-row-title">${taskName(i)}</div>
+      <div class="np-row-area">${extractArea(i) || ''}</div>
+    </button>`).join('');
+  }
+  if (doneItems.length > 0) {
+    html += `<div class="ds-np-list-label">완료</div>`;
+    html += doneItems.map(i => `<button class="ds-np-row done" onclick="location.href='schedule.html'">
+      <div class="np-row-time">${fmtTime(i.time || i.scheduled_time)}</div>
+      <div class="np-row-title">${taskName(i)}</div>
+      <div class="np-row-area">${extractArea(i) || ''}</div>
+    </button>`).join('');
+  }
+  html += `</div>`;
+
+  tl.innerHTML = html;
 }
 
 // V1.8 헬스 카드: 청소 작업 자동 추정 + 3단계 색/캐릭터
@@ -1564,12 +1858,26 @@ function applyWeatherScene(weather) {
     snowEl.remove();
   }
 
-  // 기온 칩
+  // 기온 칩 + 최고/최저 (V1.9.6)
   const tempEl = document.getElementById('today-fc-temp');
   const tempVal = document.getElementById('today-fc-temp-val');
   if (tempEl && tempVal && typeof weather.temp === 'number') {
     tempVal.textContent = weather.temp;
     tempEl.style.display = 'inline-flex';
+    // 최고/최저 표시 — temp_min ≠ temp_max 일 때만
+    const rangeEl = document.getElementById('today-fc-temp-range');
+    const hiEl = document.getElementById('today-fc-temp-hi');
+    const loEl = document.getElementById('today-fc-temp-lo');
+    if (rangeEl && hiEl && loEl
+        && typeof weather.temp_max === 'number'
+        && typeof weather.temp_min === 'number'
+        && weather.temp_max !== weather.temp_min) {
+      hiEl.textContent = `${weather.temp_max}°`;
+      loEl.textContent = `${weather.temp_min}°`;
+      rangeEl.style.display = 'inline';
+    } else if (rangeEl) {
+      rangeEl.style.display = 'none';
+    }
   }
 
   // V1.9.5: 활기찬 하루 칩 삭제 — 상태 칩 코드 제거
