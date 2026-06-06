@@ -30,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v36";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v37";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -53,7 +53,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260607-4">
+<link rel="stylesheet" href="design.css?v=20260607-5">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -731,11 +731,11 @@ select.form-input{cursor:pointer;}
 </div>
 
 <nav class="ds-nav">
-  <button class="ds-nav-item" onclick="location.href='index.html'"><div class="ds-nav-ico">🏠</div><div>홈</div></button>
-  <button class="ds-nav-item" onclick="location.href='schedule.html'"><div class="ds-nav-ico">📅</div><div>스케줄</div></button>
-  <button class="ds-nav-item" onclick="location.href='community.html'"><div class="ds-nav-ico">💬</div><div>커뮤니티</div></button>
-  <button class="ds-nav-item" onclick="location.href='workforce.html'"><div class="ds-nav-ico">👥</div><div>동료</div></button>
-  <button class="ds-nav-item" onclick="location.href='my.html'"><div class="ds-nav-ico">👤</div><div>MY</div></button>
+  <button class="ds-nav-item" onclick="location.href='index.html'"><div class="ds-nav-ico"><svg viewBox="0 0 24 24"><path d="M3 12L12 3L21 12V20A1 1 0 0 1 20 21H4A1 1 0 0 1 3 20Z"/><path d="M9 21V12H15V21"/></svg></div><div>홈</div></button>
+  <button class="ds-nav-item" onclick="location.href='schedule.html'"><div class="ds-nav-ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9H21M8 3V7M16 3V7"/></svg></div><div>스케줄</div></button>
+  <button class="ds-nav-item" onclick="location.href='community.html'"><div class="ds-nav-ico"><svg viewBox="0 0 24 24"><path d="M21 12C21 16.97 16.97 21 12 21C10.4 21 8.9 20.6 7.6 19.9L3 21L4.1 16.4C3.4 15.1 3 13.6 3 12C3 7.03 7.03 3 12 3S21 7.03 21 12Z"/></svg></div><div>커뮤니티</div></button>
+  <button class="ds-nav-item" onclick="location.href='workforce.html'"><div class="ds-nav-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 21C2 17 5 14 9 14S16 17 16 21"/><circle cx="17" cy="9" r="3"/><path d="M22 20C22 17 20 14.5 17 14.5"/></svg></div><div>동료</div></button>
+  <button class="ds-nav-item" onclick="location.href='my.html'"><div class="ds-nav-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M3 21C3 16.58 7.03 13 12 13S21 16.58 21 21"/></svg></div><div>MY</div></button>
 </nav>
 
 <!-- FAQ 편집 모달 -->

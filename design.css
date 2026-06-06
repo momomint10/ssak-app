@@ -1429,13 +1429,52 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   box-shadow: var(--sh-xl), var(--hl-top-strong);
 }
 
-/* ── 하단 네비 글래스모피즘 강화 (.ds-nav 이미 정의됨, 보강) ───── */
+/* ── V1.9.12: 하단 네비 Glassmorphism (B안) — iOS 17 스타일 ───── */
 .ds-nav {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  box-shadow: 0 -1px 0 rgba(20, 30, 50, 0.04), 0 -4px 14px rgba(20, 30, 50, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 -1px 0 rgba(20, 30, 50, 0.04), 0 -8px 24px rgba(20, 30, 50, 0.05);
+  padding: 10px 0 max(12px, env(safe-area-inset-bottom));
 }
+
+/* 활성 indicator — 발광 코랄 bar */
+.ds-nav-item.on::before {
+  top: -1px !important;
+  left: 50% !important; right: auto !important;
+  transform: translateX(-50%);
+  width: 32px; height: 3px;
+  background: var(--c-pr);
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 0 8px rgba(255, 56, 92, 0.55);
+}
+
+/* SVG 라인 아이콘 시스템 */
+.ds-nav-ico {
+  width: 24px; height: 24px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0; /* emoji fallback 숨김 (svg 사용 시) */
+  transition: transform .2s ease, filter .2s ease;
+}
+.ds-nav-ico svg {
+  width: 24px; height: 24px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round;
+  transition: stroke-width .15s ease;
+}
+.ds-nav-item.on .ds-nav-ico {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 3px 8px rgba(255, 56, 92, 0.42));
+}
+.ds-nav-item.on .ds-nav-ico svg {
+  stroke-width: 2.4;
+}
+.ds-nav-item { font-size: 10.5px !important; }
+.ds-nav-item.on { font-weight: 900 !important; }
+/* 미사용/구 emoji fallback — svg 없으면 emoji 다시 보이게 */
+.ds-nav-ico:not(:has(svg)) { font-size: 22px; }
 
 /* ── 카드 active feedback (전 페이지 공통) ─────────────────────── */
 .ds-card:active,
