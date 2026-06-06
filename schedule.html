@@ -30,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v37";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v38";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -43,7 +43,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260607-5">
+<link rel="stylesheet" href="design.css?v=20260607-6">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -93,6 +93,51 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .cal-day.today.saturday .cal-num{color:#fff;}
 .cal-dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px;min-height:6px;}
 .cal-dot{width:5px;height:5px;border-radius:50%;}
+
+/* V1.9.13 법정공휴일 표시 */
+.cal-day.holiday .cal-num { color: #FF385C !important; font-weight: 800; }
+.cal-day.today.holiday .cal-num { color: #fff !important; }
+.cal-day .holiday-name {
+  position: absolute; top: 1px; left: 50%; transform: translateX(-50%);
+  font-size: 8px; font-weight: 800; color: #FF385C;
+  background: rgba(255,56,92,0.10);
+  padding: 1px 4px; border-radius: 3px;
+  white-space: nowrap;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  pointer-events: none;
+}
+.cal-day.today .holiday-name { background: rgba(255,255,255,0.25); color: #fff; }
+.cal-day.holiday .cal-num { margin-top: 8px; }
+
+/* V1.9.13 Glassmorphism FAB — 48px, 발광 X */
+.ds-fab-glass {
+  position: fixed;
+  right: 18px; bottom: 86px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(255,56,92,0.92);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.4);
+  box-shadow: 0 10px 28px rgba(255,56,92,0.38), inset 0 1px 0 rgba(255,255,255,0.3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 110;
+  transition: transform 0.15s;
+  font-family: inherit;
+  padding: 0;
+}
+.ds-fab-glass:active { transform: scale(0.92); }
+.ds-fab-glass svg {
+  width: 22px; height: 22px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2.8; stroke-linecap: round;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-fab-glass { transition: none; }
+}
 
 /* 콘텐츠 */
 .content{padding:16px 20px;}
@@ -390,6 +435,11 @@ textarea.form-input{resize:none;}
 </div>
 
 <!-- 하단 네비게이션 -->
+<!-- V1.9.13 Glassmorphism FAB — 일정 추가 -->
+<button class="ds-fab-glass" onclick="openAddModal()" aria-label="일정 추가">
+  <svg viewBox="0 0 24 24"><path d="M12 5V19M5 12H19"/></svg>
+</button>
+
 <nav class="ds-nav">
   <button class="ds-nav-item" onclick="location.href='index.html'"><div class="ds-nav-ico"><svg viewBox="0 0 24 24"><path d="M3 12L12 3L21 12V20A1 1 0 0 1 20 21H4A1 1 0 0 1 3 20Z"/><path d="M9 21V12H15V21"/></svg></div><div>홈</div></button>
   <button class="ds-nav-item on"><div class="ds-nav-ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9H21M8 3V7M16 3V7"/></svg></div><div>스케줄</div></button>
@@ -702,6 +752,50 @@ function toDateStr(d) {
 
 function todayStr() { return toDateStr(new Date()); }
 
+// V1.9.13: 한국 법정공휴일 (2026~2027 양력)
+// 음력 공휴일(설날/부처님오신날/추석)은 양력 변환값 사용
+const KOREAN_HOLIDAYS = {
+  // 2026년
+  '2026-01-01': '신정',
+  '2026-02-16': '설날',
+  '2026-02-17': '설날',
+  '2026-02-18': '설날',
+  '2026-03-01': '삼일절',
+  '2026-03-02': '대체공휴일', // 삼일절(일) 대체
+  '2026-05-05': '어린이날',
+  '2026-05-25': '부처님오신날',
+  '2026-06-06': '현충일',
+  '2026-08-15': '광복절',
+  '2026-08-17': '대체공휴일', // 광복절(토) 대체
+  '2026-09-24': '추석',
+  '2026-09-25': '추석',
+  '2026-09-26': '추석',
+  '2026-10-03': '개천절',
+  '2026-10-05': '대체공휴일', // 개천절(토) 대체
+  '2026-10-09': '한글날',
+  '2026-12-25': '크리스마스',
+  // 2027년
+  '2027-01-01': '신정',
+  '2027-02-06': '설날',
+  '2027-02-07': '설날',
+  '2027-02-08': '설날',
+  '2027-02-09': '대체공휴일',
+  '2027-03-01': '삼일절',
+  '2027-05-05': '어린이날',
+  '2027-05-13': '부처님오신날',
+  '2027-06-06': '현충일',
+  '2027-06-07': '대체공휴일', // 현충일(일) 대체
+  '2027-08-15': '광복절',
+  '2027-08-16': '대체공휴일',
+  '2027-09-15': '추석',
+  '2027-09-16': '추석',
+  '2027-09-17': '추석',
+  '2027-10-03': '개천절',
+  '2027-10-04': '대체공휴일',
+  '2027-10-09': '한글날',
+  '2027-12-25': '크리스마스',
+};
+
 // ── 캘린더 렌더링 ────────────────────────────
 function renderCalendar() {
   const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
@@ -755,6 +849,9 @@ function renderCalendar() {
     const isSel = dateStr === selectedDate;
     const isSun = dayOfWeek === 0;
     const isSat = dayOfWeek === 6;
+    // V1.9.13: 법정공휴일 체크
+    const holidayName = KOREAN_HOLIDAYS[dateStr];
+    const isHoliday = !!holidayName && !isOther;
 
     let cls = 'cal-day';
     if (isOther) cls += ' other-month';
@@ -762,6 +859,7 @@ function renderCalendar() {
     if (isSel) cls += ' selected';
     if (isSun) cls += ' sunday';
     if (isSat) cls += ' saturday';
+    if (isHoliday) cls += ' holiday';
 
     // 점 (최대 3개)
     const dots = (dotMap[dateStr] || []).slice(0, 3).map(st =>
@@ -782,7 +880,12 @@ function renderCalendar() {
       }
     }
 
+    // V1.9.13: 공휴일 이름 라벨 (대체공휴일은 짧게)
+    const holidayLabel = isHoliday
+      ? `<div class="holiday-name">${holidayName === '대체공휴일' ? '대체' : holidayName}</div>`
+      : '';
     html += `<div class="${cls}" onclick="selectDay('${dateStr}')">
+      ${holidayLabel}
       <div class="cal-num">${dateNum}</div>
       <div class="cal-dots">${dots}</div>
       ${miniHtml}
