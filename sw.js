@@ -5,31 +5,14 @@
 // V15: V1.7.1 balance — 고객케어 카드 sandwich (2 tile + 고객케어 + 2 tile)
 // V16: V1.7.2 weather always-on — 일정 0건이어도 weather hero 표시
 // V17: V1.7.2 DEV BYPASS — 로그인 가드 일시 비활성화
-const CACHE_NAME = 'ssak-v17';
-const STATIC_ASSETS = [
-  '/',
-  '/index.html?v=8',
-  '/ssak-quote.html',
-  '/schedule.html',
-  '/my.html',
-  '/community.html',
-  '/market.html',
-  '/workforce.html',
-  '/login.html',
-  '/sign.html',
-  '/design.css',
-  '/utils.js',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-];
+// V18: 캐시 prefetch 제거 + navigation cache 잔존 fix — SW가 옛 페이지 stuck 차단
+const CACHE_NAME = 'ssak-v18';
+const STATIC_ASSETS = []; // ← V18: prefetch 제거. SW는 transparent network passthrough만.
 
 // ── 설치 ──────────────────────────────────────────────────────
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
-  );
+  // V18: prefetch 없이 즉시 skipWaiting (SW transparent mode)
+  event.waitUntil(self.skipWaiting());
 });
 
 // ── 활성화 (강제 캐시 비우기 + 모든 클라이언트 새로고침) ──────────
@@ -70,19 +53,11 @@ self.addEventListener('fetch', event => {
   const isStatic = /\.(html|css|js)(\?|$)/i.test(url.pathname + url.search) || url.pathname.endsWith('/');
   const fetchOpts = isStatic ? { cache: 'no-store' } : undefined;
 
+  // V18: cache write/fallback 모두 제거 — pure network passthrough
+  // 옛 페이지 잔존 위험 차단 (push notification은 별도 이벤트라 영향 없음)
   event.respondWith(
-    fetch(event.request, fetchOpts).then(response => {
-      if (response.ok && event.request.method === 'GET') {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-      }
-      return response;
-    }).catch(() =>
-      caches.match(event.request).then(cached => {
-        if (cached) return cached;
-        if (event.request.headers.get('accept')?.includes('text/html'))
-          return caches.match('/index.html');
-      })
+    fetch(event.request, fetchOpts).catch(() =>
+      new Response('네트워크 연결을 확인해주세요', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
     )
   );
 });
