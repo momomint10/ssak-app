@@ -4,7 +4,8 @@
 // V14: V1.7.1 prioritization A — 홈 5 영역 제거 (KPI/Weekly/Recent/Timeline/FAB)
 // V15: V1.7.1 balance — 고객케어 카드 sandwich (2 tile + 고객케어 + 2 tile)
 // V16: V1.7.2 weather always-on — 일정 0건이어도 weather hero 표시
-const CACHE_NAME = 'ssak-v16';
+// V17: V1.7.2 DEV BYPASS — 로그인 가드 일시 비활성화
+const CACHE_NAME = 'ssak-v17';
 const STATIC_ASSETS = [
   '/',
   '/index.html?v=8',
