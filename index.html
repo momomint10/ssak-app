@@ -33,13 +33,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v30";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v31";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260606-8">
+<link rel="preload" as="script" href="utils.js?v=20260606-9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260606-8">
+<link rel="stylesheet" href="design.css?v=20260606-9">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -751,7 +751,7 @@
   <div class="home-header-v2">
     <div class="hh-row">
       <div class="hh-body">
-        <div class="hh-date" id="hh-date">2026년 6월 6일 · 토</div>
+        <!-- V1.9.4: 헤더 날짜 제거 — 날짜는 weather 카드에만 표시 (중복 제거) -->
         <div class="hh-name"><span id="user-name">사장님</span>,<br><span id="greeting">좋은 아침이에요</span></div>
         <div class="hh-company" id="hero-company" style="display:none;"></div>
       </div>
@@ -876,7 +876,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260606-8"></script>
+<script src="utils.js?v=20260606-9"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
