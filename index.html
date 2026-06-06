@@ -33,13 +33,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v21";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v22";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260605-8">
+<link rel="preload" as="script" href="utils.js?v=20260605-9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260605-8">
+<link rel="stylesheet" href="design.css?v=20260605-9">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -270,6 +270,55 @@
   min-width: 20px; text-align: center;
 }
 .tile-badge.green { background: #22C55E; }
+
+/* ── V1.7.3: Extended FAB (고객케어 primary CTA) ──────────── */
+.ds-fab-ext {
+  position: fixed;
+  right: 16px;
+  bottom: 80px; /* nav(60px) + 20px gap */
+  border-radius: 28px;
+  background: linear-gradient(135deg, #FF385C 0%, #E31C5F 100%);
+  box-shadow: 0 8px 24px rgba(255,56,92,0.36), 0 3px 8px rgba(0,0,0,0.16);
+  border: none;
+  color: #fff;
+  padding: 14px 22px 14px 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  z-index: 50;
+  min-height: 52px;
+  letter-spacing: -.2px;
+  transition: transform 120ms cubic-bezier(.16,1,.3,1), box-shadow 180ms ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+.ds-fab-ext:active {
+  transform: scale(0.96);
+  box-shadow: 0 4px 12px rgba(255,56,92,0.28), 0 2px 4px rgba(0,0,0,0.12);
+}
+.ds-fab-ext-ico {
+  font-size: 18px;
+  width: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.ds-fab-ext-lbl {
+  font-size: 14px;
+  font-weight: 800;
+}
+/* 홈 컨텐츠 padding-bottom — 마지막 tile이 FAB에 가려지지 않도록 */
+.ds-home-content {
+  padding-bottom: 80px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-fab-ext { transition: none; }
+  .ds-fab-ext:active { transform: none; }
+}
+
 .tile-row {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
 }
@@ -382,7 +431,7 @@
 
     <!-- V1.7.1: Timeline/KPI 제거 — Today Forecast 카드가 같은 정보를 가짐 (prioritization A) -->
 
-  <!-- V1.7.1 balance: 위쪽 2 tile — 비즈니스 (예약·견적) -->
+  <!-- V1.7.3: 4 tile 2×2 통합 (sandwich center 제거 → Extended FAB로 이동) -->
   <div class="tile-grid ds-fade-in ds-fade-in-1" style="margin-top:12px;">
     <button class="tile ds-tap-card" onclick="location.href='schedule.html'">
       <div class="tile-ico" style="background:#EFF6FF; color:#3B82F6;">📅</div>
@@ -396,22 +445,6 @@
       <div class="tile-sub">대기 <b id="tile-pending-n">-</b>건</div>
       <span class="tile-badge" id="tile-pending-badge" style="display:none;"></span>
     </button>
-  </div>
-
-  <!-- V1.7.1 balance: 가운데 — 고객케어 hero (primary, sandwich center) -->
-  <div class="quick-grid ds-fade-in ds-fade-in-1" style="margin-top:10px;">
-    <button class="quick-btn quick-hero ds-tap-card" onclick="goTo('quote')">
-      <div class="quick-ico" style="background:#FFF0EC;">⚡</div>
-      <div>
-        <div class="quick-lbl">고객케어</div>
-        <div class="quick-hero-sub">견적 · 계약 · 완료 보고를 한 번에</div>
-      </div>
-      <div class="quick-hero-arrow">›</div>
-    </button>
-  </div>
-
-  <!-- V1.7.1 balance: 아래쪽 2 tile — 채널 (동료·커뮤니티) -->
-  <div class="tile-grid ds-fade-in ds-fade-in-1" style="margin-top:10px;">
     <button class="tile ds-tap-card" onclick="location.href='workforce.html'">
       <div class="tile-ico" style="background:#F0FDF4; color:#22C55E;">👥</div>
       <div class="tile-lbl">동료</div>
@@ -434,7 +467,12 @@
 
 </div><!-- /shell -->
 
-<!-- V1.7.1 prioritization A: FAB 제거 — 고객케어 hero가 같은 quote 액션 -->
+<!-- V1.7.3: Extended FAB — 고객케어 (모든 페이지 가능, 현재는 홈에만 노출)
+     라벨 명시로 50대도 의미 즉시 인지. nav 위 16px sticky 위치 -->
+<button class="ds-fab-ext ds-fade-in" onclick="goTo('quote')" aria-label="고객케어 — 견적·계약·완료 보고">
+  <span class="ds-fab-ext-ico">⚡</span>
+  <span class="ds-fab-ext-lbl">고객케어</span>
+</button>
 
 <!-- 하단 네비 -->
 <nav class="ds-nav">
@@ -473,7 +511,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260605-8"></script>
+<script src="utils.js?v=20260605-9"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
