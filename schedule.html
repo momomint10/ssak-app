@@ -30,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v38";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v39";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -43,7 +43,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260607-6">
+<link rel="stylesheet" href="design.css?v=20260607-7">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -342,20 +342,88 @@ textarea.form-input{resize:none;}
 .cal-mini-count{display:inline-block;background:var(--primary);color:#fff;border-radius:6px;padding:0 3px;font-size:8.5px;margin-left:1px;font-weight:700;}
 .cal-day.selected .cal-mini{color:var(--primary-dark);}
 .cal-day.other-month .cal-mini{color:var(--gray-300);}
+
+/* ═══ V1.9.14 풀 리뉴얼 ═══ */
+/* 1) 인사말 헤더 */
+.sched-greet { padding:50px 24px 14px; background:#fff; border-bottom:1px solid #F2F4F6; }
+.sched-greet .greet-inner { display:flex; align-items:flex-end; justify-content:space-between; gap:14px; }
+.sched-greet .greet-name { font-size:24px; font-weight:900; letter-spacing:-.03em; line-height:1.15; color:#191F28; }
+.sched-greet .greet-name small { display:block; font-size:14px; color:#1B2A3F; font-weight:800; margin-top:3px; }
+.sched-greet .icon-btn { background:#F2F4F6; border:none; width:38px; height:38px; border-radius:50%; font-size:16px; cursor:pointer; flex-shrink:0; }
+
+/* 2) 주/월/년 segmented control */
+.period-seg { margin:12px 16px 0; background:#fff; border-radius:11px; padding:3px; display:flex; gap:3px; box-shadow:0 2px 8px rgba(15,15,18,.05); }
+.period-seg button { flex:1; padding:8px 0; background:none; border:none; border-radius:8px; font-size:12.5px; font-weight:800; color:#8B95A1; cursor:pointer; font-family:inherit; transition:all .18s; }
+.period-seg button.on { background:linear-gradient(135deg,#FF385C,#E31C5F); color:#fff; box-shadow:0 3px 10px rgba(255,56,92,.32); }
+
+/* 3) Pure White 진행 카드 */
+.progress-card { margin:12px 16px 0; background:#fff; border-radius:18px; padding:14px 16px; box-shadow:0 4px 14px rgba(15,15,18,0.06); }
+.progress-top { display:flex; align-items:center; gap:14px; }
+.mini-donut { width:56px; height:56px; flex-shrink:0; position:relative; }
+.mini-donut svg { width:56px; height:56px; }
+.mini-donut svg circle { fill:none; stroke-width:7; }
+.donut-bg { stroke:rgba(27,42,63,.10); }
+.donut-seg { stroke-linecap:round; transition:stroke-dasharray .5s cubic-bezier(.4,0,.2,1); }
+.mini-donut .center { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#1B2A3F; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13.5px; font-weight:900; letter-spacing:-.04em; }
+.progress-body { flex:1; min-width:0; }
+.progress-label { font-size:11px; font-weight:800; color:#6B7280; letter-spacing:.06em; text-transform:uppercase; }
+.progress-title { font-size:17px; font-weight:900; color:#1B2A3F; margin-top:3px; letter-spacing:-.02em; }
+.progress-sub { font-size:12px; font-weight:700; color:#9CA3AF; margin-top:2px; }
+.progress-counts { display:flex; gap:14px; margin-top:10px; padding-top:10px; border-top:1px solid rgba(15,15,18,.06); }
+.progress-counts .cnt-it { flex:1; display:flex; align-items:baseline; gap:5px; }
+.cnt-dot { width:6px; height:6px; border-radius:50%; }
+.cnt-n { font-size:16px; font-weight:900; color:#1B2A3F; font-family:'JetBrains Mono', ui-monospace, monospace; letter-spacing:-.02em; }
+.cnt-l { font-size:10.5px; font-weight:700; color:#6B7280; }
+
+/* 4) 세부일정 B안 (큰 시간 강조) */
+.ds-sched-row {
+  display:grid; grid-template-columns:64px 1fr auto;
+  align-items:center; gap:12px;
+  width:100%; padding:13px 12px;
+  background:#fff;
+  border:none; border-radius:12px;
+  margin-bottom:8px;
+  cursor:pointer;
+  text-align:left;
+  font-family:inherit;
+  box-shadow:0 2px 8px rgba(15,15,18,.04);
+  transition:transform .12s, box-shadow .15s;
+}
+.ds-sched-row:active { transform:scale(.98); }
+.ds-sched-time { font-family:'JetBrains Mono', ui-monospace, monospace; }
+.ds-sched-time-start { font-size:20px; font-weight:900; color:#1B2A3F; letter-spacing:-.04em; line-height:1; }
+.ds-sched-time-end { font-size:10.5px; font-weight:700; color:rgba(27,42,63,.5); margin-top:4px; }
+.ds-sched-body { min-width:0; }
+.ds-sched-title { font-size:14.5px; font-weight:800; color:#1B2A3F; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ds-sched-meta { font-size:11.5px; font-weight:700; color:rgba(27,42,63,.58); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ds-sched-status { font-size:10px; font-weight:900; letter-spacing:.04em; padding:4px 9px; border-radius:5px; flex-shrink:0; }
+.ds-sched-row-done .ds-sched-time-start, .ds-sched-row-done .ds-sched-title { color:rgba(27,42,63,.4); text-decoration:line-through; text-decoration-color:rgba(27,42,63,.3); }
+.ds-sched-row-done .ds-sched-time-end, .ds-sched-row-done .ds-sched-meta { color:rgba(27,42,63,.35); }
+.ds-sched-row-done .ds-sched-status { background:#D1FAE5; color:#047857; }
+.ds-sched-row-inprogress { background:linear-gradient(90deg, rgba(255,56,92,.07), #fff); border-radius:12px; }
+.ds-sched-row-inprogress .ds-sched-time-start { color:#FF385C; }
+.ds-sched-row-inprogress .ds-sched-status { background:#FF385C; color:#fff; box-shadow:0 3px 10px rgba(255,56,92,.32); }
+.ds-sched-row-inprogress .ds-sched-status::before { content:''; width:5px; height:5px; border-radius:50%; background:#fff; display:inline-block; margin-right:4px; vertical-align:middle; animation:sched-blink 1.4s ease-in-out infinite; }
+@keyframes sched-blink { 0%,100% { opacity:1; } 50% { opacity:.35; } }
+.ds-sched-row-confirmed .ds-sched-status { background:#F2F4F6; color:#6B7280; }
+.ds-sched-row-cancelled .ds-sched-status { background:#FEE2E2; color:#DC2626; }
+.ds-sched-row-cancelled .ds-sched-title { color:rgba(27,42,63,.5); text-decoration:line-through; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-sched-row-inprogress .ds-sched-status::before { animation:none; }
+  .donut-seg { transition:none; }
+}
 </style>
 <script src="utils.js?v=20260605-2"></script>
 </head>
 <body>
 <div class="shell">
 
-  <!-- 헤더 -->
-  <div class="header ds-app-header">
-    <div class="header-inner">
-      <div><h1 class="ds-page-title header-title">스케줄</h1><p class="ds-page-subtitle header-sub">예약 · 일정 · 매출</p></div>
-      <div class="header-actions">
-        <button class="icon-btn" onclick="openSearch()" aria-label="검색">🔍</button>
-        <button class="add-btn-top" onclick="openAddModal()" aria-label="예약 추가">+</button>
-      </div>
+  <!-- V1.9.14 인사말 헤더 -->
+  <div class="sched-greet">
+    <div class="greet-inner">
+      <div class="greet-name">사장님,<br><small id="greet-msg">스케줄을 한눈에 확인하세요</small></div>
+      <button class="icon-btn" onclick="openSearch()" aria-label="검색">🔍</button>
     </div>
   </div>
   <div class="reminder-status" id="reminder-status"></div>
@@ -371,10 +439,36 @@ textarea.form-input{resize:none;}
   </div>
   <div class="pending-sheet" id="pending-sheet"><div id="pending-list"></div></div>
 
-  <!-- Phase 5: 뷰 토글 -->
-  <div class="view-toggle" id="view-toggle">
-    <button class="view-toggle-btn active" id="vbtn-month" onclick="setView('month')">📅 월간</button>
-    <button class="view-toggle-btn" id="vbtn-agenda" onclick="setView('agenda')">📋 리스트</button>
+  <!-- V1.9.14 주/월/년 segmented control -->
+  <div class="period-seg" id="period-seg">
+    <button id="pbtn-week" onclick="setPeriod('week')">주</button>
+    <button class="on" id="pbtn-month" onclick="setPeriod('month')">월</button>
+    <button id="pbtn-year" onclick="setPeriod('year')">년</button>
+  </div>
+
+  <!-- V1.9.14 Pure White 진행 카드 -->
+  <div class="progress-card" id="progress-card">
+    <div class="progress-top">
+      <div class="mini-donut">
+        <svg viewBox="0 0 56 56" aria-hidden="true">
+          <circle class="donut-bg" cx="28" cy="28" r="22"/>
+          <circle id="donut-done" class="donut-seg" cx="28" cy="28" r="22" stroke="#10B981" stroke-dasharray="0 138.2" stroke-dashoffset="0" transform="rotate(-90 28 28)"/>
+          <circle id="donut-now" class="donut-seg" cx="28" cy="28" r="22" stroke="#FF385C" stroke-dasharray="0 138.2" stroke-dashoffset="0" transform="rotate(-90 28 28)"/>
+          <circle id="donut-next" class="donut-seg" cx="28" cy="28" r="22" stroke="#3B82F6" stroke-dasharray="0 138.2" stroke-dashoffset="0" transform="rotate(-90 28 28)"/>
+        </svg>
+        <div class="center" id="progress-pct">0%</div>
+      </div>
+      <div class="progress-body">
+        <div class="progress-label">📊 <span id="progress-period">이번 달</span> 진행 현황</div>
+        <div class="progress-title" id="progress-title">0건 중 0건 처리</div>
+        <div class="progress-sub" id="progress-sub">데이터 로딩 중...</div>
+      </div>
+    </div>
+    <div class="progress-counts">
+      <div class="cnt-it"><div class="cnt-dot" style="background:#10B981;"></div><div><span class="cnt-n" id="cnt-done">0</span> <span class="cnt-l">완료</span></div></div>
+      <div class="cnt-it"><div class="cnt-dot" style="background:#FF385C;"></div><div><span class="cnt-n" id="cnt-prog">0</span> <span class="cnt-l">진행중</span></div></div>
+      <div class="cnt-it"><div class="cnt-dot" style="background:#3B82F6;"></div><div><span class="cnt-n" id="cnt-next">0</span> <span class="cnt-l">예정</span></div></div>
+    </div>
   </div>
 
 <!-- 월간 뷰 영역 -->
@@ -399,23 +493,8 @@ textarea.form-input{resize:none;}
     <div class="cal-grid" id="cal-grid"></div>
   </div>
 
-  <!-- Phase 8: 매출 그래프 -->
-  <div class="stats-card" id="stats-card">
-    <div class="stats-row">
-      <div class="stats-title" id="stats-title">이번 달 매출</div>
-      <div class="stats-totals">
-        <div class="stats-total-item">
-          <div class="stats-total-lbl">매출</div>
-          <div class="stats-total-num" id="stats-total">0만</div>
-        </div>
-        <div class="stats-total-item">
-          <div class="stats-total-lbl">완료</div>
-          <div class="stats-total-num" id="stats-count">0</div>
-        </div>
-      </div>
-    </div>
-    <svg class="stats-chart" id="stats-chart" viewBox="0 0 320 80" preserveAspectRatio="none"></svg>
-  </div>
+  <!-- V1.9.14: 기존 매출 그래프 카드 제거 — Pure White 진행 카드로 대체 (매출 표시 X) -->
+  <div class="stats-card" id="stats-card" style="display:none;"></div>
 
   <!-- 예약 목록 -->
   <div class="content">
@@ -899,7 +978,7 @@ function renderCalendar() {
 
 function selectDay(dateStr) {
   selectedDate = dateStr;
-  if (viewMode === 'month') { renderCalendar(); renderList(); }
+  if (viewMode === 'month') { renderCalendar(); renderList(); updateProgressCard(); updateGreeting(); }
   else renderAgenda();
 }
 
@@ -937,35 +1016,40 @@ function renderList() {
     return;
   }
 
-  const STATUS_LABEL = {confirmed:'예약확정', inprogress:'진행중', done:'완료', cancelled:'취소'};
-  const STATUS_CLASS = {confirmed:'status-confirmed', inprogress:'status-inprogress', done:'status-done', cancelled:'status-cancelled'};
+  // V1.9.14 B안: 큰 시간 강조 + 본문 + 배지 (3컬럼 grid)
+  const STATUS_LABEL = {confirmed:'예약', inprogress:'진행중', done:'완료', completed:'완료', cancelled:'취소'};
+  const fmtTime = t => (t || '—').toString().slice(0,5);
+  const estimateEnd = (start) => {
+    if (!start) return '—';
+    const [h, m] = start.split(':').map(Number);
+    if (isNaN(h) || isNaN(m)) return '—';
+    const eh = (h + 2) % 24;
+    return `${String(eh).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  };
 
-  list.innerHTML = items.map(s => `
-    <div class="booking-card-wrap" data-id="${esc(s.id)}">
+  list.innerHTML = items.map(s => {
+    const status = s.status || 'confirmed';
+    const startStr = fmtTime(s.time || s.scheduled_time);
+    const endStr = fmtTime(s.end_time || estimateEnd(s.time));
+    const title = esc(s.type || '청소');
+    const addr = s.addr || s.name || '';
+    const sizeStr = s.size ? ` · ${esc(s.size)}평` : '';
+    const metaLine = addr ? `📍 ${esc(addr)}${sizeStr}` : (sizeStr ? sizeStr.replace(/^ · /, '') : '');
+    return `<div class="booking-card-wrap" data-id="${esc(s.id)}">
       <button class="swipe-action" type="button" onclick="event.stopPropagation();swipeDelete('${esc(s.id)}')">🗑 삭제</button>
-      <div class="booking-card" onclick="openActionSheet('${esc(s.id)}')">
-        <div class="booking-card-top">
-          <div>
-            <div class="booking-name">${esc(s.name)}</div>
-            <div class="booking-meta" style="margin-top:4px;">
-              ${s.time ? `<span class="booking-meta-item">🕐 ${esc(s.time)}</span>` : ''}
-              ${s.type ? `<span class="booking-meta-item">🧹 ${esc(s.type)}</span>` : ''}
-              ${s.size ? `<span class="booking-meta-item">📐 ${esc(s.size)}평</span>` : ''}
-            </div>
-          </div>
-          <span class="booking-status ${STATUS_CLASS[s.status]||''}">${STATUS_LABEL[s.status]||esc(s.status)}</span>
+      <button class="ds-sched-row ds-sched-row-${status} booking-card" onclick="openActionSheet('${esc(s.id)}')">
+        <div class="ds-sched-time">
+          <div class="ds-sched-time-start">${startStr}</div>
+          <div class="ds-sched-time-end">~${endStr}</div>
         </div>
-        ${s.addr ? `<div class="booking-addr-line">📍 ${esc(s.addr)}</div>` : ''}
-        ${s.price ? `<div class="booking-price-line">💰 ${Number(s.price).toLocaleString()}원</div>` : ''}
-        ${s.memo ? `<div class="booking-memo-line">💬 ${esc(s.memo)}</div>` : ''}
-        <div class="booking-card-footer">
-          <button class="card-action-btn primary" onclick="event.stopPropagation();openActionSheet('${esc(s.id)}')">⚡ 액션</button>
-          <button class="card-action-btn" onclick="event.stopPropagation();openEditModal('${esc(s.id)}')">✏️ 수정</button>
-          <button class="card-action-btn" onclick="event.stopPropagation();changeStatus('${esc(s.id)}')">🔄 상태</button>
+        <div class="ds-sched-body">
+          <div class="ds-sched-title">${title}</div>
+          <div class="ds-sched-meta">${metaLine}</div>
         </div>
-      </div>
-    </div>
-  `).join('');
+        <div class="ds-sched-status">${STATUS_LABEL[status] || esc(status)}</div>
+      </button>
+    </div>`;
+  }).join('');
 
   // Phase 7: 스와이프 이벤트 바인딩
   bindSwipeHandlers();
@@ -1067,7 +1151,7 @@ async function saveBooking() {
     viewYear = d.getFullYear();
     viewMonth = d.getMonth();
     closeModal();
-    renderCalendar(); renderList();
+    renderCalendar(); renderList(); updateProgressCard(); updateGreeting();
     toast('✅ 예약이 수정됐습니다');
     if (isServerId(editingId)) serverUpdate(data);
     return;
@@ -1096,7 +1180,7 @@ async function saveBooking() {
   viewYear = d.getFullYear();
   viewMonth = d.getMonth();
   closeModal();
-  renderCalendar(); renderList();
+  renderCalendar(); renderList(); updateProgressCard(); updateGreeting();
   toast(dates.length > 1 ? `✅ 정기 예약 ${dates.length}건이 추가됐습니다` : '✅ 예약이 추가됐습니다');
 
   // 서버 동기화 (백그라운드, 일괄)
@@ -1153,7 +1237,7 @@ async function deleteBooking() {
   schedules = schedules.filter(s => s.id !== targetId);
   saveSchedules();
   closeModal();
-  renderCalendar(); renderList();
+  renderCalendar(); renderList(); updateProgressCard(); updateGreeting();
   toast('🗑 예약이 삭제됐습니다');
   serverDelete(targetId);
 }
@@ -1168,7 +1252,7 @@ async function changeStatus(id) {
   s.status = ORDER[(cur + 1) % ORDER.length];
   s.updatedAt = Date.now();
   saveSchedules();
-  renderCalendar(); renderList();
+  renderCalendar(); renderList(); updateProgressCard(); updateGreeting();
   toast(`→ ${LABEL[s.status]}으로 변경됐습니다`);
   serverUpdate(s);
 }
@@ -1298,7 +1382,7 @@ async function approveBooking(id, bStr) {
     const dt = new Date(dd + 'T00:00:00');
     viewYear = dt.getFullYear(); viewMonth = dt.getMonth(); selectedDate = dd;
   }
-  renderCalendar(); renderList();
+  renderCalendar(); renderList(); updateProgressCard(); updateGreeting();
   toast('✅ 스케줄에 추가됐습니다!');
 }
 
@@ -1400,7 +1484,7 @@ async function actionDelete() {
   schedules = schedules.filter(s => s.id !== id);
   saveSchedules();
   closeActionSheet();
-  renderCalendar(); renderList();
+  renderCalendar(); renderList(); updateProgressCard(); updateGreeting();
   toast('🗑 예약이 삭제됐습니다');
   serverDelete(id);
 }
@@ -1498,7 +1582,7 @@ function goToSchedule(id) {
   viewMonth = d.getMonth();
   selectedDate = s.date;
   closeSearch();
-  renderCalendar(); renderList();
+  renderCalendar(); renderList(); updateProgressCard(); updateGreeting();
   setTimeout(() => openActionSheet(id), 250);
 }
 
@@ -1553,18 +1637,122 @@ async function checkAutoReminders() {
   if (ok > 0) toast(`📱 내일 일정 ${ok}건 자동 리마인더 발송!`);
 }
 
-// ── Phase 5: 뷰 전환 (월간 / 아젠다) ───────────
-let viewMode = localStorage.getItem('ssak_view_mode') || 'month';
+// V1.9.14: 뷰 모드 — viewMode 'agenda' 폐기, 'month'로 고정
+let viewMode = 'month';
 
 function setView(mode) {
-  viewMode = mode;
-  localStorage.setItem('ssak_view_mode', mode);
-  document.getElementById('vbtn-month').classList.toggle('active', mode === 'month');
-  document.getElementById('vbtn-agenda').classList.toggle('active', mode === 'agenda');
-  document.getElementById('view-month').style.display = mode === 'month' ? 'block' : 'none';
-  document.getElementById('view-agenda').classList.toggle('active', mode === 'agenda');
-  if (mode === 'agenda') renderAgenda();
-  else { renderCalendar(); renderList(); renderSalesChart(); }
+  // V1.9.14: 호환 stub — 새 setPeriod로 위임. 기존 호출처 안전 유지.
+  if (mode === 'agenda') return; // agenda 뷰 폐기
+  viewMode = 'month';
+  const vMonth = document.getElementById('view-month');
+  const vAgenda = document.getElementById('view-agenda');
+  if (vMonth) vMonth.style.display = 'block';
+  if (vAgenda) vAgenda.classList.remove('active');
+  renderCalendar();
+  renderList();
+  updateProgressCard();
+  updateGreeting();
+}
+
+// V1.9.14: 주/월/년 토글
+let periodMode = localStorage.getItem('ssak_period_mode') || 'month';
+
+function setPeriod(p) {
+  if (!['week','month','year'].includes(p)) p = 'month';
+  periodMode = p;
+  localStorage.setItem('ssak_period_mode', p);
+  document.querySelectorAll('.period-seg button').forEach(btn => btn.classList.remove('on'));
+  const btn = document.getElementById('pbtn-' + p);
+  if (btn) btn.classList.add('on');
+  updateProgressCard();
+  updateGreeting();
+}
+
+// V1.9.14: 기간별 필터링 — 주(이번주 월~일) / 월(이번달) / 년(올해)
+function filterByPeriod(items, period) {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  const d = now.getDate();
+  const dow = now.getDay(); // 0=일
+  // 이번 주: 월~일 (월요일 시작 기준)
+  const weekStart = new Date(y, m, d - ((dow + 6) % 7));
+  const weekEnd = new Date(y, m, d - ((dow + 6) % 7) + 6);
+  const fmt = dt => `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+  return (items || []).filter(s => {
+    if (s.status === 'cancelled') return false;
+    const sd = (s.date || s.scheduled_date || '').slice(0,10);
+    if (!sd) return false;
+    if (period === 'week') {
+      return sd >= fmt(weekStart) && sd <= fmt(weekEnd);
+    } else if (period === 'month') {
+      return sd.startsWith(`${y}-${String(m+1).padStart(2,'0')}`);
+    } else { // year
+      return sd.startsWith(`${y}-`);
+    }
+  });
+}
+
+// V1.9.14: Pure White 진행 카드 업데이트
+function updateProgressCard() {
+  const items = filterByPeriod(schedules || [], periodMode);
+  const total = items.length;
+  const done = items.filter(s => s.status === 'completed' || s.status === 'done').length;
+  const prog = items.filter(s => s.status === 'inprogress' || s.status === 'in_progress').length;
+  const next = total - done - prog;
+
+  const pct = total > 0 ? Math.round(((done + prog * 0.5) / total) * 100) : 0;
+
+  // 라벨
+  const periodLabels = { week: '이번 주', month: '이번 달', year: '올해' };
+  const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+  set('progress-period', periodLabels[periodMode] || '이번 달');
+  set('progress-title', `${total}건 중 ${done + prog}건 처리`);
+  set('progress-pct', `${pct}%`);
+  set('cnt-done', done);
+  set('cnt-prog', prog);
+  set('cnt-next', Math.max(0, next));
+
+  // sub 텍스트
+  const today = todayStr();
+  const tomorrow = (() => { const d = new Date(); d.setDate(d.getDate()+1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })();
+  const todayCnt = (schedules || []).filter(s => s.date === today && s.status !== 'cancelled').length;
+  const tmrwCnt = (schedules || []).filter(s => s.date === tomorrow && s.status !== 'cancelled').length;
+  set('progress-sub', `오늘 ${todayCnt}건 · 내일 ${tmrwCnt}건`);
+
+  // 도넛 dasharray (circumference = 2*pi*22 ≈ 138.2)
+  const C = 138.2;
+  const safeTotal = Math.max(total, 1);
+  const lenDone = (done / safeTotal) * C;
+  const lenProg = (prog / safeTotal) * C;
+  const lenNext = (Math.max(0, next) / safeTotal) * C;
+  const dDone = document.getElementById('donut-done');
+  const dNow = document.getElementById('donut-now');
+  const dNext = document.getElementById('donut-next');
+  if (dDone) dDone.setAttribute('stroke-dasharray', `${lenDone} ${C}`);
+  if (dNow) {
+    dNow.setAttribute('stroke-dasharray', `${lenProg} ${C}`);
+    dNow.setAttribute('stroke-dashoffset', `-${lenDone}`);
+  }
+  if (dNext) {
+    dNext.setAttribute('stroke-dasharray', `${lenNext} ${C}`);
+    dNext.setAttribute('stroke-dashoffset', `-${lenDone + lenProg}`);
+  }
+}
+
+// V1.9.14: 인사말 — 기간 + 진행 상황
+function updateGreeting() {
+  const items = filterByPeriod(schedules || [], periodMode);
+  const total = items.length;
+  const handled = items.filter(s => ['completed','done','inprogress','in_progress'].includes(s.status)).length;
+  const periodLabels = { week: '이번 주', month: '이번 달', year: '올해' };
+  const msg = document.getElementById('greet-msg');
+  if (!msg) return;
+  if (total === 0) {
+    msg.textContent = `${periodLabels[periodMode]} 예약을 등록해보세요`;
+  } else {
+    msg.textContent = `${periodLabels[periodMode]} ${total}건 중 ${handled}건 처리 중`;
+  }
 }
 
 function renderAgenda() {
@@ -1675,7 +1863,7 @@ async function swipeDelete(id) {
   if (!(await ssakConfirm('이 예약을 삭제하시겠습니까?'))) return;
   schedules = schedules.filter(s => s.id !== id);
   saveSchedules();
-  if (viewMode === 'month') { renderCalendar(); renderList(); }
+  if (viewMode === 'month') { renderCalendar(); renderList(); updateProgressCard(); updateGreeting(); }
   else renderAgenda();
   toast('🗑 예약이 삭제됐습니다');
   serverDelete(id);
@@ -1752,6 +1940,8 @@ function renderSalesChart() {
 
 // 1) localStorage 캐시로 즉시 표시
 setView(viewMode); // 저장된 뷰 모드 적용 (기본 month)
+// V1.9.14: 저장된 period(주/월/년) 복원 + UI 활성화
+try { setPeriod(periodMode); } catch(_) {}
 fetchPendingBookings();
 if (typeof initStickyHeader === 'function') initStickyHeader(); // 헤더 스크롤 축소 효과
 
@@ -1761,7 +1951,7 @@ if (typeof initStickyHeader === 'function') initStickyHeader(); // 헤더 스크
     await migrateLocalToServerOnce();
     const ok = await serverFetchSchedules();
     if (ok) {
-      if (viewMode === 'month') { renderCalendar(); renderList(); }
+      if (viewMode === 'month') { renderCalendar(); renderList(); updateProgressCard(); updateGreeting(); }
       else renderAgenda();
     }
     await checkAutoReminders();
