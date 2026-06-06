@@ -33,13 +33,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v28";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v29";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260606-6">
+<link rel="preload" as="script" href="utils.js?v=20260606-7">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260606-6">
+<link rel="stylesheet" href="design.css?v=20260606-7">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -806,11 +806,8 @@
         <span class="ds-today-fc-unit">건</span>
       </div>
       <div class="ds-today-fc-sub" id="today-fc-progress">완료 <b>0</b> · 진행 <b>0</b> · 예정 <b>0</b></div>
+      <!-- V1.9.2: 진척률 셀 제거 (사장님 결정 — 중복 정보) → 3셀 (첫/지금/마지막) -->
       <div class="ds-today-fc-foot">
-        <div class="ds-today-fc-cell">
-          <div class="ds-today-fc-cell-lbl">진척률</div>
-          <div class="ds-today-fc-cell-val up" id="today-fc-progress-pct">0%</div>
-        </div>
         <div class="ds-today-fc-cell">
           <div class="ds-today-fc-cell-lbl">🌅 첫</div>
           <div class="ds-today-fc-cell-val" id="today-fc-first">—</div>
@@ -889,7 +886,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260606-6"></script>
+<script src="utils.js?v=20260606-7"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -1205,7 +1202,7 @@ function renderTodayForecast(items) {
     set('today-fc-date', dateStr);
     set('today-fc-state', '🌤 여유로운 하루');
     setHTML('today-fc-progress', '오늘 일정 없음 · 탭해서 새 견적 받기');
-    set('today-fc-progress-pct', '—');
+    // V1.9.2: today-fc-progress-pct 제거
     set('today-fc-first', '—');
     set('today-fc-now', '—');
     set('today-fc-last', '—');
@@ -1221,7 +1218,7 @@ function renderTodayForecast(items) {
   const done = items.filter(i => i.status === 'completed' || i.status === 'done').length;
   const inprog = items.filter(i => i.status === 'inprogress' || i.status === 'in_progress').length;
   const upcoming = total - done - inprog;
-  const progressPct = total > 0 ? Math.round((done / total) * 100) : 0;
+  // V1.9.2: progressPct 계산 제거 (진척률 셀 제거)
 
   // 시간 추출 (HH:MM 또는 first.time)
   const sorted = items.slice().sort((a, b) => {
@@ -1263,7 +1260,7 @@ function renderTodayForecast(items) {
   set('today-fc-date', dateStr);
   set('today-fc-state', stateLabel);
   setHTML('today-fc-progress', `완료 <b>${done}</b> · 진행 <b>${inprog}</b> · 예정 <b>${confirmed}</b>`);
-  set('today-fc-progress-pct', progressPct + '%');
+  // V1.9.2: today-fc-progress-pct set 제거 (진척률 셀 삭제됨)
   set('today-fc-first', firstTime);
   set('today-fc-now', nowTime);
   set('today-fc-last', lastTime);
