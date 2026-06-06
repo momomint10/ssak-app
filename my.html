@@ -3,9 +3,7 @@
 <head>
 <script>
 /* 싹싹 인증 진입 가드 (Phase 2 / 2026-05-17) — JWT 검증, 미로그인 시 login.html로 */
-/* ★ V1.7.2 DEV BYPASS: 수정 작업 중 로그인 비활성화 — 복원: 아래 'if(true)return;' 줄만 삭제 ★ */
 (function(){
-  if(true)return; // ← DEV BYPASS (복원 시 이 줄 삭제)
   try {
     var tok = localStorage.getItem('ssak_jwt');
     if (!tok) throw new Error('no_token');
@@ -32,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v32";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v36";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -45,7 +43,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260605-2">
+<link rel="stylesheet" href="design.css?v=20260607-4">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -206,6 +204,16 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <span class="menu-badge" id="hero-row-badge" style="display:none;">✓ 설정됨</span>
       <input id="hero-file" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" style="display:none;" onchange="onHeroFileSelected(event)">
     </div>
+    <!-- V1.9.10: 활동 자치구 입력 — 홈 날씨/추천 일정 정확도 ↑ -->
+    <div class="menu-item ds-tap-card" id="acc-region-row" onclick="openRegionModal()">
+      <div class="menu-icon" style="background:#FEF3C7;color:#92400E;font-size:18px;">📍</div>
+      <div class="menu-text">
+        <div class="menu-title">활동 자치구</div>
+        <div class="menu-sub" id="region-row-sub">서울 25개 자치구 중 주로 일하는 지역을 선택하세요</div>
+      </div>
+      <span class="menu-badge" id="region-row-badge" style="display:none;">강서구</span>
+      <div class="menu-arrow">›</div>
+    </div>
   </div>
 
   <!-- 계정 (Phase 2 인증 — 로그인 정보 + 관리자 진입 + 로그아웃) -->
@@ -298,6 +306,43 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
   </div>
 </div>
+
+<!-- V1.9.10 활동 자치구 선택 모달 -->
+<div id="region-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closeRegionModal()">
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;max-height:90vh;overflow-y:auto;">
+    <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;"></div>
+    <div style="font-size:17px;font-weight:var(--fw-bold);margin-bottom:6px;">📍 활동 자치구</div>
+    <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;">
+      주로 일하시는 지역을 선택하세요.<br>
+      <b style="color:#1B2A3F;">홈 날씨</b>와 <b style="color:#1B2A3F;">추천 일정</b>이 이 지역 기준으로 표시됩니다.
+    </div>
+    <div id="region-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;"></div>
+    <button id="region-save-btn" onclick="saveRegion()"
+            style="width:100%;padding:14px;font-size:15px;font-weight:var(--fw-bold);font-family:inherit;border:none;border-radius:12px;background:var(--c-pr,#FF385C);color:#fff;cursor:pointer;margin-top:14px;min-height:52px;box-shadow:0 4px 12px rgba(255,56,92,0.32);">저장</button>
+    <button onclick="closeRegionModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:8px;">취소</button>
+  </div>
+</div>
+<style>
+  .region-chip-pick {
+    padding: 11px 6px;
+    background: #F7F8FA;
+    border: 1.5px solid transparent;
+    border-radius: 10px;
+    font-size: 12.5px; font-weight: 700;
+    text-align: center;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .region-chip-pick.active {
+    background: #FFF1F4;
+    border-color: #FF385C;
+    color: #FF385C;
+    font-weight: 900;
+  }
+  .region-chip-pick.active::after { content: ' ✓'; }
+</style>
 
 <!-- 자동 로그인 기기 관리 모달 -->
 <div id="trust-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closeTrustDevicesModal()">
@@ -448,6 +493,61 @@ async function openPinModal(){
   setTimeout(() => document.getElementById('pin-input-1').focus(), 200);
 }
 function closePinModal(){ document.getElementById('pin-ov').style.display = 'none'; }
+
+// ═══ V1.9.10 활동 자치구 선택 ═══
+const SEOUL_DISTRICTS = ['강남구','강동구','강북구','강서구','관악구','광진구','구로구','금천구','노원구','도봉구','동대문구','동작구','마포구','서대문구','서초구','성동구','성북구','송파구','양천구','영등포구','용산구','은평구','종로구','중구','중랑구'];
+let _selectedRegion = null;
+
+function openRegionModal(){
+  const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  _selectedRegion = cfg.region || cfg.district || '강서구';
+  const grid = document.getElementById('region-grid');
+  if (grid) {
+    grid.innerHTML = SEOUL_DISTRICTS.map(d => {
+      const cls = (d === _selectedRegion) ? 'region-chip-pick active' : 'region-chip-pick';
+      return `<button type="button" class="${cls}" data-region="${d}" onclick="pickRegion('${d}')">${d}</button>`;
+    }).join('');
+  }
+  document.getElementById('region-ov').style.display = 'block';
+}
+function closeRegionModal(){ document.getElementById('region-ov').style.display = 'none'; }
+function pickRegion(region){
+  _selectedRegion = region;
+  document.querySelectorAll('.region-chip-pick').forEach(el => {
+    el.classList.toggle('active', el.dataset.region === region);
+  });
+}
+function saveRegion(){
+  if (!_selectedRegion) { closeRegionModal(); return; }
+  try {
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+    cfg.region = _selectedRegion;
+    cfg.district = _selectedRegion; // 호환성
+    localStorage.setItem('ssak_cfg', JSON.stringify(cfg));
+  } catch(_) {}
+  // 메뉴 badge 갱신
+  const badge = document.getElementById('region-row-badge');
+  const sub = document.getElementById('region-row-sub');
+  if (badge) { badge.textContent = _selectedRegion; badge.style.display = 'inline-block'; }
+  if (sub) sub.textContent = `현재: ${_selectedRegion} · 홈 날씨/추천 일정 기준`;
+  closeRegionModal();
+  if (typeof ssakToast === 'function') ssakToast(`✓ 활동 자치구를 ${_selectedRegion}로 저장했어요`);
+  else if (typeof ssakAlert === 'function') ssakAlert(`활동 자치구: ${_selectedRegion}`);
+}
+
+// 페이지 로드 시 현재 region 표시
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+    const r = cfg.region || cfg.district;
+    if (r) {
+      const badge = document.getElementById('region-row-badge');
+      const sub = document.getElementById('region-row-sub');
+      if (badge) { badge.textContent = r; badge.style.display = 'inline-block'; }
+      if (sub) sub.textContent = `현재: ${r} · 홈 날씨/추천 일정 기준`;
+    }
+  } catch(_) {}
+});
 
 ['pin-input-1','pin-input-2'].forEach(id => {
   document.addEventListener('DOMContentLoaded', () => {

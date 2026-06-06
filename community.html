@@ -3,9 +3,7 @@
 <head>
 <script>
 /* 싹싹 인증 진입 가드 (Phase 2 / 2026-05-17) — JWT 검증, 미로그인 시 login.html로 */
-/* ★ V1.7.2 DEV BYPASS: 수정 작업 중 로그인 비활성화 — 복원: 아래 'if(true)return;' 줄만 삭제 ★ */
 (function(){
-  if(true)return; // ← DEV BYPASS (복원 시 이 줄 삭제)
   try {
     var tok = localStorage.getItem('ssak_jwt');
     if (!tok) throw new Error('no_token');
@@ -32,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v32";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v36";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -44,7 +42,7 @@
 <title>싹싹 — 커뮤니티</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260605-2">
+<link rel="stylesheet" href="design.css?v=20260607-4">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */

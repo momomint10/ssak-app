@@ -3,9 +3,7 @@
 <head>
 <script>
 /* 싹싹 인증 진입 가드 (Phase 2 / 2026-05-17) — JWT 검증, 미로그인 시 login.html로 */
-/* ★ V1.7.2 DEV BYPASS: 수정 작업 중 로그인 비활성화 — 복원: 아래 'if(true)return;' 줄만 삭제 ★ */
 (function(){
-  if(true)return; // ← DEV BYPASS (복원 시 이 줄 삭제)
   try {
     var tok = localStorage.getItem('ssak_jwt');
     if (!tok) throw new Error('no_token');
@@ -33,7 +31,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v35";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v36";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -48,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260607-3">
+<link rel="stylesheet" href="design.css?v=20260607-4">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -826,6 +824,15 @@
   0%, 100% { opacity: 1; }
   50%      { opacity: 0.6; }
 }
+.ds-np-hero .np-progress-text {
+  font-size: 11.5px; font-weight: 800;
+  color: rgba(27,42,63,0.6);
+  margin-top: 7px; letter-spacing: -0.01em;
+  font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+.ds-today-fc.scene-rain .ds-np-hero .np-progress-text,
+.ds-today-fc.scene-night .ds-np-hero .np-progress-text,
+.ds-today-fc.scene-thunder .ds-np-hero .np-progress-text { color: rgba(255,255,255,0.7); }
 .ds-np-hero.np-hero-btn {
   background: none; border: none; width: 100%;
   text-align: left; cursor: pointer;
@@ -1648,7 +1655,26 @@ function renderTimeline(sorted, nextItem) {
     return a.replace(/^서울특별시\s*/, '').replace(/^서울시\s*/, '').replace(/^서울\s*/, '').slice(0, 24);
   };
   const isDoneItem = i => i.status === 'completed' || i.status === 'done';
-  const isOngoingItem = i => i.status === 'inprogress' || i.status === 'in_progress';
+  const isOngoingItem = i => {
+    if (i.status === 'inprogress' || i.status === 'in_progress') return true;
+    // V1.9.9: 자동 진행중 — confirmed 상태인 일정이 현재 시간 [start, end] 사이면 진행중으로 인식
+    if (i.status === 'confirmed' && (i.time || i.scheduled_time)) {
+      const now = new Date();
+      const curMin = now.getHours() * 60 + now.getMinutes();
+      const [sh, sm] = (i.time || i.scheduled_time).split(':').map(Number);
+      if (isNaN(sh) || isNaN(sm)) return false;
+      const startMin = sh * 60 + sm;
+      let endMin;
+      if (i.end_time) {
+        const [eh, em] = i.end_time.split(':').map(Number);
+        endMin = eh * 60 + em;
+      } else {
+        endMin = startMin + 120; // 기본 2시간 (end_time 없을 때)
+      }
+      return curMin >= startMin && curMin <= endMin;
+    }
+    return false;
+  };
 
   // hero 선정: 진행중 > 다음 일정 (nextItem) > 첫 예정
   const ongoing = active.find(isOngoingItem);
@@ -1688,7 +1714,17 @@ function renderTimeline(sorted, nextItem) {
       const endMin = eh * 60 + em;
       const totalMin = Math.max(endMin - startMin, 1);
       const elapsedMin = Math.max(0, Math.min(totalMin, curMin - startMin));
+      const remainMin = Math.max(0, totalMin - elapsedMin);
       const progressPct = Math.round((elapsedMin / totalMin) * 100);
+      // 친절한 시간 표시: 60분 미만은 'X분', 이상은 'H시간 M분'
+      const fmtDur = m => {
+        if (m < 60) return `${m}분`;
+        const h = Math.floor(m / 60); const mm = m % 60;
+        return mm > 0 ? `${h}시간 ${mm}분` : `${h}시간`;
+      };
+      const progressText = remainMin <= 0
+        ? '⏱ 시간 종료'
+        : `⏱ ${fmtDur(elapsedMin)} 경과 · ${fmtDur(remainMin)} 남음`;
       html += `<button class="ds-np-hero np-hero-btn" onclick="location.href='schedule.html'">
         <div class="np-now-label">지금 진행중</div>
         <div class="np-title">${taskName(heroItem)}</div>
@@ -1698,6 +1734,7 @@ function renderTimeline(sorted, nextItem) {
           <div class="bar"><div class="bar-fill" style="--np-progress:${progressPct}%;"></div></div>
           <span class="t-end">${endStr}</span>
         </div>
+        <div class="np-progress-text">${progressText}</div>
       </button>`;
     } else {
       // 다음 일정 강조 hero — border는 CSS class에서 처리 (scene별 색 override)
