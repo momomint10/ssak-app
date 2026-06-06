@@ -33,7 +33,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v33";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v34";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -48,7 +48,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260607-1">
+<link rel="stylesheet" href="design.css?v=20260607-2">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -940,6 +940,50 @@
 .ds-today-fc.scene-night .ds-np-hero .np-timebar .bar,
 .ds-today-fc.scene-thunder .ds-np-hero .np-timebar .bar { background: rgba(255,255,255,0.2); }
 
+/* V1.9.7 다크 scene 가독성 fix — 헤더 위치 / empty hero 라벨·meta 흰색 override */
+.ds-today-fc.scene-rain .ds-today-fc-area,
+.ds-today-fc.scene-night .ds-today-fc-area,
+.ds-today-fc.scene-thunder .ds-today-fc-area {
+  color: rgba(255,255,255,0.82) !important;
+}
+.ds-today-fc.scene-rain .ds-today-fc-date,
+.ds-today-fc.scene-night .ds-today-fc-date,
+.ds-today-fc.scene-thunder .ds-today-fc-date {
+  color: rgba(255,255,255,0.92) !important;
+}
+.ds-today-fc.scene-rain .ds-today-fc-label,
+.ds-today-fc.scene-night .ds-today-fc-label,
+.ds-today-fc.scene-thunder .ds-today-fc-label {
+  color: rgba(255,255,255,0.7) !important;
+}
+.ds-today-fc.scene-rain .np-empty-label,
+.ds-today-fc.scene-night .np-empty-label,
+.ds-today-fc.scene-thunder .np-empty-label {
+  color: rgba(255,255,255,0.75);
+}
+.ds-today-fc.scene-rain .ds-np-empty-hero .np-meta,
+.ds-today-fc.scene-night .ds-np-empty-hero .np-meta,
+.ds-today-fc.scene-thunder .ds-np-empty-hero .np-meta {
+  color: rgba(255,255,255,0.78);
+}
+.ds-today-fc.scene-rain .ds-np-empty-hero,
+.ds-today-fc.scene-night .ds-np-empty-hero,
+.ds-today-fc.scene-thunder .ds-np-empty-hero {
+  border-top-color: rgba(255,255,255,0.24) !important;
+  border-bottom-color: rgba(255,255,255,0.24) !important;
+}
+/* sub (완료/진행/예정 카운트)도 가독성 ↑ */
+.ds-today-fc.scene-rain .ds-today-fc-sub,
+.ds-today-fc.scene-night .ds-today-fc-sub,
+.ds-today-fc.scene-thunder .ds-today-fc-sub {
+  color: rgba(255,255,255,0.85) !important;
+}
+.ds-today-fc.scene-rain .ds-today-fc-sub b,
+.ds-today-fc.scene-night .ds-today-fc-sub b,
+.ds-today-fc.scene-thunder .ds-today-fc-sub b {
+  color: #4ADE80 !important; /* 밝은 그린 — 다크 배경 대비 */
+}
+
 /* 가독성 ↑: 헤더 폰트 키움 + 최고/최저 칩 */
 .ds-today-fc-date { font-size: 15px !important; }
 .ds-today-fc-area { font-size: 13px !important; }
@@ -1652,8 +1696,8 @@ function renderTimeline(sorted, nextItem) {
         </div>
       </button>`;
     } else {
-      // 다음 일정 강조 hero
-      html += `<button class="ds-np-empty-hero np-hero-btn" onclick="location.href='schedule.html'" style="border-top:1px solid rgba(27,42,63,0.14); border-bottom:1px solid rgba(27,42,63,0.14); border-left:none; border-right:none; background:none; width:100%; cursor:pointer;">
+      // 다음 일정 강조 hero — border는 CSS class에서 처리 (scene별 색 override)
+      html += `<button class="ds-np-empty-hero np-hero-btn" onclick="location.href='schedule.html'" style="border-left:none; border-right:none; background:none; width:100%; cursor:pointer;">
         <div class="np-empty-label">다음 일정</div>
         <div class="np-empty-text">${startStr} · ${taskName(heroItem)}</div>
         <div class="np-meta" style="margin-top:4px;">${metaLine}</div>
