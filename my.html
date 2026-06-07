@@ -30,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v37";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v43";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -43,7 +43,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260607-5">
+<link rel="stylesheet" href="design.css?v=20260607-10">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -214,6 +214,16 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <span class="menu-badge" id="region-row-badge" style="display:none;">강서구</span>
       <div class="menu-arrow">›</div>
     </div>
+    <!-- V1.9.16: 자동 리마인더 설정 (스케줄 탭에서 이동) -->
+    <div class="menu-item ds-tap-card" id="acc-reminder-row" onclick="openReminderModal()">
+      <div class="menu-icon" style="background:#FFF0F4;color:#FF385C;font-size:18px;">🔔</div>
+      <div class="menu-text">
+        <div class="menu-title">자동 리마인더</div>
+        <div class="menu-sub" id="reminder-row-sub">고객에게 내일 일정 전날 자동 SMS 발송</div>
+      </div>
+      <span class="menu-badge" id="reminder-row-badge">설정 안 됨</span>
+      <div class="menu-arrow">›</div>
+    </div>
   </div>
 
   <!-- 계정 (Phase 2 인증 — 로그인 정보 + 관리자 진입 + 로그아웃) -->
@@ -304,6 +314,43 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     <div style="font-size:11.5px;color:#999;text-align:center;margin-top:10px;line-height:1.5;">
       🔒 PIN은 안전하게 암호화되어 저장됩니다.<br>5회 실패 시 30분간 잠금 + SMS 강제 인증.
     </div>
+  </div>
+</div>
+
+<!-- V1.9.16 자동 리마인더 설정 모달 -->
+<div id="reminder-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closeReminderModal()">
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;max-height:90vh;overflow-y:auto;">
+    <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;"></div>
+    <div style="font-size:17px;font-weight:var(--fw-bold);margin-bottom:6px;">🔔 자동 리마인더</div>
+    <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;">
+      <b style="color:#1B2A3F;">내일 일정 고객</b>에게 전날 자동 SMS 발송<br>
+      앱 진입 시 자동으로 발송됩니다.
+    </div>
+
+    <!-- ON/OFF 토글 -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#F7F8FA;border-radius:12px;margin-bottom:12px;">
+      <div>
+        <div style="font-size:14px;font-weight:800;color:#1B2A3F;">자동 리마인더 사용</div>
+        <div style="font-size:11.5px;color:#6B7280;margin-top:2px;">SMS 발송 자동 실행</div>
+      </div>
+      <label style="position:relative;display:inline-block;width:50px;height:28px;cursor:pointer;">
+        <input id="reminder-toggle" type="checkbox" style="opacity:0;width:0;height:0;" onchange="toggleReminder()">
+        <span id="reminder-slider" style="position:absolute;inset:0;background:#D1D5DB;border-radius:99px;transition:.2s;"></span>
+        <span id="reminder-knob" style="position:absolute;height:22px;width:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 2px 4px rgba(0,0,0,.2);"></span>
+      </label>
+    </div>
+
+    <!-- 상태 표시 -->
+    <div id="reminder-status-text" style="font-size:12.5px;color:#6B7280;background:#F7F8FA;padding:10px 14px;border-radius:10px;line-height:1.6;margin-bottom:12px;">
+      현재 상태 로딩 중...
+    </div>
+
+    <!-- SMS 설정 안내 -->
+    <div style="font-size:11px;color:#9CA3AF;background:#FEF3C7;padding:10px 14px;border-radius:10px;line-height:1.6;margin-bottom:14px;">
+      💡 <b>SMS 발송</b>을 위해선 <b>앱 설정 > API키 / 발송번호</b> 입력이 필요합니다
+    </div>
+
+    <button onclick="closeReminderModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;">닫기</button>
   </div>
 </div>
 
@@ -511,6 +558,77 @@ function openRegionModal(){
   document.getElementById('region-ov').style.display = 'block';
 }
 function closeRegionModal(){ document.getElementById('region-ov').style.display = 'none'; }
+
+// ═══ V1.9.16 자동 리마인더 설정 ═══
+function getReminderState() {
+  const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+  const enabled = cfg.autoReminder !== false; // 기본 ON
+  const hasSms = !!(cfg.apiKey && cfg.apiSecret && cfg.fromPhone);
+  return { enabled, hasSms, cfg };
+}
+function renderReminderRow() {
+  const { enabled, hasSms } = getReminderState();
+  const badge = document.getElementById('reminder-row-badge');
+  if (!badge) return;
+  if (enabled && hasSms) {
+    badge.textContent = 'ON';
+    badge.style.background = '#D1FAE5';
+    badge.style.color = '#047857';
+  } else if (enabled && !hasSms) {
+    badge.textContent = 'SMS 설정 필요';
+    badge.style.background = '#FEF3C7';
+    badge.style.color = '#92400E';
+  } else {
+    badge.textContent = 'OFF';
+    badge.style.background = '#F2F4F6';
+    badge.style.color = '#6B7280';
+  }
+  badge.style.display = 'inline-block';
+}
+function openReminderModal() {
+  const { enabled, hasSms } = getReminderState();
+  const toggle = document.getElementById('reminder-toggle');
+  if (toggle) toggle.checked = enabled;
+  updateReminderUI();
+  const status = document.getElementById('reminder-status-text');
+  if (status) {
+    if (enabled && hasSms) {
+      status.innerHTML = '✅ <b style="color:#047857;">자동 발송 중</b><br>매일 앱 진입 시 내일 일정 고객에게 SMS 자동 발송';
+    } else if (enabled && !hasSms) {
+      status.innerHTML = '⚠ <b style="color:#92400E;">SMS 설정 필요</b><br>앱 설정 > API키 / 발송번호를 먼저 입력해주세요';
+    } else {
+      status.innerHTML = '🔕 <b style="color:#6B7280;">자동 발송 OFF</b><br>고객 알림 SMS를 수동으로 발송합니다';
+    }
+  }
+  document.getElementById('reminder-ov').style.display = 'block';
+}
+function closeReminderModal() { document.getElementById('reminder-ov').style.display = 'none'; }
+function toggleReminder() {
+  const toggle = document.getElementById('reminder-toggle');
+  const enabled = toggle ? toggle.checked : false;
+  try {
+    const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
+    cfg.autoReminder = enabled;
+    localStorage.setItem('ssak_cfg', JSON.stringify(cfg));
+  } catch(_) {}
+  updateReminderUI();
+  renderReminderRow();
+  if (typeof ssakToast === 'function') {
+    ssakToast(enabled ? '✅ 자동 리마인더 ON' : '🔕 자동 리마인더 OFF');
+  }
+  // 상태 텍스트 즉시 갱신
+  setTimeout(() => openReminderModal(), 50);
+}
+function updateReminderUI() {
+  const { enabled } = getReminderState();
+  const slider = document.getElementById('reminder-slider');
+  const knob = document.getElementById('reminder-knob');
+  if (slider) slider.style.background = enabled ? '#FF385C' : '#D1D5DB';
+  if (knob) knob.style.left = enabled ? '25px' : '3px';
+}
+document.addEventListener('DOMContentLoaded', () => {
+  try { renderReminderRow(); } catch(_) {}
+});
 function pickRegion(region){
   _selectedRegion = region;
   document.querySelectorAll('.region-chip-pick').forEach(el => {
