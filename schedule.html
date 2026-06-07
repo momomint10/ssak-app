@@ -30,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v43";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v44";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -43,7 +43,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260607-10">
+<link rel="stylesheet" href="design.css?v=20260607-11">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -471,14 +471,14 @@ textarea.form-input{resize:none;}
   box-shadow:0 2px 6px rgba(15,15,18,.08);
 }
 
-/* 7) 세부일정 B안 (Pure White soft shadow) */
+/* 7) 세부일정 B안 (Pure White soft shadow) — V1.9.17 살짝 축소 */
 .ds-sched-row {
-  display:grid; grid-template-columns:72px 1fr auto;
-  align-items:center; gap:14px;
-  width:100%; padding:14px;
+  display:grid; grid-template-columns:60px 1fr auto;
+  align-items:center; gap:12px;
+  width:100%; padding:11px 12px;
   background:#fff;
-  border:none; border-radius:14px;
-  margin-bottom:8px;
+  border:none; border-radius:12px;
+  margin-bottom:7px;
   cursor:pointer;
   text-align:left;
   font-family:inherit;
@@ -487,12 +487,30 @@ textarea.form-input{resize:none;}
 }
 .ds-sched-row:active { transform:scale(.98); }
 .ds-sched-time { font-family:'JetBrains Mono', ui-monospace, monospace; }
-.ds-sched-time-start { font-size:22px; font-weight:900; color:#1B2A3F; letter-spacing:-.05em; line-height:1; }
-.ds-sched-time-end { font-size:11px; font-weight:700; color:rgba(27,42,63,.5); margin-top:4px; }
+.ds-sched-time-start { font-size:18px; font-weight:800; color:#1B2A3F; letter-spacing:-.04em; line-height:1; }
+.ds-sched-time-end { font-size:10px; font-weight:700; color:rgba(27,42,63,.5); margin-top:3px; }
 .ds-sched-body { min-width:0; }
-.ds-sched-title { font-size:15px; font-weight:800; color:#1B2A3F; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.ds-sched-meta { font-size:12px; font-weight:700; color:rgba(27,42,63,.58); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.ds-sched-status { font-size:10.5px; font-weight:900; letter-spacing:.04em; padding:4px 10px; border-radius:6px; flex-shrink:0; }
+.ds-sched-title { font-size:14px; font-weight:700; color:#1B2A3F; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ds-sched-meta { font-size:11.5px; font-weight:600; color:rgba(27,42,63,.58); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ds-sched-status { font-size:10px; font-weight:800; letter-spacing:.04em; padding:3px 8px; border-radius:5px; flex-shrink:0; }
+
+/* V1.9.17 그룹 헤더 (날짜별 묶음 — 달력 아이콘 X) */
+.sched-group-header {
+  margin:14px 22px 6px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.sched-group-header .lbl {
+  font-size:13px; font-weight:800; color:#1B2A3F;
+  display:flex; align-items:center; gap:6px;
+}
+.sched-group-header.today .lbl::before {
+  content:''; width:7px; height:7px; border-radius:50%;
+  background:#FF385C;
+  animation:sched-blink 1.4s ease-in-out infinite;
+}
+.sched-group-header .cnt {
+  font-size:11px; font-weight:800; color:#6B7280;
+}
 .ds-sched-row-done .ds-sched-time-start, .ds-sched-row-done .ds-sched-title { color:rgba(27,42,63,.4); text-decoration:line-through; text-decoration-color:rgba(27,42,63,.3); }
 .ds-sched-row-done .ds-sched-time-end, .ds-sched-row-done .ds-sched-meta { color:rgba(27,42,63,.35); }
 .ds-sched-row-done .ds-sched-status { background:#D1FAE5; color:#047857; }
@@ -991,6 +1009,49 @@ const KOREAN_HOLIDAYS = {
   '2027-12-25': '크리스마스',
 };
 
+// V1.9.17: 주 모드 캘린더 — 이번 주 일~토 7일만
+function renderWeekCalendar(grid, today) {
+  if (!grid) return;
+  const now = new Date();
+  const dow = now.getDay(); // 0=일
+  // 이번 주 일요일
+  const sunStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow);
+  const dotMap = {};
+  schedules.forEach(s => {
+    if (!dotMap[s.date]) dotMap[s.date] = [];
+    dotMap[s.date].push(s.status);
+  });
+  const STATUS_COLOR = {confirmed:'#6366F1', inprogress:'#EA580C', done:'#FF385C', cancelled:'#DC2626'};
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(sunStart.getFullYear(), sunStart.getMonth(), sunStart.getDate() + i);
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const isToday = dateStr === today;
+    const isSel = dateStr === selectedDate;
+    const isSun = i === 0; const isSat = i === 6;
+    const holidayName = KOREAN_HOLIDAYS[dateStr];
+    const isHoliday = !!holidayName;
+    let cls = 'cal-day';
+    if (isToday) cls += ' today';
+    if (isSel) cls += ' selected';
+    if (isSun) cls += ' sunday';
+    if (isSat) cls += ' saturday';
+    if (isHoliday) cls += ' holiday';
+    const dots = (dotMap[dateStr] || []).slice(0, 3).map(st =>
+      `<div class="cal-dot" style="background:${STATUS_COLOR[st]||'#ccc'}"></div>`
+    ).join('');
+    const holidayLabel = isHoliday
+      ? `<div class="holiday-name">${holidayName === '대체공휴일' ? '대체' : holidayName}</div>`
+      : '';
+    html += `<div class="${cls}" data-holiday="${isHoliday ? (holidayName === '대체공휴일' ? '대체' : holidayName) : ''}" onclick="selectDay('${dateStr}')">
+      ${holidayLabel}
+      <div class="cal-num">${d.getDate()}</div>
+      <div class="cal-dots">${dots}</div>
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
 // ── 캘린더 렌더링 ────────────────────────────
 function renderCalendar() {
   const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
@@ -998,6 +1059,12 @@ function renderCalendar() {
 
   const grid = document.getElementById('cal-grid');
   const today = todayStr();
+
+  // V1.9.17: 주 모드면 이번 주(일~토) 7일만 표시
+  if ((periodMode || 'month') === 'week') {
+    renderWeekCalendar(grid, today);
+    return;
+  }
 
   // 이달 1일 요일, 말일
   const firstDay = new Date(viewYear, viewMonth, 1).getDay();
@@ -1105,34 +1172,48 @@ function changeMonth(dir) {
   renderCalendar();
 }
 
-// ── 목록 렌더링 ───────────────────────────────
+// ── 목록 렌더링 (V1.9.17: 그룹 모드 — 주/월/년 토글에 따라 날짜 그룹) ──
 function renderList() {
   const list = document.getElementById('booking-list');
   const label = document.getElementById('list-label');
   const countBadge = document.getElementById('list-count');
+  if (!list) return;
 
   const today = todayStr();
-  let items = schedules.filter(s => s.date === selectedDate)
-    .sort((a,b) => (a.time||'').localeCompare(b.time||''));
+  // V1.9.17: period 모드 기반 필터링 (전체 그룹) vs selectedDate 단일
+  let items;
+  let periodLabel = '오늘 일정';
+  const isSelectedToday = selectedDate === today;
 
-  const isToday = selectedDate === today;
-  const d = new Date(selectedDate + 'T00:00:00');
-  const dayNames = ['일','월','화','수','목','금','토'];
-  label.textContent = isToday
-    ? `오늘의 예약`
-    : `${d.getMonth()+1}월 ${d.getDate()}일 (${dayNames[d.getDay()]}) 예약`;
+  // 캘린더 cell 클릭으로 selectedDate가 today가 아니면 → 단일 날짜 모드 (필터)
+  // 그 외에는 period 모드 (그룹)
+  const useGroupMode = isSelectedToday; // selectedDate가 today일 때만 그룹 모드
 
-  countBadge.textContent = `${items.length}건`;
+  if (useGroupMode) {
+    items = (typeof filterByPeriod === 'function')
+      ? filterByPeriod(schedules, periodMode || 'month').sort((a,b) =>
+          (a.date||'').localeCompare(b.date||'') || (a.time||'').localeCompare(b.time||''))
+      : schedules.filter(s => s.date === today).sort((a,b) => (a.time||'').localeCompare(b.time||''));
+    periodLabel = ({ week: '이번 주 일정', month: '이번 달 일정', year: '올해 일정' })[periodMode || 'month'];
+  } else {
+    items = schedules.filter(s => s.date === selectedDate)
+      .sort((a,b) => (a.time||'').localeCompare(b.time||''));
+    const d = new Date(selectedDate + 'T00:00:00');
+    const dayNames = ['일','월','화','수','목','금','토'];
+    periodLabel = `${d.getMonth()+1}월 ${d.getDate()}일 (${dayNames[d.getDay()]}) 예약`;
+  }
+
+  if (label) label.textContent = periodLabel;
+  if (countBadge) countBadge.textContent = `${items.length}건`;
 
   if (items.length === 0) {
     list.innerHTML = `<div class="empty-state" style="text-align:center;padding:32px 16px;">
       <div class="ds-empty-svg" style="margin:0 auto 14px;">${typeof svgIcon === 'function' ? svgIcon('broom', { size: 72, color: 'var(--c-pr)' }) : '📭'}</div>
-      <div class="empty-text">이 날 예약이 없습니다<br><span style="color:var(--c-pr, #FF385C);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
+      <div class="empty-text">예약이 없습니다<br><span style="color:var(--c-pr, #FF385C);font-weight:700;cursor:pointer;" onclick="openAddModal()">+ 예약 추가하기</span></div>
     </div>`;
     return;
   }
 
-  // V1.9.14 B안: 큰 시간 강조 + 본문 + 배지 (3컬럼 grid)
   const STATUS_LABEL = {confirmed:'예약', inprogress:'진행중', done:'완료', completed:'완료', cancelled:'취소'};
   const fmtTime = t => (t || '—').toString().slice(0,5);
   const estimateEnd = (start) => {
@@ -1143,7 +1224,8 @@ function renderList() {
     return `${String(eh).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
   };
 
-  list.innerHTML = items.map(s => {
+  // 단일 카드 HTML
+  const cardHtml = (s) => {
     const status = s.status || 'confirmed';
     const startStr = fmtTime(s.time || s.scheduled_time);
     const endStr = fmtTime(s.end_time || estimateEnd(s.time));
@@ -1165,12 +1247,50 @@ function renderList() {
         <div class="ds-sched-status">${STATUS_LABEL[status] || esc(status)}</div>
       </button>
     </div>`;
-  }).join('');
+  };
+
+  if (!useGroupMode) {
+    // 단일 날짜: 그룹 없이 카드만
+    list.innerHTML = items.map(cardHtml).join('');
+  } else {
+    // 그룹 모드: 날짜별 묶기
+    const groups = {}; // dateStr → items
+    items.forEach(s => {
+      const dt = (s.date || '').slice(0,10);
+      if (!groups[dt]) groups[dt] = [];
+      groups[dt].push(s);
+    });
+    const sortedDates = Object.keys(groups).sort();
+    const dayNames = ['일','월','화','수','목','금','토'];
+    const dateLabel = (dt) => {
+      if (dt === today) {
+        const d = new Date(today + 'T00:00:00');
+        return `오늘 (${d.getMonth()+1}월 ${d.getDate()}일 ${dayNames[d.getDay()]})`;
+      }
+      const tmrw = (() => { const d = new Date(); d.setDate(d.getDate()+1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })();
+      if (dt === tmrw) {
+        const d = new Date(tmrw + 'T00:00:00');
+        return `내일 (${d.getMonth()+1}월 ${d.getDate()}일 ${dayNames[d.getDay()]})`;
+      }
+      const d = new Date(dt + 'T00:00:00');
+      return `${d.getMonth()+1}월 ${d.getDate()}일 (${dayNames[d.getDay()]})`;
+    };
+
+    list.innerHTML = sortedDates.map(dt => {
+      const isToday = dt === today;
+      const grpClass = isToday ? 'sched-group-header today' : 'sched-group-header';
+      const cardsHtml = groups[dt].map(cardHtml).join('');
+      return `<div class="${grpClass}">
+        <span class="lbl">${dateLabel(dt)}</span>
+        <span class="cnt">${groups[dt].length}건</span>
+      </div>${cardsHtml}`;
+    }).join('');
+  }
 
   // Phase 7: 스와이프 이벤트 바인딩
   bindSwipeHandlers();
 
-  // 아젠다 모드일 땐 아젠다도 갱신 (모든 데이터 변경 지점에서 자동 호출됨)
+  // 아젠다 모드일 땐 아젠다도 갱신
   if (viewMode === 'agenda' && typeof renderAgenda === 'function') renderAgenda();
 }
 
