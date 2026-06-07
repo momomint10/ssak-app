@@ -30,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v40";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v41";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -43,7 +43,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260607-8">
+<link rel="stylesheet" href="design.css?v=20260607-9">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -79,8 +79,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .cal-wd{text-align:center;font-size:11px;font-weight:600;color:var(--gray-400);padding:4px 0;}
 .cal-wd:first-child{color:#EF4444;}
 .cal-wd:last-child{color:var(--blue);}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
-.cal-day{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.15s;position:relative;font-size:15px;font-weight:800;color:#1B2A3F;font-family:'JetBrains Mono', ui-monospace, monospace;letter-spacing:-.02em;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;width:100%;}
+.cal-day{aspect-ratio:1;min-width:0;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.15s;position:relative;font-size:15px;font-weight:800;color:#1B2A3F;font-family:'JetBrains Mono', ui-monospace, monospace;letter-spacing:-.02em;overflow:hidden;}
 .cal-day:active{background:var(--gray-100);}
 .cal-day.other-month .cal-num{color:var(--gray-300);}
 .cal-day.today .cal-num{background:var(--c-pr, #FF385C);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
@@ -337,9 +337,9 @@ textarea.form-input{resize:none;}
 @keyframes rem-pulse{0%,100%{opacity:1}50%{opacity:.65}}
 .reminder-status .on{color:#0F766E;font-weight:700;}
 
-/* === Phase 4: 캘린더 셀 미니 텍스트 === */
-.cal-mini{font-size:9.5px;font-weight:600;color:var(--gray-500);line-height:1.1;margin-top:1px;white-space:nowrap;overflow:hidden;max-width:100%;text-align:center;}
-.cal-mini-count{display:inline-block;background:var(--primary);color:#fff;border-radius:6px;padding:0 3px;font-size:8.5px;margin-left:1px;font-weight:700;}
+/* === Phase 4: 캘린더 셀 미니 텍스트 (V1.9.15: cell 안에 안 들어가는 시간 미리보기 숨김) === */
+.cal-mini{display:none;}
+.cal-mini-count{display:none;}
 .cal-day.selected .cal-mini{color:var(--primary-dark);}
 .cal-day.other-month .cal-mini{color:var(--gray-300);}
 
@@ -444,14 +444,17 @@ textarea.form-input{resize:none;}
   box-shadow:0 2px 6px rgba(15,15,18,.08);
 }
 
-/* 5) 캘린더 큰 카드 */
+/* 5) 캘린더 큰 카드 — V1.9.15.1 cell overflow fix */
 .cal-card {
-  margin:0 18px;
+  margin:0 16px;
   background:#fff;
   border-radius:22px;
-  padding:18px 14px 20px;
+  padding:14px 8px 16px;       /* 좌우 padding 14 → 8 */
   box-shadow:0 4px 18px rgba(15,15,18,.05);
+  overflow:hidden;
 }
+.cal-card .cal-grid { gap:3px !important; }
+.cal-card .cal-day { font-size:14px !important; }
 
 /* 6) "오늘" 라벨 */
 .day-label-v2 {
