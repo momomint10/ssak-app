@@ -30,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v45";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v46";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -43,7 +43,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260607-11">
+<link rel="stylesheet" href="design.css?v=20260607-12">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -559,6 +559,49 @@ textarea.form-input{resize:none;}
 .ds-fab-glass {
   box-shadow:0 6px 14px rgba(15,15,18,0.18) !important;
 }
+
+/* V1.9.18 년 모드 — 5년 카드 가로 스크롤 */
+.year-cards-wrap {
+  margin:0 16px;
+  background:#fff;
+  border-radius:22px;
+  padding:14px 8px;
+  box-shadow:0 4px 18px rgba(15,15,18,.05);
+}
+.year-cards {
+  display:flex; gap:8px;
+  overflow-x:auto; overflow-y:hidden;
+  padding:4px 6px;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+.year-cards::-webkit-scrollbar { display:none; }
+.year-card {
+  flex:0 0 86px;
+  background:#F7F8FA; border:none;
+  border-radius:14px;
+  padding:12px 10px;
+  text-align:center; cursor:pointer; font-family:inherit;
+  box-shadow:0 2px 8px rgba(15,15,18,.06);
+  transition:transform .12s;
+  scroll-snap-align:center;
+}
+.year-card:active { transform:scale(.97); }
+.year-card.cur {
+  background:linear-gradient(135deg,#FF385C,#E31C5F);
+  color:#fff;
+  box-shadow:0 6px 18px rgba(255,56,92,.35);
+}
+.year-card .yc-num { font-size:13px; font-weight:900; color:#1B2A3F; font-family:'JetBrains Mono', ui-monospace, monospace; letter-spacing:-.02em; }
+.year-card.cur .yc-num { color:#fff; }
+.year-card .yc-cnt { font-size:20px; font-weight:900; margin-top:5px; color:#1B2A3F; font-family:'JetBrains Mono', ui-monospace, monospace; line-height:1; letter-spacing:-.04em; }
+.year-card.cur .yc-cnt { color:#fff; }
+.year-card .yc-lbl { font-size:9.5px; font-weight:700; color:#6B7280; margin-top:2px; letter-spacing:.04em; text-transform:uppercase; }
+.year-card.cur .yc-lbl { color:rgba(255,255,255,.85); }
+.year-card .yc-bar { margin-top:7px; height:3px; background:#fff; border-radius:2px; overflow:hidden; }
+.year-card.cur .yc-bar { background:rgba(255,255,255,.3); }
+.year-card .yc-bar-fill { height:100%; background:#10B981; border-radius:2px; }
+.year-card.cur .yc-bar-fill { background:#fff; }
 </style>
 <script src="utils.js?v=20260605-2"></script>
 </head>
@@ -1018,6 +1061,80 @@ const KOREAN_HOLIDAYS = {
   '2027-12-25': '크리스마스',
 };
 
+// V1.9.18: 년 모드 캘린더 — 최근 5년 카드 가로 스크롤
+function renderYearCards(grid) {
+  if (!grid) return;
+  const parent = grid.parentElement; // cal-card
+  // cal-card 전체를 year-cards-wrap으로 교체
+  if (parent && parent.classList.contains('cal-card')) {
+    parent.style.display = 'none';
+  }
+  // 별도 컨테이너 사용 (이미 있으면 재사용)
+  let yWrap = document.getElementById('year-cards-wrap');
+  if (!yWrap) {
+    yWrap = document.createElement('div');
+    yWrap.id = 'year-cards-wrap';
+    yWrap.className = 'year-cards-wrap';
+    yWrap.innerHTML = '<div class="year-cards" id="year-cards"></div>';
+    if (parent && parent.parentElement) {
+      parent.parentElement.insertBefore(yWrap, parent.nextSibling);
+    }
+  }
+  yWrap.style.display = 'block';
+
+  // 연도별 집계
+  const curYear = (new Date()).getFullYear();
+  const years = [curYear-4, curYear-3, curYear-2, curYear-1, curYear];
+  const yearStats = {};
+  years.forEach(y => yearStats[y] = { total:0, done:0 });
+  (schedules || []).forEach(s => {
+    const y = parseInt((s.date || '').slice(0,4), 10);
+    if (yearStats[y]) {
+      yearStats[y].total++;
+      if (['completed','done'].includes(s.status)) yearStats[y].done++;
+    }
+  });
+
+  const cardsEl = document.getElementById('year-cards');
+  cardsEl.innerHTML = years.map(y => {
+    const st = yearStats[y];
+    const pct = st.total > 0 ? Math.round((st.done / st.total) * 100) : 0;
+    const isCur = y === curYear;
+    return `<button class="year-card ${isCur?'cur':''}" onclick="selectYear(${y})">
+      <div class="yc-num">${y}</div>
+      <div class="yc-cnt">${st.total}</div>
+      <div class="yc-lbl">건</div>
+      <div class="yc-bar"><div class="yc-bar-fill" style="width:${pct}%;"></div></div>
+    </button>`;
+  }).join('');
+
+  // 올해 카드 가운데로 스크롤
+  try {
+    setTimeout(() => {
+      const curCard = cardsEl.querySelector('.year-card.cur');
+      if (curCard) curCard.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    }, 100);
+  } catch(_) {}
+}
+
+// V1.9.18: 연도 카드 클릭 — 그 해 일정으로 필터
+function selectYear(year) {
+  const d = new Date();
+  if (year === d.getFullYear()) {
+    selectedDate = todayStr();
+  } else {
+    selectedDate = `${year}-01-01`;
+  }
+  // 카드 강조 변경
+  document.querySelectorAll('.year-card').forEach(c => c.classList.remove('cur'));
+  // 선택 카드 cur
+  const cards = document.querySelectorAll('.year-card');
+  const curYear = (new Date()).getFullYear();
+  const idx = year - (curYear - 4);
+  if (cards[idx]) cards[idx].classList.add('cur');
+  renderList();
+}
+
 // V1.9.17: 주 모드 캘린더 — 이번 주 일~토 7일만
 function renderWeekCalendar(grid, today) {
   if (!grid) return;
@@ -1064,13 +1181,30 @@ function renderWeekCalendar(grid, today) {
 // ── 캘린더 렌더링 ────────────────────────────
 function renderCalendar() {
   const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-  document.getElementById('month-label').textContent = `${viewYear}년 ${MONTHS[viewMonth]}`;
+  // V1.9.18: 모드별 동적 라벨
+  const pm = periodMode || 'month';
+  const labelEl = document.getElementById('month-label');
+  if (labelEl) {
+    if (pm === 'year') labelEl.textContent = '최근 5년';
+    else labelEl.textContent = `${viewYear}년 ${MONTHS[viewMonth]}`;
+  }
 
   const grid = document.getElementById('cal-grid');
   const today = todayStr();
 
+  // V1.9.18: 년 모드면 5년 카드, cal-card 숨김
+  if (pm === 'year') {
+    renderYearCards(grid);
+    return;
+  }
+  // V1.9.18: 월/주 모드면 5년 카드 숨기고 cal-card 보임
+  const yWrap = document.getElementById('year-cards-wrap');
+  if (yWrap) yWrap.style.display = 'none';
+  const calCard = grid && grid.parentElement;
+  if (calCard && calCard.classList.contains('cal-card')) calCard.style.display = '';
+
   // V1.9.17: 주 모드면 이번 주(일~토) 7일만 표시
-  if ((periodMode || 'month') === 'week') {
+  if (pm === 'week') {
     renderWeekCalendar(grid, today);
     return;
   }
