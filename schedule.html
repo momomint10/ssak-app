@@ -30,7 +30,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v39";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v40";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
@@ -43,7 +43,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260607-7">
+<link rel="stylesheet" href="design.css?v=20260607-8">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -79,8 +79,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .cal-wd{text-align:center;font-size:11px;font-weight:600;color:var(--gray-400);padding:4px 0;}
 .cal-wd:first-child{color:#EF4444;}
 .cal-wd:last-child{color:var(--blue);}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
-.cal-day{min-height:40px;border-radius:8px;display:flex;flex-direction:column;align-items:center;padding:2px 2px;cursor:pointer;transition:background 0.15s;position:relative;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-day{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.15s;position:relative;font-size:15px;font-weight:800;color:#1B2A3F;font-family:'JetBrains Mono', ui-monospace, monospace;letter-spacing:-.02em;}
 .cal-day:active{background:var(--gray-100);}
 .cal-day.other-month .cal-num{color:var(--gray-300);}
 .cal-day.today .cal-num{background:var(--c-pr, #FF385C);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
@@ -343,64 +343,157 @@ textarea.form-input{resize:none;}
 .cal-day.selected .cal-mini{color:var(--primary-dark);}
 .cal-day.other-month .cal-mini{color:var(--gray-300);}
 
-/* ═══ V1.9.14 풀 리뉴얼 ═══ */
-/* 1) 인사말 헤더 */
-.sched-greet { padding:50px 24px 14px; background:#fff; border-bottom:1px solid #F2F4F6; }
+/* ═══ V1.9.15 mockup 풀 적용 — 사장님 결정 ═══ */
+/* 1) 인사말 헤더 — 큰 톤 */
+.sched-greet { padding:62px 28px 18px; background:#fff; }
 .sched-greet .greet-inner { display:flex; align-items:flex-end; justify-content:space-between; gap:14px; }
-.sched-greet .greet-name { font-size:24px; font-weight:900; letter-spacing:-.03em; line-height:1.15; color:#191F28; }
-.sched-greet .greet-name small { display:block; font-size:14px; color:#1B2A3F; font-weight:800; margin-top:3px; }
+.sched-greet .greet-name { font-size:30px; font-weight:900; letter-spacing:-.035em; line-height:1.18; color:#191F28; }
+.sched-greet .greet-name small { display:block; font-size:17px; color:#1B2A3F; font-weight:800; margin-top:5px; }
 .sched-greet .icon-btn { background:#F2F4F6; border:none; width:38px; height:38px; border-radius:50%; font-size:16px; cursor:pointer; flex-shrink:0; }
 
-/* 2) 주/월/년 segmented control */
-.period-seg { margin:12px 16px 0; background:#fff; border-radius:11px; padding:3px; display:flex; gap:3px; box-shadow:0 2px 8px rgba(15,15,18,.05); }
-.period-seg button { flex:1; padding:8px 0; background:none; border:none; border-radius:8px; font-size:12.5px; font-weight:800; color:#8B95A1; cursor:pointer; font-family:inherit; transition:all .18s; }
-.period-seg button.on { background:linear-gradient(135deg,#FF385C,#E31C5F); color:#fff; box-shadow:0 3px 10px rgba(255,56,92,.32); }
+/* 2) Pure White Hero 카드 */
+.hero-card {
+  margin:14px 18px 0; border-radius:22px; padding:16px 22px;
+  background:#fff; box-shadow:0 4px 18px rgba(15,15,18,.07);
+}
+.hero-label {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:12px; font-weight:800; color:#6B7280;
+  letter-spacing:.04em; margin-bottom:7px;
+}
+.hero-title {
+  font-size:24px; font-weight:900; color:#1B2A3F;
+  letter-spacing:-.03em; line-height:1.15;
+}
+.hero-title b { color:#1B2A3F; font-weight:900; }
+.hero-sub {
+  font-size:13px; font-weight:700; color:#6B7280; margin-top:6px;
+}
+.hero-sub b { color:inherit; font-weight:700; }
 
-/* 3) Pure White 진행 카드 */
-.progress-card { margin:12px 16px 0; background:#fff; border-radius:18px; padding:14px 16px; box-shadow:0 4px 14px rgba(15,15,18,0.06); }
-.progress-top { display:flex; align-items:center; gap:14px; }
-.mini-donut { width:56px; height:56px; flex-shrink:0; position:relative; }
-.mini-donut svg { width:56px; height:56px; }
-.mini-donut svg circle { fill:none; stroke-width:7; }
-.donut-bg { stroke:rgba(27,42,63,.10); }
-.donut-seg { stroke-linecap:round; transition:stroke-dasharray .5s cubic-bezier(.4,0,.2,1); }
-.mini-donut .center { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#1B2A3F; font-family:'JetBrains Mono', ui-monospace, monospace; font-size:13.5px; font-weight:900; letter-spacing:-.04em; }
-.progress-body { flex:1; min-width:0; }
-.progress-label { font-size:11px; font-weight:800; color:#6B7280; letter-spacing:.06em; text-transform:uppercase; }
-.progress-title { font-size:17px; font-weight:900; color:#1B2A3F; margin-top:3px; letter-spacing:-.02em; }
-.progress-sub { font-size:12px; font-weight:700; color:#9CA3AF; margin-top:2px; }
-.progress-counts { display:flex; gap:14px; margin-top:10px; padding-top:10px; border-top:1px solid rgba(15,15,18,.06); }
-.progress-counts .cnt-it { flex:1; display:flex; align-items:baseline; gap:5px; }
-.cnt-dot { width:6px; height:6px; border-radius:50%; }
-.cnt-n { font-size:16px; font-weight:900; color:#1B2A3F; font-family:'JetBrains Mono', ui-monospace, monospace; letter-spacing:-.02em; }
-.cnt-l { font-size:10.5px; font-weight:700; color:#6B7280; }
+/* 3) 라이브 카드 — 4가지 상태 */
+.live-card {
+  margin:10px 18px 0; background:#fff;
+  border-radius:18px; padding:14px 16px 14px 14px;
+  box-shadow:0 4px 18px rgba(15,15,18,.07);
+  border-left:4px solid #FF385C;
+  display:none;
+}
+.live-card.is-active { display:block; }
+.live-card.state-now { border-left-color:#FF385C; }
+.live-card.state-soon { border-left-color:#F59E0B; }
+.live-card.state-done { border-left-color:#10B981; }
+.live-card.state-waiting { border-left-color:#9CA3AF; }
+.live-top { display:flex; align-items:center; gap:7px; }
+.live-dot { width:8px; height:8px; border-radius:50%; position:relative; }
+.live-dot.animated { animation:live-dot-pulse 1.4s ease-in-out infinite; }
+.live-dot.animated::after {
+  content:''; position:absolute; inset:-4px; border-radius:50%;
+  animation:live-dot-ring 1.4s ease-out infinite;
+}
+@keyframes live-dot-pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.5;transform:scale(.8);} }
+@keyframes live-dot-ring { 0%{transform:scale(.6);opacity:.6;} 100%{transform:scale(1.8);opacity:0;} }
+.state-now .live-dot { background:#FF385C; }
+.state-now .live-dot::after { background:rgba(255,56,92,.3); }
+.state-now .live-lbl { color:#FF385C; }
+.state-now .live-bar-fill { background:linear-gradient(90deg,#FF385C,#E31C5F); }
+.state-soon .live-dot { background:#F59E0B; }
+.state-soon .live-dot::after { background:rgba(245,158,11,.3); }
+.state-soon .live-lbl { color:#D97706; }
+.state-soon .live-bar-fill { background:linear-gradient(90deg,#F59E0B,#D97706); }
+.state-done .live-dot { background:#10B981; }
+.state-done .live-lbl { color:#047857; }
+.state-done .live-bar-fill { background:linear-gradient(90deg,#10B981,#059669); animation:none; }
+.state-waiting .live-dot { background:#9CA3AF; }
+.state-waiting .live-lbl { color:#6B7280; }
+.state-waiting .live-title { color:#6B7280; }
+.live-lbl { font-size:10.5px; font-weight:900; letter-spacing:.1em; text-transform:uppercase; }
+.live-title { font-size:16px; font-weight:900; color:#1B2A3F; margin-top:7px; letter-spacing:-.02em; }
+.live-meta { font-size:11.5px; font-weight:700; color:#6B7280; margin-top:3px; }
+.live-bar { margin-top:10px; height:5px; background:#F2F4F6; border-radius:3px; overflow:hidden; position:relative; }
+.live-bar-fill { position:absolute; left:0; top:0; bottom:0; border-radius:3px; animation:live-bar-flow 2.5s ease-in-out infinite; }
+@keyframes live-bar-flow { 0%,100%{opacity:1;} 50%{opacity:.7;} }
+.live-time { display:flex; justify-content:space-between; margin-top:7px; font-size:10.5px; font-weight:800; color:#1B2A3F; font-family:'JetBrains Mono', ui-monospace, monospace; }
+.live-time .right { color:#6B7280; }
 
-/* 4) 세부일정 B안 (큰 시간 강조) */
-.ds-sched-row {
-  display:grid; grid-template-columns:64px 1fr auto;
-  align-items:center; gap:12px;
-  width:100%; padding:13px 12px;
+/* 4) 캘린더 헤더 (월 라벨 + 우측 toggle) */
+.cal-header {
+  margin:18px 22px 12px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.cal-month-label {
+  font-size:18px; font-weight:700; color:#1B2A3F; letter-spacing:-.02em;
+  display:flex; align-items:center; gap:4px;
+}
+.cal-month-label .chev {
+  color:#FF385C; padding:0 4px; cursor:pointer;
+  font-weight:700; font-size:20px;
+  background:none; border:none;
+}
+.period-pill {
+  background:#F2F4F6; border-radius:10px; padding:3px;
+  display:flex; gap:2px;
+}
+.period-pill button {
+  padding:6px 13px; background:none; border:none; border-radius:7px;
+  font-size:12.5px; font-weight:800; color:#8B95A1;
+  cursor:pointer; font-family:inherit;
+}
+.period-pill button.on {
+  background:#fff; color:#1B2A3F;
+  box-shadow:0 2px 6px rgba(15,15,18,.08);
+}
+
+/* 5) 캘린더 큰 카드 */
+.cal-card {
+  margin:0 18px;
   background:#fff;
-  border:none; border-radius:12px;
+  border-radius:22px;
+  padding:18px 14px 20px;
+  box-shadow:0 4px 18px rgba(15,15,18,.05);
+}
+
+/* 6) "오늘" 라벨 */
+.day-label-v2 {
+  margin:18px 22px 10px;
+  font-size:14.5px; font-weight:700;
+  color:#6B7280; letter-spacing:-.02em;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.day-label-v2 .left { color:#1B2A3F; font-weight:700; }
+.day-label-v2 .cnt {
+  background:#fff; color:#1B2A3F;
+  padding:4px 12px; border-radius:7px;
+  font-size:13px; font-weight:700;
+  box-shadow:0 2px 6px rgba(15,15,18,.08);
+}
+
+/* 7) 세부일정 B안 (Pure White soft shadow) */
+.ds-sched-row {
+  display:grid; grid-template-columns:72px 1fr auto;
+  align-items:center; gap:14px;
+  width:100%; padding:14px;
+  background:#fff;
+  border:none; border-radius:14px;
   margin-bottom:8px;
   cursor:pointer;
   text-align:left;
   font-family:inherit;
-  box-shadow:0 2px 8px rgba(15,15,18,.04);
-  transition:transform .12s, box-shadow .15s;
+  box-shadow:0 2px 10px rgba(15,15,18,.06);
+  transition:transform .12s;
 }
 .ds-sched-row:active { transform:scale(.98); }
 .ds-sched-time { font-family:'JetBrains Mono', ui-monospace, monospace; }
-.ds-sched-time-start { font-size:20px; font-weight:900; color:#1B2A3F; letter-spacing:-.04em; line-height:1; }
-.ds-sched-time-end { font-size:10.5px; font-weight:700; color:rgba(27,42,63,.5); margin-top:4px; }
+.ds-sched-time-start { font-size:22px; font-weight:900; color:#1B2A3F; letter-spacing:-.05em; line-height:1; }
+.ds-sched-time-end { font-size:11px; font-weight:700; color:rgba(27,42,63,.5); margin-top:4px; }
 .ds-sched-body { min-width:0; }
-.ds-sched-title { font-size:14.5px; font-weight:800; color:#1B2A3F; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.ds-sched-meta { font-size:11.5px; font-weight:700; color:rgba(27,42,63,.58); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.ds-sched-status { font-size:10px; font-weight:900; letter-spacing:.04em; padding:4px 9px; border-radius:5px; flex-shrink:0; }
+.ds-sched-title { font-size:15px; font-weight:800; color:#1B2A3F; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ds-sched-meta { font-size:12px; font-weight:700; color:rgba(27,42,63,.58); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ds-sched-status { font-size:10.5px; font-weight:900; letter-spacing:.04em; padding:4px 10px; border-radius:6px; flex-shrink:0; }
 .ds-sched-row-done .ds-sched-time-start, .ds-sched-row-done .ds-sched-title { color:rgba(27,42,63,.4); text-decoration:line-through; text-decoration-color:rgba(27,42,63,.3); }
 .ds-sched-row-done .ds-sched-time-end, .ds-sched-row-done .ds-sched-meta { color:rgba(27,42,63,.35); }
 .ds-sched-row-done .ds-sched-status { background:#D1FAE5; color:#047857; }
-.ds-sched-row-inprogress { background:linear-gradient(90deg, rgba(255,56,92,.07), #fff); border-radius:12px; }
+.ds-sched-row-inprogress { background:#fff; }
 .ds-sched-row-inprogress .ds-sched-time-start { color:#FF385C; }
 .ds-sched-row-inprogress .ds-sched-status { background:#FF385C; color:#fff; box-shadow:0 3px 10px rgba(255,56,92,.32); }
 .ds-sched-row-inprogress .ds-sched-status::before { content:''; width:5px; height:5px; border-radius:50%; background:#fff; display:inline-block; margin-right:4px; vertical-align:middle; animation:sched-blink 1.4s ease-in-out infinite; }
@@ -411,7 +504,30 @@ textarea.form-input{resize:none;}
 
 @media (prefers-reduced-motion: reduce) {
   .ds-sched-row-inprogress .ds-sched-status::before { animation:none; }
-  .donut-seg { transition:none; }
+  .live-dot.animated, .live-bar-fill { animation:none; }
+}
+
+/* 공휴일 column-reverse — V1.9.15 */
+.cal-day.holiday {
+  color:#FF385C !important; font-weight:900;
+  flex-direction:column-reverse;
+  justify-content:center;
+  gap:3px;
+  padding-bottom:2px;
+}
+.cal-day.holiday::before {
+  content:attr(data-holiday);
+  font-size:8px; font-weight:800; color:#FF385C;
+  background:rgba(255,56,92,.10); padding:1px 5px; border-radius:3px;
+  font-family:'Pretendard Variable', sans-serif;
+  letter-spacing:-.04em; line-height:1;
+  position:static; transform:none;
+}
+.cal-day.today.holiday::before { background:rgba(255,255,255,.25); color:#fff; }
+
+/* V1.9.15 FAB 발광 제거 — 차분한 그림자 */
+.ds-fab-glass {
+  box-shadow:0 6px 14px rgba(15,15,18,0.18) !important;
 }
 </style>
 <script src="utils.js?v=20260605-2"></script>
@@ -419,17 +535,15 @@ textarea.form-input{resize:none;}
 <body>
 <div class="shell">
 
-  <!-- V1.9.14 인사말 헤더 -->
+  <!-- V1.9.15 인사말 헤더 (큰 톤) -->
   <div class="sched-greet">
     <div class="greet-inner">
-      <div class="greet-name">사장님,<br><small id="greet-msg">스케줄을 한눈에 확인하세요</small></div>
+      <div class="greet-name">사장님,<br><small id="greet-msg">이번 달 일정을 한눈에 확인하세요</small></div>
       <button class="icon-btn" onclick="openSearch()" aria-label="검색">🔍</button>
     </div>
   </div>
   <div class="reminder-status" id="reminder-status"></div>
 
-  <!-- 월 네비게이션 -->
-  
   <div id="pending-banner" class="pending-banner" style="display:none;" onclick="togglePendingSheet()">
     <div class="pending-banner-inner">
       <div class="pending-dot"></div>
@@ -439,48 +553,46 @@ textarea.form-input{resize:none;}
   </div>
   <div class="pending-sheet" id="pending-sheet"><div id="pending-list"></div></div>
 
-  <!-- V1.9.14 주/월/년 segmented control -->
-  <div class="period-seg" id="period-seg">
-    <button id="pbtn-week" onclick="setPeriod('week')">주</button>
-    <button class="on" id="pbtn-month" onclick="setPeriod('month')">월</button>
-    <button id="pbtn-year" onclick="setPeriod('year')">년</button>
+  <!-- V1.9.15 Pure White Hero 카드 -->
+  <div class="hero-card" id="hero-card">
+    <div class="hero-label">📅 <span id="hero-period-label">이번 달</span></div>
+    <div class="hero-title" id="hero-title">데이터 로딩 중...</div>
+    <div class="hero-sub" id="hero-sub">잠시만 기다려주세요</div>
   </div>
 
-  <!-- V1.9.14 Pure White 진행 카드 -->
-  <div class="progress-card" id="progress-card">
-    <div class="progress-top">
-      <div class="mini-donut">
-        <svg viewBox="0 0 56 56" aria-hidden="true">
-          <circle class="donut-bg" cx="28" cy="28" r="22"/>
-          <circle id="donut-done" class="donut-seg" cx="28" cy="28" r="22" stroke="#10B981" stroke-dasharray="0 138.2" stroke-dashoffset="0" transform="rotate(-90 28 28)"/>
-          <circle id="donut-now" class="donut-seg" cx="28" cy="28" r="22" stroke="#FF385C" stroke-dasharray="0 138.2" stroke-dashoffset="0" transform="rotate(-90 28 28)"/>
-          <circle id="donut-next" class="donut-seg" cx="28" cy="28" r="22" stroke="#3B82F6" stroke-dasharray="0 138.2" stroke-dashoffset="0" transform="rotate(-90 28 28)"/>
-        </svg>
-        <div class="center" id="progress-pct">0%</div>
-      </div>
-      <div class="progress-body">
-        <div class="progress-label">📊 <span id="progress-period">이번 달</span> 진행 현황</div>
-        <div class="progress-title" id="progress-title">0건 중 0건 처리</div>
-        <div class="progress-sub" id="progress-sub">데이터 로딩 중...</div>
-      </div>
+  <!-- V1.9.15 라이브 카드 (4가지 상태 자동) -->
+  <div class="live-card" id="live-card">
+    <div class="live-top">
+      <div class="live-dot" id="live-dot"></div>
+      <div class="live-lbl" id="live-lbl">지금 진행중</div>
     </div>
-    <div class="progress-counts">
-      <div class="cnt-it"><div class="cnt-dot" style="background:#10B981;"></div><div><span class="cnt-n" id="cnt-done">0</span> <span class="cnt-l">완료</span></div></div>
-      <div class="cnt-it"><div class="cnt-dot" style="background:#FF385C;"></div><div><span class="cnt-n" id="cnt-prog">0</span> <span class="cnt-l">진행중</span></div></div>
-      <div class="cnt-it"><div class="cnt-dot" style="background:#3B82F6;"></div><div><span class="cnt-n" id="cnt-next">0</span> <span class="cnt-l">예정</span></div></div>
+    <div class="live-title" id="live-title">—</div>
+    <div class="live-meta" id="live-meta">—</div>
+    <div class="live-bar"><div class="live-bar-fill" id="live-bar-fill" style="width:0%;"></div></div>
+    <div class="live-time">
+      <span id="live-time-left">—</span>
+      <span class="right" id="live-time-right">—</span>
     </div>
   </div>
 
 <!-- 월간 뷰 영역 -->
 <div id="view-month">
-<div class="month-nav">
-    <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
-    <span class="month-label" id="month-label"></span>
-    <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
+  <!-- V1.9.15 캘린더 헤더 — 월 라벨 좌측 + 주/월/년 토글 우측 inline -->
+  <div class="cal-header">
+    <div class="cal-month-label">
+      <button class="chev" onclick="changeMonth(-1)" aria-label="이전 달">‹</button>
+      <span class="month-label" id="month-label"></span>
+      <button class="chev" onclick="changeMonth(1)" aria-label="다음 달">›</button>
+    </div>
+    <div class="period-pill" id="period-seg">
+      <button id="pbtn-week" onclick="setPeriod('week')">주</button>
+      <button class="on" id="pbtn-month" onclick="setPeriod('month')">월</button>
+      <button id="pbtn-year" onclick="setPeriod('year')">년</button>
+    </div>
   </div>
 
-  <!-- 캘린더 -->
-  <div class="calendar-wrap">
+  <!-- V1.9.15 큰 캘린더 카드 -->
+  <div class="cal-card">
     <div class="cal-weekdays">
       <div class="cal-wd">일</div>
       <div class="cal-wd">월</div>
@@ -493,15 +605,15 @@ textarea.form-input{resize:none;}
     <div class="cal-grid" id="cal-grid"></div>
   </div>
 
-  <!-- V1.9.14: 기존 매출 그래프 카드 제거 — Pure White 진행 카드로 대체 (매출 표시 X) -->
+  <!-- V1.9.14: 기존 매출 그래프 카드 제거 -->
   <div class="stats-card" id="stats-card" style="display:none;"></div>
 
-  <!-- 예약 목록 -->
-  <div class="content">
-    <div class="section-title">
-      <span id="list-label">오늘의 예약</span>
-      <span class="count-badge" id="list-count">0건</span>
-    </div>
+  <!-- V1.9.15: 오늘 라벨 + 카운트 pill -->
+  <div class="day-label-v2">
+    <span class="left" id="list-label">오늘 예약</span>
+    <span class="cnt" id="list-count">0건</span>
+  </div>
+  <div style="padding:0 18px 16px;">
     <div id="booking-list"></div>
   </div>
 </div>
@@ -1694,50 +1806,154 @@ function filterByPeriod(items, period) {
 }
 
 // V1.9.14: Pure White 진행 카드 업데이트
+// V1.9.15: Pure White Hero 카드 — 텍스트 기반 (도넛 X)
 function updateProgressCard() {
   const items = filterByPeriod(schedules || [], periodMode);
   const total = items.length;
   const done = items.filter(s => s.status === 'completed' || s.status === 'done').length;
   const prog = items.filter(s => s.status === 'inprogress' || s.status === 'in_progress').length;
-  const next = total - done - prog;
-
+  const next = Math.max(0, total - done - prog);
   const pct = total > 0 ? Math.round(((done + prog * 0.5) / total) * 100) : 0;
 
-  // 라벨
   const periodLabels = { week: '이번 주', month: '이번 달', year: '올해' };
   const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-  set('progress-period', periodLabels[periodMode] || '이번 달');
-  set('progress-title', `${total}건 중 ${done + prog}건 처리`);
-  set('progress-pct', `${pct}%`);
-  set('cnt-done', done);
-  set('cnt-prog', prog);
-  set('cnt-next', Math.max(0, next));
+  const setHTML = (id, v) => { const e = document.getElementById(id); if (e) e.innerHTML = v; };
 
-  // sub 텍스트
+  set('hero-period-label', periodLabels[periodMode] || '이번 달');
+
+  // hero-title: "5건 · 완료 2 · 예정 3"
+  if (total === 0) {
+    setHTML('hero-title', '예약을 등록해보세요');
+    setHTML('hero-sub', `${periodLabels[periodMode]} 일정이 없습니다`);
+  } else {
+    setHTML('hero-title', `${total}건 · 완료 <b>${done}</b> · 예정 ${next}`);
+    // sub: "오늘 N건 · 내일 N건 · 이번주 X% 진행"
+    const today = todayStr();
+    const tmr = (() => { const d = new Date(); d.setDate(d.getDate()+1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })();
+    const todayCnt = (schedules || []).filter(s => s.date === today && s.status !== 'cancelled').length;
+    const tmrwCnt = (schedules || []).filter(s => s.date === tmr && s.status !== 'cancelled').length;
+    setHTML('hero-sub', `오늘 ${todayCnt}건 · 내일 ${tmrwCnt}건 · ${periodLabels[periodMode]} <b>${pct}% 진행</b>`);
+  }
+
+  // 라이브 카드 갱신
+  try { updateLiveCard(); } catch(_) {}
+}
+
+// V1.9.15: 라이브 카드 — 4가지 상태 자동 인식
+function updateLiveCard() {
+  const card = document.getElementById('live-card');
+  if (!card) return;
   const today = todayStr();
-  const tomorrow = (() => { const d = new Date(); d.setDate(d.getDate()+1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })();
-  const todayCnt = (schedules || []).filter(s => s.date === today && s.status !== 'cancelled').length;
-  const tmrwCnt = (schedules || []).filter(s => s.date === tomorrow && s.status !== 'cancelled').length;
-  set('progress-sub', `오늘 ${todayCnt}건 · 내일 ${tmrwCnt}건`);
+  const todayItems = (schedules || []).filter(s => s.date === today && s.status !== 'cancelled');
+  const now = new Date();
+  const curMin = now.getHours() * 60 + now.getMinutes();
+  const toMin = t => { if (!t) return null; const [h,m] = t.split(':').map(Number); return isNaN(h)?null:h*60+m; };
+  const addH = (t, hours) => { const m = toMin(t); if (m==null) return null; const total = m + hours*60; const hh = Math.floor(total/60)%24; const mm = total%60; return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`; };
+  const fmtDur = m => { if (m < 60) return `${m}분`; const h = Math.floor(m/60); const mm = m%60; return mm>0 ? `${h}시간 ${mm}분` : `${h}시간`; };
 
-  // 도넛 dasharray (circumference = 2*pi*22 ≈ 138.2)
-  const C = 138.2;
-  const safeTotal = Math.max(total, 1);
-  const lenDone = (done / safeTotal) * C;
-  const lenProg = (prog / safeTotal) * C;
-  const lenNext = (Math.max(0, next) / safeTotal) * C;
-  const dDone = document.getElementById('donut-done');
-  const dNow = document.getElementById('donut-now');
-  const dNext = document.getElementById('donut-next');
-  if (dDone) dDone.setAttribute('stroke-dasharray', `${lenDone} ${C}`);
-  if (dNow) {
-    dNow.setAttribute('stroke-dasharray', `${lenProg} ${C}`);
-    dNow.setAttribute('stroke-dashoffset', `-${lenDone}`);
+  const setT = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+
+  // 1) 진행중 일정 찾기
+  let activeItem = null;
+  let activeStart = null;
+  let activeEnd = null;
+  for (const s of todayItems) {
+    const stMin = toMin(s.time);
+    if (stMin == null) continue;
+    let endStr = s.end_time;
+    if (!endStr) endStr = addH(s.time, 2);
+    const enMin = toMin(endStr);
+    if (s.status === 'inprogress' || s.status === 'in_progress' ||
+        (s.status === 'confirmed' && curMin >= stMin && curMin <= enMin)) {
+      activeItem = s; activeStart = stMin; activeEnd = enMin;
+      break;
+    }
   }
-  if (dNext) {
-    dNext.setAttribute('stroke-dasharray', `${lenNext} ${C}`);
-    dNext.setAttribute('stroke-dashoffset', `-${lenDone + lenProg}`);
+
+  // 2) 방금 완료 (종료 후 30분 이내)
+  let recentDone = null;
+  if (!activeItem) {
+    let bestEnd = -1;
+    for (const s of todayItems) {
+      if (!['completed','done'].includes(s.status)) continue;
+      const stMin = toMin(s.time); if (stMin == null) continue;
+      let endStr = s.end_time || addH(s.time, 2);
+      const enMin = toMin(endStr);
+      if (curMin - enMin <= 30 && curMin - enMin >= 0 && enMin > bestEnd) {
+        recentDone = s; bestEnd = enMin;
+      }
+    }
   }
+
+  // 3) 곧 시작 (30분 이내 시작할 다음 일정)
+  let soonItem = null;
+  if (!activeItem && !recentDone) {
+    let bestDiff = 99999;
+    for (const s of todayItems) {
+      if (['completed','done','inprogress','in_progress'].includes(s.status)) continue;
+      const stMin = toMin(s.time); if (stMin == null) continue;
+      const diff = stMin - curMin;
+      if (diff >= 0 && diff <= 30 && diff < bestDiff) {
+        soonItem = s; bestDiff = diff;
+      }
+    }
+  }
+
+  const area = (s) => {
+    const addr = s.addr || s.address || '';
+    const m = addr.match(/(\S+구|\S+군|\S+시)/);
+    return (m && m[1]) || (s.region || '');
+  };
+  const ttl = (s) => s.type || s.name || '청소';
+
+  // 상태별 클래스 + 내용
+  card.className = 'live-card';
+  if (activeItem) {
+    card.classList.add('is-active', 'state-now');
+    document.getElementById('live-dot').className = 'live-dot animated';
+    setT('live-lbl', '지금 진행중');
+    setT('live-title', `${ttl(activeItem)} · ${area(activeItem) || '—'}`);
+    setT('live-meta', `📍 ${activeItem.addr || activeItem.address || ''}${activeItem.size ? ' · ' + activeItem.size + '평' : ''}`);
+    const total = Math.max(activeEnd - activeStart, 1);
+    const elapsed = Math.max(0, Math.min(total, curMin - activeStart));
+    const remain = Math.max(0, total - elapsed);
+    const pct = Math.round((elapsed/total)*100);
+    document.getElementById('live-bar-fill').style.width = pct + '%';
+    setT('live-time-left', `⏱ ${fmtDur(elapsed)} 경과`);
+    setT('live-time-right', `${fmtDur(remain)} 남음`);
+  } else if (recentDone) {
+    card.classList.add('is-active', 'state-done');
+    document.getElementById('live-dot').className = 'live-dot';
+    setT('live-lbl', '✓ 방금 완료');
+    setT('live-title', `${ttl(recentDone)} · ${area(recentDone) || '—'}`);
+    setT('live-meta', `📍 잘 마치셨어요!${recentDone.size ? ' · ' + recentDone.size + '평' : ''}`);
+    document.getElementById('live-bar-fill').style.width = '100%';
+    const stMin = toMin(recentDone.time);
+    const endStr = recentDone.end_time || addH(recentDone.time, 2);
+    const enMin = toMin(endStr);
+    const duration = Math.max(0, enMin - stMin);
+    setT('live-time-left', `✓ ${fmtDur(duration)} 작업`);
+    setT('live-time-right', `${endStr} 종료`);
+  } else if (soonItem) {
+    card.classList.add('is-active', 'state-soon');
+    document.getElementById('live-dot').className = 'live-dot animated';
+    setT('live-lbl', '⏰ 곧 시작');
+    setT('live-title', `${ttl(soonItem)} · ${area(soonItem) || '—'}`);
+    setT('live-meta', `📍 ${soonItem.addr || soonItem.address || ''}${soonItem.size ? ' · ' + soonItem.size + '평' : ''}`);
+    const stMin = toMin(soonItem.time);
+    const diff = stMin - curMin;
+    document.getElementById('live-bar-fill').style.width = '5%';
+    setT('live-time-left', `⏱ ${diff}분 후 시작`);
+    setT('live-time-right', `${soonItem.time} ~`);
+  } else {
+    // 표시 안 함
+    card.classList.remove('is-active', 'state-now', 'state-soon', 'state-done', 'state-waiting');
+  }
+}
+
+// V1.9.15: 라이브 카드 1분마다 자동 갱신
+if (!window._liveCardInterval) {
+  window._liveCardInterval = setInterval(() => { try { updateLiveCard(); } catch(_) {} }, 60 * 1000);
 }
 
 // V1.9.14: 인사말 — 기간 + 진행 상황
