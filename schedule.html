@@ -30,20 +30,20 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v46";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v47";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260608-1">
+<link rel="preload" as="script" href="utils.js?v=20260608-2">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — 스케줄</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260608-1">
+<link rel="stylesheet" href="design.css?v=20260608-2">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -83,7 +83,11 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .cal-day{aspect-ratio:1;min-width:0;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.15s;position:relative;font-size:15px;font-weight:800;color:#1B2A3F;font-family:'JetBrains Mono', ui-monospace, monospace;letter-spacing:-.02em;overflow:hidden;}
 .cal-day:active{background:var(--gray-100);}
 .cal-day.other-month .cal-num{color:var(--gray-300);}
-.cal-day.today .cal-num{background:var(--c-pr, #FF385C);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
+/* V1.9.20: 오늘 cell 원형 크기/그라데/그림자 강화 + dot 위치 iOS Calendar 패턴 */
+.cal-day.today .cal-num{background:linear-gradient(135deg,#FF385C,#E31C5F);color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(255,56,92,.32);font-weight:800;}
+/* V1.9.20: 오늘 + 일정 있으면 흰 점을 원 안 숫자 아래에 (iOS Cal 패턴) */
+.cal-day.today.has-event .cal-dots{bottom:auto;top:62%;}
+.cal-day.today.has-event .cal-dot{background:#fff !important;width:3.5px;height:3.5px;}
 .cal-day.selected{background:#FFF0EC;}
 .cal-day.selected .cal-num{color:var(--primary-dark);font-weight:700;}
 .cal-num{font-size:13px;font-weight:500;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
@@ -603,7 +607,7 @@ textarea.form-input{resize:none;}
 .year-card .yc-bar-fill { height:100%; background:#10B981; border-radius:2px; }
 .year-card.cur .yc-bar-fill { background:#fff; }
 </style>
-<script src="utils.js?v=20260608-1"></script>
+<script src="utils.js?v=20260608-2"></script>
 </head>
 <body>
 <div class="shell">
@@ -1181,12 +1185,29 @@ function renderWeekCalendar(grid, today) {
 // ── 캘린더 렌더링 ────────────────────────────
 function renderCalendar() {
   const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-  // V1.9.18: 모드별 동적 라벨
+  // V1.9.20: 모드별 동적 라벨 — 주 모드는 "1주 (X~Y일)" 추가
   const pm = periodMode || 'month';
   const labelEl = document.getElementById('month-label');
   if (labelEl) {
-    if (pm === 'year') labelEl.textContent = '최근 5년';
-    else labelEl.textContent = `${viewYear}년 ${MONTHS[viewMonth]}`;
+    if (pm === 'year') {
+      labelEl.innerHTML = '최근 5년';
+    } else if (pm === 'week') {
+      // 이번 주 일~토 산출
+      const now = new Date();
+      const dow = now.getDay(); // 0=일
+      const sun = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow);
+      const sat = new Date(sun.getFullYear(), sun.getMonth(), sun.getDate() + 6);
+      // "N주" = 일요일이 속한 그 달의 N번째 주
+      const sunDate = sun.getDate();
+      const weekNum = Math.ceil(sunDate / 7);
+      const labelMo = sun.getMonth() + 1;
+      const range = (sun.getMonth() === sat.getMonth())
+        ? `${sun.getDate()}~${sat.getDate()}일`
+        : `${sun.getDate()}일~${sat.getMonth()+1}월 ${sat.getDate()}일`;
+      labelEl.innerHTML = `${sun.getFullYear()}년 ${labelMo}월 ${weekNum}주 <small style="font-size:.78em;color:#6B7280;font-weight:600;margin-left:3px;">(${range})</small>`;
+    } else {
+      labelEl.innerHTML = `${viewYear}년 ${MONTHS[viewMonth]}`;
+    }
   }
 
   const grid = document.getElementById('cal-grid');
