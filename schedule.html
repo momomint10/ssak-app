@@ -30,20 +30,20 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v47";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v48";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260608-2">
+<link rel="preload" as="script" href="utils.js?v=20260608-3">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — 스케줄</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260608-2">
+<link rel="stylesheet" href="design.css?v=20260608-3">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -83,13 +83,16 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .cal-day{aspect-ratio:1;min-width:0;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.15s;position:relative;font-size:15px;font-weight:800;color:#1B2A3F;font-family:'JetBrains Mono', ui-monospace, monospace;letter-spacing:-.02em;overflow:hidden;}
 .cal-day:active{background:var(--gray-100);}
 .cal-day.other-month .cal-num{color:var(--gray-300);}
-/* V1.9.20: 오늘 cell 원형 크기/그라데/그림자 강화 + dot 위치 iOS Calendar 패턴 */
-.cal-day.today .cal-num{background:linear-gradient(135deg,#FF385C,#E31C5F);color:#fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(255,56,92,.32);font-weight:800;}
+/* V1.9.20.1: 오늘 cell 원형 + 글씨 명확화 (font-size + line-height 명시) */
+.cal-day.today .cal-num{background:linear-gradient(135deg,#FF385C,#E31C5F);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(255,56,92,.32);font-weight:800;font-size:14px;line-height:1;}
 /* V1.9.20: 오늘 + 일정 있으면 흰 점을 원 안 숫자 아래에 (iOS Cal 패턴) */
-.cal-day.today.has-event .cal-dots{bottom:auto;top:62%;}
+.cal-day.today.has-event .cal-dots{bottom:auto;top:64%;}
 .cal-day.today.has-event .cal-dot{background:#fff !important;width:3.5px;height:3.5px;}
 .cal-day.selected{background:#FFF0EC;}
 .cal-day.selected .cal-num{color:var(--primary-dark);font-weight:700;}
+/* V1.9.20.1: 오늘 + selected 동시 적용 시 옅은 박스 제거 (코랄 원만 강조) */
+.cal-day.today.selected{background:transparent;}
+.cal-day.today.selected .cal-num{color:#fff;font-weight:800;}
 .cal-num{font-size:13px;font-weight:500;width:24px;height:24px;display:flex;align-items:center;justify-content:center;}
 .cal-day:first-child .cal-num,.cal-day.sunday .cal-num{color:#EF4444;}
 .cal-day.today:first-child .cal-num,.cal-day.today.sunday .cal-num{color:#fff;}
@@ -607,7 +610,7 @@ textarea.form-input{resize:none;}
 .year-card .yc-bar-fill { height:100%; background:#10B981; border-radius:2px; }
 .year-card.cur .yc-bar-fill { background:#fff; }
 </style>
-<script src="utils.js?v=20260608-2"></script>
+<script src="utils.js?v=20260608-3"></script>
 </head>
 <body>
 <div class="shell">
@@ -1192,19 +1195,12 @@ function renderCalendar() {
     if (pm === 'year') {
       labelEl.innerHTML = '최근 5년';
     } else if (pm === 'week') {
-      // 이번 주 일~토 산출
+      // V1.9.20.1: "N주"만 표시 (사장님 요청 — 날짜 범위 제거)
       const now = new Date();
       const dow = now.getDay(); // 0=일
       const sun = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow);
-      const sat = new Date(sun.getFullYear(), sun.getMonth(), sun.getDate() + 6);
-      // "N주" = 일요일이 속한 그 달의 N번째 주
-      const sunDate = sun.getDate();
-      const weekNum = Math.ceil(sunDate / 7);
-      const labelMo = sun.getMonth() + 1;
-      const range = (sun.getMonth() === sat.getMonth())
-        ? `${sun.getDate()}~${sat.getDate()}일`
-        : `${sun.getDate()}일~${sat.getMonth()+1}월 ${sat.getDate()}일`;
-      labelEl.innerHTML = `${sun.getFullYear()}년 ${labelMo}월 ${weekNum}주 <small style="font-size:.78em;color:#6B7280;font-weight:600;margin-left:3px;">(${range})</small>`;
+      const weekNum = Math.ceil(sun.getDate() / 7);
+      labelEl.innerHTML = `${sun.getFullYear()}년 ${sun.getMonth()+1}월 ${weekNum}주`;
     } else {
       labelEl.innerHTML = `${viewYear}년 ${MONTHS[viewMonth]}`;
     }
