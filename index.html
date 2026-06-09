@@ -31,13 +31,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v53";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v54";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260608-8">
+<link rel="preload" as="script" href="utils.js?v=20260608-9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260608-8">
+<link rel="stylesheet" href="design.css?v=20260608-9">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -1279,7 +1279,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260608-8"></script>
+<script src="utils.js?v=20260608-9"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -1877,45 +1877,45 @@ function renderHealthCard(items) {
   const card = document.getElementById('health-card');
   const face = document.getElementById('health-face');
   if (!card || !face) return;
+  // V1.9.23: items 캐시 — watchPosition 콜백에서 즉시 재계산
+  window._lastHealthItems = items;
   // 청소 시간: 일정의 status가 done/inprogress인 항목들로 자동 추정
-  // 일정 1건당 평균 2시간 가정 (실측 데이터 없을 때)
   const worked = (items || []).filter(i => {
     return i.status === 'completed' || i.status === 'done' || i.status === 'inprogress' || i.status === 'in_progress';
   });
-  // service_time/duration 있으면 사용, 없으면 평균 2h
   let hours = 0;
   worked.forEach(i => {
     const t = parseFloat(i.duration || i.service_time || 0);
     hours += (t > 0 ? t : 2);
   });
   // 칼로리: 1시간 청소 ≈ 220kcal (체중 65kg 기준)
-  const kcal = Math.round(hours * 220);
-  // 걸음: 1시간 청소 ≈ 5,000보
-  const steps = Math.round(hours * 5000);
-  // 3 단계 결정
-  // L1: 0~400 / L2: 400~700 / L3: 700+
+  const kcalWork = Math.round(hours * 220);
+  // V1.9.23: GPS 이동 거리 자동 합산
+  const act = _readActivity();
+  const km = (act.distance_m || 0) / 1000;
+  // 이동 1km ≈ 50kcal (걸으면 50, 차량 0이지만 보수적으로 50)
+  const kcalMove = Math.round(km * 50);
+  const kcal = kcalWork + kcalMove;
+  // 3단계 (L1: 0~400 / L2: 400~700 / L3: 700+)
   let level = 1;
   if (kcal >= 700) level = 3;
   else if (kcal >= 400) level = 2;
-  // 카드 색 클래스 갱신
   card.classList.remove('level-1', 'level-2', 'level-3');
   card.classList.add(`level-${level}`);
-  // 캐릭터 SVG 교체
   face.innerHTML = HEALTH_FACE_SVG[level];
-  // 텍스트 갱신
   const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
   set('health-status', HEALTH_STATUS[level]);
   set('health-kcal', kcal);
-  // meta: 시간 + 걸음
+  // V1.9.23: meta 갱신 — 청소 시간 + GPS 이동 거리 (자동 표시)
   const metaEl = document.getElementById('health-meta');
   if (metaEl) {
-    if (kcal > 0) {
-      metaEl.textContent = `· ${hours.toFixed(1)}h · ${steps.toLocaleString()}보`;
-    } else {
-      metaEl.textContent = '· 오늘 시작 전';
-    }
+    const parts = [];
+    if (hours > 0) parts.push(`${hours.toFixed(1)}h 청소`);
+    if (km >= 0.1) parts.push(`${km.toFixed(1)}km 이동`);
+    if (parts.length === 0) parts.push('오늘 시작 전');
+    metaEl.textContent = '· ' + parts.join(' · ');
   }
-  // 진행바 (목표 1000kcal 기준)
+  // 진행바 (목표 1000kcal)
   const pct = Math.min(100, Math.round(kcal / 1000 * 100));
   const fill = document.getElementById('health-bar-fill');
   if (fill) fill.style.width = pct + '%';
@@ -2037,6 +2037,61 @@ function applyWeatherScene(weather) {
   try { setGreeting(weather); } catch(_) {}
 }
 
+// V1.9.23: 활동량 자동 트래커 — GPS watchPosition + Haversine 누적 + 자정 자동 리셋
+function _todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function _haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const toRad = x => x * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+function _readActivity() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('ssak_activity') || '{}');
+    if (raw.date !== _todayKey()) return { date: _todayKey(), distance_m: 0 };
+    return raw;
+  } catch(_) { return { date: _todayKey(), distance_m: 0 }; }
+}
+function _saveActivity(a) {
+  try { localStorage.setItem('ssak_activity', JSON.stringify(a)); } catch(_) {}
+}
+function _recordPosition(lat, lon) {
+  const a = _readActivity();
+  const now = Date.now();
+  if (typeof a.last_lat === 'number' && typeof a.last_lon === 'number') {
+    const dKm = _haversineKm(a.last_lat, a.last_lon, lat, lon);
+    // 노이즈 필터: 50m 이상 이동 + 시속 200km 이하 (GPS 튐 + 비행기 제외)
+    const dt = (now - (a.last_ts || now)) / 1000;
+    const speed_kmh = dt > 0 ? (dKm / (dt / 3600)) : 0;
+    if (dKm * 1000 >= 50 && speed_kmh <= 200) {
+      a.distance_m = (a.distance_m || 0) + Math.round(dKm * 1000);
+    }
+  }
+  a.last_lat = lat;
+  a.last_lon = lon;
+  a.last_ts = now;
+  a.date = _todayKey();
+  _saveActivity(a);
+}
+let _activityWatchId = null;
+function startActivityTracker() {
+  if (!navigator.geolocation || _activityWatchId !== null) return;
+  _activityWatchId = navigator.geolocation.watchPosition(
+    pos => {
+      _recordPosition(pos.coords.latitude, pos.coords.longitude);
+      // 헬스 카드 즉시 재계산 (이미 schedules 로드된 경우)
+      try { if (window._lastHealthItems) renderHealthCard(window._lastHealthItems); } catch(_) {}
+    },
+    err => { console.warn('[activity] watch failed:', err?.message); },
+    { enableHighAccuracy: false, maximumAge: 60000, timeout: 10000 }
+  );
+}
+
 // V1.9.22: 사용자 위치 캐싱 — 한번 받으면 24h 재사용 (반복 권한 X)
 function _getCachedCoords() {
   try {
@@ -2120,6 +2175,8 @@ async function loadHomeStats() {
   if (!window._weatherInterval) {
     window._weatherInterval = setInterval(() => { try { loadWeather(); } catch(_) {} }, 5 * 60 * 1000);
   }
+  // V1.9.23: 활동량 자동 트래커 시작 (GPS watchPosition + 거리 누적)
+  try { startActivityTracker(); } catch(_) {}
 
   // 오늘 할 일 + Today Forecast hero (V1.7.x)
   try {
