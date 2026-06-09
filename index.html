@@ -31,13 +31,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v56";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v57";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260608-11">
+<link rel="preload" as="script" href="utils.js?v=20260608-12">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260608-11">
+<link rel="stylesheet" href="design.css?v=20260608-12">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -1349,7 +1349,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260608-11"></script>
+<script src="utils.js?v=20260608-12"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -2181,7 +2181,8 @@ function _saveCoords(lat, lon) {
 function _getUserCoords() {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) return reject(new Error('geolocation_unsupported'));
-    const opts = { timeout: 3000, maximumAge: 6 * 3600 * 1000, enableHighAccuracy: false };
+    // V1.9.24.2: 정확도 ↑ (저정확도는 IP 기반으로 부정확. 점심 식당 검색에 정확도 필요)
+    const opts = { timeout: 8000, maximumAge: 30 * 60 * 1000, enableHighAccuracy: true };
     navigator.geolocation.getCurrentPosition(
       pos => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
       err => reject(err),
@@ -2205,9 +2206,23 @@ async function renderLunchHero() {
   const hero = document.getElementById('lunch-hero');
   if (!hero) return;
   if (!_isLunchTime()) { hero.style.display = 'none'; return; }
-  // 위치 우선순위 — GPS 캐시 → ssak_cfg.region
-  const c = _getCachedCoords();
-  if (!c) { hero.style.display = 'none'; return; } // 위치 없으면 표시 X (조용한 fallback)
+  // V1.9.24.2: 디버그 모드면 캐시 무시 + 고정확도 GPS 새로 받기
+  const isDebug = location.search.includes('lunch=test') || localStorage.getItem('ssak_lunch_debug') === '1';
+  let c = isDebug ? null : _getCachedCoords();
+  if (!c) {
+    try {
+      c = await new Promise((res, rej) => {
+        navigator.geolocation.getCurrentPosition(
+          p => res({ lat: p.coords.latitude, lon: p.coords.longitude }),
+          rej,
+          { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+        );
+      });
+      _saveCoords(c.lat, c.lon);
+    } catch(_) {
+      hero.style.display = 'none'; return;
+    }
+  }
   hero.style.display = 'block';
   // 미리보기 (전체 카테고리) — Kakao API 호출
   try {
