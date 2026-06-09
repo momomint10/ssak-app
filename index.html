@@ -31,13 +31,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v57";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v58";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260608-12">
+<link rel="preload" as="script" href="utils.js?v=20260608-13">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260608-12">
+<link rel="stylesheet" href="design.css?v=20260608-13">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -305,31 +305,51 @@
 /* V1.8: stat-grid/stat-tile 제거 — 단일 health card로 교체 */
 
 /* ═══ V1.8 헬스 카드 — 3단계 색 (블루 → 살구 → 코랄) ═══ */
-/* V1.9.24: 점심 hero — 시간대 조건부 (11:30~13:00) */
+/* V1.9.25: 점심 hero — D안 살구 톤 (기본) + 날씨 기반 4가지 톤 */
 .lunch-hero {
   margin:14px 18px 0;
-  background:linear-gradient(135deg, #FFF3E0, #FFE0B2);
+  background:linear-gradient(135deg, #FFF7F0 0%, #FFE8D6 100%);
   border-radius:18px;
   padding:14px 16px;
   position:relative; overflow:hidden;
 }
 .lunch-hero::before {
   content:''; position:absolute; right:-12px; top:-12px;
-  width:70px; height:70px; background:rgba(245,158,11,.15);
+  width:70px; height:70px; background:rgba(245,158,11,.10);
   border-radius:50%;
 }
+/* 톤별 배경 */
+.lunch-hero.tone-mild { background:linear-gradient(135deg, #FFF7F0 0%, #FFE8D6 100%); }
+.lunch-hero.tone-rainy { background:linear-gradient(135deg, #E8DCC8 0%, #D4C29C 100%); }
+.lunch-hero.tone-cold { background:linear-gradient(135deg, #FEF3E0 0%, #FFE0B2 100%); }
+.lunch-hero.tone-warm { background:linear-gradient(135deg, #FFF7F0 0%, #FFE8D6 100%); }
+.lunch-hero.tone-hot { background:linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%); }
+.lunch-hero.tone-rainy::before { background:rgba(120,80,40,.10); }
+.lunch-hero.tone-cold::before { background:rgba(217,119,6,.10); }
+.lunch-hero.tone-hot::before { background:rgba(2,132,199,.10); }
 .lunch-badge {
-  display:inline-block; font-size:9.5px; font-weight:900; color:#fff;
-  background:#F59E0B; padding:2.5px 9px; border-radius:99px;
-  letter-spacing:.06em; position:relative; z-index:1;
+  font-size:10.5px; font-weight:900;
+  color:#9A3412; letter-spacing:.04em;
+  position:relative; z-index:1;
+  display:inline-block;
 }
+.lunch-hero.tone-cold .lunch-badge { color:#92400E; }
+.lunch-hero.tone-rainy .lunch-badge { color:#5C3317; }
+.lunch-hero.tone-hot .lunch-badge { color:#075985; }
 .lunch-title {
-  font-size:15px; font-weight:900; color:#92400E; margin-top:7px;
+  font-size:15px; font-weight:900; color:#7C2D12; margin-top:5px;
   letter-spacing:-.02em; position:relative; z-index:1;
 }
+.lunch-hero.tone-cold .lunch-title { color:#7C2D12; }
+.lunch-hero.tone-rainy .lunch-title { color:#3F2918; }
+.lunch-hero.tone-hot .lunch-title { color:#0C4A6E; }
 .lunch-sub {
-  font-size:11.5px; font-weight:700; color:#A16207; margin-top:3px; position:relative; z-index:1;
+  font-size:11.5px; font-weight:700; color:#9A3412; margin-top:3px;
+  opacity:.85; position:relative; z-index:1;
 }
+.lunch-hero.tone-cold .lunch-sub { color:#92400E; }
+.lunch-hero.tone-rainy .lunch-sub { color:#5C3317; }
+.lunch-hero.tone-hot .lunch-sub { color:#075985; }
 .lunch-cta {
   margin-top:12px; display:grid; grid-template-columns:repeat(4,1fr); gap:7px;
   position:relative; z-index:1;
@@ -339,10 +359,25 @@
   padding:9px 4px; font-size:11px; font-weight:800; color:#1B2A3F;
   display:flex; flex-direction:column; align-items:center; gap:3px;
   box-shadow:0 2px 8px rgba(15,15,18,.08); cursor:pointer; font-family:inherit;
-  transition:transform .12s;
+  transition:transform .12s; position:relative;
 }
 .lunch-cta button:active { transform:scale(.95); }
 .lunch-cta button .e { font-size:18px; }
+/* 추천 카테고리 강조 */
+.lunch-cta button.recommend {
+  box-shadow:0 0 0 2px #F59E0B, 0 2px 6px rgba(245,158,11,.3);
+}
+.lunch-hero.tone-hot .lunch-cta button.recommend {
+  box-shadow:0 0 0 2px #0EA5E9, 0 2px 6px rgba(14,165,233,.3);
+}
+.lunch-cta button.recommend::after {
+  content:'추천'; position:absolute; top:-7px; right:-5px;
+  background:#F59E0B; color:#fff;
+  font-size:8.5px; font-weight:900;
+  padding:1px 5px; border-radius:99px;
+  letter-spacing:.02em;
+}
+.lunch-hero.tone-hot .lunch-cta button.recommend::after { background:#0EA5E9; }
 
 /* 점심 모달 */
 .lunch-modal { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; display:flex; align-items:flex-end; }
@@ -1349,7 +1384,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260608-12"></script>
+<script src="utils.js?v=20260608-13"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -2202,6 +2237,77 @@ function _isLunchTime() {
   const m = d.getHours() * 60 + d.getMinutes();
   return m >= 11 * 60 + 30 && m <= 13 * 60; // 11:30 ~ 13:00
 }
+// V1.9.25: 날씨 → 점심 추천 매핑 (계절/온도/기상 자동)
+function menuStrategy(weather) {
+  const def = {
+    label: '🕛 점심시간', title: '근처에 식당 N곳', keyword: '', tone: 'mild',
+    cats: [
+      { e:'🍱', l:'한식',   k:'',     rec:false },
+      { e:'🍜', l:'국밥',   k:'국밥', rec:false },
+      { e:'🥗', l:'가볍게', k:'분식', rec:false },
+      { e:'📍', l:'전체',   k:'',     rec:false }
+    ]
+  };
+  if (!weather) return def;
+  const main = (weather.main || '').toLowerCase();
+  const desc = (weather.description || '').toLowerCase();
+  const temp = typeof weather.temp === 'number' ? weather.temp : 18;
+  const isWet = ['rain','drizzle','thunderstorm','snow'].some(k => main.includes(k))
+             || desc.includes('비') || desc.includes('눈') || desc.includes('소나기');
+  // 비/눈 + 추움
+  if (isWet && temp < 10) {
+    return { label:'🌧 비오는 추운 날엔', title:'따뜻한 국밥 어떠세요?', keyword:'해장국', tone:'rainy',
+      cats: [
+        { e:'🍜', l:'국밥', k:'국밥',   rec:true },
+        { e:'🥘', l:'찌개', k:'찌개',   rec:false },
+        { e:'🍱', l:'한식', k:'',       rec:false },
+        { e:'📍', l:'전체', k:'',       rec:false }
+      ] };
+  }
+  // 비/눈
+  if (isWet) {
+    return { label:'🌧 비오는 날엔', title:'따뜻한 국물 어떠세요?', keyword:'국밥', tone:'rainy',
+      cats: [
+        { e:'🍜', l:'국밥', k:'국밥',   rec:true },
+        { e:'🍝', l:'국수', k:'국수',   rec:false },
+        { e:'🥘', l:'찌개', k:'찌개',   rec:false },
+        { e:'📍', l:'전체', k:'',       rec:false }
+      ] };
+  }
+  // 추움 (10°C 미만)
+  if (temp < 10) {
+    return { label:'❄️ 추운 날엔', title:'뜨끈한 찌개 어때요?', keyword:'찌개', tone:'cold',
+      cats: [
+        { e:'🥘', l:'찌개', k:'찌개',   rec:true },
+        { e:'🍜', l:'국밥', k:'국밥',   rec:false },
+        { e:'🍱', l:'한식', k:'',       rec:false },
+        { e:'📍', l:'전체', k:'',       rec:false }
+      ] };
+  }
+  // 매우 더움 (30°C 이상)
+  if (temp >= 30) {
+    return { label:'🌞 더운 날엔', title:'시원한 냉면 어때요?', keyword:'냉면', tone:'hot',
+      cats: [
+        { e:'🍜', l:'냉면', k:'냉면',   rec:true },
+        { e:'🥗', l:'가볍게', k:'분식', rec:false },
+        { e:'🍙', l:'분식', k:'분식',   rec:false },
+        { e:'📍', l:'전체', k:'',       rec:false }
+      ] };
+  }
+  // 따뜻 (25~30°C)
+  if (temp >= 25) {
+    return { label:'☀️ 따뜻한 날엔', title:'가볍게 어때요?', keyword:'분식', tone:'warm',
+      cats: [
+        { e:'🥗', l:'가볍게', k:'분식', rec:true },
+        { e:'🍙', l:'분식',   k:'분식', rec:false },
+        { e:'🍱', l:'한식',   k:'',     rec:false },
+        { e:'📍', l:'전체',   k:'',     rec:false }
+      ] };
+  }
+  // 적당 (10~25°)
+  return def;
+}
+
 async function renderLunchHero() {
   const hero = document.getElementById('lunch-hero');
   if (!hero) return;
@@ -2224,22 +2330,42 @@ async function renderLunchHero() {
     }
   }
   hero.style.display = 'block';
-  // 미리보기 (전체 카테고리) — Kakao API 호출
+  // V1.9.25: 날씨 기반 메뉴 전략 결정
+  const strat = menuStrategy(window._lastWeather);
+  // 카드 톤 클래스 적용
+  hero.classList.remove('tone-mild','tone-rainy','tone-cold','tone-warm','tone-hot');
+  hero.classList.add('tone-' + strat.tone);
+  // 라벨 갱신
+  const badgeEl = document.getElementById('lunch-badge');
+  if (badgeEl) badgeEl.textContent = strat.label;
+  // 카테고리 버튼 동적 재구성
+  const ctaWrap = hero.querySelector('.lunch-cta');
+  if (ctaWrap) {
+    ctaWrap.innerHTML = strat.cats.map(c =>
+      `<button onclick="openLunchModal('${c.k}')" class="${c.rec ? 'recommend' : ''}">` +
+      `<span class="e">${c.e}</span><span>${c.l}</span></button>`
+    ).join('');
+  }
+  // 미리보기 — keyword 사용 (날씨 기반 추천)
   try {
-    const url = `${SERVER}/api/lunch?lat=${c.lat.toFixed(4)}&lon=${c.lon.toFixed(4)}&size=8`;
+    const params = new URLSearchParams({ lat: c.lat.toFixed(4), lon: c.lon.toFixed(4), size: 8 });
+    if (strat.keyword) params.set('keyword', strat.keyword);
+    const url = `${SERVER}/api/lunch?${params}`;
     const r = await fetch(url);
     const d = await r.json();
     if (d.success && d.data && d.data.places?.length > 0) {
       const places = d.data.places;
       const titleEl = document.getElementById('lunch-title');
       const subEl = document.getElementById('lunch-sub');
-      if (titleEl) titleEl.textContent = `근처에 식당 ${places.length}곳`;
+      if (titleEl) {
+        // strat.title의 "N곳" 자동 치환
+        titleEl.textContent = strat.title.replace('N곳', `${places.length}곳`);
+      }
       if (subEl) {
         const top3 = places.slice(0, 3).map(p => `${p.name} (${p.distance_m}m)`).join(' · ');
         subEl.textContent = top3;
       }
     } else if (d.error?.includes('KAKAO_REST_API_KEY')) {
-      // 키 미설정 — 사장님 onboarding 안내
       const titleEl = document.getElementById('lunch-title');
       const subEl = document.getElementById('lunch-sub');
       if (titleEl) titleEl.textContent = '🕛 점심시간';
@@ -2341,7 +2467,10 @@ async function loadWeather() {
     const d = await r.json();
     if (d.success && d.data) {
       applyWeatherScene(d.data);
-      // V1.9.22.1: city → localStorage 저장 (renderTodayForecast가 우선 사용 → 강서구 덮어쓰기 방지)
+      // V1.9.25: weather 전역 저장 + 점심 hero 재계산 트리거
+      window._lastWeather = d.data;
+      try { if (typeof renderLunchHero === 'function') renderLunchHero(); } catch(_) {}
+      // V1.9.22.1: city → localStorage 저장
       if (d.data.city) {
         try { localStorage.setItem('ssak_geo_city', JSON.stringify(d.data.city)); } catch(_) {}
         const areaEl = document.getElementById('today-fc-area');
