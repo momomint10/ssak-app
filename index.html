@@ -31,13 +31,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v54";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v55";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260608-9">
+<link rel="preload" as="script" href="utils.js?v=20260608-10">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260608-9">
+<link rel="stylesheet" href="design.css?v=20260608-10">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -305,6 +305,63 @@
 /* V1.8: stat-grid/stat-tile 제거 — 단일 health card로 교체 */
 
 /* ═══ V1.8 헬스 카드 — 3단계 색 (블루 → 살구 → 코랄) ═══ */
+/* V1.9.24: 점심 hero — 시간대 조건부 (11:30~13:00) */
+.lunch-hero {
+  margin:14px 18px 0;
+  background:linear-gradient(135deg, #FFF3E0, #FFE0B2);
+  border-radius:18px;
+  padding:14px 16px;
+  position:relative; overflow:hidden;
+}
+.lunch-hero::before {
+  content:''; position:absolute; right:-12px; top:-12px;
+  width:70px; height:70px; background:rgba(245,158,11,.15);
+  border-radius:50%;
+}
+.lunch-badge {
+  display:inline-block; font-size:9.5px; font-weight:900; color:#fff;
+  background:#F59E0B; padding:2.5px 9px; border-radius:99px;
+  letter-spacing:.06em; position:relative; z-index:1;
+}
+.lunch-title {
+  font-size:15px; font-weight:900; color:#92400E; margin-top:7px;
+  letter-spacing:-.02em; position:relative; z-index:1;
+}
+.lunch-sub {
+  font-size:11.5px; font-weight:700; color:#A16207; margin-top:3px; position:relative; z-index:1;
+}
+.lunch-cta {
+  margin-top:12px; display:grid; grid-template-columns:repeat(4,1fr); gap:7px;
+  position:relative; z-index:1;
+}
+.lunch-cta button {
+  background:#fff; border:none; border-radius:10px;
+  padding:9px 4px; font-size:11px; font-weight:800; color:#1B2A3F;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  box-shadow:0 2px 8px rgba(15,15,18,.08); cursor:pointer; font-family:inherit;
+  transition:transform .12s;
+}
+.lunch-cta button:active { transform:scale(.95); }
+.lunch-cta button .e { font-size:18px; }
+
+/* 점심 모달 */
+.lunch-modal { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; display:flex; align-items:flex-end; }
+.lunch-modal-inner { background:#fff; width:100%; max-width:480px; margin:0 auto; border-radius:20px 20px 0 0; max-height:80vh; overflow-y:auto; padding:18px 18px 28px; padding-bottom:max(28px, env(safe-area-inset-bottom)); }
+.lunch-modal .grip { width:36px; height:4px; background:#E5E7EB; border-radius:2px; margin:-8px auto 14px; }
+.lunch-modal-title { font-size:17px; font-weight:900; color:#1B2A3F; margin-bottom:4px; }
+.lunch-modal-sub { font-size:12px; color:#6B7280; margin-bottom:16px; }
+.lunch-list { display:flex; flex-direction:column; gap:8px; }
+.lunch-item {
+  display:grid; grid-template-columns:36px 1fr auto;
+  align-items:center; gap:11px;
+  padding:11px 12px; background:#F7F8FA; border-radius:11px;
+  text-decoration:none; color:inherit;
+}
+.lunch-item .e { font-size:22px; text-align:center; }
+.lunch-item .name { font-size:13px; font-weight:800; color:#1B2A3F; }
+.lunch-item .meta { font-size:11px; font-weight:700; color:#6B7280; margin-top:2px; }
+.lunch-item .dist { font-size:11px; font-weight:800; color:#F59E0B; }
+
 .health-card {
   margin: 12px 16px 20px;
   border-radius: 16px;
@@ -1217,6 +1274,19 @@
       <div class="ds-timeline" id="today-timeline" style="display:none;"></div>
     </div>
 
+    <!-- V1.9.24: 점심 hero — 시간대 조건부 (11:30~13:00) -->
+    <div class="lunch-hero" id="lunch-hero" style="display:none;">
+      <span class="lunch-badge" id="lunch-badge">🕛 점심시간</span>
+      <div class="lunch-title" id="lunch-title">근처 식당 검색 중...</div>
+      <div class="lunch-sub" id="lunch-sub">잠시만 기다려주세요</div>
+      <div class="lunch-cta">
+        <button onclick="openLunchModal('한식')"><span class="e">🍱</span><span>한식</span></button>
+        <button onclick="openLunchModal('국밥')"><span class="e">🍜</span><span>국밥</span></button>
+        <button onclick="openLunchModal('분식')"><span class="e">🥗</span><span>가볍게</span></button>
+        <button onclick="openLunchModal('')"><span class="e">📍</span><span>전체</span></button>
+      </div>
+    </div>
+
     <!-- V1.7.2: status-card fallback 영구 hide — weather hero가 0건도 처리 -->
     <div class="ds-status-card" id="today-card" style="display:none;"></div>
 
@@ -1279,7 +1349,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260608-9"></script>
+<script src="utils.js?v=20260608-10"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -2120,6 +2190,108 @@ function _getUserCoords() {
   });
 }
 
+// V1.9.24: 점심 hero — 시간대 11:30~13:00에만 노출 + Kakao Local 검색
+function _isLunchTime() {
+  const d = new Date();
+  const m = d.getHours() * 60 + d.getMinutes();
+  return m >= 11 * 60 + 30 && m <= 13 * 60; // 11:30 ~ 13:00
+}
+async function renderLunchHero() {
+  const hero = document.getElementById('lunch-hero');
+  if (!hero) return;
+  if (!_isLunchTime()) { hero.style.display = 'none'; return; }
+  // 위치 우선순위 — GPS 캐시 → ssak_cfg.region
+  const c = _getCachedCoords();
+  if (!c) { hero.style.display = 'none'; return; } // 위치 없으면 표시 X (조용한 fallback)
+  hero.style.display = 'block';
+  // 미리보기 (전체 카테고리) — Kakao API 호출
+  try {
+    const url = `${SERVER}/api/lunch?lat=${c.lat.toFixed(4)}&lon=${c.lon.toFixed(4)}&size=8`;
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.success && d.data && d.data.places?.length > 0) {
+      const places = d.data.places;
+      const titleEl = document.getElementById('lunch-title');
+      const subEl = document.getElementById('lunch-sub');
+      if (titleEl) titleEl.textContent = `근처에 식당 ${places.length}곳`;
+      if (subEl) {
+        const top3 = places.slice(0, 3).map(p => `${p.name} (${p.distance_m}m)`).join(' · ');
+        subEl.textContent = top3;
+      }
+    } else if (d.error?.includes('KAKAO_REST_API_KEY')) {
+      // 키 미설정 — 사장님 onboarding 안내
+      const titleEl = document.getElementById('lunch-title');
+      const subEl = document.getElementById('lunch-sub');
+      if (titleEl) titleEl.textContent = '🕛 점심시간';
+      if (subEl) subEl.textContent = 'Kakao API 키 설정 후 자동 노출됩니다';
+    } else {
+      hero.style.display = 'none';
+    }
+  } catch (e) {
+    console.warn('lunch load failed:', e?.message);
+    hero.style.display = 'none';
+  }
+}
+async function openLunchModal(keyword) {
+  const c = _getCachedCoords();
+  if (!c) {
+    if (typeof ssakAlert === 'function') ssakAlert('위치 정보가 필요합니다');
+    return;
+  }
+  // 모달 생성 (탭마다 재생성)
+  let modal = document.getElementById('lunch-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'lunch-modal';
+    modal.className = 'lunch-modal';
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  }
+  const label = keyword || '근처 식당';
+  modal.innerHTML = `<div class="lunch-modal-inner">
+    <div class="grip"></div>
+    <div class="lunch-modal-title">🍚 ${label}</div>
+    <div class="lunch-modal-sub">현재 위치 부근 (거리순)</div>
+    <div class="lunch-list" id="lunch-list">검색 중...</div>
+  </div>`;
+  try {
+    const params = new URLSearchParams({ lat: c.lat.toFixed(4), lon: c.lon.toFixed(4), size: 12 });
+    if (keyword) params.set('keyword', keyword);
+    const r = await fetch(`${SERVER}/api/lunch?${params}`);
+    const d = await r.json();
+    const list = document.getElementById('lunch-list');
+    if (!d.success || !d.data?.places?.length) {
+      if (list) list.innerHTML = '<div style="text-align:center;padding:30px 0;font-size:13px;color:#9CA3AF;">검색 결과가 없습니다</div>';
+      return;
+    }
+    const emojiByCat = (cat) => {
+      if (/국밥|해장|국|탕|찌개/.test(cat)) return '🍜';
+      if (/한식|한정식|백반/.test(cat)) return '🍱';
+      if (/분식|김밥|떡볶이/.test(cat)) return '🥗';
+      if (/피자|이탈리안/.test(cat)) return '🍕';
+      if (/중식/.test(cat)) return '🥡';
+      if (/일식|초밥|돈까스|라멘/.test(cat)) return '🍣';
+      if (/카페|커피|디저트/.test(cat)) return '☕';
+      return '🍴';
+    };
+    if (list) {
+      list.innerHTML = d.data.places.map(p => `
+        <a class="lunch-item" href="${p.url || '#'}" target="_blank" rel="noopener">
+          <div class="e">${emojiByCat(p.category)}</div>
+          <div>
+            <div class="name">${p.name}</div>
+            <div class="meta">${p.category || ''} · ${p.address || ''}</div>
+          </div>
+          <div class="dist">${p.distance_m}m</div>
+        </a>
+      `).join('');
+    }
+  } catch (e) {
+    const list = document.getElementById('lunch-list');
+    if (list) list.innerHTML = `<div style="text-align:center;padding:30px 0;font-size:13px;color:#9CA3AF;">검색 실패: ${e?.message || ''}</div>`;
+  }
+}
+
 async function loadWeather() {
   try {
     // V1.9.22: 위치 우선순위 — 1) 캐시된 GPS  2) 새 GPS  3) 사용자 활동 자치구  4) 강서구
@@ -2177,6 +2349,11 @@ async function loadHomeStats() {
   }
   // V1.9.23: 활동량 자동 트래커 시작 (GPS watchPosition + 거리 누적)
   try { startActivityTracker(); } catch(_) {}
+  // V1.9.24: 점심 hero 시간대 분기 (11:30~13:00에만 노출)
+  try { renderLunchHero(); } catch(_) {}
+  if (!window._lunchInterval) {
+    window._lunchInterval = setInterval(() => { try { renderLunchHero(); } catch(_) {} }, 5 * 60 * 1000);
+  }
 
   // 오늘 할 일 + Today Forecast hero (V1.7.x)
   try {
