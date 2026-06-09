@@ -31,13 +31,13 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.7.1 force-update v17 — 모바일 stuck SW v13/v14 정리 + 캐시 비우기 + reload (2026-06-05) */
-(function(){try{var K="ssak_force_update_v51";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v52";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260608-6">
+<link rel="preload" as="script" href="utils.js?v=20260608-7">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260608-6">
+<link rel="stylesheet" href="design.css?v=20260608-7">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -1279,7 +1279,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260608-6"></script>
+<script src="utils.js?v=20260608-7"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -2032,18 +2032,70 @@ function applyWeatherScene(weather) {
   try { setGreeting(weather); } catch(_) {}
 }
 
+// V1.9.22: 사용자 위치 캐싱 — 한번 받으면 24h 재사용 (반복 권한 X)
+function _getCachedCoords() {
+  try {
+    const raw = localStorage.getItem('ssak_geo');
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (!obj || typeof obj.lat !== 'number' || typeof obj.lon !== 'number') return null;
+    const age = Date.now() - (obj.ts || 0);
+    if (age > 24 * 3600 * 1000) return null;
+    return obj;
+  } catch (_) { return null; }
+}
+function _saveCoords(lat, lon) {
+  try { localStorage.setItem('ssak_geo', JSON.stringify({ lat, lon, ts: Date.now() })); } catch (_) {}
+}
+// V1.9.22: navigator.geolocation Promise wrapper (3초 타임아웃, 권한 거부 시 reject)
+function _getUserCoords() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) return reject(new Error('geolocation_unsupported'));
+    const opts = { timeout: 3000, maximumAge: 6 * 3600 * 1000, enableHighAccuracy: false };
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+      err => reject(err),
+      opts
+    );
+  });
+}
+
 async function loadWeather() {
   try {
+    // V1.9.22: 위치 우선순위 — 1) 캐시된 GPS  2) 새 GPS  3) 사용자 활동 자치구  4) 강서구
     const cfg = JSON.parse(localStorage.getItem('ssak_cfg') || '{}');
-    const region = cfg.region || cfg.district || '강서구';
-    const url = SERVER + '/api/weather?region=' + encodeURIComponent(region);
+    let lat, lon, useGps = false;
+    const cached = _getCachedCoords();
+    if (cached) {
+      lat = cached.lat; lon = cached.lon; useGps = true;
+    } else {
+      try {
+        const c = await _getUserCoords();
+        lat = c.lat; lon = c.lon; useGps = true;
+        _saveCoords(lat, lon);
+      } catch (geoErr) {
+        // 권한 거부 / 타임아웃 / 지원 X — 사용자 자치구 fallback
+        useGps = false;
+      }
+    }
+    let url;
+    if (useGps && typeof lat === 'number' && typeof lon === 'number') {
+      url = `${SERVER}/api/weather?lat=${lat.toFixed(4)}&lon=${lon.toFixed(4)}`;
+    } else {
+      const region = cfg.region || cfg.district || '강서구';
+      url = `${SERVER}/api/weather?region=${encodeURIComponent(region)}`;
+    }
     const r = await fetch(url);
     const d = await r.json();
     if (d.success && d.data) {
       applyWeatherScene(d.data);
+      // V1.9.22: 응답의 city 표시 → today-fc-area 갱신
+      if (d.data.city) {
+        const areaEl = document.getElementById('today-fc-area');
+        if (areaEl) areaEl.textContent = '📍 ' + d.data.city;
+      }
     }
   } catch (e) {
-    // 무음 fallback — weather 없어도 hero 자체는 일정 정보로 표시됨
     console.warn('weather load failed:', e?.message);
   }
 }

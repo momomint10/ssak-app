@@ -30,20 +30,20 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* V1.6 force-update — 한 번만 SW 정리 + 캐시 비우기 + reload (2026-06-04) */
-(function(){try{var K="ssak_force_update_v51";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
+(function(){try{var K="ssak_force_update_v52";if(localStorage.getItem(K)==="1")return;var hSW="serviceWorker" in navigator,hC="caches" in window;if(!hSW&&!hC){localStorage.setItem(K,"1");return;}Promise.resolve().then(function(){return hSW?navigator.serviceWorker.getRegistrations():[];}).then(function(rs){return Promise.all((rs||[]).map(function(r){return r.unregister();}));}).then(function(){return hC?caches.keys():[];}).then(function(ks){return Promise.all((ks||[]).map(function(k){return caches.delete(k);}));}).then(function(){localStorage.setItem(K,"1");location.reload();}).catch(function(){localStorage.setItem(K,"1");});}catch(_){}})();
 </script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260608-6">
+<link rel="preload" as="script" href="utils.js?v=20260608-7">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — MY</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
-<link rel="stylesheet" href="design.css?v=20260608-6">
+<link rel="stylesheet" href="design.css?v=20260608-7">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
@@ -129,7 +129,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
 /* 토스트 — design.css 글로벌 (260528) */
 .trust-card{background:#fff;border-radius:var(--radius);margin:12px 16px;padding:14px 18px;box-shadow:var(--shadow);} .trust-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;} .trust-row{display:flex;gap:12px;} .trust-stat{flex:1;text-align:center;padding:8px 0;} .trust-val{font-size:22px;font-weight:var(--fw-bold);color:var(--gray-900);margin-bottom:2px;} .trust-val.amber{color:#F59E0B;} .trust-lbl{font-size:11px;color:var(--gray-500);} .trust-empty{font-size:11px;color:var(--gray-400);text-align:center;padding:8px 0;} </style>
-<script src="utils.js?v=20260608-6"></script>
+<script src="utils.js?v=20260608-7"></script>
 </head>
 <body>
 <div class="shell">
