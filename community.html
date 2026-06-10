@@ -85,18 +85,30 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .search-info{padding:8px 16px 0;font-size:12px;color:var(--gray-400);display:none;}
 .search-info b{color:var(--gray-700);}
 
-/* 정렬 chip (V1.6 — 다크 fill 활성) */
-.sort-row{display:flex;gap:6px;padding:8px 0 0;}
-.sort-chip{padding:5px 12px;border-radius:9999px;border:1.5px solid var(--gray-200);background:#fff;font-size:12px;font-weight:600;color:var(--gray-500);cursor:pointer;font-family:inherit;transition:.15s;}
-.sort-chip.on{background:var(--gray-900);border-color:var(--gray-900);color:#fff;}
+/* V1.9.26 — Twin Tabs + Blind 라운지 패턴 (search/filter row + 큰 탭 2개) */
+.search-row{display:flex;align-items:center;gap:8px;margin-top:2px;}
+.search-row .search-wrap{flex:1;}
+.filter-btn{position:relative;flex-shrink:0;width:42px;height:42px;border-radius:12px;background:var(--gray-50);border:1.5px solid var(--gray-200);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gray-700);padding:0;font-family:inherit;}
+.filter-btn:active{background:var(--gray-100);}
+.filter-btn .filter-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--c-pr,#FF385C);display:none;}
+.filter-btn.has-filter .filter-dot{display:block;}
 
-/* 카테고리 탭 (Blind 스타일 칩 — 가로 스크롤) */
-.cat-tabs{display:flex;gap:6px;padding:10px 0 4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.cat-tabs::-webkit-scrollbar{display:none;}
-.cat-tab{flex-shrink:0;padding:7px 14px;border-radius:9999px;border:1.5px solid var(--gray-200);background:#fff;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s;min-height:34px;}
-.cat-tab.on{background:var(--c-pr,#FF385C);border-color:var(--c-pr,#FF385C);color:#fff;
-  box-shadow:0 4px 16px rgba(255,56,92,0.35), 0 0 0 3px rgba(255,56,92,0.12);
-  transform:translateY(-1px);}
+/* Twin Tabs — 큰 탭 2개 (실시간/인기) */
+.twin-tabs{display:flex;gap:0;margin:14px -16px 0;padding:0 16px;border-bottom:1px solid var(--gray-100);}
+.twin-tab{flex:1;padding:12px 0 14px;font-size:15px;font-weight:700;color:var(--gray-400);border:none;background:transparent;cursor:pointer;position:relative;font-family:inherit;letter-spacing:-0.01em;transition:color .15s;}
+.twin-tab.on{color:var(--gray-900);}
+.twin-tab.on::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:36px;height:3px;background:var(--gray-900);border-radius:2px;}
+
+/* 카테고리 드로어 (필터 아이콘 → 펼침) */
+.cat-drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:250;}
+.cat-drawer-ov.on{display:block;}
+.cat-drawer{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;z-index:251;padding-bottom:max(16px,env(safe-area-inset-bottom));}
+.cat-drawer-hd{width:32px;height:3px;background:var(--gray-200);border-radius:2px;margin:10px auto 14px;}
+.cat-drawer-ttl{font-size:15px;font-weight:700;padding:0 20px 12px;color:var(--gray-700);}
+.cat-drawer-list{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 18px;}
+.cat-pill{padding:9px 16px;border-radius:9999px;border:1.5px solid var(--gray-200);background:#fff;font-size:13.5px;font-weight:600;color:var(--gray-700);cursor:pointer;font-family:inherit;transition:.15s;}
+.cat-pill.on{background:var(--gray-900);border-color:var(--gray-900);color:#fff;}
+.cat-drawer-clear{display:block;width:calc(100% - 40px);margin:0 20px;padding:11px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;font-size:13px;color:var(--gray-500);font-weight:600;cursor:pointer;font-family:inherit;}
 
 /* 카드 카테고리 뱃지 */
 .card-cat{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;background:#f0f0f0;color:#444;margin-bottom:6px;}
@@ -215,32 +227,46 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <div><h1 class="ds-page-title header-title">커뮤니티</h1><p class="ds-page-subtitle header-sub">정보 · 팁 · 질문</p></div>
       <button class="btn-write" onclick="openWrite()">✏️ 글쓰기</button>
     </div>
-    <div class="search-wrap">
-      <svg class="search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input class="search-input" id="search-input" type="text" placeholder="검색"
-        oninput="onSearch(this.value)"
-        onkeydown="if(event.key==='Enter') doSearch()">
-      <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
+    <!-- V1.9.26: 검색 + 필터 아이콘 한 줄 -->
+    <div class="search-row">
+      <div class="search-wrap">
+        <svg class="search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="search-input" type="text" placeholder="검색"
+          oninput="onSearch(this.value)"
+          onkeydown="if(event.key==='Enter') doSearch()">
+        <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
+      </div>
+      <button class="filter-btn" id="filter-btn" onclick="openCatDrawer()" aria-label="카테고리 필터">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        <span class="filter-dot"></span>
+      </button>
     </div>
-    <!-- 정렬 chip (V1.6 — 다크 fill) -->
-    <div class="sort-row" id="sort-row">
-      <button class="sort-chip on" data-sort="latest" onclick="onSort('latest')">최신순</button>
-      <button class="sort-chip" data-sort="popular" onclick="onSort('popular')">인기순</button>
-      <button class="sort-chip" data-sort="comments" onclick="onSort('comments')">댓글 많은순</button>
-    </div>
-    <!-- 카테고리 칩 (Blind 스타일) -->
-    <div class="cat-tabs" id="cat-tabs">
-      <button class="cat-tab on" data-cat="" onclick="onCat('')">전체</button>
-      <button class="cat-tab" data-cat="자유" onclick="onCat('자유')">자유</button>
-      <button class="cat-tab" data-cat="노하우" onclick="onCat('노하우')">노하우</button>
-      <button class="cat-tab" data-cat="구인구직" onclick="onCat('구인구직')">구인구직</button>
-      <button class="cat-tab" data-cat="Q&A" onclick="onCat('Q&A')">Q&A</button>
+    <!-- Twin Tabs — Blind HOT/실시간 패턴 -->
+    <div class="twin-tabs" id="twin-tabs">
+      <button class="twin-tab on" data-sort="latest" onclick="onTwinTab('latest')">🔥 실시간</button>
+      <button class="twin-tab" data-sort="popular" onclick="onTwinTab('popular')">📈 인기</button>
     </div>
   </div>
 
   <div class="search-info" id="search-info"></div>
   <div id="feed"></div>
 
+</div>
+
+<!-- V1.9.26: 카테고리 드로어 (필터 아이콘 → 펼침) -->
+<div class="cat-drawer-ov" id="cat-drawer-ov" onclick="if(event.target===this)closeCatDrawer()">
+  <div class="cat-drawer">
+    <div class="cat-drawer-hd"></div>
+    <div class="cat-drawer-ttl">카테고리</div>
+    <div class="cat-drawer-list" id="cat-drawer-list">
+      <button class="cat-pill on" data-cat="" onclick="onCat('')">전체</button>
+      <button class="cat-pill" data-cat="자유" onclick="onCat('자유')">자유</button>
+      <button class="cat-pill" data-cat="노하우" onclick="onCat('노하우')">노하우</button>
+      <button class="cat-pill" data-cat="구인구직" onclick="onCat('구인구직')">구인구직</button>
+      <button class="cat-pill" data-cat="Q&A" onclick="onCat('Q&A')">Q&A</button>
+    </div>
+    <button class="cat-drawer-clear" onclick="onCat(''); closeCatDrawer()">필터 초기화</button>
+  </div>
 </div>
 
 <!-- 상세 시트 -->
@@ -433,23 +459,42 @@ function card(p){
   </div>`;
 }
 
-// 카테고리 필터 (사장님 결정 D1 B: Blind 스타일 카테고리 칩)
+// V1.9.26: 카테고리 필터 (드로어 pill 동기화 + filter-btn 활성 표시)
 function onCat(cat){
   curCat = cat;
-  document.querySelectorAll('.cat-tab').forEach(t => {
+  document.querySelectorAll('.cat-pill').forEach(t => {
     t.classList.toggle('on', (t.getAttribute('data-cat') || '') === cat);
   });
+  // filter-btn 활성 도트 (전체='' 면 비활성)
+  document.getElementById('filter-btn')?.classList.toggle('has-filter', !!cat);
   loadFeed(true);
 }
 
-// 정렬 — 클라이언트 측 (서버 sort 파라미터 보내고 fallback은 client 정렬)
-function onSort(sort){
+// V1.9.26: Twin Tabs — 실시간/인기 두 개만
+function onTwinTab(sort){
   curSort = sort;
-  document.querySelectorAll('.sort-chip').forEach(t => {
+  document.querySelectorAll('.twin-tab').forEach(t => {
     t.classList.toggle('on', t.getAttribute('data-sort') === sort);
   });
   loadFeed(true);
 }
+
+// V1.9.26: 카테고리 드로어 열기/닫기
+function openCatDrawer(){
+  document.getElementById('cat-drawer-ov')?.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeCatDrawer(){
+  document.getElementById('cat-drawer-ov')?.classList.remove('on');
+  document.body.style.overflow = '';
+}
+// 카테고리 선택 후 자동으로 드로어 닫기 (전체는 즉시 닫기)
+const _origOnCat = onCat;
+window.onCat = function(cat){
+  _origOnCat(cat);
+  // 카테고리 선택 후 0.2초 뒤 닫기 (전환 효과)
+  setTimeout(closeCatDrawer, 200);
+};
 
 // ── 검색 ─────────────────────────────────────────────────────────
 function onSearch(v){
