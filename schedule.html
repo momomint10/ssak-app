@@ -389,19 +389,27 @@ textarea.form-input{resize:none;}
 }
 .hero-sub b { color:inherit; font-weight:700; }
 
-/* V1.9.28: 날씨 연동 Bold 풀 그라데 (홈 weather와 통일) */
-.hero-card.tone-clear   { background:linear-gradient(135deg,#FFEEA0 0%,#FBBF24 100%); }
-.hero-card.tone-clouds  { background:linear-gradient(135deg,#E5E7EB 0%,#9CA3AF 100%); }
-.hero-card.tone-rainy   { background:linear-gradient(135deg,#C7D2DC 0%,#94A3B8 100%); }
-.hero-card.tone-cold    { background:linear-gradient(135deg,#FFDFA3 0%,#FBA94E 100%); }
-.hero-card.tone-hot     { background:linear-gradient(135deg,#9CDCFB 0%,#38BDF8 100%); }
-/* Bold tone에서 텍스트 가독성 — 다크 잉크 통일 */
-.hero-card[class*="tone-"] .hero-title,
-.hero-card[class*="tone-"] .hero-title b   { color:#0F172A; }
-.hero-card[class*="tone-"] .hero-label,
-.hero-card[class*="tone-"] .hero-sub       { color:rgba(15,23,42,.7); }
-.hero-card[class*="tone-"] .hero-sub b     { color:#0F172A; }
-.hero-card[class*="tone-"] .hero-weather   { color:rgba(15,23,42,.6); }
+/* V1.9.28.1: 홈 ds-today-fc(design.css) 시스템과 100% 동일 색 — 진짜 통일 */
+.hero-card.tone-clear   { background: linear-gradient(165deg, #DCE9F5 0%, #CFE0F0 55%, #B8D2EA 100%); }   /* 홈 base 동일 */
+.hero-card.tone-clouds  { background: linear-gradient(165deg, #DDDFE5 0%, #C3C6CD 55%, #A8ACB5 100%); }   /* scene-cloudy 동일 */
+.hero-card.tone-rainy   { background: linear-gradient(165deg, #8B9BB1 0%, #6B7C95 55%, #4F5E7A 100%); color:#fff; }   /* scene-rain 동일 */
+.hero-card.tone-snow    { background: linear-gradient(165deg, #EEF2F7 0%, #D7E1EC 55%, #B8C7D7 100%); }   /* 옅은 청백 */
+.hero-card.tone-night   { background: linear-gradient(165deg, #2A3A55 0%, #1E2A42 55%, #14192C 100%); color:#E8EFF7; }   /* scene-night 동일 */
+/* Light tone에서 텍스트 — 다크 잉크 */
+.hero-card.tone-clear .hero-title, .hero-card.tone-clear .hero-title b,
+.hero-card.tone-clouds .hero-title, .hero-card.tone-clouds .hero-title b,
+.hero-card.tone-snow .hero-title, .hero-card.tone-snow .hero-title b   { color:#1B2A3F; }
+.hero-card.tone-clear .hero-label, .hero-card.tone-clear .hero-sub,
+.hero-card.tone-clouds .hero-label, .hero-card.tone-clouds .hero-sub,
+.hero-card.tone-snow .hero-label, .hero-card.tone-snow .hero-sub   { color:rgba(27,42,63,.7); }
+.hero-card.tone-clear .hero-sub b, .hero-card.tone-clouds .hero-sub b, .hero-card.tone-snow .hero-sub b   { color:#1B2A3F; }
+/* Dark tone (비/밤)에서 텍스트 — 흰 잉크 */
+.hero-card.tone-rainy .hero-title, .hero-card.tone-rainy .hero-title b,
+.hero-card.tone-night .hero-title, .hero-card.tone-night .hero-title b   { color:#fff; }
+.hero-card.tone-rainy .hero-label, .hero-card.tone-rainy .hero-sub,
+.hero-card.tone-night .hero-label, .hero-card.tone-night .hero-sub   { color:rgba(255,255,255,.78); }
+.hero-card.tone-rainy .hero-sub b, .hero-card.tone-night .hero-sub b   { color:#fff; }
+.hero-card.tone-rainy .hero-weather, .hero-card.tone-night .hero-weather   { color:rgba(255,255,255,.7); }
 @media (prefers-reduced-motion: reduce) {
   .hero-card { transition: none; }
 }
@@ -2490,7 +2498,7 @@ function applyWeatherTone(){
     if (!w || !w.tone || (Date.now() - (w.ts||0)) > 60*60*1000) return;
     const card = document.getElementById('hero-card');
     if (!card) return;
-    card.classList.remove('tone-clear','tone-clouds','tone-rainy','tone-cold','tone-hot');
+    card.classList.remove('tone-clear','tone-clouds','tone-rainy','tone-snow','tone-night','tone-cold','tone-hot');
     card.classList.add('tone-' + w.tone);
     const chip = document.getElementById('hero-weather-chip');
     if (chip && w.emoji) {

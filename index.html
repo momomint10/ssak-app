@@ -2473,18 +2473,25 @@ async function loadWeather() {
       // V1.9.25: weather 전역 저장 + 점심 hero 재계산 트리거
       window._lastWeather = d.data;
       try { if (typeof renderLunchHero === 'function') renderLunchHero(); } catch(_) {}
-      // V1.9.28: weather tone → localStorage 저장 (스케줄 hero 연동)
+      // V1.9.28.1: weather tone → 홈 SCENE_BY_MAIN과 100% 동일 매핑 (5종)
       try {
         const w = d.data;
-        const main = (w.main || '').toLowerCase();
-        const temp = w.temp;
-        const isWet = ['rain','drizzle','thunderstorm','snow'].some(k => main.includes(k));
+        const main = w.main || '';
+        const isNight = (w.icon || '').endsWith('n');
         let tone, emoji, label;
-        if (isWet) { tone='rainy'; emoji='🌧'; label= main.includes('snow') ? '눈' : '비'; }
-        else if (temp < 10) { tone='cold'; emoji='🥶'; label=Math.round(temp)+'°C'; }
-        else if (temp >= 30) { tone='hot'; emoji='🔥'; label=Math.round(temp)+'°C'; }
-        else if (main.includes('cloud')) { tone='clouds'; emoji='☁'; label='흐림'; }
-        else { tone='clear'; emoji='☀️'; label='맑음'; }
+        if (main === 'Rain' || main === 'Drizzle' || main === 'Thunderstorm' || main === 'Squall' || main === 'Tornado') {
+          tone='rainy'; emoji='🌧'; label= main === 'Thunderstorm' ? '천둥' : '비';
+        } else if (main === 'Snow') {
+          tone='snow'; emoji='❄️'; label='눈';
+        } else if (main === 'Clouds' || ['Mist','Smoke','Haze','Dust','Fog','Sand','Ash'].includes(main)) {
+          tone='clouds'; emoji='☁'; label='흐림';
+        } else if (main === 'Clear' && isNight) {
+          tone='night'; emoji='🌙'; label='맑은 밤';
+        } else { /* Clear (낮) */
+          tone='clear'; emoji='☀️'; label='맑음';
+        }
+        // 온도 표시는 chip에 추가 (정보 보조)
+        if (typeof w.temp === 'number') label += ' ' + Math.round(w.temp) + '°C';
         localStorage.setItem('ssak_weather', JSON.stringify({ tone, emoji, label, ts: Date.now() }));
       } catch(_) {}
       // V1.9.22.1: city → localStorage 저장
