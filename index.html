@@ -2473,6 +2473,20 @@ async function loadWeather() {
       // V1.9.25: weather 전역 저장 + 점심 hero 재계산 트리거
       window._lastWeather = d.data;
       try { if (typeof renderLunchHero === 'function') renderLunchHero(); } catch(_) {}
+      // V1.9.28: weather tone → localStorage 저장 (스케줄 hero 연동)
+      try {
+        const w = d.data;
+        const main = (w.main || '').toLowerCase();
+        const temp = w.temp;
+        const isWet = ['rain','drizzle','thunderstorm','snow'].some(k => main.includes(k));
+        let tone, emoji, label;
+        if (isWet) { tone='rainy'; emoji='🌧'; label= main.includes('snow') ? '눈' : '비'; }
+        else if (temp < 10) { tone='cold'; emoji='🥶'; label=Math.round(temp)+'°C'; }
+        else if (temp >= 30) { tone='hot'; emoji='🔥'; label=Math.round(temp)+'°C'; }
+        else if (main.includes('cloud')) { tone='clouds'; emoji='☁'; label='흐림'; }
+        else { tone='clear'; emoji='☀️'; label='맑음'; }
+        localStorage.setItem('ssak_weather', JSON.stringify({ tone, emoji, label, ts: Date.now() }));
+      } catch(_) {}
       // V1.9.22.1: city → localStorage 저장
       if (d.data.city) {
         try { localStorage.setItem('ssak_geo_city', JSON.stringify(d.data.city)); } catch(_) {}
