@@ -71,11 +71,11 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .header-row{display:flex;align-items:center;margin-bottom:10px;}
 /* .header-title 페이지 인라인 정의 삭제 → design.css의 .ds-page-title 이 시각 결정 (22px 600) */
 
-/* V1.9.27: 글쓰기 FAB (schedule.html ds-fab-glass 패턴 통일) */
+/* V1.9.27.1: 글쓰기 FAB — schedule.html과 완전 동일 (48px, 22px svg, 2.8 stroke) */
 .ds-fab-glass {
   position: fixed;
   right: 18px; bottom: 86px;
-  width: 56px; height: 56px;
+  width: 48px; height: 48px;
   border-radius: 50%;
   background: rgba(255,56,92,0.92);
   backdrop-filter: saturate(180%) blur(20px);
@@ -92,13 +92,16 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 .ds-fab-glass:active { transform: scale(0.92); }
 .ds-fab-glass svg {
-  width: 24px; height: 24px;
+  width: 22px; height: 22px;
   stroke: currentColor; fill: none;
-  stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round;
+  stroke-width: 2.8; stroke-linecap: round;
 }
 @media (prefers-reduced-motion: reduce) {
   .ds-fab-glass { transition: none; }
-  .ds-fab-glass:active { transform: none; }
+}
+/* V1.9.27.1: schedule.html과 동일 그림자 override (차분한 다크) */
+.ds-fab-glass {
+  box-shadow:0 6px 14px rgba(15,15,18,0.18) !important;
 }
 
 /* 검색 */
