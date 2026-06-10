@@ -448,19 +448,39 @@
 .span-3{grid-column:span 3;}
 .span-2{grid-column:span 2;}
 .row-2{grid-row:span 2;}
-/* HERO */
-.b-card.hero{background:linear-gradient(135deg,#FF5161 0%,#FF1A4C 100%);color:#fff;padding:18px 18px 16px;}
-.b-card.hero .b-lbl{color:rgba(255,255,255,.85);}
-.b-card.hero .b-big{color:#fff;font-size:42px;}
-.b-card.hero .b-big .unit{color:rgba(255,255,255,.8);}
-.b-card.hero .b-sub{color:rgba(255,255,255,.85);}
+/* HERO — V1.9.30: health-card level과 동기화 (홈 통일) */
+.b-card.hero{padding:18px 18px 16px;transition:background .4s ease;}
+/* 기본 L1 (여유롭게 — 블루 그라데 + 네이비 텍스트) */
+.b-card.hero,
+.bento.level-1 .b-card.hero{background:linear-gradient(135deg,#BFD7F0 0%,#7BA8DC 100%);color:#0F1E33;}
+.b-card.hero .b-lbl,.bento.level-1 .b-card.hero .b-lbl{color:rgba(15,30,51,.75);}
+.b-card.hero .b-big,.bento.level-1 .b-card.hero .b-big{color:#0F1E33;font-size:42px;}
+.b-card.hero .b-big .unit,.bento.level-1 .b-card.hero .b-big .unit{color:rgba(15,30,51,.7);}
+.b-card.hero .b-sub,.bento.level-1 .b-card.hero .b-sub{color:rgba(15,30,51,.75);}
+/* L2 순조롭게 — 살구 + 갈색 텍스트 */
+.bento.level-2 .b-card.hero{background:linear-gradient(135deg,#FFD8B5 0%,#FFB585 100%);color:#4A2410;}
+.bento.level-2 .b-card.hero .b-lbl{color:rgba(74,36,16,.75);}
+.bento.level-2 .b-card.hero .b-big{color:#4A2410;}
+.bento.level-2 .b-card.hero .b-big .unit{color:rgba(74,36,16,.7);}
+.bento.level-2 .b-card.hero .b-sub{color:rgba(74,36,16,.75);}
+/* L3 활기차게 — 코랄 핑크 + 와인 텍스트 */
+.bento.level-3 .b-card.hero{background:linear-gradient(135deg,#FFB8C5 0%,#FF7A95 100%);color:#4A0E1F;}
+.bento.level-3 .b-card.hero .b-lbl{color:rgba(74,14,31,.75);}
+.bento.level-3 .b-card.hero .b-big{color:#4A0E1F;}
+.bento.level-3 .b-card.hero .b-big .unit{color:rgba(74,14,31,.7);}
+.bento.level-3 .b-card.hero .b-sub{color:rgba(74,14,31,.75);}
+/* sparkline 색도 텍스트 색 따라가게 (currentColor) */
+.b-card.hero .spark svg path{stroke:currentColor !important;opacity:.85;}
 /* Sparkline */
 .spark{margin-top:8px;}
 .spark svg{width:100%;height:36px;display:block;}
 /* Mini bars */
 .mini-bars{display:flex;align-items:flex-end;gap:3px;height:54px;margin-top:8px;}
 .mb{flex:1;background:#E5E7EB;border-radius:3px 3px 0 0;min-height:4px;transition:.2s;}
-.mb.on{background:linear-gradient(180deg,#FF5161,#FF1A4C);}
+/* V1.9.30: 오늘 막대 색도 level에 동기화 */
+.mb.on{background:linear-gradient(180deg,#7BA8DC,#4A87C8);}
+.bento.level-2 .mb.on{background:linear-gradient(180deg,#FFB585,#F08A4D);}
+.bento.level-3 .mb.on{background:linear-gradient(180deg,#FF7A95,#E04E72);}
 .mini-bars + .mini-labels{display:flex;justify-content:space-between;font-size:10px;color:#94A3B8;font-weight:700;margin-top:5px;}
 .mini-bars + .mini-labels span.today{color:#FF1A4C;}
 /* Ring small */
@@ -468,7 +488,10 @@
 .b-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
 .b-ring circle{fill:none;stroke-width:8;stroke-linecap:round;}
 .b-ring .tr{stroke:#E5E7EB;}
-.b-ring .pr{stroke:#FF1A4C;transition:stroke-dashoffset .5s;}
+/* V1.9.30: ring 색도 level에 동기화 */
+.b-ring .pr{stroke:#4A87C8;transition:stroke-dashoffset .5s,stroke .4s ease;}
+.bento.level-2 .b-ring .pr{stroke:#F08A4D;}
+.bento.level-3 .b-ring .pr{stroke:#E04E72;}
 .b-ring-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#0F172A;}
 /* Insight */
 .b-card.insight{grid-column:span 6;background:#FFF7ED;border:1px solid #FED7AA;padding:12px 14px;color:#7C2D12;font-weight:700;font-size:12.5px;line-height:1.5;}
@@ -2354,6 +2377,14 @@ function renderActivityStats(period){
   if (subEl) subEl.textContent = { day:'최근 7일', week:'최근 8주', month:'최근 6개월', year:'최근 5년' }[period];
   const bento = document.getElementById('act-bento');
   if (!bento) return;
+  // V1.9.30: 홈 health-card의 현재 level과 동기화 (통일성)
+  const hc = document.getElementById('health-card');
+  bento.classList.remove('level-1','level-2','level-3');
+  if (hc) {
+    if (hc.classList.contains('level-3')) bento.classList.add('level-3');
+    else if (hc.classList.contains('level-2')) bento.classList.add('level-2');
+    else bento.classList.add('level-1');
+  }
   const s = _computeActivityStats(period);
   // 빈 상태 (총 이동 0) → 안내
   if (s.totalDist === 0 && period !== 'day') {
