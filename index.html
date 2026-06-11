@@ -486,6 +486,10 @@
 .bento.level-3 .mb.on{background:linear-gradient(180deg,#FF7A95,#E04E72);}
 .mini-bars + .mini-labels{display:flex;justify-content:space-between;font-size:11.5px;color:#64748B;font-weight:700;margin-top:7px;font-variant-numeric:tabular-nums;}
 .mini-bars + .mini-labels span.today{color:#FF1A4C;font-weight:900;}
+/* V1.9.36: 주 보기 2단 라벨 — 월(바뀔 때만, 작게) + N주 */
+.mini-labels span{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.mini-labels .ml-mon{font-size:9.5px;font-weight:800;color:#FF1A4C;font-style:normal;min-height:12px;line-height:1.1;letter-spacing:0;}
+.mini-labels .ml-wk{font-style:normal;}
 /* Ring small */
 .b-ring{width:72px;height:72px;margin:6px auto 0;position:relative;}
 .b-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
@@ -2319,13 +2323,20 @@ function _computeActivityStats(period) {
       buckets.push({ key, label: i===0 ? '오늘' : dayLabel, dist: e.d, sched: e.s, isToday: i===0 });
     }
   } else if (period === 'week') {
+    // V1.9.36: 라벨 분리 — 막대는 "N주" 한 줄, 월은 바뀔 때만 위에 표시
+    let prevMonth = null;
     for (let w = 7; w >= 0; w--) {
       const end = new Date(now); end.setDate(now.getDate() - w*7);
       const start = new Date(end); start.setDate(end.getDate() - 6);
       let d=0, s=0;
       for (let i=0;i<7;i++) { const dt=new Date(start); dt.setDate(start.getDate()+i); const k=dt.toISOString().slice(0,10); const e=hist[k]||{d:0,s:0}; d+=e.d; s+=e.s; }
-      const label = w===0 ? '이번주' : `${end.getMonth()+1}월${Math.ceil(end.getDate()/7)}주`;
-      buckets.push({ key: end.toISOString().slice(0,10), label, dist: d, sched: s, isToday: w===0 });
+      const mon = end.getMonth()+1;
+      const wom = Math.ceil(end.getDate()/7);
+      const cweek = w===0 ? '이번주' : wom + '주';
+      const cmonth = (mon !== prevMonth) ? (mon + '월') : '';
+      prevMonth = mon;
+      const label = w===0 ? '이번주' : `${mon}월 ${wom}주`; // 통계 카드용 풀 라벨
+      buckets.push({ key: end.toISOString().slice(0,10), label, cweek, cmonth, dist: d, sched: s, isToday: w===0 });
     }
   } else if (period === 'month') {
     for (let m = 5; m >= 0; m--) {
@@ -2424,7 +2435,13 @@ function renderActivityStats(period){
   }).join(' ');
   // mini bars
   const barsHtml = s.buckets.map(b => `<div class="mb ${b.isToday ? 'on' : ''}" style="height:${Math.max(8, (b.dist / maxBucketDist) * 100)}%"></div>`).join('');
-  const labelsHtml = s.buckets.map(b => `<span class="${b.isToday ? 'today' : ''}">${b.label}</span>`).join('');
+  // V1.9.36: 주 보기는 "월"(바뀔 때만) + "N주" 2단 라벨, 나머지는 단일 라벨
+  const labelsHtml = s.buckets.map(b => {
+    if (period === 'week') {
+      return `<span class="${b.isToday ? 'today' : ''}"><i class="ml-mon">${b.cmonth || ''}</i><i class="ml-wk">${b.cweek}</i></span>`;
+    }
+    return `<span class="${b.isToday ? 'today' : ''}">${b.label}</span>`;
+  }).join('');
   // 목표 (일=3km, 주=21km, 월=90km, 년=1000km)
   const goal = { day: 3000*7, week: 21000*8, month: 90000*6, year: 1000000*5 }[period];
   const goalSingle = { day: '3km/일', week: '21km/주', month: '90km/월', year: '1000km/년' }[period];
