@@ -453,27 +453,31 @@
 .row-2{grid-row:span 2;}
 /* HERO — V1.9.30: health-card level과 동기화 (홈 통일) */
 .b-card.hero{padding:18px 18px 16px;transition:background .4s ease;}
-/* 기본 L1 (여유롭게 — 블루 그라데 + 네이비 텍스트) */
+/* V1.9.37: level 색조를 살린 깊은 채도 텍스트 (near-black 탈피, 카드마다 개성) */
+/* L1 여유 — 블루 바탕 + 깊은 오션블루 텍스트 + 밝은 블루 sparkline */
 .b-card.hero,
-.bento.level-1 .b-card.hero{background:linear-gradient(135deg,#BFD7F0 0%,#7BA8DC 100%);color:#0F1E33;}
-.b-card.hero .b-lbl,.bento.level-1 .b-card.hero .b-lbl{color:rgba(15,30,51,.75);}
-.b-card.hero .b-big,.bento.level-1 .b-card.hero .b-big{color:#0F1E33;font-size:48px;}
-.b-card.hero .b-big .unit,.bento.level-1 .b-card.hero .b-big .unit{color:rgba(15,30,51,.7);}
-.b-card.hero .b-sub,.bento.level-1 .b-card.hero .b-sub{color:rgba(15,30,51,.75);}
-/* L2 순조롭게 — 살구 + 갈색 텍스트 */
-.bento.level-2 .b-card.hero{background:linear-gradient(135deg,#FFD8B5 0%,#FFB585 100%);color:#4A2410;}
-.bento.level-2 .b-card.hero .b-lbl{color:rgba(74,36,16,.75);}
-.bento.level-2 .b-card.hero .b-big{color:#4A2410;}
-.bento.level-2 .b-card.hero .b-big .unit{color:rgba(74,36,16,.7);}
-.bento.level-2 .b-card.hero .b-sub{color:rgba(74,36,16,.75);}
-/* L3 활기차게 — 코랄 핑크 + 와인 텍스트 */
-.bento.level-3 .b-card.hero{background:linear-gradient(135deg,#FFB8C5 0%,#FF7A95 100%);color:#4A0E1F;}
-.bento.level-3 .b-card.hero .b-lbl{color:rgba(74,14,31,.75);}
-.bento.level-3 .b-card.hero .b-big{color:#4A0E1F;}
-.bento.level-3 .b-card.hero .b-big .unit{color:rgba(74,14,31,.7);}
-.bento.level-3 .b-card.hero .b-sub{color:rgba(74,14,31,.75);}
-/* sparkline 색도 텍스트 색 따라가게 (currentColor) */
-.b-card.hero .spark svg path{stroke:currentColor !important;opacity:.85;}
+.bento.level-1 .b-card.hero{background:linear-gradient(135deg,#BFD7F0 0%,#7BA8DC 100%);color:#103A72;}
+.b-card.hero .b-lbl,.bento.level-1 .b-card.hero .b-lbl{color:#103A72;}
+.b-card.hero .b-big,.bento.level-1 .b-card.hero .b-big{color:#103A72;font-size:48px;}
+.b-card.hero .b-big .unit,.bento.level-1 .b-card.hero .b-big .unit{color:rgba(16,58,114,.65);}
+.b-card.hero .b-sub,.bento.level-1 .b-card.hero .b-sub{color:rgba(16,58,114,.72);}
+.b-card.hero .spark svg path,.bento.level-1 .b-card.hero .spark svg path{stroke:#2E6BB0;}
+/* L2 순조 — 살구 바탕 + 깊은 테라코타 텍스트 + 밝은 오렌지 sparkline */
+.bento.level-2 .b-card.hero{background:linear-gradient(135deg,#FFD8B5 0%,#FFB585 100%);color:#7A3508;}
+.bento.level-2 .b-card.hero .b-lbl{color:#7A3508;}
+.bento.level-2 .b-card.hero .b-big{color:#7A3508;}
+.bento.level-2 .b-card.hero .b-big .unit{color:rgba(122,53,8,.65);}
+.bento.level-2 .b-card.hero .b-sub{color:rgba(122,53,8,.72);}
+.bento.level-2 .b-card.hero .spark svg path{stroke:#D9690F;}
+/* L3 활기 — 코랄 바탕 + 깊은 로즈 텍스트 + 밝은 코랄 sparkline */
+.bento.level-3 .b-card.hero{background:linear-gradient(135deg,#FFB8C5 0%,#FF7A95 100%);color:#8A1733;}
+.bento.level-3 .b-card.hero .b-lbl{color:#8A1733;}
+.bento.level-3 .b-card.hero .b-big{color:#8A1733;}
+.bento.level-3 .b-card.hero .b-big .unit{color:rgba(138,23,51,.65);}
+.bento.level-3 .b-card.hero .b-sub{color:rgba(138,23,51,.72);}
+.bento.level-3 .b-card.hero .spark svg path{stroke:#E0335C;}
+/* sparkline 공통 (level별 stroke override 위) */
+.b-card.hero .spark svg path{opacity:.9;}
 /* Sparkline */
 .spark{margin-top:8px;}
 .spark svg{width:100%;height:36px;display:block;}
