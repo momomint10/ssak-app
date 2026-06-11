@@ -59,9 +59,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
 /* 헤더 */
 .header{
-  background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);
-  border-bottom:0.5px solid #f5e8e4;
-  padding:14px 16px 10px;
+  background:#fff;
+  border-bottom:1px solid var(--gray-100,#F3F4F6);
+  padding:14px 16px 0;
   position:sticky;top:0;z-index:50;
 }
 .header::after{
@@ -128,6 +128,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .twin-tab{flex:1;padding:12px 0 14px;font-size:15px;font-weight:700;color:var(--gray-400);border:none;background:transparent;cursor:pointer;position:relative;font-family:inherit;letter-spacing:-0.01em;transition:color .15s;}
 .twin-tab.on{color:var(--gray-900);}
 .twin-tab.on::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:36px;height:3px;background:var(--gray-900);border-radius:2px;}
+
+/* V1.9.33: HOT 티커 — 인기글 자동 교대 (탭 아래 한 줄) */
+.hot-ticker{display:flex;align-items:center;gap:8px;margin:0 -16px;background:linear-gradient(90deg,rgba(255,56,92,.07),rgba(255,56,92,.02));padding:9px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.ticker-badge{flex-shrink:0;font-size:10.5px;font-weight:900;color:var(--c-pr,#FF385C);letter-spacing:.06em;}
+.ticker-txt{flex:1;font-size:13px;font-weight:600;color:var(--gray-700,#334155);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .25s;}
+.ticker-cnt{flex-shrink:0;font-size:11px;font-weight:800;color:var(--c-pr,#FF385C);}
+@media (prefers-reduced-motion: reduce){.ticker-txt{transition:none;}}
 
 /* 카테고리 드로어 (필터 아이콘 → 펼침) */
 .cat-drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:250;}
@@ -272,8 +279,14 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
     <!-- Twin Tabs — Blind HOT/실시간 패턴 -->
     <div class="twin-tabs" id="twin-tabs">
-      <button class="twin-tab on" data-sort="latest" onclick="onTwinTab('latest')">🔥 실시간</button>
-      <button class="twin-tab" data-sort="popular" onclick="onTwinTab('popular')">📈 인기</button>
+      <button class="twin-tab on" data-sort="latest" onclick="onTwinTab('latest')">실시간</button>
+      <button class="twin-tab" data-sort="popular" onclick="onTwinTab('popular')">인기</button>
+    </div>
+    <!-- V1.9.33: HOT 티커 — 인기글 자동 교대, 터치 시 해당 글로 -->
+    <div class="hot-ticker" id="hot-ticker" style="display:none;" onclick="openTickerPost()">
+      <span class="ticker-badge">🔥 HOT</span>
+      <span class="ticker-txt" id="ticker-txt"></span>
+      <span class="ticker-cnt" id="ticker-cnt"></span>
     </div>
   </div>
 
@@ -735,8 +748,48 @@ function setWriteCat(c){
   });
 }
 
+// ── V1.9.33: HOT 티커 — 인기글 상위 3개 4초 교대 ──────────────────
+let _tickerPosts = [], _tickerIdx = 0, _tickerTimer = null;
+async function loadHotTicker(){
+  const bar = document.getElementById('hot-ticker');
+  if (!bar) return;
+  try {
+    const d = await fetch(SERVER+'/api/community/posts?page=0&limit=3&sort=popular').then(r=>r.json());
+    if (!d.success || !d.data || !d.data.length) { bar.style.display='none'; return; }
+    _tickerPosts = d.data.slice(0, 3);
+    bar.style.display = 'flex';
+    _tickerIdx = 0;
+    _renderTickerItem(true);
+    if (_tickerPosts.length > 1 && !_tickerTimer) {
+      _tickerTimer = setInterval(() => {
+        _tickerIdx = (_tickerIdx + 1) % _tickerPosts.length;
+        _renderTickerItem();
+      }, 4000);
+    }
+  } catch(_) { bar.style.display='none'; }
+}
+function _renderTickerItem(instant){
+  const p = _tickerPosts[_tickerIdx];
+  if (!p) return;
+  const txt = document.getElementById('ticker-txt');
+  const cnt = document.getElementById('ticker-cnt');
+  const apply = () => {
+    if (txt) txt.textContent = p.title || (p.content || '').slice(0, 40);
+    if (cnt) cnt.textContent = '💬 ' + (p.comment_count || 0);
+    if (txt) txt.style.opacity = '1';
+  };
+  if (instant || !txt) { apply(); return; }
+  txt.style.opacity = '0';
+  setTimeout(apply, 250);
+}
+function openTickerPost(){
+  const p = _tickerPosts[_tickerIdx];
+  if (p && p.id) openDet(p.id);
+}
+
 // ── Toast ─────────────────────────────────────────────────────────
 loadFeed(true);
+loadHotTicker();
 </script>
 </body>
 </html>
