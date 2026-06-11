@@ -1,7 +1,7 @@
 # 싹싹(Ssak-ssak) 디자인 시스템
 
-> **버전**: design.css v3 (2026-05-27 — 입체감·발광 시스템 + 글로벌 hook)
-> **레퍼런스 톤**: Toss, Kakao Bank, Daangn (한국 모바일 표준 + 발광 입체감)
+> **버전**: design.css v7 (2026-06-11 — V1.9 Pure White + Twin Tabs + 날씨 연동)
+> **레퍼런스 톤**: Toss, Kakao Bank, Daangn, Blind (한국 모바일 표준 + Pure White 미니멀)
 > **타겟 사용자**: 30~50대 입주청소 사장님 (다양 연령대 — 노년 친화 over-fit 회피)
 > **단일 진실 원본**: `design.css` (이 문서는 그 사람이 읽기 좋게 정리한 사본)
 
@@ -12,7 +12,7 @@
 ### ✅ Simplicity — 심플
 - 페이지당 핵심 정보 4~6개로 제한 (카드: 이름·연락처·핵심태그·금액·상태·시간)
 - 부가 정보(⚠️/🔌/📸)는 sub 라인에 dot 압축
-- font-weight 800/900 사용 금지 (모두 700으로 통일)
+- font-weight: 본문·라벨은 700 통일. **통계 큰 숫자(Bento 통계·KPI hero)는 800/900 허용** (V1.9 — 수치 강조 시각 임팩트)
 - 인라인 CSS 대신 `.ds-*` 컴포넌트 클래스 활용 (페이지당 인라인 CSS 50% 이하 목표)
 
 ### ✅ Readability — 가독성
@@ -94,9 +94,10 @@
 - 미세한 그림자로 종이 위에 떠 있는 느낌
 
 ### 3.3 그라데이션 (Gradient)
-- **헤더 배경**: `linear-gradient(160deg, #FFF8F5 0%, #FFFFFF 60%)` — 따뜻한 톤 살짝 침투
-- **헤더 하단 라인**: `linear-gradient(90deg, var(--c-pr) 0%, #FC8181 100%)` — 코랄 액센트
-- **CTA 통계 카드**: 코랄 그라데이션 (큰 숫자 강조 시)
+- **헤더 배경 (V1.9)**: `#FFFFFF` Pure White — 전 페이지 통일. (구 v3: 살구 그라데 `160deg #FFF8F5→#FFF` 폐기)
+- **헤더 하단 (V1.9)**: `border-bottom: 1px solid var(--gray-100)` — 회색 보더. (구 v3: 코랄 라인 폐기)
+- **날씨 연동 hero (V1.9.28)**: 홈/스케줄 hero-card 배경이 날씨 scene 따라 변함 (맑음 블루 / 비 청회 / 흐림 회색 / 눈 청백 / 밤 다크블루). 홈 `design.css .ds-today-fc` 색을 단일 진실로 공유
+- **CTA 통계 카드**: 코랄 그라데이션 (큰 숫자 강조 시), 활동량 Bento는 level별 (여유 블루 / 순조 살구 / 활기 코랄)
 
 ### 3.4 Metal/메탈 — 미사용
 > 청소업 모바일 앱에는 메탈 텍스처 미적용. 따뜻한 페이퍼 톤이 브랜드와 맞음.
@@ -522,6 +523,7 @@ production 적용 시 Stage 2로 진행. 매출 정책 ✗을 그대로 따름.
 
 | 일자 | 버전 | 주요 변경 |
 | --- | --- | --- |
+| 2026-06-11 | **v7** | **V1.9 — Pure White + Twin Tabs + 날씨 연동**: 전 페이지 헤더 Pure White 통일 (살구 그라데·코랄 라인 폐기) / Twin Tabs 패턴 (커뮤니티·동료·활동량 시트 — 텍스트+underline, 이모지 ✗) / 검색+필터아이콘+드로어 패턴 (커뮤니티·중고거래) / 글래스 FAB 통일 (스케줄·커뮤니티·중고) / 날씨 연동 hero (홈↔스케줄 색 동기화) / 활동량 Bento 통계 시트 (일/주/월/년, level별 컬러) / 커뮤니티 HOT 티커 / 통계 큰 숫자 800/900 허용 |
 | 2026-06-05 | **v6** | **V1.7 — 매출 정책 + 접근성 (섹션 15)**: 정산 tile → 커뮤니티 tile 교체 / 매출 단어·숫자·sparkline 홈에서 ✗ / focus-visible + min-height 44px + prefers-reduced-motion 글로벌 / DESIGN.md에 매출 정책 명문화 |
 | 2026-06-03 | **v5** | **홈 V1.5 — Action Hub (섹션 14)**: hero 매출 제거 / `.tile-grid` 2×2 / F 색 정책 (숫자 다크 통일 + 뱃지 의미별) / 정산 sparkline 코랄 / `/api/stats/weekly` 신규 endpoint / 빈 상태 status-card → quote 분기 |
 | 2026-06-03 | **v4** | **브랜드 정체성 가이드 (섹션 13)**: 코랄 차별화 옵션 / mint/teal 통합 결정 / 마스코트 변종 5종 계획 / 사진 hero 한국 컨텍스트 / voice·tone 가이드 |
