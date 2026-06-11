@@ -121,10 +121,12 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .filter-btn.has-filter .filter-dot{display:block;}
 
 /* Twin Tabs — 큰 탭 2개 (실시간/인기) */
-.twin-tabs{display:flex;gap:0;margin:14px -16px 0;padding:0 16px;border-bottom:1px solid var(--gray-100);}
-.twin-tab{flex:1;padding:12px 0 14px;font-size:15px;font-weight:700;color:var(--gray-400);border:none;background:transparent;cursor:pointer;position:relative;font-family:inherit;letter-spacing:-0.01em;transition:color .15s;}
+.twin-tabs{position:relative;display:flex;gap:0;margin:14px -16px 0;padding:0 16px;border-bottom:1px solid var(--gray-100);}
+.twin-tab{flex:1;padding:12px 0 14px;font-size:15px;font-weight:700;color:var(--gray-400);border:none;background:transparent;cursor:pointer;position:relative;font-family:inherit;letter-spacing:-0.01em;transition:color .25s ease;}
 .twin-tab.on{color:var(--gray-900);}
-.twin-tab.on::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:36px;height:3px;background:var(--gray-900);border-radius:2px;}
+/* V1.9.35: 미끄러지는 밑줄 (토스 스프링감) */
+.twin-ind{position:absolute;bottom:-1px;left:0;width:36px;height:3px;background:var(--gray-900);border-radius:2px;transition:transform .32s cubic-bezier(.34,1.56,.64,1);will-change:transform;}
+@media (prefers-reduced-motion: reduce){.twin-ind{transition:none;}}
 
 /* V1.9.33: HOT 티커 — 인기글 자동 교대 (탭 아래 한 줄) */
 .hot-ticker{display:flex;align-items:center;gap:8px;margin:0 -16px;background:linear-gradient(90deg,rgba(255,56,92,.07),rgba(255,56,92,.02));padding:9px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
@@ -278,6 +280,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     <div class="twin-tabs" id="twin-tabs">
       <button class="twin-tab on" data-sort="latest" onclick="onTwinTab('latest')">실시간</button>
       <button class="twin-tab" data-sort="popular" onclick="onTwinTab('popular')">인기</button>
+      <span class="twin-ind" id="twin-ind"></span>
     </div>
     <!-- V1.9.33: HOT 티커 — 인기글 자동 교대, 터치 시 해당 글로 -->
     <div class="hot-ticker" id="hot-ticker" style="display:none;" onclick="openTickerPost()">
@@ -520,7 +523,17 @@ function onTwinTab(sort){
   document.querySelectorAll('.twin-tab').forEach(t => {
     t.classList.toggle('on', t.getAttribute('data-sort') === sort);
   });
+  _moveTwinInd();
   loadFeed(true);
+}
+// V1.9.35: 활성 탭 중앙으로 밑줄 이동
+function _moveTwinInd(){
+  const wrap = document.getElementById('twin-tabs');
+  const ind = document.getElementById('twin-ind');
+  const active = wrap?.querySelector('.twin-tab.on');
+  if (!wrap || !ind || !active) return;
+  const w = 36;
+  ind.style.transform = 'translateX(' + (active.offsetLeft + active.offsetWidth/2 - w/2) + 'px)';
 }
 
 // V1.9.26: 카테고리 드로어 열기/닫기
@@ -787,6 +800,12 @@ function openTickerPost(){
 // ── Toast ─────────────────────────────────────────────────────────
 loadFeed(true);
 loadHotTicker();
+// V1.9.35: 밑줄 초기 위치 + 리사이즈 대응 (transition 없이 첫 배치)
+(function(){
+  const ind = document.getElementById('twin-ind');
+  if (ind) { const t = ind.style.transition; ind.style.transition = 'none'; _moveTwinInd(); requestAnimationFrame(() => { ind.style.transition = t; }); }
+})();
+window.addEventListener('resize', _moveTwinInd);
 </script>
 </body>
 </html>
