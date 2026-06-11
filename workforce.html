@@ -71,17 +71,18 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .btn-hd{background:#fff;color:var(--c-pr,#FF385C);border:1.5px solid rgba(255,56,92,0.35);border-radius:20px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s;}
 .btn-hd:hover{background:rgba(255,56,92,0.06);border-color:rgba(255,56,92,0.55);}
 .btn-hd:active{background:rgba(255,56,92,0.10);}
-.tab-row{padding:10px 16px;background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);border-bottom:0.5px solid #f5e8e4;}
-/* Segmented Control 탭 */
-.tabs-seg{display:flex;background:var(--g100,#F3F4F6);border-radius:12px;padding:3px;gap:2px;}
+/* V1.9.32: Twin Tabs 패턴 (커뮤니티/활동량 시트와 통일) — 그라데 제거, Pure White */
+.tab-row{padding:0 16px;background:#fff;border-bottom:1px solid var(--g100,#F3F4F6);}
+.tabs-seg{display:flex;gap:0;background:transparent;}
 .tab{
-  flex:1;padding:8px 10px;text-align:center;font-size:12.5px;font-weight:600;
-  color:var(--g500,#6B7684);cursor:pointer;border-radius:9px;border:none;
+  flex:1;padding:13px 0 15px;text-align:center;font-size:15px;font-weight:800;
+  color:#94A3B8;cursor:pointer;border:none;position:relative;
   background:transparent;font-family:inherit;white-space:nowrap;
-  transition:background .18s,color .18s,box-shadow .18s;
+  letter-spacing:.02em;transition:color .15s;
   -webkit-tap-highlight-color:transparent;
 }
-.tab.on{background:#fff;color:var(--pr,var(--c-pr, #FF385C));box-shadow:var(--sh-sm, 0 2px 6px rgba(20,30,50,.07)), inset 0 1px 0 rgba(255,255,255,.7), 0 4px 14px rgba(255,56,92,.07);}
+.tab.on{color:#0F172A;}
+.tab.on::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:32px;height:3px;background:#0F172A;border-radius:2px;}
 /* ── 필터 ── */
 .filter-bar{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;scrollbar-width:none;}
 .filter-bar::-webkit-scrollbar{display:none;}
@@ -92,9 +93,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   transition:background .18s,border-color .18s,color .18s,box-shadow .18s;
   -webkit-tap-highlight-color:transparent;
 }
+/* V1.9.32: 다크 fill 통일 (커뮤니티/마켓 cat-pill과 동일 톤) */
 .fbtn.on{
-  background:var(--pr);border-color:var(--pr);color:#fff;
-  box-shadow:0 2px 8px rgba(255,56,92,.25);
+  background:var(--g900,#191F28);border-color:var(--g900,#191F28);color:#fff;
 }
 /* ── 인력 카드 (260528 AX 하이브리드: A기본 + B아바타 + C메타) ── */
 .list{padding:8px 16px 0;}

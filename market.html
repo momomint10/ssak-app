@@ -56,28 +56,39 @@
 html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--g50);color:var(--g900);}
 .shell{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:100px;}
 
-/* ── 헤더 ──────────────────────────────── */
-.hd{background:linear-gradient(160deg,#FFF8F5 0%,#FFFFFF 60%);padding:14px 16px 0;border-bottom:0.5px solid #f5e8e4;position:sticky;top:0;z-index:50;}
-.hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+/* ── 헤더 — V1.9.32: Pure White + 검색/필터 한 줄 (커뮤니티 V1.9.26 패턴) ── */
+.hd{background:#fff;padding:14px 16px 12px;border-bottom:1px solid var(--g100);position:sticky;top:0;z-index:50;}
+.hd-top{display:flex;align-items:center;margin-bottom:10px;}
 /* .hd-title 페이지 인라인 정의 삭제 → design.css의 .ds-page-title 이 시각 결정 (22px 600) */
-.btn-write{background:#fff;color:var(--c-pr,#FF385C);border:1.5px solid rgba(255,56,92,0.35);border-radius:20px;padding:10px 18px;min-height:40px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s;}
-.btn-write:hover{background:rgba(255,56,92,0.06);border-color:rgba(255,56,92,0.55);}
-.btn-write:active{background:rgba(255,56,92,0.10);}
 
-/* 검색 */
-.srch{position:relative;margin-bottom:10px;}
+/* 검색 + 필터 한 줄 */
+.srch-row{display:flex;align-items:center;gap:8px;}
+.srch{position:relative;flex:1;}
 .srch-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--g400);pointer-events:none;}
 .srch-inp{width:100%;padding:10px 36px;border:1.5px solid var(--g200);border-radius:22px;font-size:14px;font-family:inherit;background:var(--g50);outline:none;transition:.15s;}
 .srch-inp:focus{border-color:var(--pr);background:#fff;}
 .srch-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:17px;color:var(--g300);cursor:pointer;display:none;}
+.filter-btn{position:relative;flex-shrink:0;width:42px;height:42px;border-radius:12px;background:var(--g50);border:1.5px solid var(--g200);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--g700);padding:0;font-family:inherit;}
+.filter-btn:active{background:var(--g100);}
+.filter-btn .filter-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--c-pr,#FF385C);display:none;}
+.filter-btn.has-filter .filter-dot{display:block;}
 
-/* 카테고리 탭 */
-.cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;}
-.cats::-webkit-scrollbar{display:none;}
-.cat-btn{flex-shrink:0;padding:10px 16px;min-height:40px;border-radius:9999px;border:1.5px solid var(--g200);background:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--g500);white-space:nowrap;transition:.12s;}
-.cat-btn.on{background:var(--c-pr,#FF385C);border-color:var(--c-pr,#FF385C);color:#fff;
-  box-shadow:0 4px 16px rgba(255,56,92,0.35), 0 0 0 3px rgba(255,56,92,0.12);
-  transform:translateY(-1px);}
+/* 카테고리 드로어 (커뮤니티 V1.9.26 패턴) */
+.cat-drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:250;}
+.cat-drawer-ov.on{display:block;}
+.cat-drawer{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;z-index:251;padding-bottom:max(16px,env(safe-area-inset-bottom));}
+.cat-drawer-hd{width:32px;height:3px;background:var(--g200);border-radius:2px;margin:10px auto 14px;}
+.cat-drawer-ttl{font-size:15px;font-weight:700;padding:0 20px 12px;color:var(--g700);}
+.cat-drawer-list{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 18px;}
+.cat-pill{padding:9px 16px;border-radius:9999px;border:1.5px solid var(--g200);background:#fff;font-size:13.5px;font-weight:600;color:var(--g700);cursor:pointer;font-family:inherit;transition:.15s;}
+.cat-pill.on{background:var(--g900);border-color:var(--g900);color:#fff;}
+.cat-drawer-clear{display:block;width:calc(100% - 40px);margin:0 20px;padding:11px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;font-size:13px;color:var(--g500);font-weight:600;cursor:pointer;font-family:inherit;}
+
+/* 팔기 FAB (schedule/community ds-fab-glass 동일) */
+.ds-fab-glass{position:fixed;right:18px;bottom:86px;width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:110;transition:transform 0.15s;font-family:inherit;padding:0;box-shadow:0 6px 14px rgba(15,15,18,0.18);}
+.ds-fab-glass:active{transform:scale(0.92);}
+.ds-fab-glass svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.8;stroke-linecap:round;}
+@media (prefers-reduced-motion: reduce){.ds-fab-glass{transition:none;}}
 
 /* ── 카드 ──────────────────────────────── */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 12px 0;}
@@ -223,21 +234,40 @@ textarea.w-inp{resize:none;min-height:80px;line-height:1.6;}
 <body>
 <div class="shell">
 
-  <!-- 헤더 -->
+  <!-- 헤더 — V1.9.32: Pure White + 검색/필터 한 줄 -->
   <div class="hd">
     <div class="hd-top">
       <div><h1 class="ds-page-title hd-title">중고거래</h1><p class="ds-page-subtitle hd-sub">청소 장비 · 소모품</p></div>
-      <button class="btn-write" onclick="openWrite()">✏️ 팔기</button>
     </div>
-    <div class="srch">
-      <svg class="srch-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input class="srch-inp" id="srch-inp" placeholder="물품 검색" oninput="onSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()">
-      <button class="srch-x" id="srch-x" onclick="clearSearch()">×</button>
+    <div class="srch-row">
+      <div class="srch">
+        <svg class="srch-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="srch-inp" id="srch-inp" placeholder="물품 검색" oninput="onSearch(this.value)" onkeydown="if(event.key==='Enter')doSearch()">
+        <button class="srch-x" id="srch-x" onclick="clearSearch()">×</button>
+      </div>
+      <button class="filter-btn" id="filter-btn" onclick="openCatDrawer()" aria-label="카테고리 필터">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        <span class="filter-dot"></span>
+      </button>
     </div>
-    <div class="cats" id="cats"></div>
   </div>
 
   <div id="feed"></div>
+</div>
+
+<!-- V1.9.32: 팔기 FAB (커뮤니티 글쓰기 FAB와 동일 패턴, 아이콘=태그) -->
+<button class="ds-fab-glass" onclick="openWrite()" aria-label="팔기">
+  <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+</button>
+
+<!-- V1.9.32: 카테고리 드로어 -->
+<div class="cat-drawer-ov" id="cat-drawer-ov" onclick="if(event.target===this)closeCatDrawer()">
+  <div class="cat-drawer">
+    <div class="cat-drawer-hd"></div>
+    <div class="cat-drawer-ttl">카테고리</div>
+    <div class="cat-drawer-list" id="cat-drawer-list"></div>
+    <button class="cat-drawer-clear" onclick="setCat('전체'); closeCatDrawer()">필터 초기화</button>
+  </div>
 </div>
 
 <!-- ── 상세 시트 ────────────────────────────── -->
@@ -403,15 +433,28 @@ let page=0, hasMore=true, loading=false, searchKw='', curCat='전체', searchTim
 let curId=null, curListing=null;
 let picBase64=null, picMime=null, selCat='청소기';
 
-// ── 카테고리 렌더 ─────────────────────────────────────────────
+// ── 카테고리 렌더 — V1.9.32: 드로어 pill (커뮤니티 패턴) ──────
 function renderCats(){
-  const cats = document.getElementById('cats');
-  cats.innerHTML = CATEGORIES.map(c=>`<button class="cat-btn${c===curCat?' on':''}" onclick="setCat('${c}')">${CAT_EMOJI[c]||''} ${c}</button>`).join('');
+  const list = document.getElementById('cat-drawer-list');
+  if(list) list.innerHTML = CATEGORIES.map(c=>`<button class="cat-pill${c===curCat?' on':''}" onclick="setCat('${c}')">${CAT_EMOJI[c]||''} ${c}</button>`).join('');
   // 글쓰기 카테고리
   const catSel = document.getElementById('cat-select');
   if(catSel) catSel.innerHTML = CATEGORIES.slice(1).map(c=>`<button class="cat-cell${c===selCat?' on':''}" onclick="pickCat('${c}')">${CAT_EMOJI[c]||''}<br>${c}</button>`).join('');
 }
-function setCat(c){ curCat=c; renderCats(); loadFeed(true); }
+function setCat(c){
+  curCat=c; renderCats(); loadFeed(true);
+  // 활성 필터 도트 (전체=비활성) + 드로어 자동 닫기
+  document.getElementById('filter-btn')?.classList.toggle('has-filter', c!=='전체');
+  setTimeout(closeCatDrawer, 200);
+}
+function openCatDrawer(){
+  document.getElementById('cat-drawer-ov')?.classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function closeCatDrawer(){
+  document.getElementById('cat-drawer-ov')?.classList.remove('on');
+  document.body.style.overflow='';
+}
 function pickCat(c){ selCat=c; document.getElementById('cat-select').querySelectorAll('.cat-cell').forEach(el=>{ el.classList.toggle('on', el.textContent.trim().includes(c)); }); }
 
 // ── 피드 ─────────────────────────────────────────────────────
