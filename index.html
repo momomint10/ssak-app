@@ -488,13 +488,14 @@
 .mb.on{background:linear-gradient(180deg,#7BA8DC,#4A87C8);}
 .bento.level-2 .mb.on{background:linear-gradient(180deg,#FFB585,#F08A4D);}
 .bento.level-3 .mb.on{background:linear-gradient(180deg,#FF7A95,#E04E72);}
-.mini-bars + .mini-labels{display:flex;justify-content:space-between;font-size:11.5px;color:#64748B;font-weight:700;margin-top:7px;font-variant-numeric:tabular-nums;}
+/* V1.9.39: 라벨도 막대와 동일한 flex:1 균등 칸 → 막대 정중앙 정렬 (틀어짐 제거) */
+.mini-bars + .mini-labels{display:flex;gap:3px;font-size:11.5px;color:#64748B;font-weight:700;margin-top:7px;font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
 /* V1.9.38: 현재 기간(이번주/오늘) 강조 — 빨강 제거, level 색으로 통일 */
 .mini-bars + .mini-labels span.today{color:#103A72;font-weight:900;}
 .bento.level-2 .mini-labels span.today{color:#7A3508;}
 .bento.level-3 .mini-labels span.today{color:#8A1733;}
 /* V1.9.36: 주 보기 2단 라벨 — 월(바뀔 때만, 작게) + N주 */
-.mini-labels span{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.mini-labels span{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;white-space:nowrap;}
 /* V1.9.38: 월 마커 — 빨강 제거, 조용한 회색 축 라벨 (Apple Health 방식) */
 .mini-labels .ml-mon{font-size:9.5px;font-weight:700;color:#B0B8C2;font-style:normal;min-height:12px;line-height:1.1;letter-spacing:0;}
 .mini-labels .ml-wk{font-style:normal;}
@@ -2455,12 +2456,13 @@ function renderActivityStats(period){
   const goalSingle = { day: '3km/일', week: '21km/주', month: '90km/월', year: '1000km/년' }[period];
   const pct = Math.min(100, Math.round((s.totalDist / goal) * 100));
   const ringOffset = (163 * (100 - pct) / 100).toFixed(0);
-  // 베스트 인사이트
+  // 베스트 인사이트 (V1.9.39: 조사 '이/가' 받침 문제 회피 — 기간 단위로 자연스럽게)
   let insight = '';
   if (s.maxBucket.dist > 0) {
     const maxKm = _formatKm(s.maxBucket.dist);
     const avgVsMax = s.avgDist > 0 ? Math.round((s.maxBucket.dist / s.avgDist - 1) * 100) : 0;
-    insight = `💡 <b>${s.maxBucket.label}</b>이 가장 활발 · ${maxKm}km · 평균 대비 +${avgVsMax}%`;
+    const unit = { day:'날', week:'주', month:'달', year:'해' }[period];
+    insight = `💡 가장 활발한 ${unit} <b>${s.maxBucket.label}</b> · ${maxKm}km · 평균 대비 +${avgVsMax}%`;
   }
   const periodLbl = { day:'7일', week:'8주', month:'6개월', year:'5년' }[period];
   const totalKm = _formatKm(s.totalDist);
