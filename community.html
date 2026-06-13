@@ -122,7 +122,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .search-wrap{position:relative;}
 .search-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none;}
 .search-input{width:100%;padding:10px 36px;border:1.5px solid var(--gray-200);border-radius:22px;font-size:14px;font-family:inherit;background:var(--gray-50);outline:none;transition:border-color .15s;}
-.search-input:focus{border-color:var(--primary);background:#fff;}
+.search-input:focus{border-color:var(--gray-900,#191F28);background:#fff;}
 .search-clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:17px;color:var(--gray-300);cursor:pointer;display:none;padding:0;line-height:1;}
 
 /* 검색 안내 */
@@ -402,7 +402,7 @@ try { localStorage.setItem('ssak_community_last_seen', new Date().toISOString())
 function hl(t, kw) {
   if(!kw) return esc(t);
   const e=esc(t), k=esc(kw).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-  return e.replace(new RegExp(k,'gi'),m=>'<mark style="background:#FFF59D;border-radius:2px;">'+m+'</mark>');
+  return e.replace(new RegExp(k,'gi'),m=>'<mark style="background:#FFE14D;color:#1F2937;font-weight:700;border-radius:2px;padding:0 1px;">'+m+'</mark>');
 }
 
 // ── 상태 ─────────────────────────────────────────────────────────
