@@ -215,7 +215,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 @keyframes spin{to{transform:rotate(360deg)}}
 /* ── MY 프로필 ── */
 .my-section{padding:16px 12px;}
-.my-card{background:#fff;border-radius:18px;border:1.5px solid #F2F4F6;box-shadow:var(--sh-sm, 0 2px 6px rgba(20,30,50,.05)), inset 0 1px 0 rgba(255,255,255,.7), 0 4px 14px rgba(255,56,92,.03);padding:22px 18px;margin-bottom:14px;}
+/* V1.9.66: 커뮤니티 평면 chrome 통일 — 테두리·광택·코랄글로우 제거 (반경 18은 프로필 카드 위계로 유지) */
+.my-card{background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:22px 18px;margin-bottom:14px;}
 .my-profile-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
 .my-avatar{
   width:64px;height:64px;border-radius:50%;
@@ -242,7 +243,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   background:#fff;border-radius:14px;
   padding:32px 20px 22px;
   text-align:center;
-  box-shadow:0 1px 3px rgba(20,30,50,.06), 0 4px 14px rgba(255,56,92,.06);
+  box-shadow:var(--shadow);  /* V1.9.66: 코랄 글로우 제거 → 커뮤니티 평면 그림자 */
 }
 .no-profile-ico{
   width:72px;height:72px;margin:0 auto 14px;
