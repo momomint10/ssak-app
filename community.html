@@ -66,30 +66,12 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 /* V1.9.34: 코랄 하단 라인 제거 — 회색 보더 1px로 전 페이지 통일 */
 .header-row{display:flex;align-items:center;margin-bottom:10px;}
-/* V1.9.48: 스피드다이얼 FAB — 한 버튼에 글쓰기 + 카테고리 */
-.fab-dial-ov{position:fixed;inset:0;background:rgba(15,23,42,0);z-index:105;pointer-events:none;transition:background .2s;}
-.fab-dial-ov.on{background:rgba(15,23,42,.18);pointer-events:auto;}
-.fab-dial{position:fixed;right:18px;bottom:86px;z-index:110;display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
-/* 메인 FAB (코랄, + → ×) */
-.fab-main{width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);box-shadow:0 6px 14px rgba(15,15,18,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;position:relative;transition:transform .28s cubic-bezier(.34,1.4,.64,1);}
+/* V1.9.51: 단일 글쓰기 FAB (코랄) — 스피드다이얼·드로어 잔재 CSS 제거 */
+.fab-dial{position:fixed;right:18px;bottom:86px;z-index:110;display:flex;flex-direction:column;align-items:flex-end;}
+.fab-main{width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);box-shadow:0 6px 14px rgba(15,15,18,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:transform .28s cubic-bezier(.34,1.4,.64,1);}
 .fab-main:active{transform:scale(.92);}
 .fab-main svg{width:24px;height:24px;}
-.fab-dial.open .fab-main{transform:rotate(135deg);}
-.fab-main .filter-dot{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:#fff;display:none;border:2px solid rgba(255,56,92,.92);}
-.fab-main.has-filter .filter-dot{display:block;}
-.fab-dial.open .fab-main .filter-dot{display:none;}
-/* 펼침 액션 (라벨 + 미니 버튼) */
-.fab-action{display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(14px) scale(.85);pointer-events:none;transition:opacity .2s ease,transform .2s cubic-bezier(.34,1.4,.64,1);}
-.fab-dial.open .fab-action{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
-.fab-dial.open .fab-action:nth-child(1){transition-delay:.06s;}
-.fab-dial.open .fab-action:nth-child(2){transition-delay:.02s;}
-.fab-action-lbl{background:#fff;color:var(--gray-800,#1F2937);font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:9px;box-shadow:0 2px 8px rgba(15,23,42,.14);white-space:nowrap;}
-/* V1.9.50: 하위버튼 통일 — 라이트 코랄(메인 코랄과 같은 가족, 한 톤 밝게). 메인 FAB(진한 코랄)이 primary로 도드라짐 */
-.fab-mini{width:44px;height:44px;border-radius:50%;background:#FF6B85;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 10px rgba(255,107,133,.3);padding:0;font-family:inherit;flex-shrink:0;}
-.fab-mini:active{transform:scale(.92);}
-.fab-mini svg{width:20px;height:20px;}
-/* write·cat 둘 다 base(라이트 코랄) 그대로 — 아이콘만 다르고 색은 동일 세트 */
-@media (prefers-reduced-motion: reduce){.fab-main,.fab-action,.fab-dial-ov{transition:none;}}
+@media (prefers-reduced-motion: reduce){.fab-main{transition:none;}}
 /* .header-title 페이지 인라인 정의 삭제 → design.css의 .ds-page-title 이 시각 결정 (22px 600) */
 
 /* V1.9.27.1: 글쓰기 FAB — schedule.html과 완전 동일 (48px, 22px svg, 2.8 stroke) */
@@ -153,28 +135,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .ticker-cnt{flex-shrink:0;font-size:11px;font-weight:800;color:var(--c-pr,#FF385C);}
 @media (prefers-reduced-motion: reduce){.ticker-txt{transition:none;}}
 
-/* 카테고리 드로어 (필터 아이콘 → 펼침) */
-.cat-drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:250;}
-.cat-drawer-ov.on{display:block;}
-.cat-drawer{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;z-index:251;padding-bottom:max(16px,env(safe-area-inset-bottom));}
-.cat-drawer-hd{width:32px;height:3px;background:var(--gray-200);border-radius:2px;margin:10px auto 14px;}
-.cat-drawer-ttl{font-size:15px;font-weight:700;padding:0 20px 12px;color:var(--gray-700);}
-.cat-drawer-list{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 18px;}
-.cat-pill{padding:9px 16px;border-radius:9999px;border:1.5px solid var(--gray-200);background:#fff;font-size:13.5px;font-weight:600;color:var(--gray-700);cursor:pointer;font-family:inherit;transition:.15s;}
-.cat-pill.on{background:var(--gray-900);border-color:var(--gray-900);color:#fff;}
-.cat-drawer-clear{display:block;width:calc(100% - 40px);margin:0 20px;padding:11px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:12px;font-size:13px;color:var(--gray-500);font-weight:600;cursor:pointer;font-family:inherit;}
-
-/* 카드 카테고리 뱃지 */
-.card-cat{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;background:#f0f0f0;color:#444;margin-bottom:6px;}
-.card-cat.cat-free{background:#E6F7F1;color:#00A87A;}
-.card-cat.cat-tip{background:#FFF4E0;color:#C97A00;}
-.card-cat.cat-job{background:#E0F2FF;color:#1976D2;}
-.card-cat.cat-qna{background:#F5E6FF;color:#7B1FA2;}
-
-/* 작성 모달 카테고리 칩 */
-.wcat-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--gray-100);}
-.wcat-btn{flex-shrink:0;padding:6px 12px;border-radius:9999px;border:1.5px solid var(--gray-200);background:#fff;font-size:12.5px;font-weight:600;color:var(--gray-500);cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s;}
-.wcat-btn.on{background:var(--gray-900);border-color:var(--gray-900);color:#fff;}
+/* V1.9.51: 카테고리 드로어·카드 뱃지·작성 분류칩 CSS 제거 (단일 피드 전환) */
 
 /* 카드 */
 .post-card{background:#fff;margin:8px 12px 0;border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;cursor:pointer;transition:transform var(--dur-fast, 120ms) var(--ease-spring, cubic-bezier(.16,1,.3,1));}
@@ -300,45 +261,14 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
 </div>
 
-<!-- V1.9.48: 스피드다이얼 FAB — 한 버튼에 글쓰기 + 카테고리 -->
-<div class="fab-dial-ov" id="fab-dial-ov" onclick="closeFabDial()"></div>
+<!-- V1.9.51: 분류 제거 → 단일 글쓰기 FAB (스피드다이얼 해제) -->
 <div class="fab-dial" id="fab-dial">
-  <!-- 카테고리 (위) -->
-  <div class="fab-action">
-    <span class="fab-action-lbl">카테고리</span>
-    <button class="fab-mini cat" onclick="closeFabDial(); openCatDrawer();" aria-label="카테고리 필터">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
-    </button>
-  </div>
-  <!-- 글쓰기 (메인 바로 위) -->
-  <div class="fab-action">
-    <span class="fab-action-lbl">글쓰기</span>
-    <button class="fab-mini write" onclick="closeFabDial(); openWrite();" aria-label="글쓰기">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-    </button>
-  </div>
-  <!-- 메인 (+ → ×) -->
-  <button class="fab-main" id="filter-btn" onclick="toggleFabDial()" aria-label="메뉴">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    <span class="filter-dot"></span>
+  <button class="fab-main" id="write-fab" onclick="openWrite()" aria-label="글쓰기">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
   </button>
 </div>
 
-<!-- V1.9.26: 카테고리 드로어 (필터 아이콘 → 펼침) -->
-<div class="cat-drawer-ov" id="cat-drawer-ov" onclick="if(event.target===this)closeCatDrawer()">
-  <div class="cat-drawer">
-    <div class="cat-drawer-hd"></div>
-    <div class="cat-drawer-ttl">카테고리</div>
-    <div class="cat-drawer-list" id="cat-drawer-list">
-      <button class="cat-pill on" data-cat="" onclick="onCat('')">전체</button>
-      <button class="cat-pill" data-cat="자유" onclick="onCat('자유')">자유</button>
-      <button class="cat-pill" data-cat="노하우" onclick="onCat('노하우')">노하우</button>
-      <button class="cat-pill" data-cat="구인구직" onclick="onCat('구인구직')">구인구직</button>
-      <button class="cat-pill" data-cat="Q&A" onclick="onCat('Q&A')">Q&A</button>
-    </div>
-    <button class="cat-drawer-clear" onclick="onCat(''); closeCatDrawer()">필터 초기화</button>
-  </div>
-</div>
+<!-- V1.9.51: 카테고리 필터 드로어 제거 (단일 피드 전환) -->
 
 <!-- 상세 시트 -->
 <div class="ov" id="det-ov" onclick="if(event.target===this)closeDet()">
@@ -388,12 +318,6 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <button class="ws-cancel" onclick="closeWrite()">취소</button>
     </div>
     <div class="ws-body">
-      <div class="wcat-row">
-        <button class="wcat-btn on" data-cat="자유" onclick="setWriteCat('자유')">자유</button>
-        <button class="wcat-btn" data-cat="노하우" onclick="setWriteCat('노하우')">노하우</button>
-        <button class="wcat-btn" data-cat="구인구직" onclick="setWriteCat('구인구직')">구인구직</button>
-        <button class="wcat-btn" data-cat="Q&A" onclick="setWriteCat('Q&A')">Q&A</button>
-      </div>
       <input class="w-title-inp" id="w-title" type="text" placeholder="제목을 입력하세요" maxlength="100">
       <textarea class="w-content-inp" id="w-content"
         placeholder="청소업 관련 정보, 팁, 질문을 자유롭게 나눠보세요."
@@ -442,7 +366,7 @@ function hl(t, kw) {
 
 // ── 상태 ─────────────────────────────────────────────────────────
 let page=0, hasMore=true, loading=false, searchKw='', searchTimer=null;
-let curId=null, curLiked=false, curCat='';
+let curId=null, curLiked=false;
 let curSort='latest';  // V1.6 — latest | popular | comments
 let picBase64=null, picMime=null;
 let writeCat='자유';  // 작성 모달 선택 카테고리
@@ -483,7 +407,6 @@ async function loadFeed(reset=false) {
   try {
     let url=SERVER+'/api/community/posts?page='+page+'&limit=20';
     if(searchKw) url+='&search='+encodeURIComponent(searchKw);
-    if(curCat) url+='&category='+encodeURIComponent(curCat);
     if(curSort && curSort!=='latest') url+='&sort='+encodeURIComponent(curSort);
     const d=await fetch(url).then(r=>r.json());
     if(!d.success) throw new Error(d.error||'서버 오류');
@@ -508,17 +431,12 @@ async function loadFeed(reset=false) {
   loading=false;
 }
 
-function catClass(cat){
-  return cat==='자유'?'cat-free':cat==='노하우'?'cat-tip':cat==='구인구직'?'cat-job':cat==='Q&A'?'cat-qna':'cat-free';
-}
 function card(p){
-  const cat = p.category || '자유';
-  const catBadge = `<span class="card-cat ${catClass(cat)}">${esc(cat)}</span>`;
   const titleHl = p.title ? `<div class="card-title">${hl(p.title,searchKw)}</div>` : '';
   const contentHl = `<div class="card-content">${hl(p.content,searchKw)}</div>`;
   const imgHtml = p.image_url ? `<img class="card-img" src="${esc(p.image_url)}" alt="이미지" loading="lazy">` : '';
   return `<div class="post-card" onclick="openDet('${p.id}')">
-    ${catBadge}${titleHl}${contentHl}${imgHtml}
+    ${titleHl}${contentHl}${imgHtml}
     <div class="card-meta">
       <span class="card-nick">${esc(p.nickname)}</span>
       <span class="card-ago">${ago(p.created_at)}</span>
@@ -530,28 +448,7 @@ function card(p){
   </div>`;
 }
 
-// V1.9.48: 스피드다이얼 FAB — 메인 누르면 글쓰기/카테고리 펼침
-function toggleFabDial(){
-  const d=document.getElementById('fab-dial');
-  const open=!d.classList.contains('open');
-  d.classList.toggle('open', open);
-  document.getElementById('fab-dial-ov')?.classList.toggle('on', open);
-}
-function closeFabDial(){
-  document.getElementById('fab-dial')?.classList.remove('open');
-  document.getElementById('fab-dial-ov')?.classList.remove('on');
-}
-
-// V1.9.26: 카테고리 필터 (드로어 pill 동기화 + filter-btn 활성 표시)
-function onCat(cat){
-  curCat = cat;
-  document.querySelectorAll('.cat-pill').forEach(t => {
-    t.classList.toggle('on', (t.getAttribute('data-cat') || '') === cat);
-  });
-  // filter-btn 활성 도트 (전체='' 면 비활성)
-  document.getElementById('filter-btn')?.classList.toggle('has-filter', !!cat);
-  loadFeed(true);
-}
+// V1.9.51: 스피드다이얼·카테고리 필터 JS 제거 (단일 글쓰기 FAB + 단일 피드)
 
 // V1.9.26: Twin Tabs — 실시간/인기 두 개만
 function onTwinTab(sort){
@@ -572,22 +469,6 @@ function _moveTwinInd(){
   ind.style.transform = 'translateX(' + (active.offsetLeft + active.offsetWidth/2 - w/2) + 'px)';
 }
 
-// V1.9.26: 카테고리 드로어 열기/닫기
-function openCatDrawer(){
-  document.getElementById('cat-drawer-ov')?.classList.add('on');
-  document.body.style.overflow = 'hidden';
-}
-function closeCatDrawer(){
-  document.getElementById('cat-drawer-ov')?.classList.remove('on');
-  document.body.style.overflow = '';
-}
-// 카테고리 선택 후 자동으로 드로어 닫기 (전체는 즉시 닫기)
-const _origOnCat = onCat;
-window.onCat = function(cat){
-  _origOnCat(cat);
-  // 카테고리 선택 후 0.2초 뒤 닫기 (전환 효과)
-  setTimeout(closeCatDrawer, 200);
-};
 
 // ── 검색 ─────────────────────────────────────────────────────────
 // V1.9.47: 검색 기능 UI 제거 (onSearch/doSearch/clearSearch는 호출처 없음 — searchKw=''로 무해)
@@ -724,7 +605,7 @@ function openWrite(){
   document.getElementById('w-title').value='';
   document.getElementById('w-content').value='';
   document.getElementById('ws-char').textContent='0/2000';
-  setWriteCat('자유');
+  writeCat='자유';  // 분류 제거 — 서버 계약 위해 기본값 유지
   refreshAuthorHint();
   removePhoto();
   setTimeout(()=>document.getElementById('w-title').focus(),300);
@@ -787,13 +668,6 @@ async function submitPost(){
   }
 }
 
-// 작성 모달 카테고리 선택
-function setWriteCat(c){
-  writeCat = c;
-  document.querySelectorAll('.wcat-btn').forEach(b => {
-    b.classList.toggle('on', b.getAttribute('data-cat') === c);
-  });
-}
 
 // ── V1.9.33: HOT 티커 — 인기글 상위 3개 4초 교대 ──────────────────
 let _tickerPosts = [], _tickerIdx = 0, _tickerTimer = null;
