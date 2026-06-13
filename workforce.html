@@ -73,16 +73,18 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .btn-hd:active{background:rgba(255,56,92,0.10);}
 /* V1.9.32: Twin Tabs 패턴 (커뮤니티/활동량 시트와 통일) — 그라데 제거, Pure White */
 .tab-row{padding:0 16px;background:#fff;border-bottom:1px solid var(--g100,#F3F4F6);}
-.tabs-seg{display:flex;gap:0;background:transparent;}
+.tabs-seg{display:flex;gap:0;background:transparent;position:relative;}
 .tab{
-  flex:1;padding:13px 0 15px;text-align:center;font-size:15px;font-weight:800;
+  flex:1;padding:13px 0 15px;text-align:center;font-size:15px;font-weight:700;
   color:#94A3B8;cursor:pointer;border:none;position:relative;
   background:transparent;font-family:inherit;white-space:nowrap;
-  letter-spacing:.02em;transition:color .15s;
+  letter-spacing:-.01em;transition:color .25s ease;
   -webkit-tap-highlight-color:transparent;
 }
 .tab.on{color:#0F172A;}
-.tab.on::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:32px;height:3px;background:#0F172A;border-radius:2px;}
+/* V1.9.62: 슬라이딩 인디케이터 (커뮤니티 twin-ind와 동일 — 밑줄이 미끄러져 이동) */
+.tab-ind{position:absolute;bottom:-1px;left:0;width:36px;height:3px;background:#0F172A;border-radius:2px;transition:transform .32s cubic-bezier(.34,1.56,.64,1);will-change:transform;}
+@media (prefers-reduced-motion: reduce){.tab-ind{transition:none;}}
 /* V1.9.60: 헤더 사장님 인사 — 커뮤니티와 통일 (30px/900 + 17px/800) */
 .ds-page-header .wf-greet-ttl{font-size:30px;font-weight:900;letter-spacing:-.035em;line-height:1.18;color:#191F28;}
 .ds-page-header .wf-greet-sub{font-size:17px;font-weight:800;color:#1B2A3F;margin-top:5px;}
@@ -409,6 +411,7 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
         <button class="tab on" id="tab-find" onclick="switchTab('find')">동료 찾기</button>
         <button class="tab" id="tab-job"  onclick="switchTab('job')">동료 모집</button>
         <button class="tab" id="tab-my"   onclick="switchTab('my')">내 활동</button>
+        <span class="tab-ind" id="tab-ind"></span>
       </div>
     </div>
   </div>
@@ -647,9 +650,19 @@ function switchTab(tab){
     document.getElementById('sec-'+t).style.display=t===tab?'':'none';
   });
   const ge=document.getElementById('wf-greet'); if(ge) ge.textContent=WF_GREET[tab]||WF_GREET.find;
+  _moveTabInd();
   updateHdBtn();
   if(tab==='my') loadMyProfile();
   if(tab==='job'){ renderJobFilters(); loadJobs(); }
+}
+// V1.9.62: 탭 밑줄 슬라이드 (커뮤니티 _moveTwinInd와 동일)
+function _moveTabInd(){
+  const wrap=document.querySelector('.tabs-seg');
+  const ind=document.getElementById('tab-ind');
+  const active=wrap?.querySelector('.tab.on');
+  if(!wrap||!ind||!active) return;
+  const w=36;
+  ind.style.transform='translateX('+(active.offsetLeft+active.offsetWidth/2-w/2)+'px)';
 }
 
 // ── 필터 ─────────────────────────────────────────────────────
@@ -1568,6 +1581,10 @@ renderJobFilters();
 Promise.all([ loadWorkers(), loadJobs() ]).catch(()=>{});
 // URL 파라미터 탭 전환
 (()=>{ const p=new URLSearchParams(location.search); const t=p.get('tab'); if(t&&['find','job','my'].includes(t)) switchTab(t); })();
+// V1.9.62: 탭 슬라이딩 밑줄 초기 위치 + 폰트 로드/리사이즈 대응
+_moveTabInd();
+window.addEventListener('load', _moveTabInd);
+window.addEventListener('resize', _moveTabInd);
 </script>
 </body>
 </html>
