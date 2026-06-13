@@ -2354,22 +2354,30 @@ function _computeActivityStats(period) {
       buckets.push({ key, label: i===0 ? '오늘' : dayLabel, dist: e.d, sched: e.s, isToday: i===0 });
     }
   } else if (period === 'week') {
-    // V1.9.36: 라벨 분리 — 막대는 "N주" 한 줄, 월은 바뀔 때만 위에 표시
-    let prevMonth = null;
-    const curMonth = now.getMonth()+1; // V1.9.42: 이번 달
-    for (let w = 7; w >= 0; w--) {
-      const end = new Date(now); end.setDate(now.getDate() - w*7);
-      const start = new Date(end); start.setDate(end.getDate() - 6);
+    // V1.9.43: 이번 달의 주(1주~4/5주)만 표시 (8주 롤링 폐기 — 월 넘나듦 제거)
+    const yy = now.getFullYear(), mo = now.getMonth();
+    const daysInMonth = new Date(yy, mo+1, 0).getDate();
+    const numWeeks = Math.ceil(daysInMonth / 7); // 4 또는 5
+    const curWom = Math.ceil(now.getDate() / 7); // 이번주 = 이번 달 몇째 주
+    const pad = n => String(n).padStart(2,'0');
+    for (let wk = 1; wk <= numWeeks; wk++) {
+      const startDay = (wk-1)*7 + 1;
+      const endDay = Math.min(wk*7, daysInMonth);
       let d=0, s=0;
-      for (let i=0;i<7;i++) { const dt=new Date(start); dt.setDate(start.getDate()+i); const k=dt.toISOString().slice(0,10); const e=hist[k]||{d:0,s:0}; d+=e.d; s+=e.s; }
-      const mon = end.getMonth()+1;
-      const wom = Math.ceil(end.getDate()/7);
-      const cweek = w===0 ? '이번주' : wom + '주';
-      const cmonth = (mon !== prevMonth) ? (mon + '월') : '';
-      const cmonthCur = (cmonth !== '' && mon === curMonth); // V1.9.42: 이번 달 마커 강조
-      prevMonth = mon;
-      const label = w===0 ? '이번주' : `${mon}월 ${wom}주`; // 통계 카드용 풀 라벨
-      buckets.push({ key: end.toISOString().slice(0,10), label, cweek, cmonth, cmonthCur, dist: d, sched: s, isToday: w===0 });
+      for (let day = startDay; day <= endDay; day++) {
+        const k = `${yy}-${pad(mo+1)}-${pad(day)}`; // _todayKey와 동일 로컬 형식
+        const e = hist[k] || { d:0, s:0 };
+        d += e.d; s += e.s;
+      }
+      buckets.push({
+        key: `${yy}-${pad(mo+1)}-W${wk}`,
+        label: `${mo+1}월 ${wk}주`,            // 통계 카드용 풀 라벨
+        cweek: `${wk}주`,                       // 막대 라벨 (1주~5주)
+        cmonth: wk===1 ? `${mo+1}월` : '',      // 1주 위에만 월 표시
+        cmonthCur: wk===1,                      // 이번 달 → 강조
+        dist: d, sched: s,
+        isToday: wk===curWom                    // 이번주 강조
+      });
     }
   } else if (period === 'month') {
     for (let m = 5; m >= 0; m--) {
@@ -2435,7 +2443,7 @@ function renderActivityStats(period){
   document.querySelectorAll('.act-tab').forEach(b => b.classList.toggle('on', b.getAttribute('data-p') === period));
   _moveActInd();
   const subEl = document.getElementById('act-top-sub');
-  if (subEl) subEl.textContent = { day:'최근 7일', week:'최근 8주', month:'최근 6개월', year:'최근 5년' }[period];
+  if (subEl) subEl.textContent = { day:'최근 7일', week:`${new Date().getMonth()+1}월 · 주별`, month:'최근 6개월', year:'최근 5년' }[period];
   const bento = document.getElementById('act-bento');
   if (!bento) return;
   // V1.9.30: 홈 health-card의 현재 level과 동기화 (통일성)
@@ -2476,7 +2484,7 @@ function renderActivityStats(period){
     return `<span class="${b.isToday ? 'today' : ''}">${b.label}</span>`;
   }).join('');
   // 목표 (일=3km, 주=21km, 월=90km, 년=1000km)
-  const goal = { day: 3000*7, week: 21000*8, month: 90000*6, year: 1000000*5 }[period];
+  const goal = period==='week' ? 21000 * s.buckets.length : { day: 3000*7, month: 90000*6, year: 1000000*5 }[period];
   const goalSingle = { day: '3km/일', week: '21km/주', month: '90km/월', year: '1000km/년' }[period];
   const pct = Math.min(100, Math.round((s.totalDist / goal) * 100));
   const ringOffset = (163 * (100 - pct) / 100).toFixed(0);
@@ -2488,7 +2496,7 @@ function renderActivityStats(period){
     const unit = { day:'날', week:'주', month:'달', year:'해' }[period];
     insight = `💡 가장 활발한 ${unit} <b>${s.maxBucket.label}</b> · ${maxKm}km · 평균 대비 +${avgVsMax}%`;
   }
-  const periodLbl = { day:'7일', week:'8주', month:'6개월', year:'5년' }[period];
+  const periodLbl = { day:'7일', week:'이번 달', month:'6개월', year:'5년' }[period];
   const totalKm = _formatKm(s.totalDist);
   const avgKm = _formatKm(s.avgDist);
   // V1.9.42: 막대 클릭(selWk)용 데이터 저장 + 선택 리셋
