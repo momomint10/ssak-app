@@ -2411,8 +2411,8 @@ function _computeActivityStats(period) {
   return { buckets, totalDist, totalSched, avgDist, maxBucket, trend };
 }
 function _formatKm(m) {
-  if (m >= 1000) return (m/1000).toFixed(1);
-  return (m/1000).toFixed(2);
+  // V1.9.44: 활동량 거리 — 항상 소수점 1자리 (1km 미만도 0.9 형태)
+  return (m/1000).toFixed(1);
 }
 
 // V1.9.29: 활동량 통계 시트 (Bento Grid)
