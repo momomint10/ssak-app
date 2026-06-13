@@ -65,12 +65,15 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   position:sticky;top:0;z-index:50;
 }
 /* V1.9.34: 코랄 하단 라인 제거 — 회색 보더 1px로 전 페이지 통일 */
-.header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-/* V1.9.46: 홈/스케줄과 통일 — 제목 우측 아이콘 버튼 (검색·필터) */
-.header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.icon-btn{width:38px;height:38px;border-radius:50%;background:var(--gray-100,#F2F4F6);border:none;display:flex;align-items:center;justify-content:center;color:var(--gray-700,#334155);cursor:pointer;padding:0;font-family:inherit;position:relative;transition:background .15s;}
-.icon-btn:active{background:var(--gray-200,#E2E8F0);}
-.icon-btn.on{background:rgba(255,56,92,.10);color:var(--c-pr,#FF385C);}
+.header-row{display:flex;align-items:center;margin-bottom:10px;}
+/* V1.9.47: 검색 제거 — 헤더는 제목만. 필터는 좌하단 플로팅 버튼으로 이동 */
+.filter-fab{position:fixed;left:18px;bottom:86px;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.95);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border:1.5px solid var(--gray-200,#E2E8F0);color:var(--gray-700,#334155);display:flex;align-items:center;justify-content:center;z-index:110;cursor:pointer;padding:0;font-family:inherit;box-shadow:0 6px 14px rgba(15,15,18,.12);transition:transform .15s;}
+.filter-fab:active{transform:scale(.92);}
+.filter-fab svg{width:22px;height:22px;}
+.filter-fab .filter-dot{position:absolute;top:7px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--c-pr,#FF385C);display:none;border:2px solid #fff;}
+.filter-fab.has-filter{border-color:var(--c-pr,#FF385C);color:var(--c-pr,#FF385C);}
+.filter-fab.has-filter .filter-dot{display:block;}
+@media (prefers-reduced-motion: reduce){.filter-fab{transition:none;}}
 /* .header-title 페이지 인라인 정의 삭제 → design.css의 .ds-page-title 이 시각 결정 (22px 600) */
 
 /* V1.9.27.1: 글쓰기 FAB — schedule.html과 완전 동일 (48px, 22px svg, 2.8 stroke) */
@@ -117,15 +120,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .search-info{padding:8px 16px 0;font-size:12px;color:var(--gray-400);display:none;}
 .search-info b{color:var(--gray-700);}
 
-/* V1.9.26 — Twin Tabs + Blind 라운지 패턴 (search/filter row + 큰 탭 2개) */
-/* V1.9.46: 검색바 — 기본 숨김, 검색 아이콘 탭 시 펼침 */
-.search-row{margin-top:8px;animation:srch-slide .2s ease-out;}
-.search-row .search-wrap{width:100%;}
-@keyframes srch-slide{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
-@media (prefers-reduced-motion: reduce){.search-row{animation:none;}}
-/* 필터 아이콘 버튼 — icon-btn 베이스 + 코랄 도트 */
-.filter-btn .filter-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--c-pr,#FF385C);display:none;border:1.5px solid var(--gray-100,#F2F4F6);}
-.filter-btn.has-filter .filter-dot{display:block;}
+/* V1.9.47: 검색 UI 제거 — search-row CSS 삭제 (필터는 .filter-fab로 이동) */
 
 /* Twin Tabs — 큰 탭 2개 (실시간/인기) */
 .twin-tabs{position:relative;display:flex;gap:0;margin:14px -16px 0;padding:0 16px;border-bottom:1px solid var(--gray-100);}
@@ -266,28 +261,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <div class="shell">
 
   <div class="header">
-    <!-- V1.9.46: 홈/스케줄과 통일 — 제목 + 우측 아이콘(검색·필터) -->
+    <!-- V1.9.47: 검색 제거 — 헤더는 제목만 (필터는 좌하단 FAB) -->
     <div class="header-row">
       <div><h1 class="ds-page-title header-title">커뮤니티</h1><p class="ds-page-subtitle header-sub">정보 · 팁 · 질문</p></div>
-      <div class="header-actions">
-        <button class="icon-btn" id="search-toggle" onclick="toggleSearch()" aria-label="검색">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </button>
-        <button class="icon-btn filter-btn" id="filter-btn" onclick="openCatDrawer()" aria-label="카테고리 필터">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
-          <span class="filter-dot"></span>
-        </button>
-      </div>
-    </div>
-    <!-- 검색바: 기본 숨김, 검색 아이콘 탭 시 펼침 -->
-    <div class="search-row" id="search-row" style="display:none;">
-      <div class="search-wrap">
-        <svg class="search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input class="search-input" id="search-input" type="text" placeholder="검색"
-          oninput="onSearch(this.value)"
-          onkeydown="if(event.key==='Enter') doSearch()">
-        <button class="search-clear" id="search-clear" onclick="clearSearch()">×</button>
-      </div>
     </div>
     <!-- Twin Tabs — Blind HOT/실시간 패턴 -->
     <div class="twin-tabs" id="twin-tabs">
@@ -307,6 +283,12 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   <div id="feed"></div>
 
 </div>
+
+<!-- V1.9.47: 필터 FAB (좌하단) — 카테고리 드로어 -->
+<button class="filter-fab" id="filter-btn" onclick="openCatDrawer()" aria-label="카테고리 필터">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+  <span class="filter-dot"></span>
+</button>
 
 <!-- V1.9.27: 글쓰기 FAB (헤더 버튼 → 플로팅 통일) -->
 <button class="ds-fab-glass" onclick="openWrite()" aria-label="글쓰기">
@@ -567,22 +549,9 @@ window.onCat = function(cat){
 };
 
 // ── 검색 ─────────────────────────────────────────────────────────
-// V1.9.46: 검색 아이콘 → 검색바 펼침/접기 (홈/스케줄 패턴)
-function toggleSearch(){
-  const row=document.getElementById('search-row');
-  const open=row.style.display==='none' || !row.style.display;
-  if(open){
-    row.style.display='block';
-    document.getElementById('search-toggle')?.classList.add('on');
-    setTimeout(()=>document.getElementById('search-input')?.focus(),60);
-  } else {
-    row.style.display='none';
-    document.getElementById('search-toggle')?.classList.remove('on');
-    if(searchKw) clearSearch(); // 검색 중이었으면 초기화
-  }
-}
+// V1.9.47: 검색 기능 UI 제거 (onSearch/doSearch/clearSearch는 호출처 없음 — searchKw=''로 무해)
 function onSearch(v){
-  document.getElementById('search-clear').style.display=v?'block':'none';
+  const c=document.getElementById('search-clear'); if(c) c.style.display=v?'block':'none';
   clearTimeout(searchTimer);
   searchTimer=setTimeout(()=>doSearch(v),400);
 }
