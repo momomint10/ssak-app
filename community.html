@@ -66,12 +66,23 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 /* V1.9.34: 코랄 하단 라인 제거 — 회색 보더 1px로 전 페이지 통일 */
 .header-row{display:flex;align-items:center;margin-bottom:10px;}
-/* V1.9.51: 단일 글쓰기 FAB (코랄) — 스피드다이얼·드로어 잔재 CSS 제거 */
-.fab-dial{position:fixed;right:18px;bottom:86px;z-index:110;display:flex;flex-direction:column;align-items:flex-end;}
+/* V1.9.52: 검색+글쓰기 스피드다이얼 FAB */
+.fab-dial-ov{position:fixed;inset:0;background:rgba(15,23,42,0);z-index:105;pointer-events:none;transition:background .2s;}
+.fab-dial-ov.on{background:rgba(15,23,42,.18);pointer-events:auto;}
+.fab-dial{position:fixed;right:18px;bottom:86px;z-index:110;display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
 .fab-main{width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);box-shadow:0 6px 14px rgba(15,15,18,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:transform .28s cubic-bezier(.34,1.4,.64,1);}
 .fab-main:active{transform:scale(.92);}
 .fab-main svg{width:24px;height:24px;}
-@media (prefers-reduced-motion: reduce){.fab-main{transition:none;}}
+.fab-dial.open .fab-main{transform:rotate(135deg);}
+.fab-action{display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(14px) scale(.85);pointer-events:none;transition:opacity .2s ease,transform .2s cubic-bezier(.34,1.4,.64,1);}
+.fab-dial.open .fab-action{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+.fab-dial.open .fab-action:nth-child(1){transition-delay:.06s;}
+.fab-dial.open .fab-action:nth-child(2){transition-delay:.02s;}
+.fab-action-lbl{background:#fff;color:var(--gray-800,#1F2937);font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:9px;box-shadow:0 2px 8px rgba(15,23,42,.14);white-space:nowrap;}
+.fab-mini{width:44px;height:44px;border-radius:50%;background:#FF6B85;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 10px rgba(255,107,133,.3);padding:0;font-family:inherit;flex-shrink:0;}
+.fab-mini:active{transform:scale(.92);}
+.fab-mini svg{width:20px;height:20px;}
+@media (prefers-reduced-motion: reduce){.fab-main,.fab-action,.fab-dial-ov{transition:none;}}
 /* .header-title 페이지 인라인 정의 삭제 → design.css의 .ds-page-title 이 시각 결정 (22px 600) */
 
 /* V1.9.27.1: 글쓰기 FAB — schedule.html과 완전 동일 (48px, 22px svg, 2.8 stroke) */
@@ -117,6 +128,11 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* 검색 안내 */
 .search-info{padding:8px 16px 0;font-size:12px;color:var(--gray-400);display:none;}
 .search-info b{color:var(--gray-700);}
+/* V1.9.52: 검색바 (FAB 검색 버튼으로 펼침) */
+.search-bar{max-height:0;overflow:hidden;display:flex;align-items:center;gap:8px;padding:0 16px;background:#fff;transition:max-height .25s ease,padding .25s ease;}
+.search-bar.open{max-height:64px;padding:9px 16px;}
+.search-bar .search-wrap{flex:1;}
+.search-cancel{flex-shrink:0;background:none;border:none;font-size:14px;font-weight:600;color:var(--primary,#FF385C);cursor:pointer;font-family:inherit;padding:4px 2px;}
 
 /* V1.9.47: 검색 UI 제거 — search-row CSS 삭제 (필터는 .filter-fab로 이동) */
 
@@ -256,15 +272,40 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
   </div>
 
+  <!-- V1.9.52: 검색바 (FAB 검색 버튼으로 토글) -->
+  <div class="search-bar" id="search-bar">
+    <div class="search-wrap">
+      <span class="search-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.5" y2="16.5"/></svg></span>
+      <input class="search-input" id="search-input" type="search" placeholder="게시글 검색" enterkeyhint="search" oninput="onSearch(this.value)">
+      <button class="search-clear" id="search-clear" onclick="clearSearch()" aria-label="지우기">×</button>
+    </div>
+    <button class="search-cancel" onclick="closeSearch()">취소</button>
+  </div>
   <div class="search-info" id="search-info"></div>
   <div id="feed"></div>
 
 </div>
 
-<!-- V1.9.51: 분류 제거 → 단일 글쓰기 FAB (스피드다이얼 해제) -->
+<!-- V1.9.52: 검색+글쓰기 스피드다이얼 FAB -->
+<div class="fab-dial-ov" id="fab-dial-ov" onclick="closeFabDial()"></div>
 <div class="fab-dial" id="fab-dial">
-  <button class="fab-main" id="write-fab" onclick="openWrite()" aria-label="글쓰기">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+  <!-- 검색 (위) -->
+  <div class="fab-action">
+    <span class="fab-action-lbl">검색</span>
+    <button class="fab-mini" onclick="closeFabDial(); openSearch();" aria-label="게시글 검색">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.5" y2="16.5"/></svg>
+    </button>
+  </div>
+  <!-- 글쓰기 -->
+  <div class="fab-action">
+    <span class="fab-action-lbl">글쓰기</span>
+    <button class="fab-mini" onclick="closeFabDial(); openWrite();" aria-label="글쓰기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+    </button>
+  </div>
+  <!-- 메인 (+ → ×) -->
+  <button class="fab-main" id="fab-main-btn" onclick="toggleFabDial()" aria-label="메뉴">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   </button>
 </div>
 
@@ -471,7 +512,23 @@ function _moveTwinInd(){
 
 
 // ── 검색 ─────────────────────────────────────────────────────────
-// V1.9.47: 검색 기능 UI 제거 (onSearch/doSearch/clearSearch는 호출처 없음 — searchKw=''로 무해)
+// V1.9.52: 검색+글쓰기 스피드다이얼 + 검색바 토글
+function toggleFabDial(){
+  const d=document.getElementById('fab-dial');
+  const open=!d.classList.contains('open');
+  d.classList.toggle('open', open);
+  document.getElementById('fab-dial-ov')?.classList.toggle('on', open);
+}
+function closeFabDial(){
+  document.getElementById('fab-dial')?.classList.remove('open');
+  document.getElementById('fab-dial-ov')?.classList.remove('on');
+}
+function openSearch(){
+  document.getElementById('search-bar')?.classList.add('open');
+  setTimeout(()=>document.getElementById('search-input')?.focus(), 250);
+}
+
+// 검색 (게시글 제목·내용)
 function onSearch(v){
   const c=document.getElementById('search-clear'); if(c) c.style.display=v?'block':'none';
   clearTimeout(searchTimer);
@@ -486,6 +543,10 @@ function clearSearch(){
   document.getElementById('search-clear').style.display='none';
   document.getElementById('search-info').style.display='none';
   searchKw=''; loadFeed(true);
+}
+function closeSearch(){
+  clearSearch();
+  document.getElementById('search-bar')?.classList.remove('open');
 }
 
 // ── 상세 ─────────────────────────────────────────────────────────
