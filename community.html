@@ -256,7 +256,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   <div class="header">
     <!-- V1.9.47: 검색 제거 — 헤더는 제목만 (필터는 좌하단 FAB) -->
     <div class="header-row">
-      <div><h1 class="ds-page-title header-title">커뮤니티</h1><p class="ds-page-subtitle header-sub">정보 · 팁 · 질문</p></div>
+      <div><h1 class="ds-page-title header-title">사장님,</h1><p class="ds-page-subtitle header-sub" id="comm-greet" style="transition:opacity .18s ease;">오늘은 어떤 이야기 나눌까요?</p></div>
     </div>
     <!-- Twin Tabs — Blind HOT/실시간 패턴 -->
     <div class="twin-tabs" id="twin-tabs">
@@ -395,8 +395,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <div id="toast"></div>
 
 <script>
-// 진입 시 홈 dot 끄기 — 마지막 본 시각 기록
-try { localStorage.setItem('ssak_community_last_seen', new Date().toISOString()); } catch(_) {}
+// 진입 시 홈 dot 끄기 — 마지막 본 시각 기록 (V1.9.54: 인사용 직전 방문 시각 먼저 캡처)
+var _prevCommSeen = null;
+try { _prevCommSeen = localStorage.getItem('ssak_community_last_seen'); localStorage.setItem('ssak_community_last_seen', new Date().toISOString()); } catch(_) {}
 // ── 익명 ID ──────────────────────────────────────────────────────
 // ── 유틸 ─────────────────────────────────────────────────────────
 function hl(t, kw) {
@@ -462,6 +463,12 @@ async function loadFeed(reset=false) {
       if(d.data.length===20) feed.insertAdjacentHTML('beforeend','<div id="bmore"><button class="btn-more" onclick="loadFeed()">더보기</button></div>');
       else hasMore=false;
       page++;
+      // V1.9.54: 첫 최신 피드 로드 시 '새 글 N개' 인사 반영 (마지막 방문 이후)
+      if(!_greetDone && !searchKw && curSort==='latest'){
+        _greetDone = true;
+        const nc = _prevCommSeen ? d.data.filter(p=>p.created_at && p.created_at > _prevCommSeen).length : 0;
+        if(nc>0) setCommGreet('새 글 '+nc+'개가 올라왔어요', true);
+      }
     }
     const info=document.getElementById('search-info');
     if(searchKw && d.data.length>0){info.style.display='block';info.innerHTML='<b>"'+esc(searchKw)+'"</b> 검색 결과 '+d.data.length+'건';}
@@ -769,7 +776,36 @@ function openTickerPost(){
   if (p && p.id) openDet(p.id);
 }
 
+// V1.9.54: 커뮤니티 헤더 인사 — 실시간 새글(우선) + 회전 넛지(매번 다른 문구)
+var _greetDone=false, _greetPinned=false, _greetTimer=null;
+const COMM_NUDGES=[
+  '오늘은 어떤 이야기 나눌까요?',
+  '동료 사장님들과 소통해보세요',
+  '궁금한 건 편하게 물어보세요',
+  '오늘의 청소 노하우 나눠볼까요?',
+  '따끈한 소식 보러 오셨네요',
+  '함께 나누면 일이 쉬워져요'
+];
+function setCommGreet(msg, pin){
+  const el=document.getElementById('comm-greet'); if(!el) return;
+  el.textContent=msg;
+  if(pin){ _greetPinned=true; if(_greetTimer){clearInterval(_greetTimer); _greetTimer=null;} }
+}
+function startGreetRotation(){
+  const el=document.getElementById('comm-greet'); if(!el || _greetPinned) return;
+  let i=Math.floor(Math.random()*COMM_NUDGES.length);
+  el.textContent=COMM_NUDGES[i];
+  if(_greetTimer) clearInterval(_greetTimer);
+  _greetTimer=setInterval(function(){
+    if(_greetPinned){ clearInterval(_greetTimer); _greetTimer=null; return; }
+    i=(i+1)%COMM_NUDGES.length;
+    el.style.opacity='0';
+    setTimeout(function(){ el.textContent=COMM_NUDGES[i]; el.style.opacity='1'; }, 180);
+  }, 6000);
+}
+
 // ── Toast ─────────────────────────────────────────────────────────
+startGreetRotation();
 loadFeed(true);
 loadHotTicker();
 // V1.9.35: 밑줄 초기 위치 + 리사이즈 대응 (transition 없이 첫 배치)
