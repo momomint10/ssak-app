@@ -83,6 +83,26 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 }
 .tab.on{color:#0F172A;}
 .tab.on::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:32px;height:3px;background:#0F172A;border-radius:2px;}
+/* V1.9.60: 헤더 사장님 인사 — 커뮤니티와 통일 (30px/900 + 17px/800) */
+.ds-page-header .wf-greet-ttl{font-size:30px;font-weight:900;letter-spacing:-.035em;line-height:1.18;color:#191F28;}
+.ds-page-header .wf-greet-sub{font-size:17px;font-weight:800;color:#1B2A3F;margin-top:5px;}
+/* V1.9.60: 스피드다이얼 FAB (커뮤니티와 동일) — 프로필 등록 + 공고 등록 */
+.fab-dial-ov{position:fixed;inset:0;background:rgba(15,23,42,0);z-index:105;pointer-events:none;transition:background .2s;}
+.fab-dial-ov.on{background:rgba(15,23,42,.18);pointer-events:auto;}
+.fab-dial{position:fixed;right:18px;bottom:86px;z-index:110;display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
+.fab-main{width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);box-shadow:0 6px 14px rgba(15,15,18,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:transform .28s cubic-bezier(.34,1.4,.64,1);}
+.fab-main:active{transform:scale(.92);}
+.fab-main svg{width:24px;height:24px;}
+.fab-dial.open .fab-main{transform:rotate(135deg);}
+.fab-action{display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(14px) scale(.85);pointer-events:none;transition:opacity .2s ease,transform .2s cubic-bezier(.34,1.4,.64,1);}
+.fab-dial.open .fab-action{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+.fab-dial.open .fab-action:nth-child(1){transition-delay:.06s;}
+.fab-dial.open .fab-action:nth-child(2){transition-delay:.02s;}
+.fab-action-lbl{background:#fff;color:#1F2937;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:9px;box-shadow:0 2px 8px rgba(15,23,42,.14);white-space:nowrap;}
+.fab-mini{width:44px;height:44px;border-radius:50%;background:#FF6B85;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 10px rgba(255,107,133,.3);padding:0;font-family:inherit;flex-shrink:0;}
+.fab-mini:active{transform:scale(.92);}
+.fab-mini svg{width:20px;height:20px;}
+@media (prefers-reduced-motion: reduce){.fab-main,.fab-action,.fab-dial-ov{transition:none;}}
 /* ── 필터 ── */
 .filter-bar{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;scrollbar-width:none;}
 .filter-bar::-webkit-scrollbar{display:none;}
@@ -384,11 +404,8 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
   <div class="ds-page-header">
     <div class="ds-page-header-row">
       <div class="ds-page-titles">
-        <h1 class="ds-page-title">동료</h1>
-        <p class="ds-page-h-sub">팀원 · 매칭 · 지원자</p>
-      </div>
-      <div class="ds-page-actions">
-        <button class="btn-hd" id="hd-btn" onclick="onHdBtn()">프로필 등록</button>
+        <h1 class="ds-page-title wf-greet-ttl">사장님,</h1>
+        <p class="ds-page-h-sub wf-greet-sub" id="wf-greet">함께할 동료를 찾아볼까요?</p>
       </div>
     </div>
     <div class="tab-row">
@@ -542,6 +559,26 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
   </div>
 </div>
 
+<!-- V1.9.60: 스피드다이얼 FAB — 프로필 등록 + 공고 등록 -->
+<div class="fab-dial-ov" id="fab-dial-ov" onclick="closeFabDial()"></div>
+<div class="fab-dial" id="fab-dial">
+  <div class="fab-action">
+    <span class="fab-action-lbl">공고 등록</span>
+    <button class="fab-mini" onclick="closeFabDial(); openJobForm();" aria-label="공고 등록">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+    </button>
+  </div>
+  <div class="fab-action">
+    <span class="fab-action-lbl">프로필 등록</span>
+    <button class="fab-mini" onclick="closeFabDial(); openProfileForm(false);" aria-label="프로필 등록">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
+    </button>
+  </div>
+  <button class="fab-main" onclick="toggleFabDial()" aria-label="등록 메뉴">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+</div>
+
 <!-- 네비 -->
 <nav class="ds-nav">
   <button class="ds-nav-item" onclick="location.href='index.html'"><div class="ds-nav-ico"><svg viewBox="0 0 24 24"><path d="M3 12L12 3L21 12V20A1 1 0 0 1 20 21H4A1 1 0 0 1 3 20Z"/><path d="M9 21V12H15V21"/></svg></div><div>홈</div></button>
@@ -588,17 +625,32 @@ function onHdBtn(){
 }
 function updateHdBtn(){
   const btn=document.getElementById('hd-btn');
+  if(!btn) return;  // V1.9.60: 헤더 버튼 제거됨 — 프로필/공고 등록은 FAB로 이동
   if(curTab==='job'){btn.textContent='📋 공고 등록';}
   else{btn.textContent='👤 프로필 등록';}
 }
 
 // ── 탭 전환 ──────────────────────────────────────────────────
+// V1.9.60: 스피드다이얼 FAB (커뮤니티와 동일)
+function toggleFabDial(){
+  const d=document.getElementById('fab-dial');
+  const open=!d.classList.contains('open');
+  d.classList.toggle('open', open);
+  document.getElementById('fab-dial-ov')?.classList.toggle('on', open);
+}
+function closeFabDial(){
+  document.getElementById('fab-dial')?.classList.remove('open');
+  document.getElementById('fab-dial-ov')?.classList.remove('on');
+}
+// V1.9.60: 탭별 사장님 인사 문구
+const WF_GREET={find:'함께할 동료를 찾아볼까요?',job:'필요한 인력을 모집해요',my:'내 프로필과 지원 현황이에요'};
 function switchTab(tab){
   curTab=tab;
   ['find','job','my'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('on',t===tab);
     document.getElementById('sec-'+t).style.display=t===tab?'':'none';
   });
+  const ge=document.getElementById('wf-greet'); if(ge) ge.textContent=WF_GREET[tab]||WF_GREET.find;
   updateHdBtn();
   if(tab==='my') loadMyProfile();
   if(tab==='job'){ renderJobFilters(); loadJobs(); }
