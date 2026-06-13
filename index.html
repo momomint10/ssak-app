@@ -440,6 +440,10 @@
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;grid-auto-rows:minmax(80px,auto);}
 .b-card{background:#fff;border-radius:18px;padding:14px;box-shadow:0 1px 2px rgba(15,15,18,.04),0 2px 8px rgba(15,15,18,.04);position:relative;overflow:hidden;}
 .b-lbl{font-size:12px;font-weight:800;color:#475569;letter-spacing:.05em;text-transform:uppercase;}
+/* V1.9.40: 오늘 날짜 들어가는 미니 달력 아이콘 (📅 이모지=고정 17 대체) */
+.cal-ico{display:inline-flex;flex-direction:column;width:17px;height:17px;border-radius:4px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(15,23,42,.14);vertical-align:-4px;margin-right:3px;flex-shrink:0;}
+.cal-ico .cal-top{height:5px;background:var(--c-pr,#FF385C);}
+.cal-ico .cal-day{flex:1;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:900;color:#1B2A3F;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;}
 .b-big{font-size:32px;font-weight:900;letter-spacing:-.025em;line-height:1.05;margin-top:6px;color:#0F172A;font-variant-numeric:tabular-nums;}
 .b-big .unit{font-size:15px;color:#64748B;font-weight:700;margin-left:2px;}
 .b-sub{font-size:12.5px;color:#475569;margin-top:5px;font-weight:600;line-height:1.5;}
@@ -2479,7 +2483,7 @@ function renderActivityStats(period){
       </div>
     </div>
     <div class="b-card span-3">
-      <div class="b-lbl">📅 일정</div>
+      <div class="b-lbl"><span class="cal-ico"><span class="cal-top"></span><span class="cal-day">${new Date().getDate()}</span></span>일정</div>
       <div class="b-big">${s.totalSched}<span class="unit">건</span></div>
       ${trendHtml}
     </div>
