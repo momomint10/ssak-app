@@ -103,20 +103,16 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .fab-mini:active{transform:scale(.92);}
 .fab-mini svg{width:20px;height:20px;}
 @media (prefers-reduced-motion: reduce){.fab-main,.fab-action,.fab-dial-ov{transition:none;}}
-/* ── 필터 ── */
-.filter-bar{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;scrollbar-width:none;}
+/* ── 필터 ── (V1.9.61: 스케줄 .period-pill과 동일 — 회색 컨테이너 + 흰 활성칩) */
+.filter-bar{display:flex;gap:2px;margin:10px 16px;padding:3px;background:#F2F4F6;border-radius:10px;overflow-x:auto;scrollbar-width:none;}
 .filter-bar::-webkit-scrollbar{display:none;}
 .fbtn{
-  flex-shrink:0;padding:6px 15px;border-radius:20px;
-  border:1.5px solid var(--g200);background:#fff;
-  font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--g500);
-  transition:background .18s,border-color .18s,color .18s,box-shadow .18s;
-  -webkit-tap-highlight-color:transparent;
+  flex-shrink:0;padding:6px 13px;border-radius:7px;border:none;background:none;
+  font-size:12.5px;font-weight:800;color:#8B95A1;white-space:nowrap;
+  cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;
+  transition:background .15s,color .15s,box-shadow .15s;
 }
-/* V1.9.32: 다크 fill 통일 (커뮤니티/마켓 cat-pill과 동일 톤) */
-.fbtn.on{
-  background:var(--g900,#191F28);border-color:var(--g900,#191F28);color:#fff;
-}
+.fbtn.on{background:#fff;color:#1B2A3F;box-shadow:0 2px 6px rgba(15,15,18,.08);}
 /* ── 인력 카드 (260528 AX 하이브리드: A기본 + B아바타 + C메타) ── */
 .list{padding:8px 16px 0;}
 /* Stats bar — 마켓플레이스 활기 시그널 (260528) */
