@@ -185,14 +185,18 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* ─── 상세 시트 ─────────────────────────────────────────── */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;}
 .ov.on{display:block;}
-.sh{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;z-index:201;max-height:90vh;display:flex;flex-direction:column;}
+.sh{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;z-index:201;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;}
+/* V1.9.59: 상세 시트 코랄 상단 강조라인 */
+.sh-topline{height:4px;background:#FF385C;flex-shrink:0;}
 .sh-hd{width:32px;height:3px;background:var(--gray-200);border-radius:2px;margin:10px auto 0;}
-.sh-bar{padding:8px 16px 10px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;gap:8px;}
-.sh-nick{font-size:13px;color:var(--gray-500);font-weight:500;}
-.sh-close{margin-left:auto;background:none;border:none;font-size:22px;color:var(--gray-300);cursor:pointer;line-height:1;padding:0;}
+.sh-close{position:absolute;top:13px;right:12px;background:rgba(255,255,255,.92);border:none;font-size:20px;color:var(--gray-400);cursor:pointer;line-height:1;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:3;}
 .sh-body{overflow-y:auto;flex:1;padding:16px;}
-.det-title{font-size:18px;font-weight:var(--fw-bold);line-height:1.4;margin-bottom:4px;}
-.det-ago{font-size:12px;color:var(--gray-400);margin-bottom:14px;}
+/* V1.9.59: 아티클형 — 제목 히어로 + 작성자 byline */
+.det-title{font-size:23px;font-weight:900;line-height:1.25;letter-spacing:-.02em;}
+.det-byline{display:flex;align-items:center;gap:8px;margin:11px 0 14px;}
+.det-av{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#FFD0DA,#FF8FA6);flex-shrink:0;}
+.det-nick{font-size:12.5px;font-weight:700;color:var(--gray-700);}
+.det-ago{font-size:11px;color:var(--gray-400);}
 .det-img{width:100%;border-radius:14px;margin-bottom:14px;display:none;}
 .det-content{font-size:15px;line-height:1.8;color:var(--gray-800);white-space:pre-wrap;word-break:break-word;padding-bottom:14px;border-bottom:1px solid var(--gray-100);}
 .det-actions{display:flex;gap:8px;padding:12px 0;border-bottom:1px solid var(--gray-100);}
@@ -211,10 +215,21 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .cmt-empty{text-align:center;padding:18px;font-size:13px;color:var(--gray-400);}
 
 /* 댓글 입력 */
-.cmt-bar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--gray-200);padding:8px 12px;padding-bottom:max(8px,env(safe-area-inset-bottom));display:flex;gap:8px;align-items:flex-end;}
+.cmt-bar{display:none;background:#fff;border-top:1px solid var(--gray-200);padding:8px 12px;padding-bottom:max(8px,env(safe-area-inset-bottom));gap:8px;align-items:flex-end;flex-shrink:0;}
 .cmt-inp{flex:1;border:1.5px solid var(--gray-200);border-radius:18px;padding:9px 13px;font-size:14px;font-family:inherit;resize:none;max-height:70px;outline:none;line-height:1.4;background:var(--gray-50);}
-.cmt-inp:focus{border-color:var(--primary);background:#fff;}
+.cmt-inp:focus{border-color:var(--gray-900);background:#fff;}
 .cmt-send{background:var(--gray-900);color:#fff;border:none;border-radius:50%;width:36px;height:36px;flex-shrink:0;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
+/* V1.9.59: 하단 액션바 (♥/💬/삭제/댓글달기) + 입력 토글 */
+.det-botbar{display:flex;align-items:center;gap:14px;border-top:1px solid var(--gray-100);padding:11px 16px;padding-bottom:max(11px,env(safe-area-inset-bottom));background:#fff;flex-shrink:0;}
+.bb-act{display:flex;align-items:center;gap:5px;background:none;border:none;font-size:13px;font-weight:700;color:var(--gray-500);cursor:pointer;font-family:inherit;padding:0;}
+.bb-act svg{width:15px;height:15px;}
+.bb-like.liked{color:#FF385C;}
+.bb-like.liked svg{fill:#FF385C;stroke:#FF385C;}
+.bb-sp{flex:1;}
+.bb-del{background:none;border:none;font-size:12px;color:var(--gray-300);cursor:pointer;font-family:inherit;}
+.bb-reply{background:var(--gray-100);border:none;border-radius:18px;padding:8px 16px;font-size:12.5px;font-weight:700;color:var(--gray-600);cursor:pointer;font-family:inherit;}
+#det-ov.replying .det-botbar{display:none;}
+#det-ov.replying .cmt-bar{display:flex;}
 
 /* ─── 글쓰기 시트 ───────────────────────────────────────── */
 .wo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:300;}
@@ -324,36 +339,41 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <!-- 상세 시트 -->
 <div class="ov" id="det-ov" onclick="if(event.target===this)closeDet()">
   <div class="sh">
+    <div class="sh-topline"></div>
     <div class="sh-hd"></div>
-    <div class="sh-bar">
-      <span class="sh-nick" id="det-nick-bar"></span>
-      <button class="sh-close" onclick="closeDet()">×</button>
-    </div>
+    <button class="sh-close" onclick="closeDet()" aria-label="닫기">×</button>
     <div class="sh-body" id="det-body">
       <div class="det-title" id="det-title"></div>
-      <div class="det-ago" id="det-ago"></div>
+      <div class="det-byline">
+        <div class="det-av"></div>
+        <span class="det-nick" id="det-nick-bar"></span>
+        <span class="det-ago" id="det-ago"></span>
+      </div>
       <img class="det-img" id="det-img" alt="첨부 이미지">
       <div class="det-content" id="det-content"></div>
-      <div class="det-actions">
-        <button class="act" id="btn-like" onclick="toggleLike()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <span id="like-n">0</span>
-        </button>
-        <button class="act" onclick="focusCmt()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <span id="cmt-n">0</span>
-        </button>
-        <button class="act del" id="btn-del" style="display:none" onclick="delPost()">삭제</button>
-      </div>
       <div class="cmts">
         <div class="cmt-ttl" id="cmt-ttl">댓글</div>
         <div id="cmt-list"></div>
       </div>
     </div>
-    <div class="cmt-bar">
+    <div class="det-botbar">
+      <button class="bb-act bb-like" id="btn-like" onclick="toggleLike()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span id="like-n">0</span>
+      </button>
+      <span class="bb-act bb-cmt">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span id="cmt-n">0</span>
+      </span>
+      <span class="bb-sp"></span>
+      <button class="bb-del" id="btn-del" style="display:none" onclick="delPost()">삭제</button>
+      <button class="bb-reply" onclick="focusCmt()">댓글 달기</button>
+    </div>
+    <div class="cmt-bar" id="cmt-bar">
       <textarea class="cmt-inp" id="cmt-inp" placeholder="댓글 달기..."
         rows="1"
         oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,70)+'px'"
+        onblur="if(!this.value.trim())endReply()"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitCmt();}"></textarea>
       <button class="cmt-send" onclick="submitCmt()">↑</button>
     </div>
@@ -591,7 +611,7 @@ async function openDet(id){
     document.getElementById('like-n').textContent=p.like_count;
     document.getElementById('cmt-n').textContent=p.comment_count;
     document.getElementById('cmt-ttl').textContent='댓글 '+p.comment_count;
-    document.getElementById('btn-like').className='act'+(curLiked?' liked':'');
+    document.getElementById('btn-like').className='bb-act bb-like'+(curLiked?' liked':'');
     document.getElementById('btn-del').style.display=p.is_mine?'flex':'none';
     const cl=document.getElementById('cmt-list');
     cl.innerHTML=d.comments.length
@@ -607,8 +627,10 @@ function cmtHtml(c){
     <div class="cmt-text">${esc(c.content)}</div>
   </div>`;
 }
-function closeDet(){ document.getElementById('det-ov').classList.remove('on'); curId=null; }
-function focusCmt(){ document.getElementById('cmt-inp').focus(); }
+function closeDet(){ document.getElementById('det-ov').classList.remove('on','replying'); curId=null; }
+// V1.9.59: 댓글 입력 토글 — 댓글달기 누르면 입력창 등장, 빈 채로 벗어나면 숨김
+function focusCmt(){ document.getElementById('det-ov').classList.add('replying'); setTimeout(()=>document.getElementById('cmt-inp').focus(),60); }
+function endReply(){ document.getElementById('det-ov').classList.remove('replying'); }
 
 // ── 좋아요 ───────────────────────────────────────────────────────
 async function toggleLike(){
@@ -620,7 +642,7 @@ async function toggleLike(){
     }).then(r=>r.json());
     if(!d.success) throw new Error(d.error);
     curLiked=d.liked;
-    document.getElementById('btn-like').className='act'+(curLiked?' liked':'');
+    document.getElementById('btn-like').className='bb-act bb-like'+(curLiked?' liked':'');
     const el=document.getElementById('like-n');
     el.textContent=parseInt(el.textContent)+(curLiked?1:-1);
   } catch(e){toast('오류: '+e.message);}
@@ -648,6 +670,7 @@ async function submitCmt(){
     n.textContent=parseInt(n.textContent||0)+1;
     document.getElementById('cmt-ttl').textContent='댓글 '+n.textContent;
     document.getElementById('det-body').scrollTop=document.getElementById('det-body').scrollHeight;
+    endReply();
   } catch(e){toast('오류: '+e.message);}
 }
 async function delCmt(id){
