@@ -489,11 +489,19 @@
 .spark svg{width:100%;height:36px;display:block;}
 /* Mini bars */
 .mini-bars{display:flex;align-items:flex-end;gap:3px;height:54px;margin-top:8px;}
-.mb{flex:1;background:#E5E7EB;border-radius:3px 3px 0 0;min-height:4px;transition:.2s;}
-/* V1.9.30: 오늘 막대 색도 level에 동기화 */
+/* V1.9.42: B안 — 클릭 가능 칸(mb-col) + 둥근 막대 + 선택 강조/흐림 (토스 스타일) */
+.mb-col{flex:1;min-width:0;display:flex;align-items:flex-end;height:100%;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.mb{width:100%;background:#E5E7EB;border-radius:6px 6px 3px 3px;min-height:6px;transition:transform .18s,opacity .2s,background .2s;}
+.mb-col:active .mb{transform:scaleY(.97);}
+/* V1.9.30: 오늘 막대 색 level 동기화 (선택 없을 때 현재주 강조) */
 .mb.on{background:linear-gradient(180deg,#7BA8DC,#4A87C8);}
 .bento.level-2 .mb.on{background:linear-gradient(180deg,#FFB585,#F08A4D);}
 .bento.level-3 .mb.on{background:linear-gradient(180deg,#FF7A95,#E04E72);}
+/* 선택 모드: 비선택 막대 흐림 + 선택 막대 그라데+그림자 */
+.mini-bars.has-sel .mb-col:not(.sel) .mb{opacity:.4;}
+.mb-col.sel .mb{background:linear-gradient(180deg,#8FB3E0,#4A87C8) !important;opacity:1 !important;box-shadow:0 5px 12px rgba(74,135,200,.3);}
+.bento.level-2 .mb-col.sel .mb{background:linear-gradient(180deg,#FFC89A,#F08A4D) !important;box-shadow:0 5px 12px rgba(240,138,77,.3);}
+.bento.level-3 .mb-col.sel .mb{background:linear-gradient(180deg,#FF9DB0,#E04E72) !important;box-shadow:0 5px 12px rgba(224,78,114,.3);}
 /* V1.9.39: 라벨도 막대와 동일한 flex:1 균등 칸 → 막대 정중앙 정렬 (틀어짐 제거) */
 .mini-bars + .mini-labels{display:flex;gap:3px;font-size:11.5px;color:#64748B;font-weight:700;margin-top:7px;font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
 /* V1.9.38: 현재 기간(이번주/오늘) 강조 — 빨강 제거, level 색으로 통일 */
@@ -502,9 +510,17 @@
 .bento.level-3 .mini-labels span.today{color:#8A1733;}
 /* V1.9.36: 주 보기 2단 라벨 — 월(바뀔 때만, 작게) + N주 */
 .mini-labels span{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;white-space:nowrap;}
-/* V1.9.38: 월 마커 — 빨강 제거, 조용한 회색 축 라벨 (Apple Health 방식) */
+/* V1.9.38: 월 마커 — 지난 달 조용한 회색 */
 .mini-labels .ml-mon{font-size:9.5px;font-weight:700;color:#B0B8C2;font-style:normal;min-height:12px;line-height:1.1;letter-spacing:0;}
+/* V1.9.42: 이번 달(도래한 월) 마커 강조 컬러 (level 색) */
+.mini-labels .ml-mon.cur{color:#103A72;font-weight:900;}
+.bento.level-2 .mini-labels .ml-mon.cur{color:#7A3508;}
+.bento.level-3 .mini-labels .ml-mon.cur{color:#8A1733;}
 .mini-labels .ml-wk{font-style:normal;}
+/* V1.9.42: 클릭으로 선택된 주 라벨 강조 (level 색) */
+.mini-labels span.sel-wk{color:#103A72;font-weight:900;}
+.bento.level-2 .mini-labels span.sel-wk{color:#7A3508;}
+.bento.level-3 .mini-labels span.sel-wk{color:#8A1733;}
 /* Ring small */
 .b-ring{width:72px;height:72px;margin:6px auto 0;position:relative;}
 .b-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
@@ -2340,6 +2356,7 @@ function _computeActivityStats(period) {
   } else if (period === 'week') {
     // V1.9.36: 라벨 분리 — 막대는 "N주" 한 줄, 월은 바뀔 때만 위에 표시
     let prevMonth = null;
+    const curMonth = now.getMonth()+1; // V1.9.42: 이번 달
     for (let w = 7; w >= 0; w--) {
       const end = new Date(now); end.setDate(now.getDate() - w*7);
       const start = new Date(end); start.setDate(end.getDate() - 6);
@@ -2349,9 +2366,10 @@ function _computeActivityStats(period) {
       const wom = Math.ceil(end.getDate()/7);
       const cweek = w===0 ? '이번주' : wom + '주';
       const cmonth = (mon !== prevMonth) ? (mon + '월') : '';
+      const cmonthCur = (cmonth !== '' && mon === curMonth); // V1.9.42: 이번 달 마커 강조
       prevMonth = mon;
       const label = w===0 ? '이번주' : `${mon}월 ${wom}주`; // 통계 카드용 풀 라벨
-      buckets.push({ key: end.toISOString().slice(0,10), label, cweek, cmonth, dist: d, sched: s, isToday: w===0 });
+      buckets.push({ key: end.toISOString().slice(0,10), label, cweek, cmonth, cmonthCur, dist: d, sched: s, isToday: w===0 });
     }
   } else if (period === 'month') {
     for (let m = 5; m >= 0; m--) {
@@ -2448,12 +2466,12 @@ function renderActivityStats(period){
     const y = 36 - (b.dist / maxBucketDist) * 30;
     return `${i===0?'M':'L'}${x.toFixed(1)},${y.toFixed(1)}`;
   }).join(' ');
-  // mini bars
-  const barsHtml = s.buckets.map(b => `<div class="mb ${b.isToday ? 'on' : ''}" style="height:${Math.max(8, (b.dist / maxBucketDist) * 100)}%"></div>`).join('');
-  // V1.9.36: 주 보기는 "월"(바뀔 때만) + "N주" 2단 라벨, 나머지는 단일 라벨
+  // mini bars — V1.9.42: 클릭 가능 칸(mb-col)으로 감싸기
+  const barsHtml = s.buckets.map((b,i) => `<div class="mb-col" onclick="selWk(${i})"><div class="mb ${b.isToday ? 'on' : ''}" style="height:${Math.max(8, (b.dist / maxBucketDist) * 100)}%"></div></div>`).join('');
+  // V1.9.36/42: 주 보기 "월"(이번 달 강조) + "N주" 2단 라벨
   const labelsHtml = s.buckets.map(b => {
     if (period === 'week') {
-      return `<span class="${b.isToday ? 'today' : ''}"><i class="ml-mon">${b.cmonth || ''}</i><i class="ml-wk">${b.cweek}</i></span>`;
+      return `<span class="${b.isToday ? 'today' : ''}"><i class="ml-mon${b.cmonthCur ? ' cur' : ''}">${b.cmonth || ''}</i><i class="ml-wk">${b.cweek}</i></span>`;
     }
     return `<span class="${b.isToday ? 'today' : ''}">${b.label}</span>`;
   }).join('');
@@ -2473,6 +2491,11 @@ function renderActivityStats(period){
   const periodLbl = { day:'7일', week:'8주', month:'6개월', year:'5년' }[period];
   const totalKm = _formatKm(s.totalDist);
   const avgKm = _formatKm(s.avgDist);
+  // V1.9.42: 막대 클릭(selWk)용 데이터 저장 + 선택 리셋
+  window._actBuckets = s.buckets;
+  window._actAvgDist = s.avgDist;
+  window._actChartSubDefault = insight ? '최고 ' + _formatKm(s.maxBucket.dist) + ' km' : '데이터 쌓는 중';
+  window._actSelBar = -1;
   bento.innerHTML = `
     <div class="b-card hero span-6">
       <div class="b-lbl">${periodLbl} 총 이동거리</div>
@@ -2498,7 +2521,7 @@ function renderActivityStats(period){
       <div class="b-lbl">${period==='day'?'일별':period==='week'?'주별':period==='month'?'월별':'연별'} 활동량</div>
       <div class="mini-bars">${barsHtml}</div>
       <div class="mini-labels">${labelsHtml}</div>
-      <div class="b-sub" style="margin-top:8px;">${insight ? '최고 ' + _formatKm(s.maxBucket.dist) + ' km' : '데이터 쌓는 중'}</div>
+      <div class="b-sub" id="act-chart-sub" style="margin-top:8px;">${insight ? '최고 ' + _formatKm(s.maxBucket.dist) + ' km' : '데이터 쌓는 중'}</div>
     </div>
     <div class="b-card span-2">
       <div class="b-lbl" style="text-align:center;">목표</div>
@@ -2513,6 +2536,27 @@ function renderActivityStats(period){
     </div>
     ${insight ? `<div class="b-card insight">${insight}</div>` : ''}
   `;
+}
+// V1.9.42: 막대 클릭 → 그 주 상세로 통계 변동 (다시 누르면 전체)
+function selWk(i){
+  const bars = document.querySelector('#act-bento .mini-bars');
+  const labels = document.querySelector('#act-bento .mini-labels');
+  const sub = document.getElementById('act-chart-sub');
+  const b = (window._actBuckets || [])[i];
+  if (!bars || !sub || !b) return;
+  window._actSelBar = (window._actSelBar === i) ? -1 : i;
+  const sel = window._actSelBar;
+  bars.classList.toggle('has-sel', sel >= 0);
+  [...bars.children].forEach((c,j) => c.classList.toggle('sel', j === sel));
+  if (labels) [...labels.children].forEach((e,j) => e.classList.toggle('sel-wk', j === sel));
+  if (sel >= 0) {
+    const avg = window._actAvgDist || 0;
+    const d = avg > 0 ? Math.round((b.dist / avg - 1) * 100) : 0;
+    const lbl = b.label || b.cweek || '';
+    sub.innerHTML = `<b style="color:inherit">${lbl}</b> · ${_formatKm(b.dist)}km · 일정 ${b.sched || 0}건 · 평균 ${d>=0?'+':''}${d}%`;
+  } else {
+    sub.textContent = window._actChartSubDefault || '';
+  }
 }
 function _recordPosition(lat, lon) {
   const a = _readActivity();
