@@ -82,8 +82,12 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   -webkit-tap-highlight-color:transparent;
   -webkit-appearance:none;appearance:none;box-shadow:none;outline:none;
 }
-.tab.on{color:#0F172A;}
-/* V1.9.64: 탭/필터 입체감 제거 — design.css 전역 focus-visible 박스 무력화 (커뮤니티처럼 평평) */
+.tab.on{color:#191F28;}
+/* V1.9.67: design.css 글로벌 .tab.on 발광 박스 무력화 (1382~1411줄, !important라 동일 !important로 제압)
+   — 커뮤니티가 .twin-tab로 훅을 피한 것과 동일 효과를 .tab에서 강제. 코랄 그라데 배경·코랄 글로우·코랄 점·컨테이너 inset 모두 제거 → 평면 + .tab-ind 밑줄만 */
+.tab-row .tabs-seg .tab.on{background:transparent !important;box-shadow:none !important;}
+.tab-row .tabs-seg .tab.on::after{display:none !important;}
+.tab-row .tabs-seg{box-shadow:none !important;}
 .tab:focus,.tab:focus-visible,.tab:active{outline:none;box-shadow:none;}
 .fbtn:focus,.fbtn:focus-visible{outline:none;box-shadow:none;}
 /* V1.9.62: 슬라이딩 인디케이터 (커뮤니티 twin-ind와 동일 — 밑줄이 미끄러져 이동) */
