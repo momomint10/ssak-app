@@ -571,28 +571,9 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
   </div>
 </div>
 
-<!-- V1.9.60: 스피드다이얼 FAB — 프로필 등록 + 공고 등록 / V1.9.69: 내 활동 이동 추가 -->
-<div class="fab-dial-ov" id="fab-dial-ov" onclick="closeFabDial()"></div>
+<!-- V1.9.71: FAB 단일화 — 공고/프로필 등록은 내활동에 통합. 둥근 '+' 버튼 탭 → 내활동 진입 -->
 <div class="fab-dial" id="fab-dial">
-  <div class="fab-action">
-    <span class="fab-action-lbl">내 활동</span>
-    <button class="fab-mini" onclick="closeFabDial(); switchTab('my');" aria-label="내 활동">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    </button>
-  </div>
-  <div class="fab-action">
-    <span class="fab-action-lbl">공고 등록</span>
-    <button class="fab-mini" onclick="closeFabDial(); openJobForm();" aria-label="공고 등록">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
-    </button>
-  </div>
-  <div class="fab-action">
-    <span class="fab-action-lbl">프로필 등록</span>
-    <button class="fab-mini" onclick="closeFabDial(); openProfileForm(false);" aria-label="프로필 등록">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
-    </button>
-  </div>
-  <button class="fab-main" onclick="toggleFabDial()" aria-label="빠른 메뉴">
+  <button class="fab-main" onclick="switchTab('my')" aria-label="내 활동">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   </button>
 </div>
