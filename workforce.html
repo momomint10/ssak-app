@@ -96,24 +96,12 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* V1.9.60: 헤더 사장님 인사 — 커뮤니티와 통일 (30px/900 + 17px/800) */
 .ds-page-header .wf-greet-ttl{font-size:30px;font-weight:900;letter-spacing:-.035em;line-height:1.18;color:#191F28;}
 .ds-page-header .wf-greet-sub{font-size:17px;font-weight:800;color:#1B2A3F;margin-top:5px;}
-/* V1.9.60: 스피드다이얼 FAB (커뮤니티와 동일) — 프로필 등록 + 공고 등록 */
-.fab-dial-ov{position:fixed;inset:0;background:rgba(15,23,42,0);z-index:105;pointer-events:none;transition:background .2s;}
-.fab-dial-ov.on{background:rgba(15,23,42,.18);pointer-events:auto;}
-.fab-dial{position:fixed;right:18px;bottom:86px;z-index:110;display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
-.fab-main{width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);box-shadow:0 6px 14px rgba(15,15,18,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:transform .28s cubic-bezier(.34,1.4,.64,1);}
+/* V1.9.71: FAB 단일화 — 둥근 '+' 버튼(.fab-main) 탭 → 내활동 이동. 스피드다이얼 CSS 정리 제거 */
+.fab-dial{position:fixed;right:18px;bottom:86px;z-index:110;display:flex;flex-direction:column;align-items:flex-end;}
+.fab-main{width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);box-shadow:0 6px 14px rgba(15,15,18,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:transform .15s;}
 .fab-main:active{transform:scale(.92);}
 .fab-main svg{width:24px;height:24px;}
-.fab-dial.open .fab-main{transform:rotate(135deg);}
-.fab-action{display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(14px) scale(.85);pointer-events:none;transition:opacity .2s ease,transform .2s cubic-bezier(.34,1.4,.64,1);}
-.fab-dial.open .fab-action{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
-.fab-dial.open .fab-action:nth-child(1){transition-delay:.10s;}
-.fab-dial.open .fab-action:nth-child(2){transition-delay:.06s;}
-.fab-dial.open .fab-action:nth-child(3){transition-delay:.02s;}
-.fab-action-lbl{background:#fff;color:#1F2937;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:9px;box-shadow:0 2px 8px rgba(15,23,42,.14);white-space:nowrap;}
-.fab-mini{width:44px;height:44px;border-radius:50%;background:#FF6B85;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 10px rgba(255,107,133,.3);padding:0;font-family:inherit;flex-shrink:0;}
-.fab-mini:active{transform:scale(.92);}
-.fab-mini svg{width:20px;height:20px;}
-@media (prefers-reduced-motion: reduce){.fab-main,.fab-action,.fab-dial-ov{transition:none;}}
+@media (prefers-reduced-motion: reduce){.fab-main{transition:none;}}
 /* ── 필터 ── (V1.9.63: 커뮤니티 필터 칩과 동일 — 흰 알약 + 다크 활성, 심플) */
 .filter-bar{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;scrollbar-width:none;}
 .filter-bar::-webkit-scrollbar{display:none;}
@@ -630,17 +618,7 @@ function updateHdBtn(){
 }
 
 // ── 탭 전환 ──────────────────────────────────────────────────
-// V1.9.60: 스피드다이얼 FAB (커뮤니티와 동일)
-function toggleFabDial(){
-  const d=document.getElementById('fab-dial');
-  const open=!d.classList.contains('open');
-  d.classList.toggle('open', open);
-  document.getElementById('fab-dial-ov')?.classList.toggle('on', open);
-}
-function closeFabDial(){
-  document.getElementById('fab-dial')?.classList.remove('open');
-  document.getElementById('fab-dial-ov')?.classList.remove('on');
-}
+// V1.9.71: 스피드다이얼 폐기 — FAB는 둥근 '+' 단일 버튼(switchTab('my')). toggle/closeFabDial 제거
 // V1.9.60: 탭별 사장님 인사 문구
 const WF_GREET={find:'함께할 동료를 찾아볼까요?',job:'필요한 인력을 모집해요',my:'내 프로필과 지원 현황이에요'};
 function switchTab(tab){
@@ -651,10 +629,9 @@ function switchTab(tab){
     const sec=document.getElementById('sec-'+t); if(sec) sec.style.display=t===tab?'':'none';
   });
   const ge=document.getElementById('wf-greet'); if(ge) ge.textContent=WF_GREET[tab]||WF_GREET.find;
-  // V1.9.68: 내활동 탭에선 FAB 숨김 — 프로필/공고 등록이 모두 인라인에 있어 중복 제거
+  // V1.9.68: 내활동 탭에선 FAB('내 활동' 진입 버튼) 숨김
   const fab=document.getElementById('fab-dial');
   if(fab) fab.style.display = tab==='my' ? 'none' : '';
-  if(tab==='my') closeFabDial();
   _moveTabInd();
   updateHdBtn();
   if(tab==='my') loadMyProfile();
