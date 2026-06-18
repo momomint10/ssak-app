@@ -474,13 +474,18 @@ textarea.form-input{resize:none;}
 
 /* 4) 캘린더 헤더 (월 라벨 + 우측 toggle) */
 .cal-header {
-  /* V1.9.81: 인사말·hero 스크롤 아웃 후 캘린더 컨트롤바(월이동·주/월/년) 상단 고정 — 다른 탭의 탭바 고정과 동일감 */
+  /* V1.9.81~82: 컨트롤바 + 예약현황 요약을 한 묶음으로 스크롤 고정 (hero카드 기능 이동) */
   margin:0;
-  padding:18px 22px 12px;
+  padding:16px 22px 12px;
   position:sticky; top:env(safe-area-inset-top); z-index:20;
   background:var(--gray-50);
-  display:flex; align-items:center; justify-content:space-between;
 }
+.cal-header-bar { display:flex; align-items:center; justify-content:space-between; }
+.cal-summary { margin-top:9px; font-size:13px; font-weight:700; color:#475569; line-height:1.4; }
+.cal-summary #hero-title { color:#1B2A3F; }
+.cal-summary b { color:#191F28; font-weight:800; }
+.cal-sum-sub { display:block; font-size:11.5px; font-weight:600; color:#8B95A1; margin-top:2px; }
+.cal-sum-sub b { color:#475569; font-weight:700; }
 .cal-month-label {
   font-size:18px; font-weight:700; color:#1B2A3F; letter-spacing:-.02em;
   display:flex; align-items:center; gap:4px;
@@ -678,12 +683,7 @@ textarea.form-input{resize:none;}
   </div>
   <div class="pending-sheet" id="pending-sheet"><div id="pending-list"></div></div>
 
-  <!-- V1.9.15 Pure White Hero 카드 -->
-  <div class="hero-card" id="hero-card">
-    <div class="hero-label">📅 <span id="hero-period-label">이번 달</span><span class="hero-weather" id="hero-weather-chip" style="display:none"></span></div>
-    <div class="hero-title" id="hero-title">데이터 로딩 중...</div>
-    <div class="hero-sub" id="hero-sub">잠시만 기다려주세요</div>
-  </div>
+  <!-- V1.9.82: 날씨 hero카드 제거 → 예약 현황 요약을 캘린더 고정헤더(.cal-summary)로 이동 -->
 
   <!-- V1.9.15 라이브 카드 (4가지 상태 자동) -->
   <div class="live-card" id="live-card">
@@ -704,16 +704,20 @@ textarea.form-input{resize:none;}
 <div id="view-month">
   <!-- V1.9.15 캘린더 헤더 — 월 라벨 좌측 + 주/월/년 토글 우측 inline -->
   <div class="cal-header">
-    <div class="cal-month-label">
-      <button class="chev" onclick="changeMonth(-1)" aria-label="이전 달">‹</button>
-      <span class="month-label" id="month-label"></span>
-      <button class="chev" onclick="changeMonth(1)" aria-label="다음 달">›</button>
+    <div class="cal-header-bar">
+      <div class="cal-month-label">
+        <button class="chev" onclick="changeMonth(-1)" aria-label="이전 달">‹</button>
+        <span class="month-label" id="month-label"></span>
+        <button class="chev" onclick="changeMonth(1)" aria-label="다음 달">›</button>
+      </div>
+      <div class="period-pill" id="period-seg">
+        <button id="pbtn-week" onclick="setPeriod('week')">주</button>
+        <button class="on" id="pbtn-month" onclick="setPeriod('month')">월</button>
+        <button id="pbtn-year" onclick="setPeriod('year')">년</button>
+      </div>
     </div>
-    <div class="period-pill" id="period-seg">
-      <button id="pbtn-week" onclick="setPeriod('week')">주</button>
-      <button class="on" id="pbtn-month" onclick="setPeriod('month')">월</button>
-      <button id="pbtn-year" onclick="setPeriod('year')">년</button>
-    </div>
+    <!-- V1.9.82: hero카드 요약 이동 — 기간 예약 현황 (스크롤 시 컨트롤바와 함께 고정) -->
+    <div class="cal-summary">📋 <span id="hero-period-label">이번 달</span> · <span id="hero-title">데이터 로딩 중…</span><span class="cal-sum-sub" id="hero-sub"></span></div>
   </div>
 
   <!-- V1.9.15 큰 캘린더 카드 -->
