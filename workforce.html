@@ -72,7 +72,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .btn-hd:hover{background:rgba(255,56,92,0.06);border-color:rgba(255,56,92,0.55);}
 .btn-hd:active{background:rgba(255,56,92,0.10);}
 /* V1.9.32: Twin Tabs 패턴 (커뮤니티/활동량 시트와 통일) — 그라데 제거, Pure White */
-.tab-row{padding:0 16px;background:#fff;border-bottom:1px solid var(--g100,#F3F4F6);}
+/* V1.9.74: 인사말은 스크롤로 사라지고 탭바만 상단 고정 (토스/당근 패턴) */
+.ds-page-header{position:static;}
+.tab-row{padding:0 16px;background:#fff;border-bottom:1px solid var(--g100,#F3F4F6);position:sticky;top:0;z-index:49;}
 .tabs-seg{display:flex;gap:0;background:transparent;position:relative;}
 .tab{
   flex:1;padding:13px 0 15px;text-align:center;font-size:15px;font-weight:700;
@@ -407,13 +409,14 @@ textarea.f-inp{resize:none;min-height:72px;line-height:1.6;}
         <p class="ds-page-h-sub wf-greet-sub" id="wf-greet">함께할 동료를 찾아볼까요?</p>
       </div>
     </div>
-    <div class="tab-row">
-      <div class="tabs-seg">
-        <!-- V1.9.70: '내 활동' 탭 제거 — FAB 단축키로 이동(V1.9.69). 동료찾기/모집 2탭만 -->
-        <button class="tab on" id="tab-find" onclick="switchTab('find')">동료 찾기</button>
-        <button class="tab" id="tab-job"  onclick="switchTab('job')">동료 모집</button>
-        <span class="tab-ind" id="tab-ind"></span>
-      </div>
+  </div>
+  <!-- V1.9.74: 탭바를 헤더 밖으로 분리 → 인사말 스크롤 아웃 + 탭바 sticky 고정 -->
+  <div class="tab-row">
+    <div class="tabs-seg">
+      <!-- V1.9.70: '내 활동' 탭 제거 — FAB 단축키로 이동(V1.9.69). 동료찾기/모집 2탭만 -->
+      <button class="tab on" id="tab-find" onclick="switchTab('find')">동료 찾기</button>
+      <button class="tab" id="tab-job"  onclick="switchTab('job')">동료 모집</button>
+      <span class="tab-ind" id="tab-ind"></span>
     </div>
   </div>
 

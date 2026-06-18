@@ -63,8 +63,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   padding:14px 16px 12px;
 }
 /* V1.9.57: 정렬바 평소 숨김 → 인사가 스크롤로 사라지면 슬라이드로 등장, 상단 복귀 시 숨김 */
-/* V1.9.73: 정렬탭을 헤더에 정적 배치 — 동료 탭처럼 항상 표시 (스크롤 등장 폐기) */
-.sort-bar{background:#fff;padding:0 16px;}
+/* V1.9.73~74: 정렬탭 헤더 배치 + 탭바만 sticky 고정 (인사말은 스크롤로 사라짐) */
+.sort-bar{background:#fff;padding:0 16px;position:sticky;top:0;z-index:49;}
 .sort-bar .twin-tabs{margin-top:0;}
 /* V1.9.34: 코랄 하단 라인 제거 — 회색 보더 1px로 전 페이지 통일 */
 .header-row{display:flex;align-items:center;margin-bottom:10px;}
@@ -273,8 +273,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <body>
 <div class="shell">
 
-  <div class="header">
-    <!-- V1.9.47: 검색 제거 — 헤더는 제목만 (필터는 좌하단 FAB) -->
+  <div class="header no-design-hook">
+    <!-- V1.9.74: no-design-hook으로 인사말 sticky 해제 → 스크롤로 사라짐 (탭바 .sort-bar만 고정) -->
     <div class="header-row">
       <div><h1 class="ds-page-title header-title">사장님,</h1><p class="ds-page-subtitle header-sub" id="comm-greet" style="transition:opacity .18s ease;">오늘은 어떤 이야기 나눌까요?</p></div>
     </div>
