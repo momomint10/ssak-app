@@ -694,15 +694,12 @@ async function loadWorkers(){
     // 마켓플레이스 활기 stats bar + AX 하이브리드 카드 (260528)
     const total = d.data.length;
     const regionLbl = curRegion === '전체' ? '전체' : curRegion;
-    const avgExp = Math.round(d.data.reduce((s,w)=>s+(w.experience||0),0)/Math.max(1,total));
     const statsBar = `
       <div class="stats-bar">
         <span class="stat"><b>${total}</b>명 활동중</span>
         <span class="stat-div"></span>
         <span class="stat"><b>${esc(regionLbl)}</b> 지역</span>
-        <span class="stat-div"></span>
-        <span class="stat"><b>평균 ${avgExp}년</b></span>
-      </div>`;
+      </div>`;  /* V1.9.86: '평균 N년' 제거 (불필요) */
 
     // 닉네임 해시 → 아바타 컬러 (이름별 일관)
     const avColors = ['', 'av-mint', 'av-amber', 'av-blue', 'av-purple'];
