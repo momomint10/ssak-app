@@ -474,7 +474,11 @@ textarea.form-input{resize:none;}
 
 /* 4) 캘린더 헤더 (월 라벨 + 우측 toggle) */
 .cal-header {
-  margin:18px 22px 12px;
+  /* V1.9.81: 인사말·hero 스크롤 아웃 후 캘린더 컨트롤바(월이동·주/월/년) 상단 고정 — 다른 탭의 탭바 고정과 동일감 */
+  margin:0;
+  padding:18px 22px 12px;
+  position:sticky; top:env(safe-area-inset-top); z-index:20;
+  background:var(--gray-50);
   display:flex; align-items:center; justify-content:space-between;
 }
 .cal-month-label {
