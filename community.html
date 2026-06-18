@@ -66,6 +66,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* V1.9.73~74: 정렬탭 헤더 배치 + 탭바만 sticky 고정 (인사말은 스크롤로 사라짐) */
 .sort-bar{background:#fff;padding:0 16px;position:sticky;top:0;z-index:49;}
 .sort-bar .twin-tabs{margin-top:0;}
+/* V1.9.84: 게시글이 고정바 밑으로 통과할 때 프로스트 글래스 — 탭바 자체는 그대로, 아래 레이어만 추가(그라데: 바에 닿을수록 진하게→아래로 또렷) */
+.bar-frost{position:absolute;left:0;right:0;top:100%;height:46px;pointer-events:none;z-index:1;-webkit-backdrop-filter:blur(8px) saturate(1.08);backdrop-filter:blur(8px) saturate(1.08);background:rgba(255,255,255,.10);-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 36%,transparent 100%);mask-image:linear-gradient(180deg,#000 0%,#000 36%,transparent 100%);}
+@media (prefers-reduced-motion: reduce){.bar-frost{display:none;}}
 /* V1.9.34: 코랄 하단 라인 제거 — 회색 보더 1px로 전 페이지 통일 */
 .header-row{display:flex;align-items:center;margin-bottom:0;}  /* V1.9.75: 동료 ds-page-header와 높이 통일 (mb 10→0) */
 /* V1.9.52: 검색+글쓰기 스피드다이얼 FAB */
@@ -294,6 +297,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <span class="ticker-txt" id="ticker-txt"></span>
       <span class="ticker-cnt" id="ticker-cnt"></span>
     </div>
+    <div class="bar-frost" aria-hidden="true"></div>
   </div>
 
   <!-- V1.9.52: 검색바 (FAB 검색 버튼으로 토글) -->
