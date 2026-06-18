@@ -38,7 +38,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
 <link rel="preload" as="script" href="utils.js?v=20260608-15">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>싹싹 — 스케줄</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
@@ -357,7 +357,7 @@ textarea.form-input{resize:none;}
 
 /* ═══ V1.9.15 mockup 풀 적용 — 사장님 결정 ═══ */
 /* 1) 인사말 헤더 — 큰 톤 */
-.sched-greet { padding:14px 16px 12px; background:#fff; }  /* V1.9.75: ds-page-header 표준 높이 통일 (62/28/18→14/16/12) */
+.sched-greet { padding:calc(14px + env(safe-area-inset-top)) 16px 12px; background:#fff; }  /* V1.9.75~76: 표준 높이 통일 + standalone 노치 안전 */
 .sched-greet .greet-inner { display:flex; align-items:flex-end; justify-content:space-between; gap:14px; }
 .sched-greet .greet-name { font-size:30px; font-weight:900; letter-spacing:-.035em; line-height:1.18; color:#191F28; }
 .sched-greet .greet-name small { display:block; font-size:17px; color:#1B2A3F; font-weight:800; margin-top:5px; }

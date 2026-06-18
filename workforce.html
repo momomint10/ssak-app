@@ -38,7 +38,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
 <link rel="preload" as="script" href="utils.js?v=20260608-15">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>싹싹 — 동료</title>
 <meta name="theme-color" content="#FF385C">
 <link rel="stylesheet" href="design.css?v=20260608-15">
@@ -73,7 +73,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .btn-hd:active{background:rgba(255,56,92,0.10);}
 /* V1.9.32: Twin Tabs 패턴 (커뮤니티/활동량 시트와 통일) — 그라데 제거, Pure White */
 /* V1.9.74: 인사말은 스크롤로 사라지고 탭바만 상단 고정 (토스/당근 패턴) */
-.ds-page-header{position:static;}
+.ds-page-header{position:static;padding-top:calc(14px + env(safe-area-inset-top));}  /* V1.9.76: standalone 노치 안전 */
 .tab-row{padding:0 16px;background:#fff;border-bottom:1px solid var(--g100,#F3F4F6);position:sticky;top:0;z-index:49;}
 .tabs-seg{display:flex;gap:0;background:transparent;position:relative;}
 .tab{
