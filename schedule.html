@@ -150,6 +150,23 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 @media (prefers-reduced-motion: reduce) {
   .ds-fab-glass { transition: none; }
 }
+/* V1.9.78: 스피드다이얼 FAB (검색+일정추가) — 커뮤니티 패턴 이식 */
+.fab-dial-ov{position:fixed;inset:0;background:rgba(15,23,42,0);z-index:105;pointer-events:none;transition:background .2s;}
+.fab-dial-ov.on{background:rgba(15,23,42,.18);pointer-events:auto;}
+.fab-dial{position:fixed;right:18px;bottom:86px;z-index:110;display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
+.fab-main{width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);box-shadow:0 6px 14px rgba(15,15,18,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:transform .28s cubic-bezier(.34,1.4,.64,1);}
+.fab-main:active{transform:scale(.92);}
+.fab-main svg{width:24px;height:24px;}
+.fab-dial.open .fab-main{transform:rotate(135deg);}
+.fab-action{display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(14px) scale(.85);pointer-events:none;transition:opacity .2s ease,transform .2s cubic-bezier(.34,1.4,.64,1);}
+.fab-dial.open .fab-action{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+.fab-dial.open .fab-action:nth-child(1){transition-delay:.06s;}
+.fab-dial.open .fab-action:nth-child(2){transition-delay:.02s;}
+.fab-action-lbl{background:#fff;color:var(--gray-800,#1F2937);font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:9px;box-shadow:0 2px 8px rgba(15,23,42,.14);white-space:nowrap;}
+.fab-mini{width:44px;height:44px;border-radius:50%;background:#FF6B85;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 10px rgba(255,107,133,.3);padding:0;font-family:inherit;flex-shrink:0;}
+.fab-mini:active{transform:scale(.92);}
+.fab-mini svg{width:20px;height:20px;}
+@media (prefers-reduced-motion: reduce){.fab-main,.fab-action,.fab-dial-ov{transition:none;}}
 
 /* 콘텐츠 */
 .content{padding:16px 20px;}
@@ -641,8 +658,8 @@ textarea.form-input{resize:none;}
   <!-- V1.9.15 인사말 헤더 (큰 톤) -->
   <div class="sched-greet">
     <div class="greet-inner">
+      <!-- V1.9.78: 헤더 🔍 제거 → 검색은 FAB 스피드다이얼로 이동 (다른 탭과 통일) -->
       <div class="greet-name">사장님,<br><small id="greet-msg">이번 달 일정을 한눈에 확인하세요</small></div>
-      <button class="icon-btn" onclick="openSearch()" aria-label="검색">🔍</button>
     </div>
   </div>
   <!-- V1.9.16: 자동 리마인더 설정은 MY 탭으로 이동 (사장님 요청) -->
@@ -730,10 +747,25 @@ textarea.form-input{resize:none;}
 </div>
 
 <!-- 하단 네비게이션 -->
-<!-- V1.9.13 Glassmorphism FAB — 일정 추가 -->
-<button class="ds-fab-glass" onclick="openAddModal()" aria-label="일정 추가">
-  <svg viewBox="0 0 24 24"><path d="M12 5V19M5 12H19"/></svg>
-</button>
+<!-- V1.9.78: 스피드다이얼 FAB — 검색 + 일정 추가 (헤더 🔍 이동, 커뮤니티 패턴) -->
+<div class="fab-dial-ov" id="fab-dial-ov" onclick="closeFabDial()"></div>
+<div class="fab-dial" id="fab-dial">
+  <div class="fab-action">
+    <span class="fab-action-lbl">검색</span>
+    <button class="fab-mini" onclick="closeFabDial(); openSearch();" aria-label="검색">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+  </div>
+  <div class="fab-action">
+    <span class="fab-action-lbl">일정 추가</span>
+    <button class="fab-mini" onclick="closeFabDial(); openAddModal();" aria-label="일정 추가">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><line x1="3" y1="9.5" x2="21" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="6"/><line x1="16" y1="2.5" x2="16" y2="6"/><line x1="12" y1="13" x2="12" y2="18"/><line x1="9.5" y1="15.5" x2="14.5" y2="15.5"/></svg>
+    </button>
+  </div>
+  <button class="fab-main" onclick="toggleFabDial()" aria-label="빠른 메뉴">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+</div>
 
 <nav class="ds-nav">
   <button class="ds-nav-item" onclick="location.href='index.html'"><div class="ds-nav-ico"><svg viewBox="0 0 24 24"><path d="M3 12L12 3L21 12V20A1 1 0 0 1 20 21H4A1 1 0 0 1 3 20Z"/><path d="M9 21V12H15V21"/></svg></div><div>홈</div></button>
@@ -1488,6 +1520,17 @@ function renderList() {
   if (viewMode === 'agenda' && typeof renderAgenda === 'function') renderAgenda();
 }
 
+// V1.9.78: 스피드다이얼 FAB 토글 (검색+일정추가)
+function toggleFabDial(){
+  const d=document.getElementById('fab-dial');
+  const open=!d.classList.contains('open');
+  d.classList.toggle('open', open);
+  document.getElementById('fab-dial-ov')?.classList.toggle('on', open);
+}
+function closeFabDial(){
+  document.getElementById('fab-dial')?.classList.remove('open');
+  document.getElementById('fab-dial-ov')?.classList.remove('on');
+}
 // ── 모달 ─────────────────────────────────────
 function openAddModal() {
   editingId = null;
