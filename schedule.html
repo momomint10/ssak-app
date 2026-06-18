@@ -668,7 +668,7 @@ textarea.form-input{resize:none;}
   <div class="sched-greet">
     <div class="greet-inner">
       <!-- V1.9.78: 헤더 🔍 제거 → 검색은 FAB 스피드다이얼로 이동 (다른 탭과 통일) -->
-      <div class="greet-name">사장님,<br><small id="greet-msg">이번 달 일정을 한눈에 확인하세요</small></div>
+      <div class="greet-name">사장님,<br><small id="greet-msg">오늘도 빛나는 하루 되세요</small></div>
     </div>
   </div>
   <!-- V1.9.16: 자동 리마인더 설정은 MY 탭으로 이동 (사장님 요청) -->
@@ -717,7 +717,7 @@ textarea.form-input{resize:none;}
       </div>
     </div>
     <!-- V1.9.82: hero카드 요약 이동 — 기간 예약 현황 (스크롤 시 컨트롤바와 함께 고정) -->
-    <div class="cal-summary">📋 <span id="hero-period-label">이번 달</span> · <span id="hero-title">데이터 로딩 중…</span><span class="cal-sum-sub" id="hero-sub"></span></div>
+    <div class="cal-summary">📋 <span id="hero-period-label">이번 달</span> <span id="hero-title">예약 0건</span><span class="cal-sum-sub" id="hero-sub" style="display:none"></span></div>
   </div>
 
   <!-- V1.9.15 큰 캘린더 카드 -->
@@ -1428,7 +1428,7 @@ function renderList() {
       ? filterByPeriod(schedules, periodMode || 'month').sort((a,b) =>
           (a.date||'').localeCompare(b.date||'') || (a.time||'').localeCompare(b.time||''))
       : schedules.filter(s => s.date === today).sort((a,b) => (a.time||'').localeCompare(b.time||''));
-    periodLabel = ({ week: '이번 주 일정', month: '이번 달 일정', year: '올해 일정' })[periodMode || 'month'];
+    periodLabel = '예약 목록';  /* V1.9.83: 안A — "이번 달" 중복 제거, 깔끔한 라벨 */
   } else {
     items = schedules.filter(s => s.date === selectedDate)
       .sort((a,b) => (a.time||'').localeCompare(b.time||''));
@@ -2197,7 +2197,7 @@ function updateProgressCard() {
 
   // hero-title: "5건 · 완료 2 · 예정 3"
   if (total === 0) {
-    setHTML('hero-title', '예약을 등록해보세요');
+    setHTML('hero-title', '예약 0건');  /* V1.9.83: CTA→통계 (등록은 FAB 담당) */
     setHTML('hero-sub', `${periodLabels[periodMode]} 일정이 없습니다`);
   } else {
     setHTML('hero-title', `${total}건 · 완료 <b>${done}</b> · 예정 ${next}`);
@@ -2332,17 +2332,9 @@ if (!window._liveCardInterval) {
 
 // V1.9.14: 인사말 — 기간 + 진행 상황
 function updateGreeting() {
-  const items = filterByPeriod(schedules || [], periodMode);
-  const total = items.length;
-  const handled = items.filter(s => ['completed','done','inprogress','in_progress'].includes(s.status)).length;
-  const periodLabels = { week: '이번 주', month: '이번 달', year: '올해' };
+  // V1.9.83: 안A 역할분리 — 인사 서브문구는 따뜻한 말(통계·CTA 아님). 예약 현황은 고정바(.cal-summary)가 담당 → 중복 제거
   const msg = document.getElementById('greet-msg');
-  if (!msg) return;
-  if (total === 0) {
-    msg.textContent = `${periodLabels[periodMode]} 예약을 등록해보세요`;
-  } else {
-    msg.textContent = `${periodLabels[periodMode]} ${total}건 중 ${handled}건 처리 중`;
-  }
+  if (msg) msg.textContent = '오늘도 빛나는 하루 되세요';
 }
 
 function renderAgenda() {
