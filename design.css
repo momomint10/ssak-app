@@ -1513,7 +1513,8 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   filter: none !important;
 }
 /* 활성 아이콘 = 흰 솔리드 채움(평평한 코랄 바 위 또렷). 비활성은 흰 아웃라인 */
-.ds-nav-item.on .ds-nav-ico svg { fill: #FF385C !important; stroke: #FF385C !important; stroke-width: 1.3 !important; }
+/* V1.9.102: 활성 아이콘 = 코랄 라인(아웃라인) — 솔리드 채움 아님. 비활성 그레이 라인과 톤 통일 */
+.ds-nav-item.on .ds-nav-ico svg { fill: none !important; stroke: #FF385C !important; stroke-width: 2.2 !important; }
 /* V1.9.98: 하단 바 높이 -15% — 아이템 패딩·gap·아이콘 축소 */
 .ds-nav-item { padding: 2px 0 !important; gap: 2px !important; }
 .ds-nav-ico, .ds-nav-ico svg { width: 20px !important; height: 20px !important; }
