@@ -1761,10 +1761,10 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   transform: scale(1.05);
   filter: drop-shadow(0 1px 3px rgba(255, 56, 92, 0.12));
 }
-/* 활성 네비 아이콘에 옅은 코랄 pill 배경 — 홈 탭(.ds-nav-item.on)과 동일 효과 통일 */
+/* 옛 코랄 pill 배경 (레거시 .nav-item/.ni 전용). V1.9.95: .ds-nav-item .ds-nav-ico 제거 —
+   이 pill의 background/padding이 V1.9.94 블롭 활성 아이콘을 찌그러뜨려 작게 보이던 진짜 원인 */
 .nav-item.active .nav-icon, .nav-item.on .nav-icon,
-.ni.on .ni-ico, .ni.active .ni-ico,
-.ds-nav-item.on .ds-nav-ico, .ds-nav-item.active .ds-nav-ico {
+.ni.on .ni-ico, .ni.active .ni-ico {
   background: var(--c-pr-l) !important;
   border-radius: 10px;
   padding: 3px 10px;
