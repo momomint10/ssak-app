@@ -1476,6 +1476,41 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 /* 미사용/구 emoji fallback — svg 없으면 emoji 다시 보이게 */
 .ds-nav-ico:not(:has(svg)) { font-size: 22px; }
 
+/* ── V1.9.89: 하단 네비 — 코랄 curved notch (design-shotgun B 채택) ───────
+   코랄 바 + 활성 탭 위치(--nav-ax, utils.js가 설정)에 오목 notch + 흰 원 돌출.
+   되돌리기: git tag pre-curvednav-20260619 */
+.ds-nav {
+  --nav-ax: 50%;
+  background: #FF385C !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+  border-top: none !important;
+  box-shadow: 0 -6px 20px rgba(255, 56, 92, 0.20) !important;
+  overflow: visible;
+  padding-top: 14px;
+}
+.ds-nav.has-notch {
+  background: radial-gradient(circle 25px at var(--nav-ax) -3px, transparent 0 24px, #FF385C 25px) !important;
+}
+.ds-nav-item { color: rgba(255, 255, 255, 0.80) !important; }
+.ds-nav-item.on { color: #fff !important; font-weight: 900 !important; }
+.ds-nav-item.on::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -26px !important; left: 50% !important; right: auto !important;
+  transform: translateX(-50%) !important;
+  width: 50px !important; height: 50px !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  box-shadow: 0 5px 12px rgba(150, 20, 50, 0.30) !important;
+  z-index: 0 !important;
+}
+.ds-nav-item.on .ds-nav-ico {
+  transform: translateY(-26px) !important;
+  filter: none !important;
+  position: relative; z-index: 1;
+}
+.ds-nav-item.on .ds-nav-ico svg { stroke: #FF385C !important; stroke-width: 2 !important; }
+
 /* ── 카드 active feedback (전 페이지 공통) ─────────────────────── */
 .ds-card:active,
 .ds-swipe-wrap:active .ds-swipe-card:not(:has(.swipe-action.open)) {

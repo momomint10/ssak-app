@@ -1152,3 +1152,21 @@ function ssakAlert(message, opts = {}) {
     requestAnimationFrame(() => ov.querySelector('[data-act="1"]').focus());
   });
 }
+
+/* V1.9.89: 하단 네비 curved notch — 활성 탭(.ds-nav-item.on) 위치로 --nav-ax 설정.
+   전 페이지 공용(.ds-nav)이라 탭 위치가 달라도 흰 원/notch가 자동으로 맞춰짐. */
+(function () {
+  function navNotch() {
+    var nav = document.querySelector('.ds-nav');
+    if (!nav) return;
+    var items = nav.querySelectorAll('.ds-nav-item');
+    if (!items.length) return;
+    var idx = -1;
+    for (var i = 0; i < items.length; i++) { if (items[i].classList.contains('on')) { idx = i; break; } }
+    if (idx < 0) { nav.classList.remove('has-notch'); return; }
+    nav.style.setProperty('--nav-ax', (((idx + 0.5) / items.length) * 100).toFixed(2) + '%');
+    nav.classList.add('has-notch');
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', navNotch);
+  else navNotch();
+})();
