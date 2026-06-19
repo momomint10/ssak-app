@@ -103,6 +103,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* V1.9.60: 헤더 사장님 인사 — 커뮤니티와 통일 (30px/900 + 17px/800) */
 .ds-page-header .wf-greet-ttl{font-size:30px;font-weight:900;letter-spacing:-.035em;line-height:1.18;color:#191F28;}
 .ds-page-header .wf-greet-sub{font-size:17px;font-weight:800;color:#1B2A3F;margin-top:5px;}
+.ds-page-header .wf-greet-sub .gnum{color:var(--c-pr,#FF385C);}  /* V1.9.87: 인사말에 결합한 활동중/모집중 카운트 강조 */
 /* V1.9.71: FAB 단일화 — 둥근 '+' 버튼(.fab-main) 탭 → 내활동 이동. 스피드다이얼 CSS 정리 제거 */
 .fab-dial{position:fixed;right:18px;bottom:86px;z-index:110;display:flex;flex-direction:column;align-items:flex-end;}
 .fab-main{width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);box-shadow:0 6px 14px rgba(15,15,18,0.18);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:transform .15s;}
@@ -122,11 +123,6 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .fbtn.on{background:#191F28;border-color:#191F28;color:#fff;}
 /* ── 인력 카드 (260528 AX 하이브리드: A기본 + B아바타 + C메타) ── */
 .list{padding:8px 16px 0;}
-/* Stats bar — 마켓플레이스 활기 시그널 (260528) */
-.stats-bar{display:flex;justify-content:center;gap:24px;padding:6px 0 14px;font-size:12px;font-weight:600;color:var(--g500);}
-.stats-bar .stat{display:inline-flex;align-items:center;gap:5px;}
-.stats-bar .stat b{color:var(--c-pr);font-weight:800;font-size:13px;}
-.stats-bar .stat-div{width:1px;background:var(--g200);}
 
 /* V1.9.65: 커뮤니티 .post-card와 동일 chrome — 테두리·흰광택·코랄글로우 제거, 평면 --sh-sm + 반경 12px */
 .wcard{
@@ -630,6 +626,8 @@ function updateHdBtn(){
 // V1.9.71: 스피드다이얼 폐기 — FAB는 둥근 '+' 단일 버튼(switchTab('my')). toggle/closeFabDial 제거
 // V1.9.60: 탭별 사장님 인사 문구
 const WF_GREET={find:'함께할 동료를 찾아볼까요?',job:'필요한 인력을 모집해요',my:'내 프로필과 지원 현황이에요'};
+let _greetHtml=Object.assign({},WF_GREET);  // V1.9.87: 데이터 로드 시 카운트 포함 문구로 갱신 → 탭 전환에도 유지
+function applyGreet(t){const ge=document.getElementById('wf-greet'); if(ge) ge.innerHTML=_greetHtml[t]||_greetHtml.find;}
 function switchTab(tab){
   curTab=tab;
   ['find','job','my'].forEach(t=>{
@@ -637,7 +635,7 @@ function switchTab(tab){
     document.getElementById('tab-'+t)?.classList.toggle('on',t===tab);
     const sec=document.getElementById('sec-'+t); if(sec) sec.style.display=t===tab?'':'none';
   });
-  const ge=document.getElementById('wf-greet'); if(ge) ge.textContent=WF_GREET[tab]||WF_GREET.find;
+  applyGreet(tab);  // V1.9.87: 인사말 카운트 결합 (_greetHtml 사용)
   // V1.9.68: 내활동 탭에선 FAB('내 활동' 진입 버튼) 숨김
   const fab=document.getElementById('fab-dial');
   if(fab) fab.style.display = tab==='my' ? 'none' : '';
@@ -689,17 +687,14 @@ async function loadWorkers(){
     const d=await fetch(url).then(r=>r.json());
     if(!d.data.length){
       list.innerHTML='<div class="empty"><div class="ds-empty-svg" style="margin:0 auto 14px;">'+(typeof svgIcon==='function'?svgIcon('broom',{size:72,color:'var(--c-pr)'}):'👥')+'</div><div class="empty-ttl">등록된 인력이 없어요</div><div class="empty-sub">내 프로필을 먼저 등록해보세요!</div></div>';
+      _greetHtml.find=WF_GREET.find; if(curTab==='find') applyGreet('find');  // V1.9.87: 빈 상태 → 기본 인사말
       return;
     }
     // 마켓플레이스 활기 stats bar + AX 하이브리드 카드 (260528)
     const total = d.data.length;
-    const regionLbl = curRegion === '전체' ? '전체' : curRegion;
-    const statsBar = `
-      <div class="stats-bar">
-        <span class="stat"><b>${total}</b>명 활동중</span>
-        <span class="stat-div"></span>
-        <span class="stat"><b>${esc(regionLbl)}</b> 지역</span>
-      </div>`;  /* V1.9.86: '평균 N년' 제거 (불필요) */
+    // V1.9.87: 활동중 카운트를 인사말에 결합 (별도 stats-bar 제거 — 평균·지역도 함께 제거, 지역은 위 필터칩과 중복)
+    _greetHtml.find='지금 동료 <span class="gnum">'+total+'명</span>이 활동 중이에요';
+    if(curTab==='find') applyGreet('find');
 
     // 닉네임 해시 → 아바타 컬러 (이름별 일관)
     const avColors = ['', 'av-mint', 'av-amber', 'av-blue', 'av-purple'];
@@ -709,7 +704,7 @@ async function loadWorkers(){
       return avColors[h % avColors.length];
     };
 
-    list.innerHTML = statsBar + d.data.map(w => {
+    list.innerHTML = d.data.map(w => {
       const cls = avColor(w.nickname || '');
       const firstChar = (w.nickname || '?').trim().charAt(0);
       const avatar = w.photo_url
@@ -731,7 +726,7 @@ async function loadWorkers(){
           <div class="wcard-body">
             <div class="wcard-head">
               <span class="wcard-name">${esc(w.nickname)}</span>
-              <span class="wcard-rate">${fmtRate(w.daily_rate)}<span class="wcard-rate-unit">/일</span></span>
+              <span class="wcard-rate">${w.daily_rate?Number(w.daily_rate).toLocaleString()+'원':'협의'}<span class="wcard-rate-unit">${w.daily_rate?'/일':''}</span></span>
             </div>
             <div class="wcard-meta">📍 ${(w.regions||[]).slice(0,2).join(', ')} · <span class="act-dot"></span>활동중</div>
             <div class="skill-tags">${skillTags}</div>
@@ -767,22 +762,17 @@ async function loadJobs(){
     const d=await fetch(url).then(r=>r.json());
     if(!d.data||!d.data.length){
       list.innerHTML='<div class="empty"><div class="ds-empty-svg" style="margin:0 auto 14px;">'+(typeof svgIcon==='function'?svgIcon('cart',{size:72,color:'var(--c-pr)'}):'💼')+'</div><div class="empty-ttl">등록된 채용공고가 없어요</div><div class="empty-sub">첫 공고를 등록해보세요!</div></div>';
+      _greetHtml.job=WF_GREET.job; if(curTab==='job') applyGreet('job');  // V1.9.87: 빈 상태 → 기본 인사말
       return;
     }
     // 내 프로필 기준 자동매칭 표시
     const myAnon=getAnon();
-    // Stats bar — 모집중 건수 + 매칭 가능 건수
+    // V1.9.87: 모집중 카운트를 인사말에 결합 (별도 stats-bar 제거 — 매칭은 카드 ✨뱃지로 유지)
     const openCount = d.data.length;
-    const matchCount = myProfile ? d.data.filter(j => (j.region==='전체'||(myProfile.regions||[]).includes(j.region)) && (!j.skills||!j.skills.length||(j.skills||[]).some(sk=>(myProfile.skills||[]).includes(sk)))).length : 0;
-    const statsBarJ = `
-      <div class="stats-bar">
-        <span class="stat"><b>${openCount}</b>건 모집중</span>
-        ${myProfile ? `<span class="stat-div"></span><span class="stat"><b>${matchCount}</b>건 매칭</span>` : ''}
-        <span class="stat-div"></span>
-        <span class="stat"><b>${esc(curJobRegion==='전체'?'전체':curJobRegion)}</b> 지역</span>
-      </div>`;
+    _greetHtml.job='지금 <span class="gnum">'+openCount+'건</span>의 모집이 열려 있어요';
+    if(curTab==='job') applyGreet('job');
 
-    list.innerHTML = statsBarJ + d.data.map(j=>{
+    list.innerHTML = d.data.map(j=>{
       const isMine=j.anon_id===myAnon;
       const isMatch=myProfile&&
         (j.region==='전체'||(myProfile.regions||[]).includes(j.region))&&
