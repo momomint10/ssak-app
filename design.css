@@ -1484,35 +1484,59 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   background: #FF385C !important;
   backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
   border-top: none !important;
+  border-radius: 24px 24px 0 0;  /* V1.9.97: 평평한 코랄 바 상단 모서리 부드러운 곡선 */
   box-shadow: 0 -5px 16px rgba(255, 56, 92, 0.14) !important;
   overflow: visible;
-  padding: 7px 0 max(10px, env(safe-area-inset-bottom)) !important;
+  padding: 4px 0 max(7px, env(safe-area-inset-bottom)) !important;  /* V1.9.98: 바 높이 -15% (65→55px) */
 }
-/* V1.9.94: design-shotgun A 완성형 — 흰 블롭(curved-nav) 유지 + 활성 아이콘 코랄 솔리드 채움 + 크게(완성도↑) */
+/* V1.9.96: 블롭/노치(curved-nav) 제거 → 평평한 코랄 바. 활성 = 흰 솔리드 아이콘 + 볼드 라벨 */
 .ds-nav.has-notch {
-  background: radial-gradient(circle 26px at var(--nav-ax) 0, transparent 0 25px, #FF385C 26px) !important;
+  background: #FF385C !important;
 }
-.ds-nav.has-notch::after {
-  content: '';
-  position: absolute;
-  left: var(--nav-ax); top: 0;
-  transform: translate(-50%, -50%);
-  width: 50px; height: 50px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 5px 12px rgba(150, 20, 50, 0.24);
-  z-index: 1; pointer-events: none;
+.ds-nav.has-notch::after { display: none !important; }
+.ds-nav-item { color: rgba(255, 255, 255, 0.78) !important; }
+.ds-nav-item.on { color: #fff !important; font-weight: 800 !important; }
+/* V1.9.99: 활성 섹터 아래 라인 (흰색) — '지금 여기' 표시 */
+.ds-nav-item.on::before {
+  content: '' !important; display: block !important;
+  position: absolute !important;
+  top: auto !important; bottom: -2px !important;
+  left: 50% !important; right: auto !important;
+  transform: translateX(-50%) !important;
+  width: 18px !important; height: 3px !important;
+  background: #fff !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
 }
-.ds-nav-item { color: rgba(255, 255, 255, 0.82) !important; }
-.ds-nav-item.on { color: #fff !important; font-weight: 800 !important; z-index: 2; }
-.ds-nav-item.on::before { display: none !important; }
 .ds-nav-item.on .ds-nav-ico {
-  transform: translateY(-6px) scale(1.45) !important;   /* 블롭 정중앙 + 크게(완성도) */
+  transform: scale(1.1) !important;
   filter: none !important;
-  position: relative; z-index: 2;
 }
-/* 활성 아이콘 = 솔리드 코랄 채움(흰 블롭 위, 또렷). 비활성은 흰 아웃라인 */
-.ds-nav-item.on .ds-nav-ico svg { fill: #FF385C !important; stroke: #FF385C !important; stroke-width: 1.3 !important; }
+/* 활성 아이콘 = 흰 솔리드 채움(평평한 코랄 바 위 또렷). 비활성은 흰 아웃라인 */
+.ds-nav-item.on .ds-nav-ico svg { fill: #fff !important; stroke: #fff !important; stroke-width: 1.3 !important; }
+/* V1.9.98: 하단 바 높이 -15% — 아이템 패딩·gap·아이콘 축소 */
+.ds-nav-item { padding: 2px 0 !important; gap: 2px !important; }
+.ds-nav-ico, .ds-nav-ico svg { width: 20px !important; height: 20px !important; }
+/* V1.9.99: 탭 누름 피드백 A(눌림) + B(흰 원 번짐). utils.js가 pointerdown에 .ds-pressing/.ds-ring 주입 */
+.ds-nav-item { transition: color .15s, transform .12s ease !important; }
+.ds-nav-item.ds-pressing { transform: scale(0.9) !important; }
+.ds-nav-ico { position: relative; }
+.ds-nav-ico svg { position: relative; z-index: 1; }
+.ds-nav-ico .ds-ring {
+  position: absolute; left: 50%; top: 50%;
+  width: 42px; height: 42px; margin: -21px 0 0 -21px;
+  border-radius: 50%; background: rgba(255, 255, 255, 0.85);
+  transform: scale(.3); opacity: 0; z-index: 0; pointer-events: none;
+  animation: ds-nav-ring .44s ease-out forwards;
+}
+@keyframes ds-nav-ring {
+  0% { opacity: .55; transform: scale(.3); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-nav-ico .ds-ring { animation-duration: .01ms; }
+  .ds-nav-item.ds-pressing { transform: none !important; }
+}
 
 /* ── 카드 active feedback (전 페이지 공통) ─────────────────────── */
 .ds-card:active,
@@ -2170,9 +2194,7 @@ body:has(.bg-photo) input[type="text"] {
   background: var(--c-pr, #FF385C); color: #fff;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   border: none; cursor: pointer; z-index: 50;
-  box-shadow:
-    0 10px 30px rgba(255,56,92,0.4),
-    0 4px 12px rgba(255,56,92,0.25);
+  box-shadow: 0 6px 16px rgba(20, 30, 50, 0.20);  /* V1.9.98: 코랄 발광 제거 → 중립 그림자 */
   transition: transform .12s;
   font-family: inherit;
 }

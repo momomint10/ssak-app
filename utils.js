@@ -1170,3 +1170,31 @@ function ssakAlert(message, opts = {}) {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', navNotch);
   else navNotch();
 })();
+
+/* V1.9.99: 하단 네비 탭 누름 피드백 A(눌림=.ds-pressing) + B(흰 원 번짐=.ds-ring).
+   document 위임이라 전 페이지 .ds-nav-item에 자동 적용. */
+(function () {
+  function onPress(e) {
+    var item = e.target.closest ? e.target.closest('.ds-nav-item') : null;
+    if (!item) return;
+    item.classList.add('ds-pressing');
+    var ico = item.querySelector('.ds-nav-ico');
+    if (ico) {
+      var old = ico.querySelector('.ds-ring');
+      if (old) old.parentNode.removeChild(old);
+      var ring = document.createElement('span');
+      ring.className = 'ds-ring';
+      ico.insertBefore(ring, ico.firstChild);
+      ring.addEventListener('animationend', function () {
+        if (ring.parentNode) ring.parentNode.removeChild(ring);
+      });
+    }
+  }
+  function onRelease() {
+    var all = document.querySelectorAll('.ds-nav-item.ds-pressing');
+    for (var i = 0; i < all.length; i++) all[i].classList.remove('ds-pressing');
+  }
+  document.addEventListener('pointerdown', onPress, true);
+  document.addEventListener('pointerup', onRelease, true);
+  document.addEventListener('pointercancel', onRelease, true);
+})();
