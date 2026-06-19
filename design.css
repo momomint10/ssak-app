@@ -1481,21 +1481,21 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
    되돌리기: git tag pre-curvednav-20260619 */
 .ds-nav {
   --nav-ax: 50%;
-  background: #FF385C !important;
+  background: #fff !important;  /* V1.9.101: 코랄 바 → 화이트 바 (이질감 해소, 코랄=활성에만) */
   backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
   border-top: none !important;
-  border-radius: 24px 24px 0 0;  /* V1.9.97: 평평한 코랄 바 상단 모서리 부드러운 곡선 */
-  box-shadow: 0 -5px 16px rgba(255, 56, 92, 0.14) !important;
+  border-radius: 24px 24px 0 0;  /* 상단 모서리 부드러운 곡선 */
+  box-shadow: 0 -1px 0 #EEF1F4, 0 -8px 20px rgba(20, 30, 50, 0.06) !important;
   overflow: visible;
   padding: 4px 0 max(7px, env(safe-area-inset-bottom)) !important;  /* V1.9.98: 바 높이 -15% (65→55px) */
 }
 /* V1.9.96: 블롭/노치(curved-nav) 제거 → 평평한 코랄 바. 활성 = 흰 솔리드 아이콘 + 볼드 라벨 */
 .ds-nav.has-notch {
-  background: #FF385C !important;
+  background: #fff !important;
 }
 .ds-nav.has-notch::after { display: none !important; }
-.ds-nav-item { color: rgba(255, 255, 255, 0.78) !important; }
-.ds-nav-item.on { color: #fff !important; font-weight: 800 !important; }
+.ds-nav-item { color: #6B7684 !important; }  /* V1.9.101: 비활성=그레이 (흰 바) */
+.ds-nav-item.on { color: #FF385C !important; font-weight: 800 !important; }  /* 활성=코랄 */
 /* V1.9.99: 활성 섹터 아래 라인 (흰색) — '지금 여기' 표시 */
 .ds-nav-item.on::before {
   content: '' !important; display: block !important;
@@ -1504,7 +1504,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   left: 50% !important; right: auto !important;
   transform: translateX(-50%) !important;
   width: 18px !important; height: 3px !important;
-  background: #fff !important;
+  background: #FF385C !important;
   border-radius: 4px !important;
   box-shadow: none !important;
 }
@@ -1513,7 +1513,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   filter: none !important;
 }
 /* 활성 아이콘 = 흰 솔리드 채움(평평한 코랄 바 위 또렷). 비활성은 흰 아웃라인 */
-.ds-nav-item.on .ds-nav-ico svg { fill: #fff !important; stroke: #fff !important; stroke-width: 1.3 !important; }
+.ds-nav-item.on .ds-nav-ico svg { fill: #FF385C !important; stroke: #FF385C !important; stroke-width: 1.3 !important; }
 /* V1.9.98: 하단 바 높이 -15% — 아이템 패딩·gap·아이콘 축소 */
 .ds-nav-item { padding: 2px 0 !important; gap: 2px !important; }
 .ds-nav-ico, .ds-nav-ico svg { width: 20px !important; height: 20px !important; }
@@ -1525,7 +1525,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-nav-ico .ds-ring {
   position: absolute; left: 50%; top: 50%;
   width: 42px; height: 42px; margin: -21px 0 0 -21px;
-  border-radius: 50%; background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%; background: rgba(255, 56, 92, 0.22);  /* V1.9.101: 흰 바 위 코랄 링 */
   transform: scale(.3); opacity: 0; z-index: 0; pointer-events: none;
   animation: ds-nav-ring .44s ease-out forwards;
 }
