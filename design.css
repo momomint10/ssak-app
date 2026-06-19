@@ -1471,7 +1471,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-nav-item.on .ds-nav-ico svg {
   stroke-width: 2.4;
 }
-.ds-nav-item { font-size: 10.5px !important; }
+.ds-nav-item { font-size: 11px !important; font-weight: 700 !important; }  /* V1.9.100: 라벨 11px·700 — 코랄 위 가독성 보강 */
 .ds-nav-item.on { font-weight: 900 !important; }
 /* 미사용/구 emoji fallback — svg 없으면 emoji 다시 보이게 */
 .ds-nav-ico:not(:has(svg)) { font-size: 22px; }
