@@ -1511,8 +1511,8 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   filter: none !important;
   position: relative; z-index: 2;
 }
-/* V1.9.91: 활성 아이콘 다크(#191F28) — 흰 블롭 위 최대 대비(코랄 아웃라인은 흐릿했음) */
-.ds-nav-item.on .ds-nav-ico svg { stroke: #191F28 !important; stroke-width: 2.2 !important; }
+/* V1.9.92: 활성 아이콘 솔리드 코랄 채움 — 코랄 바와 색 조화 + 솔리드라 또렷(design-shotgun A 채택, 코랄 아웃라인은 흐려서 fill로) */
+.ds-nav-item.on .ds-nav-ico svg { fill: #FF385C !important; stroke: #FF385C !important; stroke-width: 1.4 !important; }
 
 /* ── 카드 active feedback (전 페이지 공통) ─────────────────────── */
 .ds-card:active,
