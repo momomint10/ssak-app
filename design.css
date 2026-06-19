@@ -1484,32 +1484,35 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   background: #FF385C !important;
   backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
   border-top: none !important;
-  box-shadow: 0 -6px 20px rgba(255, 56, 92, 0.20) !important;
+  box-shadow: 0 -5px 16px rgba(255, 56, 92, 0.15) !important;
   overflow: visible;
-  padding-top: 14px;
+  padding: 7px 0 max(10px, env(safe-area-inset-bottom)) !important;  /* V1.9.90: 바 높이 ↓ */
 }
+/* V1.9.90: notch + 흰 블롭 모두 nav 기준 var(--nav-ax)로 정렬 → 위치 항상 일치, 돌출 ↓ */
 .ds-nav.has-notch {
-  background: radial-gradient(circle 25px at var(--nav-ax) -3px, transparent 0 24px, #FF385C 25px) !important;
+  background: radial-gradient(circle 26px at var(--nav-ax) 0, transparent 0 25px, #FF385C 26px) !important;
 }
-.ds-nav-item { color: rgba(255, 255, 255, 0.80) !important; }
-.ds-nav-item.on { color: #fff !important; font-weight: 900 !important; }
-.ds-nav-item.on::before {
-  content: '' !important;
-  position: absolute !important;
-  top: -26px !important; left: 50% !important; right: auto !important;
-  transform: translateX(-50%) !important;
-  width: 50px !important; height: 50px !important;
-  border-radius: 50% !important;
-  background: #fff !important;
-  box-shadow: 0 5px 12px rgba(150, 20, 50, 0.30) !important;
-  z-index: 0 !important;
+.ds-nav.has-notch::after {
+  content: '';
+  position: absolute;
+  left: var(--nav-ax); top: 0;
+  transform: translate(-50%, -50%);
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 5px 11px rgba(150, 20, 50, 0.22);
+  z-index: 1; pointer-events: none;
 }
+.ds-nav-item { color: rgba(255, 255, 255, 0.82) !important; }
+.ds-nav-item.on { color: #fff !important; font-weight: 800 !important; z-index: 2; }
+.ds-nav-item.on::before { display: none !important; }  /* 구 코랄 인디케이터/v1 흰 원 제거 */
 .ds-nav-item.on .ds-nav-ico {
-  transform: translateY(-26px) !important;
+  transform: translateY(-6px) scale(1.28) !important;  /* V1.9.91: 측정 보정 — 블롭 정중앙 + 확대(또렷) */
   filter: none !important;
-  position: relative; z-index: 1;
+  position: relative; z-index: 2;
 }
-.ds-nav-item.on .ds-nav-ico svg { stroke: #FF385C !important; stroke-width: 2 !important; }
+/* V1.9.91: 활성 아이콘 다크(#191F28) — 흰 블롭 위 최대 대비(코랄 아웃라인은 흐릿했음) */
+.ds-nav-item.on .ds-nav-ico svg { stroke: #191F28 !important; stroke-width: 2.2 !important; }
 
 /* ── 카드 active feedback (전 페이지 공통) ─────────────────────── */
 .ds-card:active,
