@@ -37,7 +37,7 @@
 <link rel="preconnect" href="https://ssakssak-server-production.up.railway.app">
 <link rel="dns-prefetch" href="https://ezzydgtbuknamwibjhcl.supabase.co">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self' https://ssakssak-server-production.up.railway.app https://ezzydgtbuknamwibjhcl.supabase.co; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'">
-<link rel="preload" as="script" href="utils.js?v=20260620-6">
+<link rel="preload" as="script" href="utils.js?v=20260620-7">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>싹싹</title>
@@ -46,7 +46,7 @@
 <meta name="apple-mobile-web-app-title" content="싹싹">
 <meta name="theme-color" content="#FF385C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
-<link rel="stylesheet" href="design.css?v=20260620-6">
+<link rel="stylesheet" href="design.css?v=20260620-7">
 <style>
 /* ── 홈 전용 스타일 ────────────────────────────────────────── */
 .home-header {
@@ -1536,7 +1536,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="utils.js?v=20260620-6"></script>
+<script src="utils.js?v=20260620-7"></script>
 <script>
 
 // ── 인사말 ──────────────────────────────────
@@ -2596,7 +2596,7 @@ function _recordPosition(lat, lon) {
   _saveActivity(a);
 }
 let _activityWatchId = null;
-function startActivityTracker() {
+function _beginActivityWatch() {
   if (!navigator.geolocation || _activityWatchId !== null) return;
   _activityWatchId = navigator.geolocation.watchPosition(
     pos => {
@@ -2607,6 +2607,19 @@ function startActivityTracker() {
     err => { console.warn('[activity] watch failed:', err?.message); },
     { enableHighAccuracy: false, maximumAge: 60000, timeout: 10000 }
   );
+}
+// V1.9.103: 활동 트래커는 '위치 권한이 이미 허용된 경우에만' 자동 시작.
+//   → 매 접속마다 watchPosition이 권한 팝업을 띄우던 문제 해결. (날씨/점심은 24h 캐시 사용)
+//   권한 미허용(prompt) 또는 거부(denied) 상태면 자동으로 안 물어봄. 나중에 허용되면 자동 시작.
+function startActivityTracker() {
+  if (!navigator.geolocation || _activityWatchId !== null) return;
+  if (navigator.permissions && navigator.permissions.query) {
+    navigator.permissions.query({ name: 'geolocation' }).then(st => {
+      if (st.state === 'granted') _beginActivityWatch();
+      try { st.onchange = () => { if (st.state === 'granted') _beginActivityWatch(); }; } catch(_) {}
+    }).catch(() => { /* Permissions API 미지원 → 자동 시작 생략(팝업 방지) */ });
+  }
+  // Permissions API 미지원(구형 브라우저)에서는 자동 시작 안 함 → 권한 팝업이 뜨지 않음.
 }
 
 // V1.9.22: 사용자 위치 캐싱 — 한번 받으면 24h 재사용 (반복 권한 X)
