@@ -1774,10 +1774,10 @@ function sendQuickSMS(type) {
 
   toast('📱 문자 발송 중...');
 
-  fetch(SERVER + '/send-sms', {
+  fetch(SERVER + '/api/sms/send', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ to: phone, from: fromPhone, text: msg, apiKey, apiSecret })
+    body: JSON.stringify({ to: phone, msg: msg })  /* F4: 서버 env 키 사용 — 클라 apiKey/apiSecret 노출 제거 */
   }).then(r => r.json()).then(data => {
     if (data.success) toast('✅ 문자 발송 완료!');
     else toast('❌ 발송 실패: ' + (data.error||'오류'));
@@ -1995,10 +1995,10 @@ function sendSmsForBooking(s, type) {
   if (!msg) return Promise.resolve(false);
 
   toast('📱 문자 발송 중...');
-  return fetch(SERVER + '/send-sms', {
+  return fetch(SERVER + '/api/sms/send', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ to: s.phone, from: fromPhone, text: msg, apiKey, apiSecret })
+    body: JSON.stringify({ to: s.phone, msg: msg })  /* F4: 서버 env 키 사용 */
   }).then(r => r.json()).then(data => {
     if (data.success) { toast('✅ 문자 발송 완료!'); return true; }
     toast('❌ 발송 실패: ' + (data.error || '오류'));
