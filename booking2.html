@@ -341,12 +341,14 @@ window.onload = async () => {
         return;
       }
       applyQuoteData(json.data);
+      window._quoteOwnerId = (json.data && json.data.owner_id) || '';  // 멀티테넌트: 예약 owner 귀속
     } catch(e) {
       document.getElementById('screen-loading').innerHTML =
         '<div class="state-icon">❌</div><div class="state-title">서버 연결 오류</div><div class="state-sub">잠시 후 다시 시도해주세요</div>';
     }
   } else {
     // URL 파라미터 방식 (fallback)
+    window._quoteOwnerId = params.get('o') || '';
     applyQuoteData({ name: urlName, phone: urlPhone, size: urlSize, type: urlType, price: urlPrice, companyName: urlCompany });
   }
 };
@@ -420,6 +422,7 @@ function submitBooking() {
     headers: {'Content-Type':'application/json'},
     signal: _ctrl.signal,
     body: JSON.stringify({name, phone, address, size, type, date, time, notes,
+      owner_id: window._quoteOwnerId || params.get('o') || '',
       ownerPhone: cfg.fromPhone || cfg.phone || '',
       company: cfg.company || '싹싹클린',
       companyName: cfg.company || '싹싹클린'

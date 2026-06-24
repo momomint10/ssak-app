@@ -811,7 +811,14 @@ async function removeTrustDevice(id){
 }
 
 function copyBookingLink() {
-  const url = 'https://ssakapp.co.kr/booking.html';
+  // 멀티테넌트: 예약 링크에 사장님 id(?o=) 포함 → 고객 예약이 본인 계정에 귀속
+  var ownerId = '';
+  try {
+    var _b = (localStorage.getItem('ssak_jwt') || '').split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    while (_b.length % 4) _b += '=';
+    ownerId = (JSON.parse(atob(_b)).sub) || '';
+  } catch (_) {}
+  const url = 'https://ssakapp.co.kr/booking.html' + (ownerId ? ('?o=' + encodeURIComponent(ownerId)) : '');
   if (navigator.clipboard) {
     navigator.clipboard.writeText(url).then(() => toast('✅ 예약 링크가 복사됐습니다!'));
   } else {

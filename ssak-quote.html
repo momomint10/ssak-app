@@ -854,6 +854,7 @@ function buildMsg(size,type,total,extraItems){
       type:    type || '',
       price:   String(total || ''),
       company: cfg.company || '서프로클린',
+      o:       (function(){try{var b=(localStorage.getItem('ssak_jwt')||'').split('.')[1].replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';return JSON.parse(atob(b)).sub||'';}catch(_){return '';}})(),
     });
     // 빈 값 제거
     [...bParams.keys()].forEach(k => { if(!bParams.get(k)) bParams.delete(k); });
