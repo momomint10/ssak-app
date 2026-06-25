@@ -555,7 +555,7 @@
     <div class="header">
       <div class="header-logo" id="hdr-logo">S</div>
       <div class="header-info">
-        <div class="header-title" id="hdr-company">서프로클린</div>
+        <div class="header-title" id="hdr-company">청소 사업자</div>
         <div class="header-sub">청소서비스 계약서 — 서명 요청</div>
       </div>
     </div>
@@ -580,7 +580,7 @@
         <!-- 브랜딩 헤더 -->
         <div class="ct-brand">
           <div>
-            <div class="ct-brand-name" id="ct-brand-name">서프로클린</div>
+            <div class="ct-brand-name" id="ct-brand-name">청소 사업자</div>
             <div class="ct-brand-num" id="ct-brand-num">청소서비스 전자계약서</div>
           </div>
           <div style="text-align:right;">
@@ -749,7 +749,7 @@
 
         <!-- 푸터 바 -->
         <div class="ct-footer-bar" id="ct-footer-bar">
-          서프로클린 &nbsp;·&nbsp; 본 계약서는 전자서명법에 의해 법적 효력을 가집니다
+          청소 사업자 &nbsp;·&nbsp; 본 계약서는 전자서명법에 의해 법적 효력을 가집니다
         </div>
 
       </div><!-- /contract-paper -->
@@ -1004,10 +1004,10 @@ function fillContract(cd, ownerSig) {
   // 헤더
   const logo = document.getElementById('hdr-logo');
   if (logo) logo.textContent = (cd.companyName||'S').charAt(0).toUpperCase();
-  s('hdr-company', cd.companyName||'서프로클린');
+  s('hdr-company', cd.companyName||'청소 사업자');
 
   // 브랜딩
-  s('ct-brand-name', cd.companyName||'서프로클린');
+  s('ct-brand-name', cd.companyName||'청소 사업자');
   s('ct-contract-num', cd.contractNum || genContractNum());
 
   // 당사자
@@ -1044,7 +1044,7 @@ function fillContract(cd, ownerSig) {
 
   // 푸터
   const ftBar = document.getElementById('ct-footer-bar');
-  if (ftBar) ftBar.textContent = (cd.companyName||'서프로클린') + '  ·  본 계약서는 전자서명법에 의해 법적 효력을 가집니다';
+  if (ftBar) ftBar.textContent = (cd.companyName||'청소 사업자') + '  ·  본 계약서는 전자서명법에 의해 법적 효력을 가집니다';
 
   // 업주 서명
   if (ownerSig) {
