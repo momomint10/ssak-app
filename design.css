@@ -403,7 +403,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-page-subtitle {
   font-size: var(--f-xs);      /* 11px */
   font-weight: 600;
-  color: var(--c-pr);          /* Rausch 액센트 */
+  color: var(--c-g500);        /* v4.1: 서브타이틀은 보조 텍스트 — 액센트 아님 (색 위계 §2-4) */
   letter-spacing: 0.03em;
   margin: 0 0 12px;
 }
