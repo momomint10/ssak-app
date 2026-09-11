@@ -42,12 +42,12 @@
 <title>싹싹 — MY</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="싹싹">
-<meta name="theme-color" content="#FF385C">
+<meta name="theme-color" content="#4F9E7C">
 <link rel="stylesheet" href="design.css?v=20260620-8">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 /* design.css 토큰 alias로 마이그 (TOP 1 확장 2026-05-15) */
-/* my.html의 --primary-light는 의도된 teal #E6FAF5 (Babu) → c-teal-l 유지 */
+/* my.html의 --primary-light는 의도된 teal #EAF2EE (Babu) → c-teal-l 유지 */
 :root{--primary:var(--c-pr);--primary-dark:var(--c-pr-d);--primary-light:var(--c-teal-l);--gray-50:var(--c-bg);--gray-100:var(--c-g100);--gray-200:var(--c-g200);--gray-300:var(--c-g300);--gray-400:var(--c-g400);--gray-500:var(--c-g500);--gray-700:var(--c-g700);--gray-900:var(--c-g900);--radius:var(--r-lg);--radius-sm:10px;--shadow:var(--sh-sm);}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;background:var(--gray-50);color:var(--gray-900);}
@@ -63,7 +63,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .profile-header.scrolled{ padding:calc(10px + env(safe-area-inset-top)) 24px 8px; }
 /* V1.6: 코랄 발광 라인 제거 — 1px g100 분할은 .profile-header의 border-bottom으로 처리 */
 .profile-header-inner{display:flex;align-items:center;gap:16px;}
-.profile-avatar{width:72px;height:72px;border-radius:50%;background:#FFF5F0;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border:2.5px solid var(--c-pr, #FF385C);
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:#EAF2EE;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;border:2.5px solid var(--c-pr, #4F9E7C);
   transition:width .22s ease,height .22s ease,font-size .22s ease;}
 .profile-header.scrolled .profile-avatar{width:40px;height:40px;font-size:18px;}
 .profile-info{flex:1;}
@@ -79,10 +79,10 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   position:absolute;top:16px;right:16px;
   width:36px;height:36px;
   border-radius:50%;
-  background:rgba(255,56,92,.1);
-  border:1.5px solid rgba(255,56,92,.28);
+  background:rgba(79, 158, 124,.1);
+  border:1.5px solid rgba(79, 158, 124,.28);
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;color:var(--c-pr, #FF385C);
+  font-size:16px;color:var(--c-pr, #4F9E7C);
   cursor:pointer;
   transition:background .18s,transform .1s;
   -webkit-tap-highlight-color:transparent;
@@ -94,13 +94,13 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .stats-bar{background:#fff;margin:0 0 12px;padding:20px 24px;box-shadow:var(--shadow);}
 .stats-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:14px;}
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.stats-hero{grid-column:1/-1;background:linear-gradient(135deg,#FFF0F3 0%,#FFFBFC 100%);border:1px solid rgba(255,56,92,0.10);border-radius:14px;padding:14px 18px;display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
+.stats-hero{grid-column:1/-1;background:linear-gradient(135deg,#F3F8F5 0%,#FFFFFF 100%);border:1px solid rgba(79, 158, 124,0.10);border-radius:14px;padding:14px 18px;display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
 .stats-hero-lbl{font-size:13px;font-weight:700;color:var(--gray-700);}
-.stats-hero-val{font-size:26px;font-weight:var(--fw-bold);color:var(--c-pr,#FF385C);letter-spacing:-0.02em;line-height:1;}
+.stats-hero-val{font-size:26px;font-weight:var(--fw-bold);color:var(--c-pr,#4F9E7C);letter-spacing:-0.02em;line-height:1;}
 .stat-item{text-align:center;background:var(--gray-50);border-radius:12px;padding:11px 6px;}
 .stat-value{font-size:18px;font-weight:var(--fw-bold);color:var(--gray-900);line-height:1;}
-.stat-value.green{color:var(--primary);}
-.stat-value.amber{color:#F59E0B;}
+.stat-value.green{color:var(--gray-900);}  /* v4 색 위계: 숫자는 잉크 */
+.stat-value.amber{color:var(--gray-900);}  /* v4 색 위계: 숫자는 잉크 */
 .stat-label{font-size:11px;color:var(--gray-400);margin-top:4px;font-weight:500;}
 
 /* 섹션 */
@@ -128,7 +128,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 /* 하단 네비 — V1.6 통일: design.css의 .ds-nav 사용 */
 
 /* 토스트 — design.css 글로벌 (260528) */
-.trust-card{background:#fff;border-radius:var(--radius);margin:12px 16px;padding:14px 18px;box-shadow:var(--shadow);} .trust-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;} .trust-row{display:flex;gap:12px;} .trust-stat{flex:1;text-align:center;padding:8px 0;} .trust-val{font-size:22px;font-weight:var(--fw-bold);color:var(--gray-900);margin-bottom:2px;} .trust-val.amber{color:#F59E0B;} .trust-lbl{font-size:11px;color:var(--gray-500);} .trust-empty{font-size:11px;color:var(--gray-400);text-align:center;padding:8px 0;} </style>
+.trust-card{background:#fff;border-radius:var(--radius);margin:12px 16px;padding:14px 18px;box-shadow:var(--shadow);} .trust-title{font-size:13px;font-weight:700;color:var(--gray-500);margin-bottom:10px;display:flex;align-items:center;gap:6px;} .trust-row{display:flex;gap:12px;} .trust-stat{flex:1;text-align:center;padding:8px 0;} .trust-val{font-size:22px;font-weight:var(--fw-bold);color:var(--gray-900);margin-bottom:2px;} .trust-val.amber{color:var(--gray-900);}  /* v4 색 위계: 숫자는 잉크 */ .trust-lbl{font-size:11px;color:var(--gray-500);} .trust-empty{font-size:11px;color:var(--gray-400);text-align:center;padding:8px 0;} </style>
 <script src="utils.js?v=20260620-8"></script>
 </head>
 <body>
@@ -136,6 +136,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
   <!-- 프로필 헤더 -->
   <div class="profile-header ds-app-header">
+    <div class="ds-lockup" aria-label="싹싹" style="margin-bottom:12px;"><span class="lk-ko">싹싹</span><span class="lk-en">Ssak-Ssak</span></div>
     <button class="profile-edit-btn" onclick="goSettings()" aria-label="설정">⚙️</button>
     <div class="profile-header-inner">
       <div class="profile-avatar">🧹</div>
@@ -196,7 +197,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <div class="menu-arrow">›</div>
     </div>
     <div class="menu-item ds-tap-card" id="acc-hero-row" onclick="document.getElementById('hero-file').click()">
-      <div class="menu-icon" style="background:#FFF0EC;color:#FF385C;font-size:18px;">🖼️</div>
+      <div class="menu-icon" style="background:#EAF2EE;color:#4F9E7C;font-size:18px;">🖼️</div>
       <div class="menu-text">
         <div class="menu-title">홈 화면 사진</div>
         <div class="menu-sub" id="hero-row-sub">사장님 회사 사진으로 바꿔보세요</div>
@@ -216,7 +217,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
     <!-- V1.9.16: 자동 리마인더 설정 (스케줄 탭에서 이동) -->
     <div class="menu-item ds-tap-card" id="acc-reminder-row" onclick="openReminderModal()">
-      <div class="menu-icon" style="background:#FFF0F4;color:#FF385C;font-size:18px;">🔔</div>
+      <div class="menu-icon" style="background:#EAF2EE;color:#4F9E7C;font-size:18px;">🔔</div>
       <div class="menu-text">
         <div class="menu-title">자동 리마인더</div>
         <div class="menu-sub" id="reminder-row-sub">고객에게 내일 일정 전날 자동 SMS 발송</div>
@@ -237,7 +238,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       </div>
     </div>
     <div class="menu-item ds-tap-card" id="acc-admin-row" style="display:none;" onclick="location.href='admin.html'">
-      <div class="menu-icon" style="background:#FFF0F4;color:#C92A4A;font-size:18px;">🛡️</div>
+      <div class="menu-icon" style="background:#EAF2EE;color:#C92A4A;font-size:18px;">🛡️</div>
       <div class="menu-text"><div class="menu-title">관리자 페이지</div><div class="menu-sub">사용자 등록·로그인 로그</div></div>
       <div class="menu-arrow">›</div>
     </div>
@@ -258,7 +259,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <div class="menu-arrow">›</div>
     </div>
     <div class="menu-item ds-tap-card" onclick="confirmSignOut()">
-      <div class="menu-icon" style="background:#F3F4F6;color:#6B7280;font-size:18px;">🚪</div>
+      <div class="menu-icon" style="background:#F5F7F6;color:#6B7280;font-size:18px;">🚪</div>
       <div class="menu-text"><div class="menu-title">로그아웃</div><div class="menu-sub">다시 로그인하려면 SMS 인증 필요</div></div>
       <div class="menu-arrow">›</div>
     </div>
@@ -282,11 +283,11 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     <strong>싹싹 (Ssak-ssak)</strong>
     청소업 사장님을 위한 스마트 관리 앱<br>v1.0.0 · Made with ❤️
     <div style="margin-top:14px;font-size:12px;line-height:2;">
-      <a href="terms.html" style="color:#8B95A1;text-decoration:none;">이용약관</a>
+      <a href="terms.html" style="color:#6A716D;text-decoration:none;">이용약관</a>
       <span style="color:#D0D5DB;"> · </span>
       <a href="privacy.html" style="color:#6B7684;text-decoration:none;font-weight:700;">개인정보처리방침</a>
       <span style="color:#D0D5DB;"> · </span>
-      <a href="location.html" style="color:#8B95A1;text-decoration:none;">위치정보 이용약관</a>
+      <a href="location.html" style="color:#6A716D;text-decoration:none;">위치정보 이용약관</a>
     </div>
   </div>
 
@@ -304,20 +305,20 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <!-- PIN 설정 모달 -->
 <div id="pin-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closePinModal()">
   <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;">
-    <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;"></div>
+    <div style="width:32px;height:3px;background:#EBEEEC;border-radius:2px;margin:-10px auto 14px;"></div>
     <div style="font-size:17px;font-weight:var(--fw-bold);margin-bottom:6px;" id="pin-modal-title">PIN 로그인 설정</div>
     <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;" id="pin-modal-desc">4자리 PIN을 설정하면 다음부터 SMS 없이 빠르게 로그인할 수 있습니다.</div>
     <label style="display:block;font-size:13px;font-weight:700;color:#444;margin-bottom:8px;">새 PIN (4자리)</label>
     <input type="tel" id="pin-input-1" inputmode="numeric" maxlength="4" placeholder="••••"
-           style="width:100%;padding:13px 14px;font-size:24px;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;outline:none;letter-spacing:8px;text-align:center;">
+           style="width:100%;padding:13px 14px;font-size:24px;font-family:inherit;border:1.5px solid #EBEEEC;border-radius:10px;background:#fff;outline:none;letter-spacing:8px;text-align:center;">
     <label style="display:block;font-size:13px;font-weight:700;color:#444;margin:12px 0 8px;">PIN 한 번 더 입력</label>
     <input type="tel" id="pin-input-2" inputmode="numeric" maxlength="4" placeholder="••••"
-           style="width:100%;padding:13px 14px;font-size:24px;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:10px;background:#fff;outline:none;letter-spacing:8px;text-align:center;">
-    <div id="pin-modal-alert" style="display:none;background:#FFF0F4;color:#C92A4A;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:600;margin-top:10px;"></div>
+           style="width:100%;padding:13px 14px;font-size:24px;font-family:inherit;border:1.5px solid #EBEEEC;border-radius:10px;background:#fff;outline:none;letter-spacing:8px;text-align:center;">
+    <div id="pin-modal-alert" style="display:none;background:#EAF2EE;color:#C92A4A;padding:10px 12px;border-radius:8px;font-size:13px;font-weight:600;margin-top:10px;"></div>
     <button id="pin-modal-save" onclick="savePin()"
-            style="width:100%;padding:14px;font-size:15px;font-weight:var(--fw-bold);font-family:inherit;border:none;border-radius:12px;background:var(--c-pr, #FF385C);color:#fff;cursor:pointer;margin-top:14px;min-height:52px;">PIN 설정</button>
+            style="width:100%;padding:14px;font-size:15px;font-weight:var(--fw-bold);font-family:inherit;border:none;border-radius:12px;background:var(--c-pr, #4F9E7C);color:#fff;cursor:pointer;margin-top:14px;min-height:52px;">PIN 설정</button>
     <button id="pin-modal-remove" onclick="removePin()" style="display:none;width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #FECACA;border-radius:12px;background:#fff;color:#DC2626;cursor:pointer;margin-top:8px;">PIN 해제</button>
-    <button onclick="closePinModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:8px;">취소</button>
+    <button onclick="closePinModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #EBEEEC;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:8px;">취소</button>
     <div style="font-size:11.5px;color:#999;text-align:center;margin-top:10px;line-height:1.5;">
       🔒 PIN은 안전하게 암호화되어 저장됩니다.<br>5회 실패 시 30분간 잠금 + SMS 강제 인증.
     </div>
@@ -327,7 +328,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <!-- V1.9.16 자동 리마인더 설정 모달 -->
 <div id="reminder-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closeReminderModal()">
   <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;max-height:90vh;overflow-y:auto;">
-    <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;"></div>
+    <div style="width:32px;height:3px;background:#EBEEEC;border-radius:2px;margin:-10px auto 14px;"></div>
     <div style="font-size:17px;font-weight:var(--fw-bold);margin-bottom:6px;">🔔 자동 리마인더</div>
     <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;">
       <b style="color:#1B2A3F;">내일 일정 고객</b>에게 전날 자동 SMS 발송<br>
@@ -335,7 +336,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
 
     <!-- ON/OFF 토글 -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#F7F8FA;border-radius:12px;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#F5F7F6;border-radius:12px;margin-bottom:12px;">
       <div>
         <div style="font-size:14px;font-weight:800;color:#1B2A3F;">자동 리마인더 사용</div>
         <div style="font-size:11.5px;color:#6B7280;margin-top:2px;">SMS 발송 자동 실행</div>
@@ -348,7 +349,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
 
     <!-- 상태 표시 -->
-    <div id="reminder-status-text" style="font-size:12.5px;color:#6B7280;background:#F7F8FA;padding:10px 14px;border-radius:10px;line-height:1.6;margin-bottom:12px;">
+    <div id="reminder-status-text" style="font-size:12.5px;color:#6B7280;background:#F5F7F6;padding:10px 14px;border-radius:10px;line-height:1.6;margin-bottom:12px;">
       현재 상태 로딩 중...
     </div>
 
@@ -357,14 +358,14 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       💡 <b>SMS 발송</b>을 위해선 <b>앱 설정 > API키 / 발송번호</b> 입력이 필요합니다
     </div>
 
-    <button onclick="closeReminderModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;">닫기</button>
+    <button onclick="closeReminderModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #EBEEEC;border-radius:12px;background:#fff;color:#555;cursor:pointer;">닫기</button>
   </div>
 </div>
 
 <!-- V1.9.10 활동 자치구 선택 모달 -->
 <div id="region-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closeRegionModal()">
   <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;max-height:90vh;overflow-y:auto;">
-    <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;"></div>
+    <div style="width:32px;height:3px;background:#EBEEEC;border-radius:2px;margin:-10px auto 14px;"></div>
     <div style="font-size:17px;font-weight:var(--fw-bold);margin-bottom:6px;">📍 활동 자치구</div>
     <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;">
       주로 일하시는 지역을 선택하세요.<br>
@@ -372,14 +373,14 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
     <div id="region-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;"></div>
     <button id="region-save-btn" onclick="saveRegion()"
-            style="width:100%;padding:14px;font-size:15px;font-weight:var(--fw-bold);font-family:inherit;border:none;border-radius:12px;background:var(--c-pr,#FF385C);color:#fff;cursor:pointer;margin-top:14px;min-height:52px;box-shadow:0 4px 12px rgba(255,56,92,0.32);">저장</button>
-    <button onclick="closeRegionModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:8px;">취소</button>
+            style="width:100%;padding:14px;font-size:15px;font-weight:var(--fw-bold);font-family:inherit;border:none;border-radius:12px;background:var(--c-pr,#4F9E7C);color:#fff;cursor:pointer;margin-top:14px;min-height:52px;box-shadow:0 4px 12px rgba(79, 158, 124,0.32);">저장</button>
+    <button onclick="closeRegionModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #EBEEEC;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:8px;">취소</button>
   </div>
 </div>
 <style>
   .region-chip-pick {
     padding: 11px 6px;
-    background: #F7F8FA;
+    background: #F5F7F6;
     border: 1.5px solid transparent;
     border-radius: 10px;
     font-size: 12.5px; font-weight: 700;
@@ -391,8 +392,8 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   }
   .region-chip-pick.active {
     background: #FFF1F4;
-    border-color: #FF385C;
-    color: #FF385C;
+    border-color: #4F9E7C;
+    color: #4F9E7C;
     font-weight: 900;
   }
   .region-chip-pick.active::after { content: ' ✓'; }
@@ -401,7 +402,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 <!-- 자동 로그인 기기 관리 모달 -->
 <div id="trust-ov" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;" onclick="if(event.target===this)closeTrustDevicesModal()">
   <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-radius:20px 20px 0 0;padding:20px 20px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));z-index:201;max-height:80vh;display:flex;flex-direction:column;">
-    <div style="width:32px;height:3px;background:#E5E7EB;border-radius:2px;margin:-10px auto 14px;flex-shrink:0;"></div>
+    <div style="width:32px;height:3px;background:#EBEEEC;border-radius:2px;margin:-10px auto 14px;flex-shrink:0;"></div>
     <div style="font-size:17px;font-weight:var(--fw-bold);margin-bottom:6px;flex-shrink:0;">🔒 자동 로그인 기기</div>
     <div style="font-size:13px;color:#666;margin-bottom:14px;line-height:1.6;flex-shrink:0;">
       등록된 기기는 30일 동안 인증번호 없이 자동 로그인됩니다.<br>
@@ -410,7 +411,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     <div id="trust-list" style="overflow-y:auto;flex:1;margin:0 -4px;">
       <div style="text-align:center;color:#999;padding:24px;">불러오는 중...</div>
     </div>
-    <button onclick="closeTrustDevicesModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #E5E7EB;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:12px;flex-shrink:0;">닫기</button>
+    <button onclick="closeTrustDevicesModal()" style="width:100%;padding:14px;font-size:14px;font-weight:700;font-family:inherit;border:1.5px solid #EBEEEC;border-radius:12px;background:#fff;color:#555;cursor:pointer;margin-top:12px;flex-shrink:0;">닫기</button>
     <div style="font-size:11.5px;color:#999;text-align:center;margin-top:10px;line-height:1.5;flex-shrink:0;">
       💡 새 기기 등록은 <b>로그인 화면에서 인증 후</b> "이 기기 자동 로그인" 선택.
     </div>
@@ -587,7 +588,7 @@ function renderReminderRow() {
     badge.style.color = '#92400E';
   } else {
     badge.textContent = 'OFF';
-    badge.style.background = '#F2F4F6';
+    badge.style.background = '#F5F7F6';
     badge.style.color = '#6B7280';
   }
   badge.style.display = 'inline-block';
@@ -630,7 +631,7 @@ function updateReminderUI() {
   const { enabled } = getReminderState();
   const slider = document.getElementById('reminder-slider');
   const knob = document.getElementById('reminder-knob');
-  if (slider) slider.style.background = enabled ? '#FF385C' : '#D1D5DB';
+  if (slider) slider.style.background = enabled ? '#4F9E7C' : '#D1D5DB';
   if (knob) knob.style.left = enabled ? '25px' : '3px';
 }
 document.addEventListener('DOMContentLoaded', () => {
@@ -792,7 +793,7 @@ function renderTrustDevices(list){
   };
   const daysLeft = (s) => Math.max(0, Math.ceil((new Date(s).getTime() - Date.now()) / 86400000));
   document.getElementById('trust-list').innerHTML = list.map(t => `
-    <div style="background:#fff;margin:8px 4px;padding:12px 14px;border-radius:10px;border:1px solid #F3F4F6;display:flex;align-items:center;gap:10px;">
+    <div style="background:#fff;margin:8px 4px;padding:12px 14px;border-radius:10px;border:1px solid #F5F7F6;display:flex;align-items:center;gap:10px;">
       <div style="flex:1;min-width:0;">
         <div style="font-size:14px;font-weight:700;color:#1A1F36;">${(t.device_name||'기기').replace(/[<>]/g,'')}</div>
         <div style="font-size:12px;color:#666;margin-top:3px;">마지막 사용: ${fmt(t.last_used_at)}</div>

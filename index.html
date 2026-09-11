@@ -44,7 +44,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="싹싹">
-<meta name="theme-color" content="#FF385C">
+<meta name="theme-color" content="#4F9E7C">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" as="style" crossorigin>
 <link rel="stylesheet" href="design.css?v=20260620-8">
 <style>
@@ -86,7 +86,7 @@
 }
 .home-header .hd-name {
   text-shadow: 0 2px 8px rgba(255,255,255,0.9), 0 1px 3px rgba(255,255,255,0.7);
-  color: #191F28 !important;
+  color: #161A18 !important;
   font-weight: 900;
 }
 /* 헤더 우상단 아이콘 버튼 글라스 강화 */
@@ -105,7 +105,7 @@
 /* .home-header::after는 design.css 글로벌 hook으로 라인 글로우 적용됨 */
 /* .home-header::before/::after는 design.css 글로벌 hook이 override함 (입체감 통일) */
 .hd-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.hd-greeting { font-size:13px; color:var(--c-pr, #FF385C); font-weight:600; margin-bottom:3px; letter-spacing:-.1px; font-size:12px;
+.hd-greeting { font-size:13px; color:var(--c-pr, #4F9E7C); font-weight:600; margin-bottom:3px; letter-spacing:-.1px; font-size:12px;
   /* 스크롤 시 페이드아웃 */
   max-height:24px; overflow:hidden;
   transition: opacity .18s ease, max-height .28s ease, margin .28s ease; }
@@ -123,20 +123,20 @@
 .hd-notif-dot {
   position:absolute; top:7px; right:7px;
   width:8px; height:8px; border-radius:50%;
-  background:#FFD600; border:1.5px solid rgba(255,56,92,.6);
+  background:#FFD600; border:1.5px solid rgba(79, 158, 124,.6);
 }
 
 /* ── 오늘 할 일 카드 ──────────────────────────────────────── */
 .today-card {
   background:
-    radial-gradient(ellipse at 100% 0%, rgba(255, 56, 92, 0.06), transparent 60%),
+    radial-gradient(ellipse at 100% 0%, rgba(79, 158, 124, 0.06), transparent 60%),
     #fff;
   border-radius:18px; padding:16px 18px;
   margin:8px 20px 0;
   box-shadow:
     var(--sh-md, 0 4px 12px rgba(20,30,50,.09)),
     inset 0 1px 0 rgba(255,255,255,.9),
-    0 6px 20px rgba(255, 56, 92, 0.10);
+    0 6px 20px rgba(79, 158, 124, 0.10);
   display:flex; align-items:center; gap:14px;
   cursor:pointer;
   transition: box-shadow var(--dur-normal, 180ms) var(--ease-out, ease-out),
@@ -144,7 +144,7 @@
   position: relative; z-index: 2;
 }
 
-.today-card:active { transform: translateY(1px); box-shadow: var(--sh-sm), inset 0 1px 0 rgba(255,255,255,.8), 0 3px 10px rgba(255,56,92,.06); }
+.today-card:active { transform: translateY(1px); box-shadow: var(--sh-sm), inset 0 1px 0 rgba(255,255,255,.8), 0 3px 10px rgba(79, 158, 124,.06); }
 .today-card-ico {
   width:48px; height:48px; border-radius:14px;
   background:var(--c-pr-l); display:flex; align-items:center; justify-content:center;
@@ -168,7 +168,7 @@
   box-shadow:
     var(--sh-sm, 0 2px 6px rgba(20,30,50,.07)),
     inset 0 1px 0 rgba(255,255,255,.8),
-    0 3px 10px rgba(255, 56, 92, 0.05);
+    0 3px 10px rgba(79, 158, 124, 0.05);
   font-family:inherit;
   transition: box-shadow var(--dur-normal, 180ms) var(--ease-out),
               transform var(--dur-fast, 120ms) var(--ease-spring, cubic-bezier(.16,1,.3,1));
@@ -187,10 +187,10 @@
   justify-content: flex-start;
   gap: 14px;
   padding: 16px 18px;
-  background: linear-gradient(135deg, #FFF0F3 0%, #FFFBFC 100%);
-  border: 1px solid rgba(255, 56, 92, 0.10);
+  background: linear-gradient(135deg, #EAF2EE 0%, #FFFBFC 100%);
+  border: 1px solid rgba(79, 158, 124, 0.10);
   box-shadow:
-    0 4px 14px rgba(255, 56, 92, 0.10),
+    0 4px 14px rgba(79, 158, 124, 0.10),
     inset 0 1px 0 rgba(255, 255, 255, .85);
 }
 .quick-btn.quick-hero .quick-ico {
@@ -203,20 +203,20 @@
   font-size: 12px; color: var(--c-g500); font-weight: 500; margin-top: 2px;
 }
 .quick-hero-arrow {
-  margin-left: auto; font-size: 18px; color: var(--c-pr, #FF385C); font-weight: 700;
+  margin-left: auto; font-size: 18px; color: var(--c-pr, #4F9E7C); font-weight: 700;
 }
 
 /* ── 이번 달 실적 ─────────────────────────────────────────── */
 .perf-card {
   margin:0 20px; margin-top:12px;
   background:
-    radial-gradient(ellipse at 100% 0%, rgba(255, 56, 92, 0.04), transparent 60%),
+    radial-gradient(ellipse at 100% 0%, rgba(79, 158, 124, 0.04), transparent 60%),
     #fff;
   border-radius:18px; padding:18px 20px;
   box-shadow:
     var(--sh-sm, 0 2px 6px rgba(20,30,50,.07)),
     inset 0 1px 0 rgba(255,255,255,.8),
-    0 4px 14px rgba(255, 56, 92, 0.06);
+    0 4px 14px rgba(79, 158, 124, 0.06);
 }
 .perf-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
 .perf-title { font-size:13px; font-weight:var(--fw-bold); color:var(--c-g500); }
@@ -253,7 +253,7 @@
   font-size: 18px;
 }
 .tile-lbl { font-size: 14px; font-weight: 700; color: var(--c-g900, #1A1F2C); }
-.tile-sub { font-size: 11px; color: var(--c-g500, #8B95A1); }
+.tile-sub { font-size: 11px; color: var(--c-g500, #6A716D); }
 /* F 패턴: 숫자는 항상 다크 통일 (정보 채널) — 알림은 뱃지로만 */
 .tile-sub b {
   font-weight: 800;
@@ -262,7 +262,7 @@
 }
 .tile-badge {
   position: absolute; top: 10px; right: 10px;
-  background: var(--c-pr, #FF385C); color: #fff;
+  background: var(--c-pr, #4F9E7C); color: #fff;
   font-size: 10px; font-weight: 700;
   padding: 2px 7px; border-radius: 8px;
   min-width: 20px; text-align: center;
@@ -382,14 +382,14 @@
 /* 점심 모달 */
 .lunch-modal { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; display:flex; align-items:flex-end; }
 .lunch-modal-inner { background:#fff; width:100%; max-width:480px; margin:0 auto; border-radius:20px 20px 0 0; max-height:80vh; overflow-y:auto; padding:18px 18px 28px; padding-bottom:max(28px, env(safe-area-inset-bottom)); }
-.lunch-modal .grip { width:36px; height:4px; background:#E5E7EB; border-radius:2px; margin:-8px auto 14px; }
+.lunch-modal .grip { width:36px; height:4px; background:#EBEEEC; border-radius:2px; margin:-8px auto 14px; }
 .lunch-modal-title { font-size:17px; font-weight:900; color:#1B2A3F; margin-bottom:4px; }
 .lunch-modal-sub { font-size:12px; color:#6B7280; margin-bottom:16px; }
 .lunch-list { display:flex; flex-direction:column; gap:8px; }
 .lunch-item {
   display:grid; grid-template-columns:36px 1fr auto;
   align-items:center; gap:11px;
-  padding:11px 12px; background:#F7F8FA; border-radius:11px;
+  padding:11px 12px; background:#F5F7F6; border-radius:11px;
   text-decoration:none; color:inherit;
 }
 .lunch-item .e { font-size:22px; text-align:center; }
@@ -422,14 +422,14 @@
 .act-ov.on{display:block;}
 .act-sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#F4F5F7;border-radius:20px 20px 0 0;z-index:281;max-height:92vh;display:flex;flex-direction:column;}
 .act-hd{width:36px;height:3px;background:#CBD5E1;border-radius:2px;margin:10px auto 4px;flex-shrink:0;}
-.act-top{padding:6px 20px 14px;flex-shrink:0;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;}
+.act-top{padding:6px 20px 14px;flex-shrink:0;border-bottom:1px solid #EBEEEC;display:flex;align-items:center;justify-content:space-between;}
 .act-top-h{font-size:18px;font-weight:800;color:#0F172A;letter-spacing:-.02em;}
 .act-top-sub{font-size:12px;color:#64748B;font-weight:600;margin-top:2px;}
 .act-close{background:none;border:none;font-size:22px;color:#94A3B8;cursor:pointer;line-height:1;padding:0 4px;font-family:inherit;}
 .act-body{overflow-y:auto;padding:14px 14px 24px;flex:1;}
 
 /* V1.9.31: Twin Tabs 패턴 (커뮤니티와 통일) + 위계 정리 */
-.act-tabs{position:relative;display:flex;gap:0;margin:2px -14px 16px;padding:0 14px;border-bottom:1px solid #E5E7EB;}
+.act-tabs{position:relative;display:flex;gap:0;margin:2px -14px 16px;padding:0 14px;border-bottom:1px solid #EBEEEC;}
 .act-tab{flex:1;padding:14px 0 16px;font-size:15px;font-weight:800;color:#94A3B8;border:none;background:transparent;cursor:pointer;position:relative;font-family:inherit;letter-spacing:.04em;transition:color .25s ease;}
 .act-tab.on{color:#0F172A;}
 /* V1.9.35: 미끄러지는 밑줄 (커뮤니티와 통일) */
@@ -444,12 +444,12 @@
 /* V1.9.41: 아이콘 + "일정" 세로 중앙 정렬 (flex로 확실하게) */
 .b-lbl-cal{display:flex;align-items:center;gap:5px;}
 .cal-ico{display:inline-flex;flex-direction:column;width:17px;height:17px;border-radius:4px;overflow:hidden;background:#fff;box-shadow:0 0 0 1px rgba(15,23,42,.14);flex-shrink:0;}
-.cal-ico .cal-top{height:5px;background:var(--c-pr,#FF385C);}
+.cal-ico .cal-top{height:5px;background:var(--c-pr,#4F9E7C);}
 .cal-ico .cal-day{flex:1;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:900;color:#1B2A3F;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;}
 .b-big{font-size:32px;font-weight:900;letter-spacing:-.025em;line-height:1.05;margin-top:6px;color:#0F172A;font-variant-numeric:tabular-nums;}
 .b-big .unit{font-size:15px;color:#64748B;font-weight:700;margin-left:2px;}
 .b-sub{font-size:12.5px;color:#475569;margin-top:5px;font-weight:600;line-height:1.5;}
-.b-trend{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;background:#ECFDF5;color:#059669;padding:4px 10px;border-radius:6px;margin-top:8px;}
+.b-trend{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;background:#F3F8F5;color:#059669;padding:4px 10px;border-radius:6px;margin-top:8px;}
 .b-trend.down{background:#FEF2F2;color:#DC2626;}
 .b-trend.flat{background:#F1F5F9;color:#64748B;}
 .span-6{grid-column:span 6;}
@@ -476,7 +476,7 @@
 .bento.level-2 .b-card.hero .b-sub{color:rgba(122,53,8,.72);}
 .bento.level-2 .b-card.hero .spark svg path{stroke:#D9690F;}
 /* L3 활기 — 코랄 바탕 + 깊은 로즈 텍스트 + 밝은 코랄 sparkline */
-.bento.level-3 .b-card.hero{background:linear-gradient(135deg,#FFB8C5 0%,#FF7A95 100%);color:#8A1733;}
+.bento.level-3 .b-card.hero{background:linear-gradient(135deg,#B8D8C9 0%,#7FC4A8 100%);color:#8A1733;}
 .bento.level-3 .b-card.hero .b-lbl{color:#8A1733;}
 .bento.level-3 .b-card.hero .b-big{color:#8A1733;}
 .bento.level-3 .b-card.hero .b-big .unit{color:rgba(138,23,51,.65);}
@@ -491,17 +491,17 @@
 .mini-bars{display:flex;align-items:flex-end;gap:3px;height:54px;margin-top:8px;}
 /* V1.9.42: B안 — 클릭 가능 칸(mb-col) + 둥근 막대 + 선택 강조/흐림 (토스 스타일) */
 .mb-col{flex:1;min-width:0;display:flex;align-items:flex-end;height:100%;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.mb{width:100%;background:#E5E7EB;border-radius:6px 6px 3px 3px;min-height:6px;transition:transform .18s,opacity .2s,background .2s;}
+.mb{width:100%;background:#EBEEEC;border-radius:6px 6px 3px 3px;min-height:6px;transition:transform .18s,opacity .2s,background .2s;}
 .mb-col:active .mb{transform:scaleY(.97);}
 /* V1.9.30: 오늘 막대 색 level 동기화 (선택 없을 때 현재주 강조) */
 .mb.on{background:linear-gradient(180deg,#7BA8DC,#4A87C8);}
 .bento.level-2 .mb.on{background:linear-gradient(180deg,#FFB585,#F08A4D);}
-.bento.level-3 .mb.on{background:linear-gradient(180deg,#FF7A95,#E04E72);}
+.bento.level-3 .mb.on{background:linear-gradient(180deg,#7FC4A8,#3E8467);}
 /* 선택 모드: 비선택 막대 흐림 + 선택 막대 그라데+그림자 */
 .mini-bars.has-sel .mb-col:not(.sel) .mb{opacity:.4;}
 .mb-col.sel .mb{background:linear-gradient(180deg,#8FB3E0,#4A87C8) !important;opacity:1 !important;box-shadow:0 5px 12px rgba(74,135,200,.3);}
 .bento.level-2 .mb-col.sel .mb{background:linear-gradient(180deg,#FFC89A,#F08A4D) !important;box-shadow:0 5px 12px rgba(240,138,77,.3);}
-.bento.level-3 .mb-col.sel .mb{background:linear-gradient(180deg,#FF9DB0,#E04E72) !important;box-shadow:0 5px 12px rgba(224,78,114,.3);}
+.bento.level-3 .mb-col.sel .mb{background:linear-gradient(180deg,#F4A0A0,#E5484D) !important;box-shadow:0 5px 12px rgba(229,72,77,.3);}
 /* V1.9.39: 라벨도 막대와 동일한 flex:1 균등 칸 → 막대 정중앙 정렬 (틀어짐 제거) */
 .mini-bars + .mini-labels{display:flex;gap:3px;font-size:11.5px;color:#64748B;font-weight:700;margin-top:7px;font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
 /* V1.9.38: 현재 기간(이번주/오늘) 강조 — 빨강 제거, level 색으로 통일 */
@@ -525,7 +525,7 @@
 .b-ring{width:72px;height:72px;margin:6px auto 0;position:relative;}
 .b-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
 .b-ring circle{fill:none;stroke-width:8;stroke-linecap:round;}
-.b-ring .tr{stroke:#E5E7EB;}
+.b-ring .tr{stroke:#EBEEEC;}
 /* V1.9.30: ring 색도 level에 동기화 */
 /* V1.9.45: ring 색은 달성률 기반(_ringColor, 인라인 stroke) — level 고정색 폐기 */
 .b-ring .pr{transition:stroke-dashoffset .5s,stroke .4s ease;}
@@ -563,7 +563,7 @@
 
 /* L3 활기차게 — 연한 코랄 (배경) + 진한 와인 (텍스트) */
 .health-card.level-3 {
-  background: linear-gradient(135deg, #FFB8C5 0%, #FF7A95 100%);
+  background: linear-gradient(135deg, #B8D8C9 0%, #7FC4A8 100%);
   color: #4A0E1F;  /* 진한 와인 — contrast 5.8:1 */
 }
 .health-card.level-3 .health-bar { background: rgba(74,14,31,0.20); }
@@ -992,13 +992,13 @@
 .ds-np-hero .np-now-label {
   display: inline-flex; align-items: center; gap: 7px;
   font-size: 11px; font-weight: 900;
-  color: #FF385C;
+  color: #4F9E7C;
   letter-spacing: 0.14em; text-transform: uppercase;
   margin-bottom: 6px;
 }
 .ds-np-hero .np-now-label::before {
   content: ''; width: 8px; height: 8px; border-radius: 50%;
-  background: #FF385C;
+  background: #4F9E7C;
   animation: ds-np-blink 1.4s ease-in-out infinite;
 }
 @keyframes ds-np-blink {
@@ -1034,7 +1034,7 @@
 }
 .ds-np-hero .np-timebar .bar-fill {
   position: absolute; left: 0; top: 0; bottom: 0;
-  background: #FF385C; border-radius: 3px;
+  background: #4F9E7C; border-radius: 3px;
   width: var(--np-progress, 30%);
   animation: ds-np-flow 2.2s ease-in-out infinite;
 }
@@ -1227,11 +1227,11 @@
   opacity: 0.62; margin-left: 6px;
   letter-spacing: -0.01em;
 }
-.ds-fc-temp-range .hi { color: #FF385C; }
+.ds-fc-temp-range .hi { color: #4F9E7C; }
 .ds-fc-temp-range .lo { color: #3B82F6; }
 .ds-today-fc.scene-rain .ds-fc-temp-range .hi,
 .ds-today-fc.scene-night .ds-fc-temp-range .hi,
-.ds-today-fc.scene-thunder .ds-fc-temp-range .hi { color: #FF8FA3; }
+.ds-today-fc.scene-thunder .ds-fc-temp-range .hi { color: #E5989E; }
 .ds-today-fc.scene-rain .ds-fc-temp-range .lo,
 .ds-today-fc.scene-night .ds-fc-temp-range .lo,
 .ds-today-fc.scene-thunder .ds-fc-temp-range .lo { color: #93C5FD; }
@@ -1295,8 +1295,8 @@
   right: 16px;
   bottom: 80px; /* nav(60px) + 20px gap */
   border-radius: 28px;
-  background: linear-gradient(135deg, #FF385C 0%, #E31C5F 100%);
-  box-shadow: 0 8px 24px rgba(255,56,92,0.36), 0 3px 8px rgba(0,0,0,0.16);
+  background: linear-gradient(135deg, #4F9E7C 0%, #3E8467 100%);
+  box-shadow: 0 8px 24px rgba(79, 158, 124,0.36), 0 3px 8px rgba(0,0,0,0.16);
   border: none;
   color: #fff;
   padding: 14px 22px 14px 18px;
@@ -1315,7 +1315,7 @@
 }
 .ds-fab-ext:active {
   transform: scale(0.96);
-  box-shadow: 0 4px 12px rgba(255,56,92,0.28), 0 2px 4px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(79, 158, 124,0.28), 0 2px 4px rgba(0,0,0,0.12);
 }
 .ds-fab-ext-ico {
   font-size: 18px;
@@ -1351,16 +1351,84 @@
 /* unread dot — 내 글 댓글 / 내 거래 메시지 신규 알림 (V1.5) */
 .unread-dot {
   display:inline-block; width:7px; height:7px; border-radius:50%;
-  background: var(--c-pr, #FF385C);
+  background: var(--c-pr, #4F9E7C);
   margin-left: 6px; vertical-align: middle;
-  box-shadow: 0 0 0 2px rgba(255,56,92,.16);
+  box-shadow: 0 0 0 2px rgba(79, 158, 124,.16);
   animation: unread-pulse 2.2s ease-in-out infinite;
 }
 @keyframes unread-pulse {
-  0%, 100% { box-shadow: 0 0 0 2px rgba(255,56,92,.16); }
-  50%      { box-shadow: 0 0 0 4px rgba(255,56,92,.08); }
+  0%, 100% { box-shadow: 0 0 0 2px rgba(79, 158, 124,.16); }
+  50%      { box-shadow: 0 0 0 4px rgba(79, 158, 124,.08); }
 }
 .recent-right { font-size:11px; color:var(--c-g300); flex-shrink:0; }
+
+/* ═══ v4 리브랜딩 (2026-09-11): 활동량 카드 색 위계 — 뉴트럴 카드 + 잉크 숫자 + 그린 게이지 ═══
+ * 규칙: 그린 히어로는 화면당 1곳. 활동량은 보조 지표 → 레벨별 컬러 그라데이션·캐릭터 폐지 (DESIGN.md v4 §2-4) */
+.health-card, .health-card.level-1, .health-card.level-2, .health-card.level-3 {
+  background: var(--c-g100) !important; color: var(--c-g900) !important;
+  box-shadow: none !important; border: 1px solid var(--c-g200);
+}
+.health-card::before { display: none !important; }
+.health-face { display: none !important; }
+.health-content { padding-right: 8px !important; text-shadow: none !important; }
+.health-card .health-lbl, .health-card .health-unit, .health-card .health-meta, .health-card .health-goal { color: var(--c-g500) !important; opacity: 1 !important; }
+.health-card .health-status { color: var(--c-g900) !important; opacity: 1 !important; }
+.health-card .health-num { font-family: inherit !important; font-weight: 800 !important; color: var(--c-g900) !important; }
+.health-card .health-bar { background: rgba(22,26,24,0.07) !important; }
+.health-card .health-bar-fill,
+.health-card.level-1 .health-bar-fill, .health-card.level-2 .health-bar-fill, .health-card.level-3 .health-bar-fill {
+  background: var(--c-pr) !important; box-shadow: none !important;
+}
+
+/* ═══ v4: 활동량 카드 → 7일 스파크라인 상태줄 (변동 가시화, P-5) ═══
+ * 어제까지 6일=히스토리 막대, 오늘 막대=그린+펄스, GPS 갱신마다 실시간으로 자람 + kcal 카운트업.
+ * 상세(게이지·목표·통계)는 탭 → 기존 활동량 시트. */
+.health-card{display:none !important;}
+.act-spark{margin:10px 16px 0;padding:11px 16px;display:flex;align-items:center;gap:11px;cursor:pointer;border-radius:14px;-webkit-tap-highlight-color:transparent;}
+.act-spark:active{background:rgba(22,26,24,.05);}
+.as-lbl{font-size:12px;font-weight:700;color:var(--c-g500);flex:0 0 auto;}
+.as-kcal{font-size:12px;font-weight:700;color:var(--c-g500);flex:0 0 auto;}
+.as-kcal b{font-size:14.5px;font-weight:800;color:var(--c-g900);font-variant-numeric:tabular-nums;}
+.as-bars{flex:1;display:flex;align-items:flex-end;gap:4px;height:22px;min-width:0;}
+.as-bars i{flex:1;border-radius:2.5px;background:rgba(79,158,124,.25);transition:height .6s cubic-bezier(.16,1,.3,1);}
+.as-bars i.today{background:var(--c-pr);animation:as-pulse 2.4s ease-in-out infinite;}
+@keyframes as-pulse{0%,100%{opacity:1;}50%{opacity:.6;}}
+/* G-1: 어제 대비 델타 배지 — 상승=그린, 하락=무채(부정 아님) */
+.as-delta{font-size:11px;font-weight:800;flex:0 0 auto;font-variant-numeric:tabular-nums;border-radius:7px;padding:3px 7px;color:#2E6B50;background:var(--c-pr-xl,#F3F8F5);white-space:nowrap;}
+.as-delta.dn{color:var(--c-g500);background:var(--c-g100);}
+@media (prefers-reduced-motion: reduce){.as-bars i{transition:none;}.as-bars i.today{animation:none;}}
+
+/* ═══ v4: 예보 카드 내 3일 일정 스트립 — E-2 정렬 테이블 + 오늘 하이라이트 밴드 ═══
+ * 시간 열 고정 정렬(장부식 명료함) · 요일+날짜 세로 라벨 · 오늘=그린 닷+진한 라벨+옅은 밴드.
+ * 어두운 씬(비·눈·번개·밤)은 흰 텍스트 오버라이드. */
+.fc-slots{margin:14px 12px 0;padding-top:4px;border-top:1px solid rgba(27,42,63,.16);display:flex;flex-direction:column;position:relative;z-index:2;}
+.fcs-grp{display:grid;grid-template-columns:52px 52px 1fr;column-gap:10px;row-gap:6px;align-items:baseline;padding:9px 10px;margin:0;border-radius:12px;}
+.fcs-grp.today{background:rgba(255,255,255,.38);}
+.fcs-day{display:flex;flex-direction:column;align-items:flex-start;gap:2px;line-height:1.1;min-width:0;}
+.fcs-day .wd{font-size:12.5px;font-weight:800;color:rgba(27,42,63,.55);display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.fcs-day .dt{font-size:10px;font-weight:700;color:rgba(27,42,63,.40);font-variant-numeric:tabular-nums;}
+.fcs-grp.today .fcs-day .wd{color:#16202E;}
+.fcs-grp.today .fcs-day .wd::before{content:'';width:5px;height:5px;border-radius:50%;background:#3E8467;flex:0 0 auto;}
+.fcs-tm{font-size:14px;font-weight:800;color:#2E6B50;font-variant-numeric:tabular-nums;}  /* C-1: 시간=딥그린 잉크(스캔 축) */
+.fcs-tm.mute{color:rgba(46,107,80,.38);font-weight:700;}
+.fcs-jb{font-size:14px;font-weight:600;color:rgba(22,32,46,.80);  /* C-1: 소프트 잉크 */white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em;min-width:0;}
+.fcs-jb.free{color:rgba(27,42,63,.42);font-size:13px;}
+.fcs-jb em{font-style:normal;font-size:11px;font-weight:800;color:#2E6B50;margin-left:5px;}
+/* 어두운 씬 오버라이드 */
+.ds-today-fc.scene-rain .fc-slots, .ds-today-fc.scene-snow .fc-slots, .ds-today-fc.scene-thunder .fc-slots, .ds-today-fc.scene-night .fc-slots{border-top-color:rgba(255,255,255,.25);}
+.ds-today-fc.scene-rain .fcs-grp.today, .ds-today-fc.scene-snow .fcs-grp.today, .ds-today-fc.scene-thunder .fcs-grp.today, .ds-today-fc.scene-night .fcs-grp.today{background:rgba(255,255,255,.15);}
+.ds-today-fc.scene-rain .fcs-day .wd, .ds-today-fc.scene-snow .fcs-day .wd, .ds-today-fc.scene-thunder .fcs-day .wd, .ds-today-fc.scene-night .fcs-day .wd{color:rgba(255,255,255,.60);}
+.ds-today-fc.scene-rain .fcs-grp.today .fcs-day .wd, .ds-today-fc.scene-snow .fcs-grp.today .fcs-day .wd, .ds-today-fc.scene-thunder .fcs-grp.today .fcs-day .wd, .ds-today-fc.scene-night .fcs-grp.today .fcs-day .wd{color:#fff;}
+.ds-today-fc.scene-rain .fcs-day .dt, .ds-today-fc.scene-snow .fcs-day .dt, .ds-today-fc.scene-thunder .fcs-day .dt, .ds-today-fc.scene-night .fcs-day .dt{color:rgba(255,255,255,.45);}
+.ds-today-fc.scene-rain .fcs-tm, .ds-today-fc.scene-snow .fcs-tm, .ds-today-fc.scene-thunder .fcs-tm, .ds-today-fc.scene-night .fcs-tm{color:#9FE0C3;}
+.ds-today-fc.scene-rain .fcs-tm.mute, .ds-today-fc.scene-snow .fcs-tm.mute, .ds-today-fc.scene-thunder .fcs-tm.mute, .ds-today-fc.scene-night .fcs-tm.mute{color:rgba(159,224,195,.45);}
+.ds-today-fc.scene-rain .fcs-jb, .ds-today-fc.scene-snow .fcs-jb, .ds-today-fc.scene-thunder .fcs-jb, .ds-today-fc.scene-night .fcs-jb{color:rgba(255,255,255,.88);}
+.ds-today-fc.scene-rain .fcs-jb.free, .ds-today-fc.scene-snow .fcs-jb.free, .ds-today-fc.scene-thunder .fcs-jb.free, .ds-today-fc.scene-night .fcs-jb.free{color:rgba(255,255,255,.55);}
+.ds-today-fc.scene-rain .fcs-jb em, .ds-today-fc.scene-snow .fcs-jb em, .ds-today-fc.scene-thunder .fcs-jb em, .ds-today-fc.scene-night .fcs-jb em{color:#9FE0C3;}
+/* 예정 평문 행·라벨은 일정 스트립이 대체 — 진행중 히어로(.ds-np-hero)만 유지 */
+.ds-timeline .ds-np-row{display:none !important;}
+.ds-timeline .ds-np-list-label{display:none !important;}
+.ds-timeline:not(:has(.ds-np-hero)){display:none !important;}
 </style>
 </head>
 <body>
@@ -1368,6 +1436,7 @@
 
   <!-- V1.7.4 mockup port: 큰 헤더 (날짜 위 + 이름,인사 두 줄 큰 글씨) -->
   <div class="home-header-v2">
+    <div class="ds-lockup" aria-label="싹싹" style="margin-bottom:12px;"><span class="lk-ko">싹싹</span><span class="lk-en">Ssak-Ssak</span></div>
     <div class="hh-row">
       <div class="hh-body">
         <!-- V1.9.4: 헤더 날짜 제거 — 날짜는 weather 카드에만 표시 (중복 제거) -->
@@ -1433,15 +1502,26 @@
       <div class="ds-today-fc-sub" id="today-fc-progress">완료 <b>0</b> · 진행 <b>0</b> · 예정 <b>0</b></div>
       <!-- V1.9.3: foot 3셀 제거 → 그 자리에 mini Timeline (E안 mockup 그대로) -->
       <div class="ds-timeline" id="today-timeline" style="display:none;"></div>
+      <!-- v4 (2026-09-11): 3일 슬롯 스트립 — 오늘·내일·모레 × 최대 2슬롯(업무 규칙), 빈 슬롯=추가 예약 여력 -->
+      <div class="fc-slots" id="fc-slots" style="display:none;"></div>
     </div>
 
     <!-- V1.7.2: status-card fallback 영구 hide — weather hero가 0건도 처리 -->
     <div class="ds-status-card" id="today-card" style="display:none;"></div>
 
+
     <!-- V1.9.3: 외부 Timeline 제거 — weather hero 안으로 통합됨 -->
 
   <!-- V1.8: 단일 헬스 카드 — 활동량 자동 추정 + 3단계 색 + 캐릭터 -->
   <!-- V1.9.29: 클릭 시 통계 시트 (Bento Grid) -->
+  <!-- v4 (2026-09-11): 오늘 활동량 → 7일 스파크라인 상태줄 (P-5) — 어제까진 히스토리, 오늘 막대는 실시간으로 자람 -->
+  <div class="act-spark ds-fade-in ds-fade-in-2" id="act-spark" onclick="openActivitySheet()" style="display:none;">
+    <span class="as-lbl">오늘 활동량</span>
+    <span class="as-kcal"><b id="as-kcal">0</b> kcal</span>
+    <span class="as-delta" id="as-delta" style="display:none;"></span>
+    <span class="as-bars" id="as-bars" aria-hidden="true"></span>
+  </div>
+
   <button class="health-card ds-fade-in ds-fade-in-2 level-1" id="health-card" onclick="openActivitySheet()">
     <svg class="health-face" id="health-face" viewBox="0 0 100 100" aria-hidden="true"></svg>
     <span class="health-arrow" aria-hidden="true">↗</span>
@@ -1530,7 +1610,7 @@
     </div>
     <div style="display:flex;gap:8px;margin-top:20px;">
       <button onclick="closeReminderModal()" style="flex:1;padding:12px;border:1px solid #E4E9EE;background:#fff;border-radius:10px;font-size:14px;font-weight:600;color:#6B7684;cursor:pointer;">닫기</button>
-      <button onclick="saveReminderSettings()" style="flex:2;padding:12px;border:none;background:#FF385C;color:#fff;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">저장</button>
+      <button onclick="saveReminderSettings()" style="flex:2;padding:12px;border:none;background:#4F9E7C;color:#fff;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">저장</button>
     </div>
   </div>
 </div>
@@ -1678,7 +1758,7 @@ function fillReminderTimes() {
 function syncEnabledUI(on) {
   const slider = document.getElementById('reminder-slider');
   const knob = document.getElementById('reminder-knob');
-  if (slider) slider.style.background = on ? '#FF385C' : '#C8D0DA';
+  if (slider) slider.style.background = on ? '#4F9E7C' : '#C8D0DA';
   if (knob) knob.style.transform = on ? 'translateX(22px)' : 'translateX(0)';
   const timeRow = document.getElementById('reminder-time-row');
   if (timeRow) timeRow.style.opacity = on ? '1' : '0.4';
@@ -2101,8 +2181,8 @@ const HEALTH_FACE_SVG = {
       <circle cx="36" cy="46" r="3" fill="#1F2D40"/>
       <circle cx="64" cy="46" r="3" fill="#1F2D40"/>
       <path d="M38 64 Q50 71 62 64" stroke="#1F2D40" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <ellipse cx="28" cy="58" rx="5" ry="3.5" fill="#FFB8C5" opacity=".5"/>
-      <ellipse cx="72" cy="58" rx="5" ry="3.5" fill="#FFB8C5" opacity=".5"/>
+      <ellipse cx="28" cy="58" rx="5" ry="3.5" fill="#B8D8C9" opacity=".5"/>
+      <ellipse cx="72" cy="58" rx="5" ry="3.5" fill="#B8D8C9" opacity=".5"/>
       <ellipse cx="78" cy="22" rx="7" ry="3.5" fill="#fff" opacity=".75"/>`,
   // L2 순조롭게 — 살구 배경, 반달 눈 + 자연 미소
   2: `<defs><radialGradient id="f2" cx=".5" cy=".4"><stop offset="0" stop-color="#FFC094"/><stop offset="1" stop-color="#E89868"/></radialGradient></defs>
@@ -2177,6 +2257,56 @@ function renderHealthCard(items) {
   const fill = document.getElementById('health-bar-fill');
   if (fill) fill.style.width = pct + '%';
   set('health-pct', pct + '%');
+  // v4: 스파크라인 상태줄 동기 갱신 (실시간 변동 가시화)
+  try { renderActSpark(kcal, pct); } catch(_) {}
+}
+
+// v4 (2026-09-11): 최근 7일 활동 스파크라인 — 과거일 kcal 근사 = 완료건×2h×220 + 이동km×50 (renderHealthCard 산식과 동일 가정)
+function renderActSpark(todayKcal, pct) {
+  const wrap = document.getElementById('act-spark');
+  const bars = document.getElementById('as-bars');
+  if (!wrap || !bars) return;
+  const hist = _readActivityHistory();
+  const vals = [];
+  for (let off = 6; off >= 1; off--) {
+    const d = new Date(); d.setDate(d.getDate() - off);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const h = hist[key] || {};
+    vals.push(Math.round((h.s || 0) * 2 * 220 + (h.d || 0) / 1000 * 50));
+  }
+  vals.push(Math.max(0, Math.round(todayKcal || 0)));
+  const max = Math.max(100, ...vals);
+  bars.innerHTML = vals.map((v, i) =>
+    `<i${i === 6 ? ' class="today"' : ''} style="height:${Math.max(12, Math.round(v / max * 100))}%"></i>`).join('');
+  const el = document.getElementById('as-kcal');
+  const target = Math.round(todayKcal || 0);
+  const prev = (typeof window._asKcalPrev === 'number') ? window._asKcalPrev : 0;
+  if (el && target !== prev) {
+    window._asKcalPrev = target;
+    const t0 = performance.now(), dur = 500;
+    const step = now => {
+      const p = Math.min(1, (now - t0) / dur);
+      el.textContent = Math.round(prev + (target - prev) * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  } else if (el) {
+    el.textContent = target;
+  }
+  // G-1: 어제 대비 델타 (어제=vals[5]) — 둘 다 0이면 숨김
+  const dEl = document.getElementById('as-delta');
+  if (dEl) {
+    const yesterday = vals[5] || 0;
+    const diff = target - yesterday;
+    if (target === 0 && yesterday === 0) {
+      dEl.style.display = 'none';
+    } else {
+      dEl.style.display = '';
+      if (diff >= 0) { dEl.className = 'as-delta'; dEl.textContent = '▲ ' + diff; }
+      else { dEl.className = 'as-delta dn'; dEl.textContent = '▼ ' + Math.abs(diff); }
+    }
+  }
+  wrap.style.display = 'flex';
 }
 
 // V1.7.4 mockup port: 헤더 날짜 업데이트
@@ -2416,7 +2546,7 @@ function _formatKm(m) {
 // V1.9.45: 목표 ring 색 — 달성률 따라 블루→앰버→코랄 (부드러운 그라데, 동기부여)
 function _ringColor(p) {
   const t = Math.min(1, Math.max(0, p/100));
-  const stops = [[74,135,200],[255,159,67],[255,56,92]]; // 블루#4A87C8 → 앰버#FF9F43 → 코랄#FF385C
+  const stops = [[74,135,200],[255,159,67],[229,72,77]]; // 블루#4A87C8 → 앰버#FF9F43 → 레드#E5484D (v4 히트스케일)
   const seg = t < 0.5 ? 0 : 1;
   const lt = t < 0.5 ? t/0.5 : (t-0.5)/0.5;
   const a = stops[seg], b = stops[seg+1];
@@ -2983,6 +3113,11 @@ async function loadHomeStats() {
       todayItems = (rToday.data || []).length > 0 ? rToday.data : pending;
     }
     renderTodayForecast(todayItems);
+    // v4: 다가오는 일정 (오늘~모레) — 오늘은 위 데이터 재사용, 내일/모레만 추가 조회
+    try {
+      if (typeof renderUpcoming === 'function') renderUpcoming(todayItems, todayStr);
+      else setTimeout(() => { try { renderUpcoming(todayItems, todayStr); } catch(_) {} }, 0);
+    } catch(_) {}
     // V1.8: renderHealthCard는 renderTodayForecast 내부에서 자동 호출
     // V1.7.1: Weekly forecast 제거 — rWeek는 fetch만 유지 (다른 기능 호환)
     void rWeek;
@@ -3051,7 +3186,7 @@ function updateBellState(subscribed) {
   if (subscribed) {
     dot.style.display = 'block';
     dot.style.background = '#FFD600'; // 활성 — 옐로
-    dot.style.borderColor = 'rgba(255,56,92,.6)';
+    dot.style.borderColor = 'rgba(79, 158, 124,.6)';
   } else if (perm === 'denied') {
     dot.style.display = 'block';
     dot.style.background = '#B0B7C3'; // 거부 — 회색
@@ -3213,6 +3348,66 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+</script>
+<script>
+/* ═══ v4 (2026-09-11): 예보 카드 3일 슬롯 스트립 ═══
+ * 오늘=홈 초기 fetch 재사용, 내일·모레만 date 지정 조회. 하루 최대 2건(업무 규칙) → 3일 6슬롯 전부 표시.
+ * 빈 슬롯 = 추가 예약 여력 시각화. schedule.html 직접 입력분(localStorage)도 병합. */
+async function renderUpcoming(todayItems, todayStr) {
+  const wrap = document.getElementById('fc-slots');
+  if (!wrap) return;
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const days = [0, 1, 2].map(off => { const d = new Date(); d.setDate(d.getDate() + off); return d; });
+  const dateStrs = days.map(fmt);
+
+  const [r1, r2] = await Promise.all([
+    fetch(SERVER + '/api/bookings?date=' + dateStrs[1]).then(r => r.json()).catch(() => ({data:[]})),
+    fetch(SERVER + '/api/bookings?date=' + dateStrs[2]).then(r => r.json()).catch(() => ({data:[]}))
+  ]);
+
+  let localAll = [];
+  try { localAll = JSON.parse(localStorage.getItem('ssak_schedules') || '[]'); } catch(_) {}
+  const localFor = ds => localAll.filter(s => (s.date || s.scheduled_date || '').slice(0,10) === ds && s.status !== 'cancelled');
+  const pick = (local, server) => (local.length > 0 ? local : server);
+
+  const lists = [
+    (todayItems || []),
+    pick(localFor(dateStrs[1]), r1.data || []),
+    pick(localFor(dateStrs[2]), r2.data || [])
+  ].map(list => (list || [])
+    .filter(s => s.status !== 'cancelled')
+    .slice()
+    .sort((a, b) => String(a.time || a.scheduled_time || '').localeCompare(String(b.time || b.scheduled_time || ''))));
+
+  const LABEL = ['오늘', '내일', '모레'];
+  wrap.innerHTML = days.map((d, i) => {
+    const list = lists[i];
+    const md = (d.getMonth() + 1) + '/' + d.getDate();
+    const dayCell = `<span class="fcs-day"><span class="wd">${LABEL[i]}</span><span class="dt">${md}</span></span>`;
+    const job = it => {
+      const tm = it.time || it.scheduled_time || '';
+      const kind = esc(String(it.kind || it.service || '청소').trim());
+      return { tm: tm ? `<span class="fcs-tm">${esc(tm)}</span>` : '<span class="fcs-tm mute">—</span>', jb: `<span class="fcs-jb">${kind}</span>` };
+    };
+    let rows;
+    if (list.length === 0) {
+      rows = `${dayCell}<span class="fcs-tm mute">—</span><span class="fcs-jb free">일정 없음</span>`;
+    } else {
+      const a = job(list[0]);
+      rows = `${dayCell}${a.tm}${a.jb}`;
+      if (list[1]) {
+        const b = job(list[1]);
+        const over = list.length > 2 ? `<em>+${list.length - 2}</em>` : '';
+        rows += `<span></span>${b.tm}<span class="fcs-jb">${esc(String(list[1].kind || list[1].service || '청소').trim())}${over}</span>`;
+      } else {
+        rows += '<span></span><span class="fcs-tm mute">—</span><span class="fcs-jb free">여유</span>';
+      }
+    }
+    return `<div class="fcs-grp${i === 0 ? ' today' : ''}">${rows}</div>`;
+  }).join('');
+  wrap.style.display = 'flex';
+}
 </script>
 </body>
 </html>

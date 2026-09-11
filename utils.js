@@ -396,7 +396,7 @@ function svgIcon(name, opts = {}) {
   const svg = SVG_ICONS[name];
   if (!svg) return '';
   const size = opts.size || 96;
-  const color = opts.color || 'var(--c-pr, #FF385C)';
+  const color = opts.color || 'var(--c-pr, #4F9E7C)';
   return `<span style="display:inline-block;width:${size}px;height:${size}px;color:${color};" aria-hidden="true">${svg}</span>`;
 }
 
@@ -762,7 +762,7 @@ function navigate(url) {
  */
 function confetti(opts = {}) {
   const count = opts.count || 60;
-  const colors = opts.colors || ['#FF385C', '#FC8181', '#14B8A6', '#FFB800', '#A78BFA', '#5EEAD4'];
+  const colors = opts.colors || ['#4F9E7C', '#7FC4A8', '#4F9E7C', '#FFB800', '#A78BFA', '#7FC4A8'];
   const origin = opts.origin || { x: 0.5, y: 0.5 };
   const totalDur = opts.duration || 2400;
   const container = document.createElement('div');
@@ -1080,7 +1080,7 @@ function _ssakModalEnsureStyles() {
       font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:transform .08s;}
     .ds-modal-btn:active{transform:scale(.97);}
     .ds-modal-btn-ghost{background:#fff;color:#6B7684;border:1px solid #E4E9EE;}
-    .ds-modal-btn-primary{background:#FF385C;color:#fff;box-shadow:0 3px 12px rgba(255,56,92,.28);}
+    .ds-modal-btn-primary{background:#4F9E7C;color:#fff;box-shadow:0 3px 12px rgba(79, 158, 124,.28);}
     .ds-modal-btn-danger{background:#EF4444;color:#fff;box-shadow:0 3px 12px rgba(239,68,68,.30);}`;
   const st = document.createElement('style');
   st.id = 'ds-modal-style'; st.textContent = css;

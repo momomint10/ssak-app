@@ -17,16 +17,16 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — 로그인</title>
-<meta name="theme-color" content="#FF385C">
+<meta name="theme-color" content="#4F9E7C">
 <link rel="stylesheet" href="design.css?v=20260620-8">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body {
   font-family: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
-  color: #191F28;
+  color: #161A18;
   min-height: 100vh;
-  background: #FFF8F5;  /* 사진 로드 전 fallback */
+  background: #F7FAF8;  /* 사진 로드 전 fallback */
 }
 body { position: relative; overflow-x: hidden; }
 
@@ -68,9 +68,16 @@ body { position: relative; overflow-x: hidden; }
   margin-top: auto;             /* 위 공간을 흡수해서 브랜드를 하단 카드 쪽으로 */
   margin-bottom: 14px;          /* 카드와 약간의 여백 */
 }
+
+/* ── v4 리브랜딩 (2026-09-11): 코랄 시대 배경사진 폐기 → 무채색 화이트 + 워드마크 락업 A ── */
+.bg-photo, .bg-overlay { display: none !important; }
+body { background: var(--c-bg, #FFFFFF) !important; }
+.brand { text-align: center; }
+.brand .ds-lockup { justify-content: center; }
 .brand p {
-  /* 얇고 뚜렷하게 — 얇은 글자 + 또렷한 흰 헤일로 */
-  display: inline;
+  /* v4: 락업 아래 별도 줄 */
+  display: block;
+  margin-top: 10px;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -105,13 +112,13 @@ body { position: relative; overflow-x: hidden; }
 }
 .card-title {
   font-size: 18px; font-weight: 800;
-  color: #191F28; margin-bottom: 4px;         /* 6 → 4 */
+  color: #161A18; margin-bottom: 4px;         /* 6 → 4 */
   text-align: center;
   letter-spacing: -0.015em;
   text-shadow: none;
 }
 .card-desc {
-  font-size: 12.5px; color: #4E5968;
+  font-size: 12.5px; color: #474E4A;
   line-height: 1.5; margin-bottom: 12px;      /* 16 → 12 */
   text-align: center;
   font-weight: 500;
@@ -128,7 +135,7 @@ input[type="tel"], input[type="text"] {
   font-size: 15px;
   font-family: inherit;
   font-weight: 600;
-  color: #191F28;
+  color: #161A18;
   border: 1.5px solid rgba(255, 255, 255, 0.65);
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.35);
@@ -143,14 +150,14 @@ input[type="tel"], input[type="text"] {
   transition: border-color .15s, box-shadow .18s, background .18s;
 }
 input:focus {
-  border-color: var(--c-pr, #FF385C);
+  border-color: var(--c-pr, #4F9E7C);
   background: rgba(255, 255, 255, 0.75);
   box-shadow:
-    0 4px 14px rgba(255, 56, 92, 0.12),
+    0 4px 14px rgba(79, 158, 124, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 input[disabled] { background: rgba(245, 245, 245, 0.7); color: #999; }
-input::placeholder { color: #8B95A1; font-weight: 500; }
+input::placeholder { color: #6A716D; font-weight: 500; }
 
 /* ── Pill 버튼 (260528 컴팩트) ── */
 .btn {
@@ -161,14 +168,14 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
   font-family: inherit;
   border: none;
   border-radius: 9999px;
-  background: linear-gradient(180deg, #FF5070 0%, #FF385C 100%);
+  background: linear-gradient(180deg, #5FAE8B 0%, #4F9E7C 100%);
   color: #fff;
   cursor: pointer;
   margin-top: 6px;                            /* 8 → 6 */
   min-height: 44px;                           /* 48 → 44 */
   letter-spacing: -0.01em;
   box-shadow:
-    0 10px 24px rgba(255, 56, 92, 0.38),
+    0 10px 24px rgba(79, 158, 124, 0.38),
     inset 0 1px 0 rgba(255,255,255,.28);
   transition: transform 0.12s cubic-bezier(0.16,1,0.3,1), box-shadow 0.18s;
 }
@@ -182,14 +189,14 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  color: #FF385C;
-  border: 1.5px solid rgba(255, 56, 92, 0.4);
+  color: #4F9E7C;
+  border: 1.5px solid rgba(79, 158, 124, 0.4);
   box-shadow: 0 6px 16px rgba(20,30,50,.08);
 }
 .btn-link {
   background: none;
   border: none;
-  color: var(--c-pr, #FF385C);
+  color: var(--c-pr, #4F9E7C);
   font-size: 13px;
   font-weight: 700;
   padding: 8px;
@@ -199,18 +206,18 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 
 .hint {
   font-size: 11.5px;
-  color: #4E5968;
+  color: #474E4A;
   margin-top: 8px;              /* 10 → 8 */
   line-height: 1.5;             /* 1.55 → 1.5 */
   text-align: center;
 }
-.hint b { color: var(--c-pr, #FF385C); }
+.hint b { color: var(--c-pr, #4F9E7C); }
 
 .timer {
   display: inline-block;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
-  color: var(--c-pr, #FF385C);
+  color: var(--c-pr, #4F9E7C);
 }
 
 .alert {
@@ -224,7 +231,7 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
   font-weight: 600;
   margin-top: 12px;
   display: none;
-  border: 1px solid rgba(255, 56, 92, 0.2);
+  border: 1px solid rgba(79, 158, 124, 0.2);
 }
 .alert.on { display: block; }
 .alert.info {
@@ -241,7 +248,7 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
 /* 관리자 문의 footer 제거 — 카드는 자연스럽게 하단으로 내려옴 */
 .bottom { display: none; }
 .bottom small { display: block; line-height: 1.7; }
-.bottom a { color: #FF385C; font-weight: 700; }
+.bottom a { color: #4F9E7C; font-weight: 700; }
 
 /* ── 베타 배너 (LAUNCH_MODE='beta' 일 때만) ── */
 .beta-banner{
@@ -251,30 +258,30 @@ input::placeholder { color: #8B95A1; font-weight: 500; }
   backdrop-filter:blur(20px) saturate(180%);
   -webkit-backdrop-filter:blur(20px) saturate(180%);
   border:1px solid rgba(255,255,255,0.75);
-  font-size:11.5px;color:#191F28;font-weight:700;
+  font-size:11.5px;color:#161A18;font-weight:700;
   text-align:center;letter-spacing:0.02em;
   box-shadow:0 4px 12px rgba(20,30,50,0.06);
 }
-.beta-banner b{color:#FF385C;font-weight:800;}
+.beta-banner b{color:#4F9E7C;font-weight:800;}
 .beta-banner.hide{display:none;}
 /* 베타 모드: SMS 버튼 작게/secondary */
 body.beta-mode #btn-send{
   background:transparent !important;
-  color:#8B95A1 !important;
+  color:#6A716D !important;
   font-size:13px;font-weight:600;
   min-height:auto;padding:8px;
   margin-top:14px;box-shadow:none !important;
   text-decoration:underline;
 }
 body.beta-mode #btn-pin-mode{
-  background:linear-gradient(180deg,#FF5070 0%,#FF385C 100%);
+  background:linear-gradient(180deg,#5FAE8B 0%,#4F9E7C 100%);
   color:#fff !important;
   border:none !important;
   display:block !important;
   margin-top:0;
   font-size:15px;font-weight:700;padding:12px;min-height:44px;
   border-radius:9999px;
-  box-shadow:0 10px 24px rgba(255,56,92,.38);
+  box-shadow:0 10px 24px rgba(79, 158, 124,.38);
 }
 </style>
 <script src="utils.js?v=20260620-8"></script>
@@ -288,6 +295,7 @@ body.beta-mode #btn-pin-mode{
 <div class="shell">
 
   <div class="brand">
+    <div class="ds-lockup lk-lg" aria-label="싹싹" style="margin-bottom:12px;"><span class="lk-ko">싹싹</span><span class="lk-en">Ssak-Ssak</span></div>
     <p>CLEAN · CARE · CONNECT</p>
   </div>
 
@@ -480,8 +488,8 @@ function offerTrustDevice() {
             공용 기기면 "매번 인증"을 누르세요.
           </div>
           <div style="display:flex;gap:10px;">
-            <button onclick="__trustResolve(false)" style="flex:1;padding:13px;border:1.5px solid #E5E7EB;background:#fff;border-radius:10px;font-size:14px;font-weight:700;color:#666;cursor:pointer;font-family:inherit;">매번 인증</button>
-            <button onclick="__trustResolve(true)" style="flex:1.5;padding:13px;border:none;background:#FF385C;color:#fff;border-radius:10px;font-size:14px;font-weight:var(--fw-bold);cursor:pointer;font-family:inherit;">자동 로그인 (30일)</button>
+            <button onclick="__trustResolve(false)" style="flex:1;padding:13px;border:1.5px solid #EBEEEC;background:#fff;border-radius:10px;font-size:14px;font-weight:700;color:#666;cursor:pointer;font-family:inherit;">매번 인증</button>
+            <button onclick="__trustResolve(true)" style="flex:1.5;padding:13px;border:none;background:#4F9E7C;color:#fff;border-radius:10px;font-size:14px;font-weight:var(--fw-bold);cursor:pointer;font-family:inherit;">자동 로그인 (30일)</button>
           </div>
         </div>
       </div>`;

@@ -37,7 +37,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>싹싹 — 견적요청서</title>
-<meta name="theme-color" content="#FF385C">
+<meta name="theme-color" content="#4F9E7C">
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 <link rel="stylesheet" href="design.css?v=20260620-8">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
@@ -75,7 +75,7 @@ textarea { resize:vertical; min-height:90px; line-height:1.6; }
 .amt-btn:active { background:#F9FAFB; }
 
 /* 휴지통 모달 row */
-.trash-row { display:flex; align-items:center; gap:10px; background:#fff; margin:8px 0; padding:12px 14px; border-radius:var(--r-sm); border:1px solid #F3F4F6; }
+.trash-row { display:flex; align-items:center; gap:10px; background:#fff; margin:8px 0; padding:12px 14px; border-radius:var(--r-sm); border:1px solid #F5F7F6; }
 .trash-empty-hint { font-size:11.5px; color:var(--c-g500); padding:4px 4px 8px; line-height:1.5; }
 .btn-restore { background:#fff; color:#0369A1; border:1.5px solid #BAE6FD; padding:8px 14px; border-radius:var(--r-sm); font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; white-space:nowrap; }
 .btn-restore:active { background:#F0F9FF; }
@@ -392,7 +392,7 @@ function renderDetail(){
     ${isPending ? `
     <div class="detail-section" style="background:#FFF7E6;padding:10px 12px;border-radius:8px;color:#92400E;font-size:13px;">
       ⏳ 고객이 아직 정보를 입력하지 않았습니다.<br>
-      링크: <a href="${formUrl}" target="_blank" style="color:var(--c-pr, #FF385C);text-decoration:underline;word-break:break-all;">${formUrl}</a>
+      링크: <a href="${formUrl}" target="_blank" style="color:var(--c-pr, #4F9E7C);text-decoration:underline;word-break:break-all;">${formUrl}</a>
     </div>
     ` : ''}
     ${r.clean_type    ? `<div class="detail-section"><div class="detail-h">청소 유형</div><div class="detail-v">${esc(r.clean_type)}</div></div>` : ''}
@@ -413,7 +413,7 @@ function renderDetail(){
       <div class="detail-section">
         <div class="detail-h">현장 특이 조건 (${r.site_conditions.length})</div>
         <div class="detail-v" style="display:flex;flex-wrap:wrap;gap:5px;">
-          ${r.site_conditions.map(s => `<span class="ds-list-tag" style="background:#FFF0F4;color:#C92A4A;">⚠️ ${esc(s)}</span>`).join('')}
+          ${r.site_conditions.map(s => `<span class="ds-list-tag" style="background:#EAF2EE;color:#C92A4A;">⚠️ ${esc(s)}</span>`).join('')}
         </div>
       </div>` : ''}
     ${Array.isArray(r.appliance_options) && r.appliance_options.length ? `

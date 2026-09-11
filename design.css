@@ -6,39 +6,48 @@
  * 언제든 backup-before-ux-redesign 태그로 복구 가능
  */
 
-/* ── 1. 색상 토큰 (2026-05-26 modernized — 토스/카뱅 톤) ───────── */
+/* ── 1. 색상 토큰 (2026-09-11 v4 리브랜딩 — 그린 차분, DESIGN.md v4) ──
+ * 변수명은 v3 그대로 유지, 값만 교체 (참조 호환).
+ * --c-pr = 유일한 브랜드 액센트(그린). teal/mint는 그린 계열로 통합(외래색 폐기). */
 :root {
-  /* Primary — 코랄 (브랜드 액센트) */
-  --c-pr:    #FF385C;
-  --c-pr-d:  #E31C5F;
-  --c-pr-l:  #FFF0F3;
-  --c-pr-xl: #FFF8F9;
-  /* Secondary — Teal (성공/완료) */
-  --c-teal:  #00C896;
-  --c-teal-d:#00A87A;
-  --c-teal-l:#E6FAF5;
+  /* Primary — 그린 차분 (유일한 브랜드 액센트) */
+  --c-pr:    #4F9E7C;
+  --c-pr-d:  #3E8467;   /* hover/pressed */
+  --c-pr-l:  #EAF2EE;   /* 틴트 배경 (아이콘 bg, 활성 칩) */
+  --c-pr-xl: #F3F8F5;   /* 옅은 틴트 (히어로 카드 bg) */
+  /* Secondary — v3 teal 참조 호환 (성공/완료도 그린으로 통합) */
+  --c-teal:  #4F9E7C;
+  --c-teal-d:#3E8467;
+  --c-teal-l:#EAF2EE;
 
-  /* Mint — 자연/청결/완료 액센트 (Botanical 영감, 2026-05-27) */
-  --c-mint:    #5EEAD4;   /* 메인 민트 */
-  --c-mint-d:  #14B8A6;   /* 강조 */
-  --c-mint-l:  #D1F4E5;   /* 블롭 배경 */
-  --c-mint-xl: #ECFDF5;   /* 옅은 배경 */
+  /* Mint — v3 참조 호환용 (그린 계열로 흡수, 신규 사용 금지) */
+  --c-mint:    #7FC4A8;
+  --c-mint-d:  #4F9E7C;
+  --c-mint-l:  #DCEEE5;
+  --c-mint-xl: #F3F8F5;
 
-  /* Neutral — 토스 색상 톤 (살짝 푸르스름한 짙은 회색 계열) */
-  --c-bg:    #F7F8FA;   /* 앱 배경 */
+  /* Neutral — 무채색 (그린 미세 바이어스, 순백 바탕) */
+  --c-bg:    #FFFFFF;   /* 앱 배경 (순백) */
   --c-white: #FFFFFF;
-  --c-g100:  #F2F4F6;   /* divider, chip bg */
-  --c-g200:  #E5E8EB;   /* border, input border */
-  --c-g300:  #D1D6DB;   /* disabled border */
-  --c-g400:  #B0B8C1;   /* placeholder, 비활성 */
-  --c-g500:  #8B95A1;   /* secondary text — Toss style */
-  --c-g700:  #4E5968;   /* body text */
-  --c-g900:  #191F28;   /* title text */
+  --c-g100:  #F5F7F6;   /* 구획 fill, chip bg */
+  --c-g200:  #EBEEEC;   /* border, divider (헤어라인) */
+  --c-g300:  #D9DEDB;   /* disabled border */
+  --c-g400:  #9AA09C;   /* placeholder, 비활성 */
+  --c-g500:  #6A716D;   /* secondary text */
+  --c-g700:  #474E4A;   /* body text */
+  --c-g900:  #161A18;   /* title text (잉크) */
 
-  /* Semantic */
-  --c-red:   #F04438;
-  --c-amber: #F79009;
+  /* Semantic (기능색 — 브랜드색 아님, 의미 전달 소면적 전용) */
+  --c-red:   #E5484D;
+  --c-amber: #D99A2B;
   --c-blue:  #3B82F6;
+  /* 날씨 기능색 — 실시간 변동 정보는 상태가 색으로 즉시 읽혀야 함 */
+  --wx-sun:   #E1A23C;  --wx-sun-ink:   #C2792E;
+  --wx-cloud: #8B949B;  --wx-cloud-ink: #6D757B;
+  --wx-rain:  #4A90C2;  --wx-rain-ink:  #3D7DAC;
+  /* 캘린더 주말 (머티드) */
+  --cal-sun: #B06A6A;
+  --cal-sat: #5B87A8;
 
   /* ── 2. 간격 & 반경 ─────────────────────────────────────────── */
   --r-sm:  8px;
@@ -55,25 +64,24 @@
   /* ── 3. Elevation 시스템 (5단계, 강조된 다층 그림자) ───────────
    * Toss·카카오뱅크 스타일 + 입체감 강조
    * 카드 상단 highlight와 함께 쓰면 광원이 위에서 비치는 효과 */
-  --sh-xs: 0 1px 2px rgba(20, 30, 50, 0.06), 0 1px 1px rgba(20, 30, 50, 0.04);
-  --sh-sm: 0 2px 6px rgba(20, 30, 50, 0.07), 0 6px 12px rgba(20, 30, 50, 0.09), 0 0 0 1px rgba(20, 30, 50, 0.03);
-  --sh-md: 0 4px 12px rgba(20, 30, 50, 0.09), 0 12px 24px rgba(20, 30, 50, 0.13), 0 0 0 1px rgba(20, 30, 50, 0.03);
-  --sh-lg: 0 8px 20px rgba(20, 30, 50, 0.10), 0 20px 40px rgba(20, 30, 50, 0.17), 0 0 0 1px rgba(20, 30, 50, 0.03);
-  --sh-xl: 0 16px 36px rgba(20, 30, 50, 0.14), 0 32px 64px rgba(20, 30, 50, 0.22), 0 0 0 1px rgba(20, 30, 50, 0.03);
+  /* v4 최소주의: 다층 발광 → 은은한 단층 + 헤어라인 (보더가 주역, 그림자는 보조) */
+  --sh-xs: 0 1px 2px rgba(22, 26, 24, 0.04);
+  --sh-sm: 0 2px 6px rgba(22, 26, 24, 0.05), 0 0 0 1px rgba(22, 26, 24, 0.03);
+  --sh-md: 0 3px 10px rgba(22, 26, 24, 0.07), 0 0 0 1px rgba(22, 26, 24, 0.03);
+  --sh-lg: 0 6px 16px rgba(22, 26, 24, 0.09), 0 0 0 1px rgba(22, 26, 24, 0.03);
+  --sh-xl: 0 10px 28px rgba(22, 26, 24, 0.12), 0 0 0 1px rgba(22, 26, 24, 0.03);
 
-  /* 컬러 그림자 — CTA·강조 카드용 (브랜드 색을 자체 발광하는 효과) */
-  /* 2026-05-27 A안 톤다운: 코랄/민트 그림자 alpha 30% 축소, 3겹 → 2겹 */
-  --sh-pr:   0 3px 10px rgba(255, 56, 92, 0.20), 0 8px 22px rgba(255, 56, 92, 0.12);
-  --sh-pr-sm: 0 2px 6px rgba(255, 56, 92, 0.18), 0 4px 10px rgba(255, 56, 92, 0.08);
-  --sh-pr-lg: 0 6px 18px rgba(255, 56, 92, 0.28), 0 14px 32px rgba(255, 56, 92, 0.16);
-  --sh-teal: 0 3px 10px rgba(0, 200, 150, 0.22), 0 8px 22px rgba(0, 200, 150, 0.12);
-  --sh-mint: 0 3px 10px rgba(94, 234, 212, 0.22), 0 8px 22px rgba(20, 184, 166, 0.12);
-  --sh-mint-sm: 0 2px 6px rgba(94, 234, 212, 0.18), 0 4px 10px rgba(20, 184, 166, 0.08);
+  /* 컬러 그림자 — v4 최소주의: 그린 소프트 그림자(FAB·주요 CTA 전용), 발광 효과 폐지 */
+  --sh-pr:   0 8px 20px -6px rgba(79, 158, 124, 0.45);
+  --sh-pr-sm: 0 4px 12px -4px rgba(79, 158, 124, 0.35);
+  --sh-pr-lg: 0 10px 26px -6px rgba(79, 158, 124, 0.50);
+  --sh-teal: 0 8px 20px -6px rgba(79, 158, 124, 0.40);
+  --sh-mint: 0 8px 20px -6px rgba(79, 158, 124, 0.35);
+  --sh-mint-sm: 0 4px 12px -4px rgba(79, 158, 124, 0.28);
 
-  /* 카드 상단 highlight — inset 1px 흰색으로 광원 시뮬레이션 */
-  /* 톤다운: 상단 highlight 미세화 */
-  --hl-top:  inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  --hl-top-strong: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  /* 카드 상단 highlight — v4 폐지 (참조 호환용 투명값) */
+  --hl-top:  inset 0 1px 0 rgba(255, 255, 255, 0);
+  --hl-top-strong: inset 0 1px 0 rgba(255, 255, 255, 0);
 
   /* 입력 필드 inset (살짝 들어간 느낌) */
   --sh-inset-sm: inset 0 1px 2px rgba(20, 30, 50, 0.04);
@@ -164,13 +172,13 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 /* ── 카드 (전 페이지 통일 스펙) ─────────────────────────────────── */
 .ds-card {
   background:
-    radial-gradient(ellipse at 100% 0%, rgba(255, 56, 92, 0.04), transparent 60%),
+    radial-gradient(ellipse at 100% 0%, rgba(79, 158, 124, 0.04), transparent 60%),
     var(--c-white);
   border-radius: var(--r-lg);
   box-shadow:
     var(--sh-sm),
     var(--hl-top),
-    0 4px 14px rgba(255, 56, 92, 0.05);
+    0 4px 14px rgba(79, 158, 124, 0.05);
   padding: var(--sp-md);
   transition: box-shadow var(--dur-normal) var(--ease-out), transform var(--dur-fast) var(--ease-spring);
 }
@@ -209,7 +217,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   max-width: 280px;
   margin: 0 auto;
   padding: 14px 20px;
-  background: linear-gradient(180deg, #FF5070 0%, var(--c-pr) 100%);
+  background: linear-gradient(180deg, #5FAE8B 0%, var(--c-pr) 100%);
   color: #fff;
   border: none;
   border-radius: var(--r-md);
@@ -241,7 +249,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 
 .ds-btn-primary {
-  background: linear-gradient(180deg, #FF5070 0%, var(--c-pr) 100%);
+  background: linear-gradient(180deg, #5FAE8B 0%, var(--c-pr) 100%);
   color: #fff;
   padding: 14px 20px; font-size: var(--f-lg); width: 100%; border-radius: var(--r-md);
   font-weight: var(--fw-semibold); letter-spacing: var(--ls-normal);
@@ -284,7 +292,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 }
 .ds-input:focus {
   border-color: var(--c-pr); background: var(--c-white);
-  box-shadow: var(--sh-inset-sm), 0 0 0 4px rgba(255, 56, 92, 0.08);
+  box-shadow: var(--sh-inset-sm), 0 0 0 4px rgba(79, 158, 124, 0.08);
 }
 .ds-input::placeholder { color: var(--c-g400); }
 
@@ -449,14 +457,14 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
   width: 100%; max-width: 480px;
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(255, 56, 92, 0.05), transparent 60%),
+    radial-gradient(ellipse at 50% 0%, rgba(79, 158, 124, 0.05), transparent 60%),
     var(--c-white);
   border-radius: var(--r-xl) var(--r-xl) 0 0;
   z-index: 201; max-height: 90vh; display: flex; flex-direction: column;
   box-shadow:
     var(--sh-xl),
     var(--hl-top-strong),
-    0 -8px 32px rgba(255, 56, 92, 0.10);
+    0 -8px 32px rgba(79, 158, 124, 0.10);
   animation: ds-sheet-up var(--dur-slow) var(--ease-spring);
   overflow: visible;
 }
@@ -467,7 +475,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   top: 0; left: 20%; right: 20%;
   height: 2px;
   background: linear-gradient(90deg, transparent 0%, var(--c-pr) 50%, transparent 100%);
-  box-shadow: 0 0 12px rgba(255, 56, 92, 0.4);
+  box-shadow: 0 0 12px rgba(79, 158, 124, 0.4);
   opacity: 0.5;
   pointer-events: none;
 }
@@ -568,7 +576,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 /* 리스트 카드 통째로 스켈레톤 (workforce/market 등 — 260528) */
 .ds-skel-list-item {
   background: #fff;
-  border: 1.5px solid #F2F4F6;
+  border: 1.5px solid #F5F7F6;
   border-radius: 14px;
   padding: 11px 12px;
   margin-bottom: 8px;
@@ -582,10 +590,10 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 /* ── 5. 통계 카드 (토스 스타일 그라데이션) ─────────────────────────── */
 .ds-stat-card {
   position: relative; overflow: hidden;
-  background: linear-gradient(135deg, #FF385C 0%, #E31C5F 100%);
+  background: linear-gradient(135deg, #4F9E7C 0%, #3E8467 100%);
   color: #fff;
   border-radius: var(--r-xl); padding: 22px 20px;
-  box-shadow: 0 4px 20px rgba(255,56,92,.25);
+  box-shadow: 0 4px 20px rgba(79, 158, 124,.25);
 }
 .ds-stat-card-label { font-size: 13px; font-weight: 700; opacity: .9; margin-bottom: 8px; }
 .ds-stat-card-num { font-size: 36px; font-weight: 700; letter-spacing: var(--ls-tight); line-height: 1.1; }
@@ -706,7 +714,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   border: none; border-radius: var(--r-md);
   font-family: inherit; font-size: 15px; font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(255,56,92,.3);
+  box-shadow: 0 4px 14px rgba(79, 158, 124,.3);
   transition: transform .12s, box-shadow .12s;
   -webkit-tap-highlight-color: transparent;
 }
@@ -811,7 +819,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   background: var(--c-pr);
   border-color: var(--c-pr);
   color: #fff;
-  box-shadow: 0 3px 10px rgba(255, 56, 92, .28);
+  box-shadow: 0 3px 10px rgba(79, 158, 124, .28);
 }
 
 /* ── B. Segmented Control ───────────────────────────────── */
@@ -864,7 +872,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   background: var(--c-pr);
   border-color: var(--c-pr);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(255, 56, 92, .25);
+  box-shadow: 0 2px 8px rgba(79, 158, 124, .25);
 }
 
 /* ── D. 체크 항목 버튼 ──────────────────────────────────── */
@@ -881,9 +889,9 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   -webkit-tap-highlight-color: transparent;
 }
 .ds-check-item.on {
-  background: #FFF0F3;
+  background: #EAF2EE;
   border-color: var(--c-pr);
-  box-shadow: 0 2px 8px rgba(255, 56, 92, .14);
+  box-shadow: 0 2px 8px rgba(79, 158, 124, .14);
 }
 .ds-check-box {
   width: 16px; height: 16px;
@@ -1154,7 +1162,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-wb.today .ds-wb-bar { background: linear-gradient(180deg, #047857, #10B981); }
 .ds-wb.today .ds-wb-count { color: #047857; }
 .ds-wb.future .ds-wb-bar {
-  background: repeating-linear-gradient(45deg, #E5E7EB, #E5E7EB 4px, #F3F4F6 4px, #F3F4F6 8px);
+  background: repeating-linear-gradient(45deg, #EBEEEC, #EBEEEC 4px, #F5F7F6 4px, #F5F7F6 8px);
 }
 .ds-wb-lbl { font-size: 10px; color: var(--c-g500); font-weight: 600; }
 .ds-wb.today .ds-wb-lbl { color: #047857; font-weight: 800; }
@@ -1193,7 +1201,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 
 /* 헤더 우측 primary 액션 버튼 (예: + 새 요청) */
 .ds-header-cta {
-  background: linear-gradient(180deg, #FF5070 0%, var(--c-pr) 100%);
+  background: linear-gradient(180deg, #5FAE8B 0%, var(--c-pr) 100%);
   color: #fff; border: none;
   padding: 9px 14px; border-radius: var(--r-full);
   font-size: 13px; font-weight: 700; font-family: inherit;
@@ -1203,7 +1211,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 }
 .ds-header-cta:active {
   transform: translateY(1px) scale(.98);
-  box-shadow: 0 1px 4px rgba(255,56,92,0.15), var(--hl-top);
+  box-shadow: 0 1px 4px rgba(79, 158, 124,0.15), var(--hl-top);
 }
 
 /* ── 상태 탭 (가로 스크롤 + 우측 fade) ──────────────────────────── */
@@ -1388,7 +1396,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 
 /* ── 페이지 공통 Primary 버튼 hook (코랄 색 사용 + 일정 크기) ──── */
 :where(button.btn, .btn-primary, .btn-new, .btn-add, .btn-send, .btn-pr):not(.ghost):not(.ds-btn-ghost):not(.ds-btn-secondary):not([disabled]) {
-  background: linear-gradient(180deg, #FF5070 0%, var(--c-pr) 100%) !important;
+  background: linear-gradient(180deg, #5FAE8B 0%, var(--c-pr) 100%) !important;
   color: #fff !important;
   box-shadow: var(--sh-pr), var(--hl-top-strong);
   transition: box-shadow var(--dur-normal, 180ms) var(--ease-out, ease-out),
@@ -1415,7 +1423,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
               box-shadow var(--dur-normal, 180ms) var(--ease-out, ease-out);
 }
 :where(input:focus, textarea:focus):not(.ds-input) {
-  box-shadow: var(--sh-inset-sm), 0 0 0 4px rgba(255, 56, 92, 0.10);
+  box-shadow: var(--sh-inset-sm), 0 0 0 4px rgba(79, 158, 124, 0.10);
 }
 
 /* ── 오버레이 hook (모든 페이지의 .ov / .overlay / .modal-overlay) ─ */
@@ -1447,7 +1455,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   width: 32px; height: 3px;
   background: var(--c-pr);
   border-radius: 0 0 3px 3px;
-  box-shadow: 0 0 8px rgba(255, 56, 92, 0.55);
+  box-shadow: 0 0 8px rgba(79, 158, 124, 0.55);
 }
 
 /* SVG 라인 아이콘 시스템 */
@@ -1466,7 +1474,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 }
 .ds-nav-item.on .ds-nav-ico {
   transform: translateY(-2px);
-  filter: drop-shadow(0 3px 8px rgba(255, 56, 92, 0.42));
+  filter: drop-shadow(0 3px 8px rgba(79, 158, 124, 0.42));
 }
 .ds-nav-item.on .ds-nav-ico svg {
   stroke-width: 2.4;
@@ -1495,7 +1503,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 }
 .ds-nav.has-notch::after { display: none !important; }
 .ds-nav-item { color: #6B7684 !important; }  /* V1.9.101: 비활성=그레이 (흰 바) */
-.ds-nav-item.on { color: #FF385C !important; font-weight: 800 !important; }  /* 활성=코랄 */
+.ds-nav-item.on { color: #4F9E7C !important; font-weight: 800 !important; }  /* 활성=코랄 */
 /* V1.9.99: 활성 섹터 아래 라인 (흰색) — '지금 여기' 표시 */
 .ds-nav-item.on::before {
   content: '' !important; display: block !important;
@@ -1504,7 +1512,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   left: 50% !important; right: auto !important;
   transform: translateX(-50%) !important;
   width: 18px !important; height: 3px !important;
-  background: #FF385C !important;
+  background: #4F9E7C !important;
   border-radius: 4px !important;
   box-shadow: none !important;
 }
@@ -1514,7 +1522,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 }
 /* 활성 아이콘 = 흰 솔리드 채움(평평한 코랄 바 위 또렷). 비활성은 흰 아웃라인 */
 /* V1.9.102: 활성 아이콘 = 코랄 라인(아웃라인) — 솔리드 채움 아님. 비활성 그레이 라인과 톤 통일 */
-.ds-nav-item.on .ds-nav-ico svg { fill: none !important; stroke: #FF385C !important; stroke-width: 2.2 !important; }
+.ds-nav-item.on .ds-nav-ico svg { fill: none !important; stroke: #4F9E7C !important; stroke-width: 2.2 !important; }
 /* V1.9.98: 하단 바 높이 -15% — 아이템 패딩·gap·아이콘 축소 */
 .ds-nav-item { padding: 2px 0 !important; gap: 2px !important; }
 .ds-nav-ico, .ds-nav-ico svg { width: 20px !important; height: 20px !important; }
@@ -1526,7 +1534,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-nav-ico .ds-ring {
   position: absolute; left: 50%; top: 50%;
   width: 42px; height: 42px; margin: -21px 0 0 -21px;
-  border-radius: 50%; background: rgba(255, 56, 92, 0.22);  /* V1.9.101: 흰 바 위 코랄 링 */
+  border-radius: 50%; background: rgba(79, 158, 124, 0.22);  /* V1.9.101: 흰 바 위 코랄 링 */
   transform: scale(.3); opacity: 0; z-index: 0; pointer-events: none;
   animation: ds-nav-ring .44s ease-out forwards;
 }
@@ -1604,7 +1612,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   color: var(--c-pr-d);
   box-shadow:
     var(--sh-sm),
-    0 2px 6px rgba(255, 56, 92, 0.12);
+    0 2px 6px rgba(79, 158, 124, 0.12);
 }
 .ds-status-tab.is-blob.on::after {
   /* 활성 탭 아래 작은 점 indicator */
@@ -1615,7 +1623,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   width: 4px; height: 4px;
   border-radius: 50%;
   background: var(--c-pr);
-  box-shadow: 0 0 4px rgba(255, 56, 92, 0.35);
+  box-shadow: 0 0 4px rgba(79, 158, 124, 0.35);
 }
 
 /* 민트 variant (완료/긍정 카테고리용) */
@@ -1678,11 +1686,11 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 /* segmented control 활성 탭에 코랄 발광 강화 */
 :where(.tab.active, .tab.on):not(.ds-status-tab) {
   position: relative;
-  background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F5 100%) !important;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F7FAF8 100%) !important;
   box-shadow:
     var(--sh-sm, 0 2px 6px rgba(20,30,50,.07)),
     inset 0 1px 0 rgba(255,255,255,.95),
-    0 4px 14px rgba(255, 56, 92, 0.18) !important;
+    0 4px 14px rgba(79, 158, 124, 0.18) !important;
 }
 
 /* 활성 탭 아래 작은 코랄 점 indicator (Botanical 영감) */
@@ -1694,7 +1702,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   width: 4px; height: 4px;
   border-radius: 50%;
   background: var(--c-pr);
-  box-shadow: 0 0 8px rgba(255, 56, 92, 0.6);
+  box-shadow: 0 0 8px rgba(79, 158, 124, 0.6);
   pointer-events: none;
   animation: ds-dot-fade-in var(--dur-normal, 180ms) var(--ease-out, ease-out);
 }
@@ -1730,14 +1738,14 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 56, 92, 0.10), transparent 65%);
+  background: radial-gradient(circle, rgba(79, 158, 124, 0.10), transparent 65%);
   filter: blur(8px);
   z-index: -1;
 }
 .ds-empty-svg svg {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 1px 3px rgba(255, 56, 92, 0.08));
+  filter: drop-shadow(0 1px 3px rgba(79, 158, 124, 0.08));
 }
 
 /* 민트 variant (휴지통 빈 상태 = 깨끗함 메타포) */
@@ -1784,7 +1792,7 @@ button, input, textarea, select { font-family: inherit; letter-spacing: var(--ls
 .ds-nav-item.active .nav-icon-svg {
   color: var(--c-pr);
   transform: scale(1.05);
-  filter: drop-shadow(0 1px 3px rgba(255, 56, 92, 0.12));
+  filter: drop-shadow(0 1px 3px rgba(79, 158, 124, 0.12));
 }
 /* 옛 코랄 pill 배경 (레거시 .nav-item/.ni 전용). V1.9.95: .ds-nav-item .ds-nav-ico 제거 —
    이 pill의 background/padding이 V1.9.94 블롭 활성 아이콘을 찌그러뜨려 작게 보이던 진짜 원인 */
@@ -1905,14 +1913,14 @@ body:has(.bg-photo) input[type="text"] {
  * ════════════════════════════════════════════════════════════════ */
 .ds-avatar {
   border-radius: 50%;
-  background: linear-gradient(135deg, #FFC9D3 0%, #FF385C 100%);  /* 기본 코랄 */
+  background: linear-gradient(135deg, #C9E2D6 0%, #4F9E7C 100%);  /* 기본 코랄 */
   display: inline-flex;
   align-items: center; justify-content: center;
   color: #FFFFFF;
   font-weight: 800;
   overflow: hidden; position: relative;
   flex-shrink: 0;
-  box-shadow: 0 3px 10px rgba(255, 56, 92, 0.18);
+  box-shadow: 0 3px 10px rgba(79, 158, 124, 0.18);
 }
 .ds-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
@@ -1924,8 +1932,8 @@ body:has(.bg-photo) input[type="text"] {
 .ds-avatar-xl { width: 88px; height: 88px; font-size: 36px; }
 
 /* 색 variant — 닉네임 해시로 자동 분배 (5색 + 기본 코랄) */
-.av-coral, .ds-avatar.av-coral { background: linear-gradient(135deg, #FFC9D3 0%, #FF385C 100%); box-shadow: 0 3px 10px rgba(255, 56, 92, 0.18); }
-.av-mint,  .ds-avatar.av-mint  { background: linear-gradient(135deg, #A7F3D0 0%, #14B8A6 100%); box-shadow: 0 3px 10px rgba(20, 184, 166, 0.20); }
+.av-coral, .ds-avatar.av-coral { background: linear-gradient(135deg, #C9E2D6 0%, #4F9E7C 100%); box-shadow: 0 3px 10px rgba(79, 158, 124, 0.18); }
+.av-mint,  .ds-avatar.av-mint  { background: linear-gradient(135deg, #A7F3D0 0%, #4F9E7C 100%); box-shadow: 0 3px 10px rgba(20, 184, 166, 0.20); }
 .av-amber, .ds-avatar.av-amber { background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 100%); box-shadow: 0 3px 10px rgba(245, 158, 11, 0.18); }
 .av-blue,  .ds-avatar.av-blue  { background: linear-gradient(135deg, #BFDBFE 0%, #3B82F6 100%); box-shadow: 0 3px 10px rgba(59, 130, 246, 0.18); }
 .av-purple,.ds-avatar.av-purple{ background: linear-gradient(135deg, #DDD6FE 0%, #8B5CF6 100%); box-shadow: 0 3px 10px rgba(139, 92, 246, 0.18); }
@@ -1934,7 +1942,7 @@ body:has(.bg-photo) input[type="text"] {
 .ds-avatar .ds-verified {
   position: absolute; bottom: -2px; right: -2px;
   width: 20px; height: 20px; border-radius: 50%;
-  background: #14B8A6; border: 2px solid #FFFFFF;
+  background: #4F9E7C; border: 2px solid #FFFFFF;
   display: flex; align-items: center; justify-content: center;
   color: #FFFFFF; font-size: 11px; font-weight: 900; line-height: 1;
 }
@@ -1966,7 +1974,7 @@ body:has(.bg-photo) input[type="text"] {
 }
 .ds-push-emoji {
   font-size: 38px; text-align: center; margin-bottom: 6px;
-  filter: drop-shadow(0 2px 6px rgba(255, 56, 92, 0.22));
+  filter: drop-shadow(0 2px 6px rgba(79, 158, 124, 0.22));
 }
 .ds-push-title {
   font-size: 18px; font-weight: 800; color: #1A1F2C;
@@ -1979,7 +1987,7 @@ body:has(.bg-photo) input[type="text"] {
 }
 .ds-push-bullets {
   list-style: none; padding: 0;
-  background: #F7F8FA; border-radius: 13px;
+  background: #F5F7F6; border-radius: 13px;
   padding: 12px 14px; margin: 0 0 18px;
 }
 .ds-push-bullets li {
@@ -2003,8 +2011,8 @@ body:has(.bg-photo) input[type="text"] {
   border: none;
 }
 .ds-push-btn-primary {
-  background: #FF385C; color: #fff;
-  box-shadow: 0 3px 12px rgba(255, 56, 92, 0.28);
+  background: #4F9E7C; color: #fff;
+  box-shadow: 0 3px 12px rgba(79, 158, 124, 0.28);
 }
 .ds-push-btn-primary:active { transform: scale(0.97); }
 .ds-push-btn-primary:disabled { opacity: 0.6; cursor: progress; }
@@ -2012,7 +2020,7 @@ body:has(.bg-photo) input[type="text"] {
   background: #fff; color: #6B7684;
   border: 1px solid #E4E9EE;
 }
-.ds-push-btn-ghost:active { background: #F2F4F6; }
+.ds-push-btn-ghost:active { background: #F5F7F6; }
 
 /* ══════════════════════════════════════════════════════════════════
    홈 사진 hero + 조합 패턴 (Phase 6 — 2026-05-29)
@@ -2119,7 +2127,7 @@ body:has(.bg-photo) input[type="text"] {
 /* ── 콘텐츠 래퍼 (헤더 위에 살짝 올라오는) ── */
 .ds-home-content {
   position: relative; z-index: 2;
-  background: var(--c-bg, #F7F8FA);
+  background: var(--c-bg, #F5F7F6);
   border-radius: 28px 28px 0 0;
   padding: 16px 16px 0;
 }
@@ -2127,7 +2135,7 @@ body:has(.bg-photo) input[type="text"] {
 /* ── Status-First 카드 ── */
 .ds-status-card {
   background: #fff;
-  border: 1px solid var(--c-g100, #F2F4F6);
+  border: 1px solid var(--c-g100, #F5F7F6);
   border-radius: 18px;
   padding: 16px 18px;
   display: flex; align-items: center; gap: 14px;
@@ -2136,14 +2144,14 @@ body:has(.bg-photo) input[type="text"] {
 }
 .ds-status-card:active { transform: scale(0.99); transition: transform .12s; }
 .ds-status-ico {
-  width: 44px; height: 44px; border-radius: 13px; background: #FFF0F3;
+  width: 44px; height: 44px; border-radius: 13px; background: #EAF2EE;
   display: flex; align-items: center; justify-content: center; font-size: 22px;
   flex-shrink: 0; position: relative;
 }
 .ds-status-ico.has-task::after {
   content: ''; position: absolute; top: -2px; right: -2px;
   width: 10px; height: 10px; border-radius: 50%;
-  background: var(--c-pr, #FF385C); border: 2px solid #fff;
+  background: var(--c-pr, #4F9E7C); border: 2px solid #fff;
   animation: ds-status-pulse 1.8s ease-out infinite;
 }
 @keyframes ds-status-pulse {
@@ -2156,14 +2164,14 @@ body:has(.bg-photo) input[type="text"] {
   font-size: 15.5px; font-weight: 800; color: var(--c-g900, #1A1F2C);
   letter-spacing: -0.01em;
 }
-.ds-status-title .num { color: var(--c-pr, #FF385C); }
+.ds-status-title .num { color: var(--c-pr, #4F9E7C); }
 .ds-status-sub {
-  font-size: 12.5px; color: var(--c-g500, #8B95A1);
+  font-size: 12.5px; color: var(--c-g500, #6A716D);
   margin-top: 3px; font-weight: 500;
   overflow: hidden; text-overflow: ellipsis;
   white-space: nowrap;
 }
-.ds-status-arr { color: var(--c-g400, #B0B8C1); font-size: 20px; flex-shrink: 0; }
+.ds-status-arr { color: var(--c-g400, #9AA09C); font-size: 20px; flex-shrink: 0; }
 
 /* ── KPI 3-col 한 줄 ── */
 .ds-kpi-row {
@@ -2172,7 +2180,7 @@ body:has(.bg-photo) input[type="text"] {
 }
 .ds-kpi-card {
   background: #fff;
-  border: 1px solid var(--c-g100, #F2F4F6);
+  border: 1px solid var(--c-g100, #F5F7F6);
   border-radius: 14px;
   padding: 12px 10px;
   text-align: center;
@@ -2181,9 +2189,9 @@ body:has(.bg-photo) input[type="text"] {
   font-size: 18px; font-weight: 800; color: var(--c-g900, #1A1F2C);
   letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
 }
-.ds-kpi-val.pr { color: var(--c-pr, #FF385C); }
+.ds-kpi-val.pr { color: var(--c-pr, #4F9E7C); }
 .ds-kpi-lbl {
-  font-size: 11px; color: var(--c-g500, #8B95A1);
+  font-size: 11px; color: var(--c-g500, #6A716D);
   margin-top: 2px; font-weight: 600;
 }
 
@@ -2192,7 +2200,7 @@ body:has(.bg-photo) input[type="text"] {
   position: fixed; bottom: 78px;
   right: calc(50% - 240px + 20px);
   width: 60px; height: 60px; border-radius: 50%;
-  background: var(--c-pr, #FF385C); color: #fff;
+  background: var(--c-pr, #4F9E7C); color: #fff;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   border: none; cursor: pointer; z-index: 50;
   box-shadow: 0 6px 16px rgba(20, 30, 50, 0.20);  /* V1.9.98: 코랄 발광 제거 → 중립 그림자 */
@@ -2207,14 +2215,14 @@ body:has(.bg-photo) input[type="text"] {
 /* ── 사진 미설정 모드 (default) — 토스 톤 흰 헤더 + 큰 KPI ── */
 .ds-hero-photo.no-photo {
   height: auto;
-  background: linear-gradient(160deg, #FFF8F5 0%, #FFFFFF 60%);
+  background: linear-gradient(160deg, #F7FAF8 0%, #FFFFFF 60%);
   border-radius: 0;
   margin-bottom: 0;
   padding-bottom: 18px;
 }
 .ds-hero-photo.no-photo::after {
   content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-  height: 3px; background: linear-gradient(90deg, var(--c-pr, #FF385C) 0%, #FC8181 100%);
+  height: 3px; background: linear-gradient(90deg, var(--c-pr, #4F9E7C) 0%, #7FC4A8 100%);
 }
 .ds-hero-photo.no-photo .ds-hero-img,
 .ds-hero-photo.no-photo .ds-hero-overlay { display: none; }
@@ -2223,13 +2231,13 @@ body:has(.bg-photo) input[type="text"] {
 }
 .ds-hero-photo.no-photo .ds-hero-btn {
   background: #fff;
-  border: 1px solid var(--c-g100, #F2F4F6);
-  color: var(--c-g700, #4E5968);
+  border: 1px solid var(--c-g100, #F5F7F6);
+  color: var(--c-g700, #474E4A);
   -webkit-backdrop-filter: none; backdrop-filter: none;
   box-shadow: 0 2px 6px rgba(20,30,50,.05);
 }
 .ds-hero-photo.no-photo .ds-hero-btn .ds-hero-dot {
-  border-color: rgba(255,56,92,0.6);
+  border-color: rgba(79, 158, 124,0.6);
 }
 .ds-hero-photo.no-photo .ds-hero-body {
   position: relative;
@@ -2239,7 +2247,7 @@ body:has(.bg-photo) input[type="text"] {
   color: var(--c-g900, #1A1F2C);
 }
 .ds-hero-photo.no-photo .ds-hero-greet {
-  color: var(--c-g500, #8B95A1);
+  color: var(--c-g500, #6A716D);
   opacity: 1;
 }
 .ds-hero-photo.no-photo .ds-hero-name {
@@ -2251,13 +2259,13 @@ body:has(.bg-photo) input[type="text"] {
 .ds-hero-photo.no-photo .ds-hero-company {
   font-size: 13px; font-weight: 700;
   letter-spacing: -0.01em; margin-top: 4px;
-  color: var(--c-pr, #FF385C);
+  color: var(--c-pr, #4F9E7C);
   text-shadow: none;
   display: inline-flex; align-items: center; gap: 6px;
-  background: #FFF0F3;
+  background: #EAF2EE;
   padding: 3px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(255,56,92,0.18);
+  border: 1px solid rgba(79, 158, 124,0.18);
 }
 .ds-hero-photo.no-photo .ds-hero-company::before {
   content: '🏢';
@@ -2269,7 +2277,7 @@ body:has(.bg-photo) input[type="text"] {
   align-items: end;
 }
 .ds-hero-photo.no-photo .ds-hero-rev-lbl {
-  color: var(--c-g500, #8B95A1);
+  color: var(--c-g500, #6A716D);
   opacity: 1;
 }
 .ds-hero-photo.no-photo .ds-hero-rev-val {
@@ -2278,11 +2286,11 @@ body:has(.bg-photo) input[type="text"] {
   text-shadow: none;
 }
 .ds-hero-photo.no-photo .ds-hero-rev-val .ds-hero-rev-unit {
-  color: var(--c-g500, #8B95A1);
+  color: var(--c-g500, #6A716D);
   font-size: 18px;
 }
 .ds-hero-photo.no-photo .ds-hero-trend {
-  background: #ECFDF5;
+  background: #F3F8F5;
   color: #10B981;
   text-shadow: none;
 }
@@ -2290,3 +2298,11 @@ body:has(.bg-photo) input[type="text"] {
   background: #FEF2F2;
   color: #EF4444;
 }
+
+/* ── v4 워드마크 락업 A (싹싹 + SSAK-SSAK) — 2026-09-11 리브랜딩 ──
+ * 5탭 헤더 + 로그인 공통. 고객 대면 페이지(booking/sign/quote)는 업체명이 브랜드 — 락업 미사용. */
+.ds-lockup{display:inline-flex;align-items:baseline;gap:8px;line-height:1;user-select:none;-webkit-user-select:none;}
+.ds-lockup .lk-ko{font-size:22px;font-weight:800;letter-spacing:-0.03em;color:var(--c-pr);}
+.ds-lockup .lk-en{font-size:9.5px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--c-g400);transform:translateY(-1px);}
+.ds-lockup.lk-lg .lk-ko{font-size:38px;}
+.ds-lockup.lk-lg .lk-en{font-size:14px;}

@@ -70,7 +70,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .srch-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:17px;color:var(--g300);cursor:pointer;display:none;}
 .filter-btn{position:relative;flex-shrink:0;width:42px;height:42px;border-radius:12px;background:var(--g50);border:1.5px solid var(--g200);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--g700);padding:0;font-family:inherit;}
 .filter-btn:active{background:var(--g100);}
-.filter-btn .filter-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--c-pr,#FF385C);display:none;}
+.filter-btn .filter-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--c-pr,#4F9E7C);display:none;}
 .filter-btn.has-filter .filter-dot{display:block;}
 
 /* 카테고리 드로어 (커뮤니티 V1.9.26 패턴) */
@@ -85,7 +85,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .cat-drawer-clear{display:block;width:calc(100% - 40px);margin:0 20px;padding:11px;background:var(--g50);border:1px solid var(--g200);border-radius:12px;font-size:13px;color:var(--g500);font-weight:600;cursor:pointer;font-family:inherit;}
 
 /* 팔기 FAB (schedule/community ds-fab-glass 동일) */
-.ds-fab-glass{position:fixed;right:18px;bottom:86px;width:48px;height:48px;border-radius:50%;background:rgba(255,56,92,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:110;transition:transform 0.15s;font-family:inherit;padding:0;box-shadow:0 6px 14px rgba(15,15,18,0.18);}
+.ds-fab-glass{position:fixed;right:18px;bottom:86px;width:48px;height:48px;border-radius:50%;background:rgba(79, 158, 124,0.92);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;border:2px solid rgba(255,255,255,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:110;transition:transform 0.15s;font-family:inherit;padding:0;box-shadow:0 6px 14px rgba(15,15,18,0.18);}
 .ds-fab-glass:active{transform:scale(0.92);}
 .ds-fab-glass svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.8;stroke-linecap:round;}
 @media (prefers-reduced-motion: reduce){.ds-fab-glass{transition:none;}}
@@ -466,7 +466,7 @@ async function loadFeed(reset=false){
   loading=true;
   const feed = document.getElementById('feed');
   if(page===0) feed.innerHTML = Array(4).fill(`
-    <div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;border:1.5px solid #F2F4F6;">
+    <div style="background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;border:1.5px solid #F5F7F6;">
       <div class="ds-skel" style="height:160px;border-radius:12px;margin-bottom:10px;"></div>
       <div class="ds-skel" style="height:13px;margin-bottom:7px;width:70%;"></div>
       <div class="ds-skel" style="height:11px;width:40%;"></div>
