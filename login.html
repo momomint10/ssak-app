@@ -78,6 +78,7 @@ body { background: var(--c-bg, #FFFFFF) !important; }
   /* v4: 락업 아래 별도 줄 */
   display: block;
   margin-top: 10px;
+  white-space: nowrap;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -92,6 +93,8 @@ body { background: var(--c-bg, #FFFFFF) !important; }
     0 0 8px rgba(255,255,255,0.95),
     0 0 18px rgba(255,255,255,0.55);
 }
+
+@media (max-width:360px){ .brand p { font-size: 10.5px; letter-spacing: 0.2em; } }
 
 /* ── 글라스 패널 (260528 — 높이 한 단계 더 ↓) ── */
 .card {
