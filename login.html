@@ -304,7 +304,7 @@ body.beta-mode #btn-pin-mode{
 
   <!-- 베타 배너 (LAUNCH_MODE='beta'일 때만 보임) -->
   <div class="beta-banner hide" id="beta-banner">
-    🚧 <b>베타 모드</b> — PIN 4자리로 로그인 (SMS는 최초 1회만)
+    <b>베타 모드</b> — PIN 4자리로 로그인 (SMS는 최초 1회만)
   </div>
 
   <!-- Step 1: 휴대폰 번호 -->
@@ -318,7 +318,7 @@ body.beta-mode #btn-pin-mode{
     <div class="alert" id="alert-phone"></div>
     <button class="btn" id="btn-send" onclick="sendOtp()">인증번호 받기</button>
     <button class="btn ghost" id="btn-pin-mode" onclick="switchToPinMode()" style="display:none;margin-top:8px;">
-      🔢 PIN으로 빠른 로그인
+      PIN으로 빠른 로그인
     </button>
     <div class="hint">처음 사용하시는 분은<br>관리자(사장님)에게 번호 등록을 요청하세요.</div>
   </div>
@@ -341,7 +341,7 @@ body.beta-mode #btn-pin-mode{
 
   <!-- Step 3: PIN 빠른 로그인 -->
   <div class="card" id="step-pin" style="display:none;">
-    <div class="card-title">🔢 PIN 로그인</div>
+    <div class="card-title">PIN 로그인</div>
     <div class="card-desc"><b id="pin-phone-display"></b><br>4자리 PIN을 입력해 주세요.</div>
 
     <label>PIN (4자리 숫자)</label>
@@ -350,7 +350,7 @@ body.beta-mode #btn-pin-mode{
     <div class="alert" id="alert-pin"></div>
     <button class="btn" id="btn-pin-verify" onclick="verifyPin()">로그인</button>
     <button class="btn ghost" onclick="switchToSmsMode()" style="margin-top:8px;">
-      📨 SMS 인증번호로 로그인
+      SMS 인증번호로 로그인
     </button>
     <div class="hint">PIN을 잊으셨나요?<br>SMS 인증으로 로그인 후 MY 페이지에서 PIN 재설정 가능.</div>
   </div>
@@ -380,7 +380,7 @@ if (LAUNCH_MODE === 'beta') {
   const pinBtn = document.getElementById('btn-pin-mode');
   if (pinBtn) {
     pinBtn.style.display = 'block';
-    pinBtn.textContent = '🔢 PIN으로 로그인';
+    pinBtn.textContent = 'PIN으로 로그인';
   }
   // SMS 버튼 라벨 변경 (작아짐 + secondary)
   const smsBtn = document.getElementById('btn-send');

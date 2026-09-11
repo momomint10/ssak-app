@@ -96,16 +96,16 @@ textarea { resize:vertical; min-height:90px; line-height:1.6; }
         <div class="ds-page-h-sub">고객 정보 수집 → 견적 발송</div>
       </div>
       <div class="ds-page-actions">
-        <button class="ds-icon-btn" id="btn-trash" onclick="openTrash()" title="휴지통" style="display:none;">🗑<span class="ds-icon-btn-badge" id="trash-badge">0</span></button>
+        <button class="ds-icon-btn" id="btn-trash" onclick="openTrash()" title="휴지통" style="display:none;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg><span class="ds-icon-btn-badge" id="trash-badge">0</span></button>
         <button class="ds-header-cta" onclick="openNew()">＋ 새 요청</button>
       </div>
     </div>
     <div class="ds-status-tabs-wrap">
       <div class="ds-status-tabs" id="status-tabs">
         <button class="ds-status-tab is-blob on" data-st="" onclick="onFilter('')">전체<span class="ds-status-tab-count" id="n-all">0</span></button>
-        <button class="ds-status-tab is-blob" data-st="submitted" onclick="onFilter('submitted')">📥 정보 도착<span class="ds-status-tab-count" id="n-submitted">0</span></button>
-        <button class="ds-status-tab is-blob" data-st="pending" onclick="onFilter('pending')">⏳ 미입력<span class="ds-status-tab-count" id="n-pending">0</span></button>
-        <button class="ds-status-tab is-blob is-mint" data-st="quoted" onclick="onFilter('quoted')">✅ 견적 완료<span class="ds-status-tab-count" id="n-quoted">0</span></button>
+        <button class="ds-status-tab is-blob" data-st="submitted" onclick="onFilter('submitted')">정보 도착<span class="ds-status-tab-count" id="n-submitted">0</span></button>
+        <button class="ds-status-tab is-blob" data-st="pending" onclick="onFilter('pending')">미입력<span class="ds-status-tab-count" id="n-pending">0</span></button>
+        <button class="ds-status-tab is-blob is-mint" data-st="quoted" onclick="onFilter('quoted')">견적 완료<span class="ds-status-tab-count" id="n-quoted">0</span></button>
         <button class="ds-status-tab is-blob" data-st="cancelled" onclick="onFilter('cancelled')">취소<span class="ds-status-tab-count" id="n-cancelled">0</span></button>
       </div>
     </div>
@@ -193,8 +193,8 @@ function fmtDateOnly(s){
 }
 
 const statusLabel = {
-  pending:'⏳ 미입력', submitted:'📥 정보 도착',
-  quoted:'✅ 견적 완료', contracted:'🤝 계약', cancelled:'❌ 취소'
+  pending:'미입력', submitted:'정보 도착',
+  quoted:'견적 완료', contracted:'계약', cancelled:'취소'
 };
 // 상태별 배지 색상 (design.css .ds-badge-*)
 // quoted는 민트 그린 (자연·완료·신선 메타포 — Botanical 영감)

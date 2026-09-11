@@ -1463,7 +1463,7 @@
         <div>
           <div class="ds-today-fc-label">오늘 일정</div>
           <div class="ds-today-fc-date" id="today-fc-date">—</div>
-          <div class="ds-today-fc-area" id="today-fc-area">📍 강서구</div>
+          <div class="ds-today-fc-area" style="display:flex;align-items:center;gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span id="today-fc-area">강서구</span></div>
         </div>
         <div class="ds-fc-temp" id="today-fc-temp" style="display:none;">
           <span id="today-fc-temp-val">—</span><span class="deg">°</span>
@@ -1950,7 +1950,7 @@ function renderTodayForecast(items) {
     set('today-fc-date', dateStr);
     // V1.9.22.1: 강서구 하드코딩 → GPS city 우선 (loadWeather가 저장한 캐시 사용)
     const _geoCity = (function(){ try { return JSON.parse(localStorage.getItem('ssak_geo_city')||'""'); } catch(_) { return ''; } })();
-    set('today-fc-area', _geoCity ? `📍 ${_geoCity}` : '📍 강서구');
+    set('today-fc-area', _geoCity || '강서구');
     setHTML('today-fc-progress', '오늘 일정 없음 · 탭해서 새 견적 받기');
     // V1.9.2: today-fc-progress-pct 제거
     // V1.9.3: foot 3셀 제거 — first/now/last 셀 set 호출 제거
@@ -1999,7 +1999,7 @@ function renderTodayForecast(items) {
   const hh = String(d.getHours()).padStart(2,'0');
   const mm = String(d.getMinutes()).padStart(2,'0');
   const dateStr = `${d.getMonth()+1}월 ${d.getDate()}일 · ${days[d.getDay()]} · ${hh}:${mm}`;
-  const areaStr = `📍 ${region}`;
+  const areaStr = region;
 
   // DOM 업데이트
   const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
@@ -2088,7 +2088,7 @@ function renderTimeline(sorted, nextItem) {
     endStr = fmtTime(endStr);
     const area = extractArea(heroItem);
     const addr = shortAddr(heroItem.address || heroItem.addr || '');
-    const metaLine = `📍 ${area || '—'}${addr ? ' · ' + addr : ''}`;
+    const metaLine = `<svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"flex:0 0 auto;\"><path d=\"M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z\"/><circle cx=\"12\" cy=\"10\" r=\"3\"/></svg> ${area || '—'}${addr ? ' · ' + addr : ''}`;
 
     if (isOngoingItem(heroItem)) {
       // 진행률 계산

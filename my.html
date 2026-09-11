@@ -111,6 +111,11 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 .menu-item:active{background:var(--gray-50);}
 .menu-icon{font-size:20px;width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-right:14px;flex-shrink:0;}
 .menu-icon.green{background:var(--primary-light);}
+/* v4.2: 이모지 → 라인 아이콘. 배경 3종만 — 그린 틴트(기본)/뉴트럴/위험 (색 위계 §5) */
+.menu-icon{background:var(--c-pr-l,#EAF2EE);color:var(--c-pr,#4F9E7C);}
+.menu-icon svg{display:block;}
+.menu-icon.neutral{background:var(--gray-100);color:var(--gray-500);}
+.menu-icon.danger{background:#FDECEC;color:#E5484D;}
 .menu-icon.blue{background:#EFF6FF;}
 .menu-icon.amber{background:#FFFBEB;}
 .menu-icon.purple{background:#F5F3FF;}
@@ -137,9 +142,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   <!-- 프로필 헤더 -->
   <div class="profile-header ds-app-header">
     <div class="ds-lockup" aria-label="싹싹" style="margin-bottom:12px;"><span class="lk-ko">싹싹</span><span class="lk-en">Ssak-Ssak</span></div>
-    <button class="profile-edit-btn" onclick="goSettings()" aria-label="설정">⚙️</button>
+    <button class="profile-edit-btn" onclick="goSettings()" aria-label="설정"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.98 19.3a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.7 8.98a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9.1a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.02a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.03Z"/></svg></button>
     <div class="profile-header-inner">
-      <div class="profile-avatar">🧹</div>
+      <div class="profile-avatar"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg></div>
       <div class="profile-info">
         <h1 class="profile-name ds-page-title" id="my-name">사장님</h1>
         <div class="profile-company" id="my-company">업체명 미설정</div>
@@ -147,9 +152,9 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
   </div>
 
-  <!-- 신뢰 지표 --><div class="trust-card"><div class="trust-title">⭐ 고객 신뢰 지표</div><div class="trust-row"><div class="trust-stat"><div class="trust-val amber" id="my-rating">-</div><div class="trust-lbl">평균 평점</div></div><div class="trust-stat"><div class="trust-val" id="my-review-count">0</div><div class="trust-lbl">후기 수</div></div><div class="trust-stat"><div class="trust-val" id="my-recommend">-</div><div class="trust-lbl">추천 비율</div></div></div></div><!-- 이달 통계 -->
+  <!-- 신뢰 지표 --><div class="trust-card"><div class="trust-title">고객 신뢰 지표</div><div class="trust-row"><div class="trust-stat"><div class="trust-val amber" id="my-rating">-</div><div class="trust-lbl">평균 평점</div></div><div class="trust-stat"><div class="trust-val" id="my-review-count">0</div><div class="trust-lbl">후기 수</div></div><div class="trust-stat"><div class="trust-val" id="my-recommend">-</div><div class="trust-lbl">추천 비율</div></div></div></div><!-- 이달 통계 -->
   <div class="stats-bar">
-    <div class="stats-title">📊 이달 현황</div>
+    <div class="stats-title">이달 현황</div>
     <div class="stats-hero">
       <div class="stats-hero-lbl">이달 매출</div>
       <div class="stats-hero-val" id="stat-revenue">-</div>
@@ -176,28 +181,28 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
   <!-- TOP-C: 이용 가이드 숨김 (미구현 toast → 사용자 인지 부담) -->
   <!-- TOP-D: 그룹 헤더 명확화 (핵심 도구 / 설정 / 지원) -->
   <div class="section">
-    <div class="section-header">📌 핵심 도구</div>
+    <div class="section-header">핵심 도구</div>
     <div class="menu-item ds-tap-card" onclick="location.href='ssak-quote.html'">
-      <div class="menu-icon green">⚡</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 18 0"/><path d="M3 12v4a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H3ZM21 12v4a2 2 0 0 1-2 2h-1a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h3Z"/></svg></div>
       <div class="menu-text"><div class="menu-title">고객케어</div><div class="menu-sub">견적·계약서·완료보고서 발송</div></div>
       <div class="menu-arrow">›</div>
     </div>
     <div class="menu-item ds-tap-card" onclick="copyBookingLink()">
-      <div class="menu-icon amber">🔗</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></div>
       <div class="menu-text"><div class="menu-title">고객 예약 링크</div><div class="menu-sub">고객에게 전달할 예약 URL 복사</div></div>
       <span class="menu-badge">복사</span>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-header">⚙️ 설정</div>
+    <div class="section-header">설정</div>
     <div class="menu-item ds-tap-card" onclick="goSettings()">
-      <div class="menu-icon purple">⚙️</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.98 19.3a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.7 8.98a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9.1a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.02a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.03Z"/></svg></div>
       <div class="menu-text"><div class="menu-title">앱 설정</div><div class="menu-sub">API키, 업체정보, 단가 설정</div></div>
       <div class="menu-arrow">›</div>
     </div>
     <div class="menu-item ds-tap-card" id="acc-hero-row" onclick="document.getElementById('hero-file').click()">
-      <div class="menu-icon" style="background:#EAF2EE;color:#4F9E7C;font-size:18px;">🖼️</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M21 15.5 16.5 11 6 21"/></svg></div>
       <div class="menu-text">
         <div class="menu-title">홈 화면 사진</div>
         <div class="menu-sub" id="hero-row-sub">사장님 회사 사진으로 바꿔보세요</div>
@@ -207,7 +212,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
     <!-- V1.9.10: 활동 자치구 입력 — 홈 날씨/추천 일정 정확도 ↑ -->
     <div class="menu-item ds-tap-card" id="acc-region-row" onclick="openRegionModal()">
-      <div class="menu-icon" style="background:#FEF3C7;color:#92400E;font-size:18px;">📍</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
       <div class="menu-text">
         <div class="menu-title">활동 자치구</div>
         <div class="menu-sub" id="region-row-sub">서울 25개 자치구 중 주로 일하는 지역을 선택하세요</div>
@@ -217,7 +222,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
     </div>
     <!-- V1.9.16: 자동 리마인더 설정 (스케줄 탭에서 이동) -->
     <div class="menu-item ds-tap-card" id="acc-reminder-row" onclick="openReminderModal()">
-      <div class="menu-icon" style="background:#EAF2EE;color:#4F9E7C;font-size:18px;">🔔</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
       <div class="menu-text">
         <div class="menu-title">자동 리마인더</div>
         <div class="menu-sub" id="reminder-row-sub">고객에게 내일 일정 전날 자동 SMS 발송</div>
@@ -229,21 +234,21 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
 
   <!-- 계정 (Phase 2 인증 — 로그인 정보 + 관리자 진입 + 로그아웃) -->
   <div class="section">
-    <div class="section-header">🔑 계정</div>
+    <div class="section-header">계정</div>
     <div class="menu-item ds-tap-card" id="acc-info-row">
-      <div class="menu-icon" style="background:#EFF6FF;color:#1E40AF;font-size:18px;">👤</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg></div>
       <div class="menu-text">
         <div class="menu-title" id="acc-name">로그인 정보</div>
         <div class="menu-sub" id="acc-role">—</div>
       </div>
     </div>
     <div class="menu-item ds-tap-card" id="acc-admin-row" style="display:none;" onclick="location.href='admin.html'">
-      <div class="menu-icon" style="background:#EAF2EE;color:#C92A4A;font-size:18px;">🛡️</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10Z"/></svg></div>
       <div class="menu-text"><div class="menu-title">관리자 페이지</div><div class="menu-sub">사용자 등록·로그인 로그</div></div>
       <div class="menu-arrow">›</div>
     </div>
     <div class="menu-item ds-tap-card" id="acc-pin-row" onclick="openPinModal()">
-      <div class="menu-icon" style="background:#E6F7F1;color:#047857;font-size:18px;">🔢</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="7" r="1.4" fill="currentColor" stroke="none"/><circle cx="17" cy="7" r="1.4" fill="currentColor" stroke="none"/><circle cx="7" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="17" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="17" r="1.4" fill="currentColor" stroke="none"/></svg></div>
       <div class="menu-text">
         <div class="menu-title" id="acc-pin-title">PIN 로그인 설정</div>
         <div class="menu-sub" id="acc-pin-sub">4자리 PIN으로 빠른 로그인 (SMS 절약)</div>
@@ -251,7 +256,7 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <div class="menu-arrow">›</div>
     </div>
     <div class="menu-item ds-tap-card" id="acc-trust-row" onclick="openTrustDevicesModal()">
-      <div class="menu-icon" style="background:#EEF2FF;color:#4338CA;font-size:18px;">🔒</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
       <div class="menu-text">
         <div class="menu-title">자동 로그인 기기 관리</div>
         <div class="menu-sub" id="acc-trust-sub">30일 동안 인증 없이 자동 로그인 (기기 분실 시 즉시 해제)</div>
@@ -259,21 +264,21 @@ html,body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;
       <div class="menu-arrow">›</div>
     </div>
     <div class="menu-item ds-tap-card" onclick="confirmSignOut()">
-      <div class="menu-icon" style="background:#F5F7F6;color:#6B7280;font-size:18px;">🚪</div>
+      <div class="menu-icon neutral"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/><path d="M16 17l5-5-5-5M21 12H9"/></svg></div>
       <div class="menu-text"><div class="menu-title">로그아웃</div><div class="menu-sub">다시 로그인하려면 SMS 인증 필요</div></div>
       <div class="menu-arrow">›</div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-header">❓ 지원</div>
+    <div class="section-header">지원</div>
     <div class="menu-item ds-tap-card" onclick="toast('카카오톡: @싹싹클린')">
-      <div class="menu-icon amber">💬</div>
+      <div class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c0 4.4-4 8-9 8-1.5 0-2.9-.3-4.1-.9L3 20l1-4A7.6 7.6 0 0 1 3 12c0-4.4 4-8 9-8s9 3.6 9 8Z"/></svg></div>
       <div class="menu-text"><div class="menu-title">고객센터</div><div class="menu-sub">문의 및 피드백</div></div>
       <div class="menu-arrow">›</div>
     </div>
     <div class="menu-item ds-tap-card" onclick="confirmLogout()">
-      <div class="menu-icon" style="background:#FFF0F0;font-size:18px;">🚪</div>
+      <div class="menu-icon danger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/></svg></div>
       <div class="menu-text"><div class="menu-title" style="color:#e05050;">앱 초기화</div><div class="menu-sub">모든 데이터 및 설정 초기화</div></div>
       <div class="menu-arrow" style="color:#e05050;">›</div>
     </div>
